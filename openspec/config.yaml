@@ -1,0 +1,50 @@
+schema: spec-driven
+
+context: |
+  Language: es
+  All artifacts must be written in es.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  Proyecto: StudyPlan — aplicación móvil Android nativa para gestionar y
+  planificar el tiempo de estudio de un estudiante universitario.
+  Características del enunciado: gestión de materias, planificación de
+  sesiones de estudio, metas semanales, reportes y estadísticas.
+
+  Stack obligatorio (decisión humana, no negociable por la IA):
+  - Lenguaje: Java (NO Kotlin). Android SDK, minSdk 24, targetSdk 37.
+  - Package / applicationId: io.github.jhoel0521.studyplan (permanente, Play Store).
+  - Build: Gradle Kotlin DSL + version catalog (gradle/libs.versions.toml).
+  - Arquitectura: MVVM (Activity/Fragment → ViewModel → Repository → Room DAO).
+  - Persistencia: Room sobre SQLite, offline-first, un único usuario local.
+  - Internet SOLO para respaldo/restauración en Google Drive (appDataFolder).
+    Sin backend propio ni Firebase.
+  - UI: Views XML + Material Design 3 (no Jetpack Compose), tema claro/oscuro, es/en.
+  - Gráficos: MPAndroidChart. Recordatorios y respaldos: WorkManager / AlarmManager.
+  - Sesión de estudio gobernada por una máquina de estados (patrón State, RN-07).
+  - Reglas de negocio RN-xx en docs/build/requisitos.py: son obligatorias.
+
+  Metodología: Scrum adaptado + Spec-Driven Development (OpenSpec).
+  Los requisitos funcionales se expresan SOLO como Historias de Usuario
+  (HU-xx) con criterios de aceptación; los no funcionales como criterios de
+  calidad ISO/IEC 25010 (RNF-xx). NO usar casos de uso ni IEEE 830
+  (no mezclar métodos ágiles con tradicionales).
+
+  Cada Requirement de una spec debe citar su ID de historia (HU-xx) para
+  mantener la trazabilidad HU → spec → código → prueba.
+
+rules:
+  proposal:
+    - Declarar explícitamente qué queda fuera de alcance.
+    - Citar los IDs HU-xx / RNF-xx afectados.
+  specs:
+    - Cada Requirement incluye el ID HU-xx en su título.
+    - Cada Scenario corresponde a un criterio de aceptación verificable.
+  tasks:
+    - Tareas de máximo 2 horas.
+    - Toda tarea de código incluye su prueba (JUnit o instrumentada).
+
+operations:
+  apply:
+    guidance:
+      - No agregar dependencias que no estén en el version catalog sin aprobación humana.
+      - Registrar cada sesión de IA en docs/auditoria-ia/bitacora.md.
