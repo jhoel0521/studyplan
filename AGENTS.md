@@ -42,10 +42,18 @@ Ningún código entra sin una spec aprobada.
 - Cada clase o test nuevo menciona en su Javadoc la HU que implementa.
 - Mensajes de commit: `feat(HU-07): ...`, `test(HU-07): ...`, `docs: ...`.
 
-## 5. Auditoría IA
-Cada sesión con IA se registra en `docs/auditoria-ia/bitacora.md` así:
-fecha · herramienta/modelo · prompt (resumen) · qué generó · decisión humana
-(aceptado / modificado / rechazado) · justificación. La IA **propone** y el humano **decide**.
+## 5. Auditoría IA (exigida por el docente)
+- La *Auditoría IA* es un **punto especial que se agrega al índice por indicación del docente** en
+  **cada** entrega. Nunca escribir que "no forma parte del documento/índice".
+- Estructura fija: A.1 Declaración de uso (herramienta, modelo, periodo) · A.2 Protocolo humano–IA ·
+  A.3 Sistema OpenSpec · A.4 Bitácora de decisiones · A.5 Riesgos y mitigación · A.6 Reflexión.
+- Cada sesión con IA agrega filas a `docs/auditoria-ia/bitacora.md`: solicitud · resultado de la IA ·
+  decisión humana (Aceptado / Modificado / Rechazado + justificación) · **verificación**.
+  Las entregas posteriores **amplían** la bitácora, no reescriben las anteriores.
+- Registrar siempre los errores de la IA (requisitos inventados, supuestos no declarados).
+- Toda referencia, DOI, versión o métrica propuesta por la IA se marca para verificación manual.
+- Mantener coherencia de la mención en portada, 1.4 Alcance y 2.2.7 (herramientas de IA).
+- La IA **propone**, el humano **decide**.
 
 ## 6. Calidad mínima antes de dar una tarea por terminada
 - Compila: `./gradlew assembleDebug`.
@@ -55,6 +63,10 @@ fecha · herramienta/modelo · prompt (resumen) · qué generó · decisión hum
 - Toda entrada de usuario se valida (por ejemplo, hora fin > hora inicio).
 
 ## 7. Estructura
+Datos personales (autor, docente, universidad) solo en `docs/build/.env` (ignorado). Los
+documentos finales (`docs/entrega*/`, `*.docx`, `*.pdf`) no se versionan. No editar el documento
+de una entrega que el autor ya modificó a mano.
+
 ```
 app/                 código Android (Java)
 openspec/            specs vigentes (specs/) y cambios en curso (changes/)

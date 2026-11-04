@@ -1,6 +1,7 @@
 # Bitácora de Auditoría IA — StudyPlan
 
-Formato de cada entrada: **fecha · herramienta/modelo · solicitud · qué generó la IA · decisión humana · justificación**.
+Formato de cada entrada: **fecha · herramienta/modelo · solicitud · qué generó la IA · decisión humana · justificación · verificación**.
+Regla del docente: la Auditoría IA es un punto especial del índice en **cada** entrega. Esta bitácora es acumulativa: cada sesión agrega filas y nunca reescribe las anteriores. Los errores de la IA se registran siempre.
 Decisiones posibles: Aceptado · Modificado · Rechazado · Decidido por el humano · Pendiente.
 
 ---
@@ -54,7 +55,28 @@ Decisiones posibles: Aceptado · Modificado · Rechazado · Decidido por el huma
 - Valores objetivo de los RNF (2 s, 200 ms, SUS ≥ 70, cobertura ≥ 70 %): son propuestas de la IA.
 - **Referencias bibliográficas:** las propuso la IA. **Verificar cada DOI/URL** antes de la entrega.
 
+### Verificación de la sesión 1
+| # | Cómo se verificó |
+|---|---|
+| 2, 3, 5 | Decisiones tomadas por el estudiante en las preguntas de la IA (registro de la conversación) |
+| 6 | `openspec status` → 4 artefactos completos |
+| 8–11, 14 | `openspec validate add-requisitos-base --strict` → «valid» en v1, v2 y v3; el estudiante revisó y rechazó la v1 |
+| 7, 10, 11 | Inspección visual de cada PNG generado (modelo de dominio, máquina de estados, W1–W15) |
+| 13 | Proceso de Word cerrado con permiso del estudiante; los índices se actualizan a mano |
+| Referencias | **Pendiente**: el estudiante verifica cada DOI y URL |
+
 ### Lecciones
 1. La IA produce artefactos con formato impecable que pueden no corresponder a lo que el usuario necesita. El formato válido (`openspec validate`) no garantiza que los requisitos sean correctos.
 2. Los escenarios narrados por el usuario revelan reglas de dominio que ninguna plantilla anticipa.
 3. Nueva regla en AGENTS.md: **la IA no inventa requisitos; si falta información, pregunta.**
+
+---
+
+## Sesión 2 — 2026-11-04 · Claude Code (Claude Opus 5.5)
+
+| # | Solicitud / tema | Qué hizo la IA | Decisión humana | Justificación | Verificación |
+|---|---|---|---|---|---|
+| 15 | Crear commits y actualizar el README | 5 commits; README con datos del autor y una sección de auditoría | Modificado | Commits sin coautoría de la IA; la IA se declara solo en el README y la bitácora | `git log` |
+| 16 | El estudiante edita el Word a mano (logo, portada, redacción) y entrega una conversión a .md | Leyó el .md sin tocar el Word | Aceptado | El documento final lo controla el estudiante | Lectura del .md: secciones 1.4, 2.2.7 y Auditoría IA |
+| 17 | Regla del docente para la Auditoría IA | La IA había escrito «no forma parte del índice original» | **Rechazado** (error de la IA) | Es un punto especial que se agrega al índice por indicación del docente, en cada entrega (A.1–A.6) | Textos del generador sincronizados con las ediciones del estudiante; regla agregada a AGENTS.md y al subagente auditor-ia |
+| 18 | No versionar documentos finales ni datos personales | La IA había commiteado el nombre del autor y del docente (README y generador) | **Rechazado** (error de la IA) | Privacidad: los datos van en `docs/build/.env` (ignorado); `.env.example` es genérico | `git log -S` sin coincidencias tras reescribir el historial local (sin remoto); ningún .docx ni .pdf en el historial |
