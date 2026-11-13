@@ -21,7 +21,7 @@ niveles_indice = 3
 etiqueta_tabla = "Tabla"
 etiqueta_figura = "Figura"
 logo = "recursos/logos/logo.png"
-logo_ancho_cm = 4
+logo_ancho_cm = 7
 
 [portada]
 espacios_arriba = 1
