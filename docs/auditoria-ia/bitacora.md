@@ -80,3 +80,22 @@ Decisiones posibles: Aceptado · Modificado · Rechazado · Decidido por el huma
 | 16 | El estudiante edita el Word a mano (logo, portada, redacción) y entrega una conversión a .md | Leyó el .md sin tocar el Word | Aceptado | El documento final lo controla el estudiante | Lectura del .md: secciones 1.4, 2.2.7 y Auditoría IA |
 | 17 | Regla del docente para la Auditoría IA | La IA había escrito «no forma parte del índice original» | **Rechazado** (error de la IA) | Es un punto especial que se agrega al índice por indicación del docente, en cada entrega (A.1–A.6) | Textos del generador sincronizados con las ediciones del estudiante; regla agregada a AGENTS.md y al subagente auditor-ia |
 | 18 | No versionar documentos finales ni datos personales | La IA había commiteado el nombre del autor y del docente (README y generador) | **Rechazado** (error de la IA) | Privacidad: los datos van en `docs/build/.env` (ignorado); `.env.example` es genérico | `git log -S` sin coincidencias tras reescribir el historial local (sin remoto); ningún .docx ni .pdf en el historial |
+
+---
+
+## Sesión 3 — 2026-11-12 · Claude Code (Claude Sonnet 5.5, con consulta a un modelo asesor) · apa-kit
+
+| # | Solicitud / tema | Qué hizo la IA | Decisión humana | Justificación | Verificación |
+|---|---|---|---|---|---|
+| 19 | Reemplazar el generador propio por las skills de apa-kit, solo a nivel repositorio | Instaló las 6 skills con `npx skills add … --agent claude-code --copy` (sin `-g`) | Aceptado | Skills versionadas con el repo; nada global | `.claude/skills/apa-*` y `skills-lock.json` creados |
+| 20 | Detectar qué Word usar como fuente | Generó con el script viejo en una copia y comparó con el Word del estudiante | Aceptado | El Word del estudiante tiene logo, portada y referencias editados a mano; manda sobre el generado | Comparación de párrafos, tablas e imágenes: 9 imágenes (logo) frente a 8 |
+| 21 | Migrar a `.md` con `apa-init` + `apa-importar` | 6 capítulos `.md`, 8 figuras, logo; corrigió a mano el bloque de código de la spec y los títulos de la Auditoría IA | Pendiente de revisión | El importador no reconoce bloques de código con tipografía monoespaciada | 95 % de palabras recuperadas; 11 diferencias de texto restantes frente al Word (portada, índices, un título de nivel 4, orden de una referencia) |
+| 22 | Borrar el generador propio | Eliminó `generar_docx.py` y `actualizar_word.ps1` (siguen en el historial de git) | Aceptado | Fuente única: los `.md` | `git status` |
+| 23 | Instalar las skills para todos los agentes del proyecto | La primera vez las instaló solo para Claude Code sin preguntar (**error de la IA**); luego las reinstaló para Claude Code, Antigravity y OpenCode | Modificado | El estudiante usa varios agentes | `.claude/skills/` y `.agents/skills/` con las 6 skills; `skills-lock.json` |
+| 24 | Quitar duplicados y unificar reglas | Borró `requisitos.py`, `gen_specs.py`, `docs/diagramas/` (8 PNG idénticos a las figuras importadas) y el `.env` antiguo; movió `diagramas.py` a `docs/documento/recursos/diagramas/`; `CLAUDE.md` pasó a remitir solo a `AGENTS.md` | Aceptado (el estudiante pidió borrar duplicados y una única versión de reglas) | Una sola fuente por dato | `md5sum` de los PNG; `generar_docx.py` sigue en OK con 27 tablas y 8 figuras; búsqueda de rutas obsoletas en README, `openspec/config.yaml` y subagentes |
+
+**Errores de la IA en esta sesión:** al corregir el bloque de código quitó por error los `**` literales que sí estaban en el Word (detectado al comparar y corregido). Suposición no declarada inicial: que el logo faltaba; en realidad estaba en el Word del estudiante.
+
+**Errores de la IA añadidos:** borró `requisitos.py` sin comprobar quién lo citaba; había referencias en `openspec/config.yaml`, dos subagentes y el README (corregidas), y el propio documento de la entrega 1 lo describe como «fuente única» en el capítulo 3 y en la tabla de estructura del repositorio.
+
+**Pendiente de revisión humana:** abrir el Word generado y actualizar campos (Ctrl+A, F9); portada (la universidad y la facultad deben ir sobre el título, apa-kit aún no lo permite); título de nivel 4 sin número; el texto de la entrega 1 menciona `docs/build/requisitos.py`, `gen_specs.py` y `docs/diagramas/`, que ya no existen: actualizarlo en la entrega 2 (no se editó para respetar lo entregado); el logo quedó ignorado por git (revela la universidad); la fuente de los requisitos pasa a ser las specs de OpenSpec.
