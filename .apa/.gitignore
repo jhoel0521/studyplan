@@ -1,0 +1,4 @@
+# Entorno aislado de Python y caché
+.venv/
+__pycache__/
+*.pyc

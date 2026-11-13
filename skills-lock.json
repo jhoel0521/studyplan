@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "skills": {
+    "apa-escribir": {
+      "source": "jhoel0521/apa-kit",
+      "sourceType": "github",
+      "skillPath": "skills/apa-escribir/SKILL.md",
+      "computedHash": "cd9a51c901558b07c9a094d52c88f5b85221a5a17acc9f1a707688195548f40a",
+      "installMode": "copy"
+    },
+    "apa-generar": {
+      "source": "jhoel0521/apa-kit",
+      "sourceType": "github",
+      "skillPath": "skills/apa-generar/SKILL.md",
+      "computedHash": "4e015fe216162270c6551a253679ddd7d85c53fef960027b41a6a5f632920874",
+      "installMode": "copy"
+    },
+    "apa-guia": {
+      "source": "jhoel0521/apa-kit",
+      "sourceType": "github",
+      "skillPath": "skills/apa-guia/SKILL.md",
+      "computedHash": "803d81be29918d895ed0439b3e21ccc7bd57fd99e5dd7f9c72040905e090b63d",
+      "installMode": "copy"
+    },
+    "apa-importar": {
+      "source": "jhoel0521/apa-kit",
+      "sourceType": "github",
+      "skillPath": "skills/apa-importar/SKILL.md",
+      "computedHash": "d32ecb960a1cd869aee47677056b4e2a27e30657f2159b71ba7b583fb2d3c88a",
+      "installMode": "copy"
+    },
+    "apa-init": {
+      "source": "jhoel0521/apa-kit",
+      "sourceType": "github",
+      "skillPath": "skills/apa-init/SKILL.md",
+      "computedHash": "0fde507b939aab59169538b758983a1f1eb05aa231cf1cfc2a8fec5e069ee939",
+      "installMode": "copy"
+    },
+    "apa-revisar": {
+      "source": "jhoel0521/apa-kit",
+      "sourceType": "github",
+      "skillPath": "skills/apa-revisar/SKILL.md",
+      "computedHash": "fa4da78d79db383b111be4b84921d12f459829ec0e7b096e5aa531717837000f",
+      "installMode": "copy"
+    }
+  }
+}
