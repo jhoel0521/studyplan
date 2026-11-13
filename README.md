@@ -7,7 +7,7 @@ respaldo en Google Drive. Funciona offline-first.
 
 | | |
 |---|---|
-| Tipo | Proyecto académico de la materia Aplicaciones Móviles (datos de autor y docente en `docs/build/.env`, no versionado) |
+| Tipo | Proyecto académico de la materia Aplicaciones Móviles (datos de autor y docente en `docs/documento/.env`, no versionado) |
 | Package | `io.github.jhoel0521.studyplan` · minSdk 24 · versión objetivo 0.1.0 |
 | Metodología | Scrum + Spec-Driven Development con [OpenSpec](https://github.com/Fission-AI/OpenSpec) |
 
@@ -26,29 +26,29 @@ funcionales (ISO/IEC 25010:2023), especificados en
 ```
 app/                 código Android (Java)
 openspec/            specs vigentes (specs/) y cambios en curso (changes/)
-docs/build/          requisitos.py (fuente única) y generadores de specs, diagramas y Word
-docs/diagramas/      modelo de dominio, máquina de estados, ciclo Scrum+SDD, wireframes W1–W15
+docs/documento/      documento de la entrega en Markdown (capitulos/, recursos/, documento.toml) y su salida en dist/
+docs/build/          diagramas.py: modelo de dominio, máquina de estados, ciclo Scrum+SDD, wireframes W1–W15
+.apa/                motor de apa-kit (genera el Word desde los .md)
 docs/auditoria-ia/   bitácora del uso de IA
-docs/entrega*/       documentos finales generados (ignorados por git)
-AGENTS.md CLAUDE.md  reglas para agentes de IA · .claude/ .agents/ comandos, skills y subagentes
+AGENTS.md            reglas para agentes de IA (CLAUDE.md solo remite a él) · .claude/ .agents/ skills y subagentes
 ```
 
 ## Regenerar la documentación
 
+El documento se escribe en Markdown y se genera con [apa-kit](https://github.com/jhoel0521/apa-kit)
+(skills `apa-*` o los comandos de abajo; requiere Python 3.9+).
+
 ```bash
-python docs/build/gen_specs.py                    # requisitos.py -> specs de OpenSpec
-openspec validate add-requisitos-base --strict
-python docs/build/diagramas.py                    # diagramas y wireframes (Pillow)
-cp docs/build/.env.example docs/build/.env      # completar portada (autor, materia, docente...)
-python docs/build/generar_docx.py                 # ¡sobrescribe docs/entrega1/StudyPlan_Entrega1.docx!
+python docs/build/diagramas.py                                  # diagramas y wireframes (Pillow)
+cp docs/documento/.env.example docs/documento/.env              # completar portada (autor, materia, docente...)
+python .apa/scripts/generar_docx.py --doc docs/documento        # genera docs/documento/dist/StudyPlan_Entrega1.docx
+openspec validate add-requisitos-base --strict                  # valida las specs
 ```
 
-Los documentos finales (`docs/entrega*/`, `*.docx`, `*.pdf`) y `docs/build/.env` **no se versionan**.
-Sin `.env`, la portada sale con marcadores genéricos en amarillo.
-
-> El documento de la Entrega 1 ya tiene ediciones manuales del autor (logo, portada y ajustes).
-> **No vuelvas a ejecutar `generar_docx.py` sobre él**; úsalo solo como base de las siguientes entregas.
-> En Word, pulsa Ctrl+A y luego F9 para actualizar el índice y las listas de tablas y figuras.
+Los documentos finales (`*.docx`, `*.pdf`), `dist/`, `original/` y `docs/documento/.env` **no se versionan**.
+Sin `.env`, la portada sale con marcadores genéricos en amarillo. En Word, pulsa Ctrl+A y luego F9 para
+actualizar el índice y las listas de tablas y figuras. Si editas un Word a mano, guárdalo con otro nombre
+fuera de `dist/` o `generar_docx.py` se negará a sobrescribirlo.
 
 ## Auditoría de IA
 

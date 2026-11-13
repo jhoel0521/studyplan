@@ -21,7 +21,7 @@ context: |
   - UI: Views XML + Material Design 3 (no Jetpack Compose), tema claro/oscuro, es/en.
   - Gráficos: MPAndroidChart. Recordatorios y respaldos: WorkManager / AlarmManager.
   - Sesión de estudio gobernada por una máquina de estados (patrón State, RN-07).
-  - Reglas de negocio RN-xx en docs/build/requisitos.py: son obligatorias.
+  - Reglas de negocio RN-xx de las specs en openspec/: son obligatorias.
 
   Metodología: Scrum adaptado + Spec-Driven Development (OpenSpec).
   Los requisitos funcionales se expresan SOLO como Historias de Usuario

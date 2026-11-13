@@ -1,7 +1,8 @@
 # AGENTS.md — Reglas para agentes de IA en StudyPlan
 
 Este archivo lo lee **cualquier** asistente de IA (Claude Code, Codex, Gemini, Copilot…)
-antes de trabajar en el repositorio. Las decisiones aquí escritas son **humanas** y la IA
+antes de trabajar en el repositorio (`CLAUDE.md` solo remite aquí: hay una única fuente de reglas).
+Las decisiones aquí escritas son **humanas** y la IA
 no puede cambiarlas por iniciativa propia.
 
 ## 1. Qué es el proyecto
@@ -40,7 +41,8 @@ Ningún código entra sin una spec aprobada.
 - **No usar casos de uso ni plantillas IEEE 830**: el proyecto es ágil y no mezcla métodos.
 - Cada `### Requirement:` de una spec lleva su `HU-xx` en el título.
 - Cada clase o test nuevo menciona en su Javadoc la HU que implementa.
-- Mensajes de commit: `feat(HU-07): ...`, `test(HU-07): ...`, `docs: ...`.
+- Mensajes de commit: `feat(HU-07): ...`, `test(HU-07): ...`, `docs: ...`. **Sin coautor ni líneas de atribución de IA** (la IA se declara en el README y la bitácora).
+- No hacer `git commit` ni `git push` sin pedido explícito. Agregar archivos por ruta, no con `git add -A`.
 
 ## 5. Auditoría IA (exigida por el docente)
 - La *Auditoría IA* es un **punto especial que se agrega al índice por indicación del docente** en
@@ -62,14 +64,36 @@ Ningún código entra sin una spec aprobada.
 - No accedas a la base de datos desde el hilo principal.
 - Toda entrada de usuario se valida (por ejemplo, hora fin > hora inicio).
 
-## 7. Estructura
-Datos personales (autor, docente, universidad) solo en `docs/build/.env` (ignorado). Los
-documentos finales (`docs/entrega*/`, `*.docx`, `*.pdf`) no se versionan. No editar el documento
-de una entrega que el autor ya modificó a mano.
+## 7. Estructura y documento académico
+El documento (entrega) se escribe en Markdown y se genera con **apa-kit** (skills `apa-*` en `.claude/skills/` y
+`.agents/skills/`, motor en `.apa/scripts/`). Los `.md` son la fuente; nunca se edita el `.docx` desde la IA.
+
+- Generar: `python .apa/scripts/generar_docx.py --doc docs/documento` (salida en `docs/documento/dist/`).
+- Revisar: `python .apa/scripts/revisar.py --doc docs/documento`. Estado: `--estado`.
+- Capítulos en `docs/documento/capitulos/*.md`; figuras en `docs/documento/recursos/`; opciones en `documento.toml`.
+- Los diagramas se regeneran con `python docs/build/diagramas.py` (salida en `docs/documento/recursos/diagramas/`).
+- Datos personales (autor, docente, universidad) solo en `docs/documento/.env` (ignorado); en los `.md`, `{{CLAVE}}`.
+- No se versionan `.env`, `dist/`, `original/`, `*.docx` ni `*.pdf`. No editar el Word que el autor ya modificó a mano.
+- No editar `.apa/scripts/` ni las skills instaladas; si apa-kit falla, se reporta en su repositorio.
 
 ```
 app/                 código Android (Java)
 openspec/            specs vigentes (specs/) y cambios en curso (changes/)
-docs/                entregas académicas, diagramas, bitácora de auditoría IA
-.claude/  .agents/   comandos, skills y subagentes de IA
+docs/documento/      documento de la entrega: capitulos/, recursos/, documento.toml, .env, dist/
+docs/auditoria-ia/   bitácora de auditoría IA
+docs/build/          scripts propios (diagramas.py)
+.apa/                motor de apa-kit
+.agents/  .claude/   skills (compartidas / de Claude Code) y subagentes de Claude Code
 ```
+
+## 8. Reglas de comportamiento para los agentes
+- Responde en español.
+- Nunca cambies `applicationId`, `namespace`, el lenguaje (Java) ni minSdk.
+- Antes de implementar, comprueba que existe un change aprobado en `openspec/changes/`.
+- Al terminar una sesión, anota en la bitácora qué pidió el usuario, qué generaste y qué quedó pendiente de revisión humana.
+
+## 9. Comandos y subagentes
+- OpenSpec: `/opsx:explore` (explorar sin código) · `/opsx:propose "<idea>"` (proposal, specs, design y tasks) ·
+  `/opsx:apply` (implementar un change aprobado) · `/opsx:archive` (archivar un change terminado).
+- Subagentes de Claude Code (`.claude/agents/`): `analista-requisitos` (HU, criterios y RNF) · `revisor-java`
+  (Java/Android contra MVVM, Room y specs) · `auditor-ia` (bitácora y trazabilidad).

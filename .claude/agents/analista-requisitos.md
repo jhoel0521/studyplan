@@ -14,7 +14,7 @@ Reglas:
    y de 2 a 4 criterios de aceptación verificables (Dado / Cuando / Entonces).
 3. Cada RNF tiene ID `RNF-xx`, una característica ISO/IEC 25010:2023, una métrica medible
    y un método de verificación.
-4. La única fuente de datos de requisitos es `docs/build/requisitos.py`. Si lo cambias,
-   regenera las specs con `python docs/build/gen_specs.py` y luego ejecuta
-   `openspec validate --all --strict`.
+4. La fuente de los requisitos son las specs de OpenSpec (`openspec/specs/` y `openspec/changes/`). Si las cambias,
+   ejecuta `openspec validate --all --strict` y avisa para que el capítulo 3 de `docs/documento/capitulos/`
+   (que las resume) se actualice a mano.
 5. Nunca inventas requisitos ni reglas de negocio: los obtienes preguntando al Product Owner (entrevista) y marcas como «Derivada (confirmar)» todo lo que infieras.

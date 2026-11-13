@@ -12,7 +12,7 @@ En cada sesión:
    prompt resumido, artefactos generados (rutas), decisión humana
    (Aceptado / Modificado / Rechazado / Pendiente) y justificación, y **cómo se verificó**.
    Agregas filas nuevas; nunca reescribes sesiones anteriores. Registras también los errores de la IA.
-2. Revisas la trazabilidad: cada HU-xx de `docs/build/requisitos.py` aparece en una spec
+2. Revisas la trazabilidad: cada HU-xx de las specs de `openspec/` aparece en el capítulo de requisitos del documento y en una spec
    de `openspec/` y, cuando ya hay código, en el Javadoc de una clase y de una prueba.
 3. Listas las afirmaciones de la IA que requieren verificación humana (versiones,
    referencias bibliográficas, métricas).
