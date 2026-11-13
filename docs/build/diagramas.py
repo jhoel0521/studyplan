@@ -1,7 +1,7 @@
 """Genera los diagramas de la Entrega 1 con Pillow (sin dependencias externas).
 
 Uso: python docs/build/diagramas.py
-Salida: docs/diagramas/*.png
+Salida: docs/documento/recursos/diagramas/*.png
 """
 import math
 from pathlib import Path
@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "docs" / "diagramas"
+OUT = ROOT / "docs" / "documento" / "recursos" / "diagramas"
 OUT.mkdir(parents=True, exist_ok=True)
 
 FONTS = Path("C:/Windows/Fonts")

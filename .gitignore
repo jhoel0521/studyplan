@@ -16,10 +16,10 @@ local.properties
 
 # Python / documentación
 __pycache__/
-docs/entrega1/~$*
 
 # Datos personales y documentos finales (no versionar)
-docs/build/.env
+docs/documento/recursos/logos/*
+!docs/documento/recursos/logos/.gitkeep
 .env
 docs/entrega*/
 *.docx
