@@ -1,0 +1,35 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <!-- Proyecto escrito en español: el corrector solo trae diccionario en inglés y marcaría todo como «Typo». -->
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+    <!-- Gramática y estilo (Grazie) revisan en inglés los textos de las skills y comandos instalados. -->
+    <inspection_tool class="GrazieInspection" enabled="false" level="GRAMMAR_ERROR" enabled_by_default="false" />
+    <inspection_tool class="GrazieStyle" enabled="false" level="STYLE_SUGGESTION" enabled_by_default="false" />
+    <!-- Las tablas del documento usan la sintaxis «Tabla:» de apa-kit, que el IDE no reconoce. -->
+    <inspection_tool class="MarkdownIncorrectTableFormatting" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="MarkdownUnresolvedFileReference" enabled="false" level="WARNING" enabled_by_default="false" />
+    <!-- Las Activities las crea Android (manifest), los listeners se pasan como this::metodo y Room usa reflexión:
+         el análisis global de «declaración sin usar» marca todo eso como falso positivo. -->
+    <inspection_tool class="UnusedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+    <!-- Los listeners reciben parámetros que exige la interfaz (View, DialogInterface...) aunque no los usen. -->
+    <inspection_tool class="unused" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="LOCAL_VARIABLE" value="true" />
+      <option name="FIELD" value="true" />
+      <option name="METHOD" value="true" />
+      <option name="CLASS" value="true" />
+      <option name="PARAMETER" value="false" />
+      <option name="REPORT_PARAMETER_FOR_PUBLIC_METHODS" value="false" />
+    </inspection_tool>
+    <!-- Sugerencias de versiones nuevas: actualizar una dependencia exige la aprobación del Product Owner (AGENTS.md §2),
+         así que el IDE no debe insistir. Se revisan a mano al abrir cada change. -->
+    <inspection_tool class="AndroidLintGradleDependency" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintAndroidGradlePluginVersion" enabled="false" level="WARNING" enabled_by_default="false" />
+    <!-- Aviso de la plantilla de Gradle (settings.gradle.kts). -->
+    <inspection_tool class="UnstableApiUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+  </profile>
+</component>
