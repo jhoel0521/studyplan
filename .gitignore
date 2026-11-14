@@ -26,3 +26,6 @@ docs/documento/recursos/logos/*
 docs/entrega*/
 *.docx
 *.pdf
+
+# Material de referencia del docente (solo local)
+docs/referencias/

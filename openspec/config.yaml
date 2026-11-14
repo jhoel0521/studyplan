@@ -14,7 +14,8 @@ context: |
   - Lenguaje: Java (NO Kotlin). Android SDK, minSdk 24, targetSdk 37.
   - Package / applicationId: io.github.jhoel0521.studyplan (permanente, Play Store).
   - Build: Gradle Kotlin DSL + version catalog (gradle/libs.versions.toml).
-  - Arquitectura: MVVM (Activity/Fragment → ViewModel → Repository → Room DAO).
+  - Arquitectura: hexagonal en 3 capas. Presentación (Activity/Fragment + ViewModel, MVVM) → núcleo
+    (casos de uso + dominio en Java puro, sin android.*) ← infraestructura (Room, Drive, huella o PIN).
   - Persistencia: Room sobre SQLite, offline-first, un único usuario local.
   - Internet SOLO para respaldo/restauración en Google Drive (appDataFolder).
     Sin backend propio ni Firebase.

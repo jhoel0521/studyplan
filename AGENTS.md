@@ -18,7 +18,7 @@ Proyecto académico con intención de publicarse en Google Play.
 |---|---|---|
 | Lenguaje | Java | Kotlin, Compose |
 | UI | Views XML + Material Design 3 | librerías UI no aprobadas |
-| Arquitectura | MVVM: Activity/Fragment → ViewModel → Repository → DAO | lógica de negocio en Activities |
+| Arquitectura | Hexagonal (puertos y adaptadores) en 3 capas: presentación (Activity/Fragment + ViewModel, MVVM) → núcleo (casos de uso + dominio, Java puro) ← infraestructura (Room, Drive, huella o PIN) | lógica de negocio en Activities; `android.*` en `domain` o `application`; que el núcleo dependa de un adaptador |
 | Datos | Room (SQLite), offline-first, un usuario local | backend propio, Firebase |
 | Respaldo | Google Drive `appDataFolder` + cifrado AES-256-GCM opcional | usar INTERNET para otra cosa |
 | Gráficos | MPAndroidChart | |
@@ -62,6 +62,9 @@ Ningún código entra sin una spec aprobada.
 - Pruebas: `./gradlew test` (y `connectedAndroidTest` cuando aplique).
 - Lint sin errores: `./gradlew lint`.
 - No accedas a la base de datos desde el hilo principal.
+- Cada layout XML abre en el editor de diseño de Android Studio y declara `tools:context` de su Activity o Fragment; la clase enlaza sus vistas por id.
+- Los eventos del ciclo de vida y los listeners (`onCreate`, `onClick`…) van en métodos con nombre, para que se vean en la revisión de código.
+- Paquetes bajo `io.github.jhoel0521.studyplan`: `domain`, `application.port.in`, `application.port.out`, `application.service`, `adapter.in.ui`, `adapter.out.persistence`, `adapter.out.drive`, `adapter.out.security`.
 - Toda entrada de usuario se valida (por ejemplo, hora fin > hora inicio).
 
 ## 7. Estructura y documento académico
@@ -96,4 +99,4 @@ docs/build/          scripts propios (diagramas.py)
 - OpenSpec: `/opsx:explore` (explorar sin código) · `/opsx:propose "<idea>"` (proposal, specs, design y tasks) ·
   `/opsx:apply` (implementar un change aprobado) · `/opsx:archive` (archivar un change terminado).
 - Subagentes de Claude Code (`.claude/agents/`): `analista-requisitos` (HU, criterios y RNF) · `revisor-java`
-  (Java/Android contra MVVM, Room y specs) · `auditor-ia` (bitácora y trazabilidad).
+  (Java/Android contra la arquitectura hexagonal, Room y specs) · `auditor-ia` (bitácora y trazabilidad).
