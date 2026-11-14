@@ -14,8 +14,8 @@
 - [x] 2.1 En Word: Ctrl+A y F9 (actualizar campos) y verificar que el índice, la lista de tablas y la lista de figuras muestran números de página
 - [x] 2.2 El estudiante revisa cada HU y sus criterios y verifica que puede explicar su valor en la defensa (el estudiante declaró el 13-nov-2026 haber revisado HU-01 a HU-04 y HU-38; las demás HU las revisa al abrir el change de su épica)
 - [x] 2.3 Confirmar o corregir los supuestos pendientes (RN-12, RN-13, RN-29, valores objetivo de los RNF) y verificar que ninguna regla queda como «Derivada (confirmar)»
-- [ ] 2.4 Verificar cada referencia bibliográfica (DOI o URL) y completar la portada, verificando que no queda texto resaltado en amarillo
-- [ ] 2.5 El docente valida el alcance de la Entrega 1 y se registra su retroalimentación en la bitácora
+- [x] 2.4 Verificar cada referencia bibliográfica (DOI o URL) y completar la portada, verificando que no queda texto resaltado en amarillo (el estudiante declaró el 14-nov-2026 que el documento de la Entrega 1 estaba bien; la referencia de la arquitectura hexagonal (Cockburn, 2005) la verificó la IA en la fuente el mismo día)
+- [ ] 2.5 El docente valida el alcance de la Entrega 1 y se registra su retroalimentación en la bitácora (el estudiante decidió el 14-nov-2026 que no es una compuerta («no importa, seguimos avanzando»); queda abierta hasta que el docente responda)
 
 ## Workflow follow-up
 
