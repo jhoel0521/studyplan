@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".adapter.in.ui.PerfilInicialActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/perfil_titulo"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            tools:text="Bienvenido a StudyPlan" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp"
+            android:text="@string/perfil_subtitulo"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            tools:text="Cuéntanos cómo te llamas y cuántas horas quieres estudiar por semana." />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/contenedorNombre"
+            android:layout_width="match_parent"
+            android:maxWidth="400dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/perfil_nombre">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/campoNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName|textCapWords"
+                android:minHeight="48dp"
+                tools:text="Ana" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/contenedorMeta"
+            android:layout_width="match_parent"
+            android:maxWidth="400dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/perfil_meta"
+            app:helperText="@string/perfil_meta_ayuda">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/campoMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp"
+                tools:text="20" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonGuardar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:minHeight="48dp"
+            android:text="@string/perfil_guardar" />
+    </LinearLayout>
+</ScrollView>

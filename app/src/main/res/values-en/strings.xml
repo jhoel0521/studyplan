@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">StudyPlan</string>
+    <string name="volver">Back</string>
+    <string name="cancelar">Cancel</string>
+
+    <!-- Initial profile (HU-01) -->
+    <string name="perfil_titulo">Welcome to StudyPlan</string>
+    <string name="perfil_subtitulo">Tell us your name and how many hours you want to study each week.</string>
+    <string name="perfil_nombre">Your name</string>
+    <string name="perfil_meta">Weekly goal (hours)</string>
+    <string name="perfil_meta_ayuda">Greater than 0 and up to 168 hours</string>
+    <string name="perfil_guardar">Save</string>
+    <string name="error_nombre_vacio">Enter your name</string>
+    <string name="error_meta_fuera_de_rango">The goal must be greater than 0 and up to 168 hours</string>
+
+    <!-- Home (HU-02) -->
+    <string name="inicio_saludo">Hello, %1$s!</string>
+    <string name="inicio_progreso_semana">Progress this week</string>
+    <string name="inicio_progreso">%1$s / %2$s h</string>
+    <string name="inicio_sin_sesiones">You have no planned sessions yet.</string>
+
+    <!-- Bottom bar -->
+    <string name="nav_inicio">Home</string>
+    <string name="nav_calendario">Calendar</string>
+    <string name="nav_estadisticas">Statistics</string>
+    <string name="nav_materias">Subjects</string>
+
+    <!-- Settings (HU-03, HU-04) -->
+    <string name="ajustes_titulo">Settings</string>
+    <string name="ajustes_tema">Theme</string>
+    <string name="tema_sistema">System default</string>
+    <string name="tema_claro">Light</string>
+    <string name="tema_oscuro">Dark</string>
+    <string name="ajustes_idioma">Language</string>
+    <string name="idioma_espanol">Español</string>
+    <string name="idioma_ingles">English</string>
+    <string name="ajustes_seguridad">Security</string>
+    <string name="ajustes_bloqueo">Lock the app with fingerprint or PIN</string>
+    <string name="ajustes_sin_bloqueo">Set up a screen lock on your phone to turn this on.</string>
+    <string name="ajustes_privacidad">Privacy and data</string>
+
+    <!-- Authentication (HU-04) -->
+    <string name="autenticacion_mensaje">Authenticate to continue</string>
+    <string name="autenticacion_titulo_dialogo">Unlock StudyPlan</string>
+    <string name="autenticacion_reintentar">Try again</string>
+
+    <!-- Delete data (HU-38) -->
+    <string name="borrar_titulo">Privacy and data</string>
+    <string name="borrar_explicacion">Your profile, settings and all your data on this phone will be deleted. This cannot be undone.</string>
+    <string name="borrar_telefono">Delete data on this phone</string>
+    <string name="borrar_titulo_dialogo">Delete data</string>
+    <string name="borrar_primera_confirmacion">Do you want to delete all the data on this phone?</string>
+    <string name="borrar_continuar">Continue</string>
+    <string name="borrar_segunda_confirmacion">This is final and cannot be undone. Do you confirm the deletion?</string>
+    <string name="borrar_confirmar">Delete everything</string>
+</resources>

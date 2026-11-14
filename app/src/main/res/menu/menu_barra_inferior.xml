@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_inicio"
+        android:icon="@drawable/ic_inicio"
+        android:title="@string/nav_inicio" />
+    <item
+        android:id="@+id/nav_calendario"
+        android:icon="@drawable/ic_calendario"
+        android:title="@string/nav_calendario" />
+    <item
+        android:id="@+id/nav_estadisticas"
+        android:icon="@drawable/ic_estadisticas"
+        android:title="@string/nav_estadisticas" />
+    <item
+        android:id="@+id/nav_materias"
+        android:icon="@drawable/ic_materias"
+        android:title="@string/nav_materias" />
+</menu>

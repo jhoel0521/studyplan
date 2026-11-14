@@ -3,16 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".adapter.in.ui.StudyPlanApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
+        tools:targetApi="33"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyPlan">
         <activity
-            android:name=".MainActivity"
+            android:name=".adapter.in.ui.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -21,6 +24,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".adapter.in.ui.PerfilInicialActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".adapter.in.ui.AutenticacionActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".adapter.in.ui.AjustesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.in.ui.BorrarDatosActivity"
+            android:exported="false" />
+
+        <!-- Guarda el idioma elegido en Android 12 o anterior (HU-03) -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
     </application>
 
 </manifest>

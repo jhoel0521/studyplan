@@ -1,0 +1,99 @@
+package io.github.jhoel0521.studyplan.adapter.in.ui;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+
+import java.util.Objects;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import io.github.jhoel0521.studyplan.application.service.ConfigurarAparienciaService;
+import io.github.jhoel0521.studyplan.application.service.ConfigurarBloqueoService;
+import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
+import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
+import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.Idioma;
+import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository;
+import io.github.jhoel0521.studyplan.fakes.FakeDisponibilidadBloqueo;
+
+/**
+ * Pruebas del ViewModel de ajustes: cada acción llama al caso de uso correcto.
+ *
+ * <p>Verifica: HU-03 (tema e idioma) y HU-04 (activar el bloqueo con y sin método en el teléfono).
+ */
+public class AjustesViewModelTest {
+
+    @Rule
+    public InstantTaskExecutorRule reglaInstantanea = new InstantTaskExecutorRule();
+
+    private FakeAjustesRepository repositorio;
+    private FakeDisponibilidadBloqueo disponibilidad;
+    private AjustesViewModel modelo;
+
+    @Before
+    public void preparar() {
+        repositorio = new FakeAjustesRepository();
+        disponibilidad = new FakeDisponibilidadBloqueo();
+        modelo = new AjustesViewModel(
+                new ConsultarAjustesService(repositorio),
+                new ConfigurarAparienciaService(repositorio),
+                new ConfigurarBloqueoService(repositorio, disponibilidad, new SesionBloqueo()),
+                Runnable::run);
+    }
+
+    @Test
+    public void cargarPublicaLosAjustesPorDefecto() {
+        modelo.cargar();
+        assertEquals(Tema.SISTEMA, ajustesPublicados().tema());
+        assertEquals(Idioma.ES, ajustesPublicados().idioma());
+    }
+
+    @Test
+    public void elegirTemaOscuroLoGuardaYLoPublica() {
+        modelo.elegirTema(Tema.OSCURO);
+        assertEquals(Tema.OSCURO, repositorio.obtener().tema());
+        assertEquals(Tema.OSCURO, ajustesPublicados().tema());
+    }
+
+    @Test
+    public void elegirInglesLoGuardaYLoPublica() {
+        modelo.elegirIdioma(Idioma.EN);
+        assertEquals(Idioma.EN, repositorio.obtener().idioma());
+        assertEquals(Idioma.EN, ajustesPublicados().idioma());
+    }
+
+    @Test
+    public void activarElBloqueoConMetodoLoGuardaSinAviso() {
+        disponibilidad.disponible = true;
+        modelo.cambiarBloqueo(true);
+        assertTrue(repositorio.obtener().bloqueoActivo());
+        assertNull(modelo.avisoSinBloqueo().getValue());
+    }
+
+    @Test
+    public void activarElBloqueoSinMetodoPublicaElAvisoYNoLoGuarda() {
+        disponibilidad.disponible = false;
+        modelo.cambiarBloqueo(true);
+        assertEquals(Boolean.TRUE, modelo.avisoSinBloqueo().getValue());
+        assertFalse(ajustesPublicados().bloqueoActivo());
+    }
+
+    @Test
+    public void desactivarElBloqueoLoGuarda() {
+        disponibilidad.disponible = true;
+        modelo.cambiarBloqueo(true);
+        modelo.cambiarBloqueo(false);
+        assertFalse(repositorio.obtener().bloqueoActivo());
+    }
+
+    private Ajustes ajustesPublicados() {
+        return Objects.requireNonNull(modelo.ajustes().getValue());
+    }
+}
