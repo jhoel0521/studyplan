@@ -2,6 +2,7 @@ package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
 import io.github.jhoel0521.studyplan.domain.Ajustes;
 import io.github.jhoel0521.studyplan.domain.Idioma;
+import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Perfil;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.Tema;
@@ -44,6 +45,21 @@ final class Mapeadores {
                 leer(Tema.class, e.tema, porDefecto.tema()),
                 leer(Idioma.class, e.idioma, porDefecto.idioma()),
                 e.bloqueoActivo);
+    }
+
+    static MateriaEntity aEntidad(Materia materia) {
+        MateriaEntity e = new MateriaEntity();
+        e.id = materia.id() == null ? 0 : materia.id();
+        e.nombre = materia.nombre();
+        e.nombreClave = materia.clave();
+        e.color = materia.color();
+        e.docente = materia.docente();
+        e.archivada = materia.archivada();
+        return e;
+    }
+
+    static Materia aDominio(MateriaEntity e) {
+        return Materia.restaurar(e.id, e.nombre, e.color, e.docente, e.archivada);
     }
 
     private static <E extends Enum<E>> E leer(Class<E> tipo, String texto, E porDefecto) {
