@@ -52,17 +52,32 @@ SERVICIOS_MATERIAS = ["ArchivarMateriaService", "ConsultarMateriaService", "Desa
                       "RegistrarMateriaService"]
 SALIDA_MATERIAS = ["MateriaRepository", "SesionesDeMateria"]
 DOMINIO_MATERIAS = ["ListadoMaterias", "Materia", "ResumenMateria"]
-PERSISTENCIA_MATERIAS = ["MateriaDao", "MateriaEntity", "MateriaRepositoryRoom", "Migraciones",
-                         "SinSesionesDeMateria"]
+PERSISTENCIA_MATERIAS = ["MateriaDao", "MateriaEntity", "MateriaRepositoryRoom", "Migraciones"]
+
+# add-sesiones-estudio
+PRESENTACION_SESIONES = ["EstadoSesionVisual", "EventoSesion", "FormatoSesion", "SesionDetalleActivity",
+                         "SesionDetalleViewModel", "SesionFormularioActivity", "SesionFormularioViewModel",
+                         "SesionInicioAdapter"]
+ENTRADA_SESIONES = ["CompletarSesion", "ConsultarSesion", "EliminarSesion", "PlanificarSesion",
+                    "RegistrarSesionPasada", "RegistrarSesionTardia", "ReprogramarSesion", "VencerSesionesPendientes"]
+SERVICIOS_SESIONES = ["CompletarSesionService", "ConsultarSesionService", "EliminarSesionService",
+                      "PlanificarSesionService", "RegistrarSesionPasadaService", "RegistrarSesionTardiaService",
+                      "ReprogramarSesionService", "ValidadorSesiones", "VencerSesionesPendientesService"]
+SALIDA_SESIONES = ["Reloj", "SesionRepository"]
+DOMINIO_SESIONES = ["CodigoEstadoSesion", "ConflictoHorario", "DetalleSesion", "DetalleSesionInicio",
+                    "EstadoCompletada", "EstadoCompletadaTardia", "EstadoEnCurso", "EstadoNoRealizada",
+                    "EstadoPendiente", "EstadoReprogramada", "EstadoSesion", "Fecha", "Hora",
+                    "ResultadoSesion", "SesionEstudio"]
+PERSISTENCIA_SESIONES = ["RelojSistema", "SesionDao", "SesionEntity", "SesionRepositoryRoom", "SesionesDeMateriaRoom"]
 
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS,
-    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS,
-    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES,
+    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES,
+    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES,
     "adapter/out/security": SEGURIDAD_CONFIG,
 }
 
@@ -203,8 +218,8 @@ def clases_materias():
     infra = [caja_con_metodos("MateriaEntity", xs[0], y5, ancho, "Entity", con_campos=True),
              caja_con_metodos("MateriaDao", xs[1], y5, ancho, "Dao"),
              caja_con_metodos("MateriaRepositoryRoom", xs[2], y5, ancho),
-             caja_de_paquete("Migración y adaptador provisional", ["Migraciones (MIGRATION_1_2)",
-                                                                  "SinSesionesDeMateria"], xs[3], y5, ancho)]
+             caja_de_paquete("Migración y adaptador real", ["Migraciones (MIGRATION_1_2)",
+                                                             "SesionesDeMateriaRoom (desde E3)"], xs[3], y5, ancho)]
     for c in infra:
         c.draw(d)
     dg.assoc(d, nucleo[3].bottom(0.2), (infra[2].x + infra[2].w * 0.5, infra[2].y), "implementan", None, None,
@@ -212,6 +227,76 @@ def clases_materias():
     dg.assoc(d, infra[2].left(0.3), infra[1].right(0.3), "usa", None, None)
     dg.assoc(d, infra[1].left(0.3), infra[0].right(0.3), "lee y escribe", None, None)
     img.crop((0, 0, W, int(y5 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_materias.png", dpi=(200, 200))
+
+
+def clases_sesiones():
+    """Clases de la épica E3: sesiones de estudio, patrón State GoF en dominio y persistencia Room v3."""
+    W, H = 3760, 5600
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, w1 = [40, 980, 1920, 2860], 860
+    fila1 = [caja_con_metodos("SesionFormularioActivity", xs1[0], 80, w1),
+             caja_con_metodos("SesionFormularioViewModel", xs1[1], 80, w1),
+             caja_con_metodos("SesionDetalleActivity", xs1[2], 80, w1),
+             caja_con_metodos("SesionDetalleViewModel", xs1[3], 80, w1)]
+    y2 = 80 + alto(fila1) + 70
+    fila2 = [caja_con_metodos("SesionInicioAdapter", xs1[0], y2, w1),
+             caja_con_metodos("EventoSesion", xs1[1], y2, w1),
+             caja_con_metodos("FormatoSesion", xs1[2], y2, w1),
+             caja_con_metodos("EstadoSesionVisual", xs1[3], y2, w1, "enumeration")]
+    for c in fila1 + fila2:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.18), fila1[1].left(0.18), "observa", None, None)
+    dg.assoc(d, fila1[2].right(0.18), fila1[3].left(0.18), "observa", None, None)
+    ynota = y2 + alto(fila2) + 24
+    d.text((40, ynota),
+           "SesionFormularioActivity y SesionDetalleActivity heredan de ActividadProtegida (FLAG_SECURE y bloqueo HU-04); MainActivity abre ambas y enlaza SesionInicioAdapter.",
+           font=dg.font(24, italic=True), fill=dg.GRAY)
+
+    y4 = ynota + 100
+    d.line([40, y4 - 30, W - 40, y4 - 30], fill=dg.MID, width=3)
+    d.text((40, y4), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y4 += 60
+    xs2, ws2 = [40, 1280, 2240, 3020], [1100, 820, 640, 700]
+    sesion = caja_con_metodos("SesionEstudio", xs2[0], y4, ws2[0], con_campos=True)
+    estado = caja_con_metodos("EstadoSesion", xs2[1], y4, ws2[1], "State GoF")
+    paquete_dom = caja_de_paquete(
+        "Estados concretos y objetos de valor",
+        ["EstadoPendiente", "EstadoEnCurso", "EstadoNoRealizada", "EstadoCompletada",
+         "EstadoCompletadaTardia", "EstadoReprogramada", "CodigoEstadoSesion",
+         "Fecha", "Hora", "ConflictoHorario", "ResultadoSesion",
+         "DetalleSesion", "DetalleSesionInicio"],
+        xs2[2], y4, ws2[2], "domain")
+    paquete_app = caja_de_paquete(
+        "Casos de uso, servicios y puertos",
+        ENTRADA_SESIONES + ["---"] + SERVICIOS_SESIONES + ["---"] + SALIDA_SESIONES,
+        xs2[3], y4, ws2[3], "application")
+    nucleo = [sesion, estado, paquete_dom, paquete_app]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, sesion.right(0.35), estado.left(0.35), "RN-07", None, None)
+    dg.assoc(d, paquete_dom.left(0.35), estado.right(0.35), "implementan", None, None)
+    dg.assoc(d, paquete_app.left(0.35), paquete_dom.right(0.35), "orquesta", None, None)
+
+    y5 = y4 + alto(nucleo) + 90
+    d.line([40, y5 - 30, W - 40, y5 - 30], fill=dg.MID, width=3)
+    d.text((40, y5), "3. Infraestructura · adapter.out.persistence", font=dg.font(34, True), fill=dg.BLACK)
+    y5 += 60
+    infra = [caja_con_metodos("SesionEntity", xs1[0], y5, w1, "Entity", con_campos=True),
+             caja_con_metodos("SesionDao", xs1[1], y5, w1, "Dao"),
+             caja_con_metodos("SesionRepositoryRoom", xs1[2], y5, w1),
+             caja_de_paquete("Adaptadores y migración v3",
+                             ["SesionesDeMateriaRoom", "RelojSistema", "Migraciones (MIGRATION_2_3)"],
+                             xs1[3], y5, w1)]
+    for c in infra:
+        c.draw(d)
+    dg.assoc(d, paquete_app.bottom(0.3), (infra[2].x + infra[2].w * 0.5, infra[2].y), "implementa", None, None,
+             name_off=(100, 0))
+    dg.assoc(d, infra[2].left(0.3), infra[1].right(0.3), "usa", None, None)
+    dg.assoc(d, infra[1].left(0.3), infra[0].right(0.3), "lee y escribe", None, None)
+    img.crop((0, 0, W, int(y5 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_sesiones.png", dpi=(200, 200))
 
 
 # ---------------------------------------------------------------- modelo lógico y diccionario de datos
@@ -229,9 +314,19 @@ DESCRIPCIONES = {
     ("materia", "color"): "Color de la materia como entero ARGB (paleta provisional).",
     ("materia", "docente"): "Docente de la materia; vacío si no se indicó (texto libre opcional).",
     ("materia", "archivada"): "1 si la materia está archivada (HU-08); 0 si está activa.",
+    ("sesion_estudio", "id"): "Identificador autogenerado de la sesión de estudio.",
+    ("sesion_estudio", "materia_id"): "Identificador de la materia asociada; clave foránea a materia(id) con borrado restringido (RN-03).",
+    ("sesion_estudio", "fecha"): "Fecha planificada o ejecutada en formato ISO AAAA-MM-DD (HU-10, HU-11).",
+    ("sesion_estudio", "hora_inicio"): "Hora de inicio en formato HH:mm de 24 horas (RN-04).",
+    ("sesion_estudio", "hora_fin"): "Hora de fin en formato HH:mm posterior a la de inicio (RN-04).",
+    ("sesion_estudio", "duracion_planificada_minutos"): "Duración planificada calculada en minutos entre hora_inicio y hora_fin.",
+    ("sesion_estudio", "duracion_real_minutos"): "Duración real estudiada en minutos (entre 1 y 1440); nula mientras no se complete (HU-12, HU-13).",
+    ("sesion_estudio", "estado"): "Código de estado según el patrón State (RN-07): PENDIENTE, EN_CURSO, NO_REALIZADA, COMPLETADA, COMPLETADA_TARDIA o REPROGRAMADA.",
+    ("sesion_estudio", "notas"): "Notas u observaciones opcionales de la sesión (hasta 500 caracteres).",
+    ("sesion_estudio", "sesion_origen_id"): "Identificador de la sesión original cuando procede de una reprogramación (HU-14); nulo si no aplica.",
 }
 TABLAS_DE_NEGOCIO = {"perfil": "Perfil del estudiante", "ajustes": "Ajustes de la aplicación",
-                     "materia": "Materias del estudiante"}
+                     "materia": "Materias del estudiante", "sesion_estudio": "Sesiones de estudio"}
 
 
 def _ultimo_esquema():
@@ -258,29 +353,48 @@ def modelo_logico():
             if (entidad["tableName"], campo["columnName"]) not in DESCRIPCIONES:
                 raise SystemExit(f"Falta la descripción de {entidad['tableName']}.{campo['columnName']} en DESCRIPCIONES")
     W = 3240
-    img = Image.new("RGB", (W, 900), dg.WHITE)
+    img = Image.new("RGB", (W, 2200), dg.WHITE)
     d = ImageDraw.Draw(img)
-    xs, ancho, y = [40, 1120, 2200], 1000, 80
-    cajas = []
-    for i, entidad in enumerate(entidades):
+    xs_fila1, ancho_fila1, y1 = [40, 1120, 2200], 1000, 80
+
+    def caja_entidad(entidad, x, y, w):
         pk = entidad["primaryKey"]
+        fk_cols = {c for fk in entidad.get("foreignKeys", []) for c in fk.get("columns", [])}
         lineas = []
         for campo in entidad["fields"]:
-            marca = "PK " if campo["columnName"] in pk["columnNames"] else "   "
+            nombre_col = campo["columnName"]
+            if nombre_col in pk["columnNames"]:
+                marca = "PK "
+            elif nombre_col in fk_cols:
+                marca = "FK "
+            else:
+                marca = "   "
             nulo = "" if campo.get("notNull") else "  (admite nulo)"
-            lineas.append(f"{marca}{campo['columnName']}: {campo['affinity']}{nulo}")
+            lineas.append(f"{marca}{nombre_col}: {campo['affinity']}{nulo}")
         for indice in entidad.get("indices", []):
             lineas.append(f"índice {indice['name']} ({', '.join(indice['columnNames'])})")
-        cajas.append(dg.UMLBox(entidad["tableName"], lineas, None, xs[i], y, w=ancho, stereotype="tabla"))
+        return dg.UMLBox(entidad["tableName"], lineas, None, x, y, w=w, stereotype="tabla")
+
+    cajas_top = [caja_entidad(entidades[i], xs_fila1[i], y1, ancho_fila1) for i in range(min(3, len(entidades)))]
+    cajas = list(cajas_top)
+    y_fin = y1 + alto(cajas_top) + 50
+    if len(entidades) > 3:
+        y2 = y1 + alto(cajas_top) + 60
+        for idx, entidad in enumerate(entidades[3:]):
+            caja_extra = caja_entidad(entidad, 40 + (idx % 2) * 1620, y2 + (idx // 2) * 560, 1560)
+            cajas.append(caja_extra)
+        y_fin = max(c.y + c.h for c in cajas) + 50
     d.text((40, 20), f"Modelo lógico · Room versión {version}", font=dg.font(34, True), fill=dg.BLACK)
     for c in cajas:
         c.draw(d)
-    y_fin = y + alto(cajas) + 50
-    for i, linea in enumerate(["Las tablas son independientes: todavía no hay claves foráneas.",
-                               "La tabla de sesiones traerá la clave foránea materia_id hacia materia (change de sesiones).",
-                               "perfil y ajustes tienen una sola fila (id fijo en 1)."]):
+    notas = [
+        "sesion_estudio.materia_id referencia a materia(id) con ON DELETE RESTRICT (RN-03: no se elimina una materia con sesiones).",
+        "sesion_estudio.sesion_origen_id referencia a sesion_estudio(id) con ON DELETE SET NULL (HU-14: enlace de reprogramación).",
+        "perfil y ajustes mantienen una única fila (id fijo en 1).",
+    ]
+    for i, linea in enumerate(notas):
         d.text((40, y_fin + i * 38), linea, font=dg.font(24, italic=True), fill=dg.GRAY)
-    img.crop((0, 0, W, int(y_fin + 140))).save(dg.OUT / "modelo_logico.png", dpi=(200, 200))
+    img.crop((0, 0, W, int(y_fin + 40 + len(notas) * 38))).save(dg.OUT / "modelo_logico.png", dpi=(200, 200))
     return version, entidades
 
 
@@ -350,8 +464,40 @@ MENSAJES = [
 ]
 
 
-def verificar_mensajes():
-    for _, _, _, real, _ in MENSAJES:
+PARTICIPANTES_PLANIFICAR_SESION = [
+    ("Estudiante", None),
+    ("SesionFormularioActivity", "SesionFormularioActivity"),
+    ("SesionFormularioViewModel", "SesionFormularioViewModel"),
+    ("PlanificarSesionService", "PlanificarSesionService"),
+    ("SesionEstudio / State", "SesionEstudio"),
+    ("SesionRepositoryRoom", "SesionRepositoryRoom"),
+    ("SesionDao", "SesionDao"),
+]
+MENSAJES_PLANIFICAR_SESION = [
+    (0, 1, "pulsa «Guardar»: onGuardarClick(View)", ("SesionFormularioActivity", "onGuardarClick"), False),
+    (1, 2, "guardarPlanificada(materiaId, fecha, inicio, fin, notas)",
+     ("SesionFormularioViewModel", "guardarPlanificada"), False),
+    (2, 2, "ejecutor.execute(...) · hilo en segundo plano", None, False),
+    (2, 3, "ejecutar(materiaId, Fecha, Hora, Hora, String)", ("PlanificarSesionService", "ejecutar"), False),
+    (3, 5, "listarPorFecha(Fecha) · ValidadorSesiones (RN-05)", ("SesionRepositoryRoom", "listarPorFecha"), False),
+    (5, 6, "listarPorFecha(String)", ("SesionDao", "listarPorFecha"), False),
+    (6, 5, "List<SesionEntity>", None, True),
+    (5, 3, "List<SesionEstudio> (sin cruce horario)", None, True),
+    (3, 4, "planificar(..., Fecha hoy) · EstadoPendiente (RN-07)", ("SesionEstudio", "planificar"), False),
+    (4, 3, "Resultado<SesionEstudio>", None, True),
+    (3, 5, "guardar(SesionEstudio)", ("SesionRepositoryRoom", "guardar"), False),
+    (5, 6, "insertar(SesionEntity)", ("SesionDao", "insertar"), False),
+    (6, 5, "id: long", None, True),
+    (5, 3, "SesionEstudio con id", None, True),
+    (3, 2, "ResultadoSesion.ok(sesion)", None, True),
+    (2, 1, "evento.postValue(PLANIFICADA)  →  onEvento(EventoSesion)",
+     ("SesionFormularioActivity", "onEvento"), False),
+    (1, 1, "finish()", None, False),
+]
+
+
+def verificar_mensajes(mensajes=MENSAJES):
+    for _, _, _, real, _ in mensajes:
         if real is None:
             continue
         clase, metodo = real
@@ -359,27 +505,27 @@ def verificar_mensajes():
             raise SystemExit(f"El diagrama de secuencia usa {clase}.{metodo}, que no existe en el código")
 
 
-def secuencia_registrar_materia():
-    verificar_mensajes()
-    W, paso, margen = 3300, 100, 80
-    n = len(PARTICIPANTES)
-    H = 300 + paso * (len(MENSAJES) + 2)
+def _dibujar_secuencia(titulo, participantes, mensajes, fondo_inicio, fondo_fin, archivo):
+    verificar_mensajes(mensajes)
+    W, paso, margen = 3400, 100, 80
+    n = len(participantes)
+    H = 300 + paso * (len(mensajes) + 2)
     img = Image.new("RGB", (W, H), dg.WHITE)
     d = ImageDraw.Draw(img)
     xs = [margen + 200 + i * ((W - 2 * margen - 400) / (n - 1)) for i in range(n)]
     y_cabecera, y0 = 90, 260
-    d.text((40, 20), "Secuencia · registrar una materia (HU-06)", font=dg.font(34, True), fill=dg.BLACK)
-    for (nombre, _), x in zip(PARTICIPANTES, xs):
-        caja = [x - 190, y_cabecera, x + 190, y_cabecera + 80]
+    d.text((40, 20), titulo, font=dg.font(34, True), fill=dg.BLACK)
+    for (nombre, _), x in zip(participantes, xs):
+        caja = [x - 195, y_cabecera, x + 195, y_cabecera + 80]
         d.rectangle(caja, fill=dg.LIGHT, outline=dg.BLACK, width=3)
-        d.text((x, y_cabecera + 40), nombre, font=dg.font(21, True), fill=dg.BLACK, anchor="mm")
+        d.text((x, y_cabecera + 40), nombre, font=dg.font(20, True), fill=dg.BLACK, anchor="mm")
         dg.dashed_line(d, [(x, y_cabecera + 80), (x, H - 60)], fill=dg.GRAY, width=2, dash=12, gap=10)
-    y_fin = y0 + paso * len(MENSAJES)
-    # zona del hilo en segundo plano (mensajes 3 a 15)
-    d.rectangle([xs[2] - 230, y0 + paso * 2 - 40, xs[6] + 230, y0 + paso * 15 - 20], outline=dg.GRAY, width=3)
-    d.text((xs[2] - 220, y0 + paso * 2 - 36), "hilo de fondo (ejecutor de un solo hilo)", font=dg.font(20, italic=True),
-           fill=dg.GRAY)
-    for i, (o, t, texto, _, retorno) in enumerate(MENSAJES):
+    y_fin = y0 + paso * len(mensajes)
+    d.rectangle([xs[2] - 230, y0 + paso * fondo_inicio - 40, xs[-1] + 230, y0 + paso * fondo_fin - 20],
+                outline=dg.GRAY, width=3)
+    d.text((xs[2] - 220, y0 + paso * fondo_inicio - 36), "hilo de fondo (ejecutor de un solo hilo)",
+           font=dg.font(20, italic=True), fill=dg.GRAY)
+    for i, (o, t, texto, _, retorno) in enumerate(mensajes):
         y = y0 + paso * i + 20
         x1, x2 = xs[o], xs[t]
         if o == t:
@@ -393,18 +539,43 @@ def secuencia_registrar_materia():
             d.line([(x1, y), (x2, y)], fill=dg.BLACK, width=3)
         dg.arrow_head(d, (x1, y), (x2, y), open_=True)
         d.text(((x1 + x2) / 2, y - 24), f"{i + 1}. {texto}", font=dg.font(21, italic=retorno), fill=dg.BLACK, anchor="mm")
-    img.crop((0, 0, W, int(y_fin + 100))).save(dg.OUT / "secuencia_registrar_materia.png", dpi=(200, 200))
+    img.crop((0, 0, W, int(y_fin + 100))).save(dg.OUT / archivo, dpi=(200, 200))
+
+
+def secuencia_registrar_materia():
+    _dibujar_secuencia(
+        "Secuencia · registrar una materia (HU-06)",
+        PARTICIPANTES,
+        MENSAJES,
+        2,
+        15,
+        "secuencia_registrar_materia.png",
+    )
+
+
+def secuencia_planificar_sesion():
+    _dibujar_secuencia(
+        "Secuencia · planificar una sesión de estudio (HU-10, RN-05 y RN-07)",
+        PARTICIPANTES_PLANIFICAR_SESION,
+        MENSAJES_PLANIFICAR_SESION,
+        2,
+        15,
+        "secuencia_planificar_sesion.png",
+    )
 
 
 def generar():
     clases_configuracion()
     clases_materias()
+    clases_sesiones()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()
+    secuencia_planificar_sesion()
 
 
 if __name__ == "__main__":
     generar()
-    for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "modelo_logico", "secuencia_registrar_materia"):
+    for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
+              "modelo_logico", "secuencia_registrar_materia", "secuencia_planificar_sesion"):
         print((dg.OUT / f"{f}.png").relative_to(RAIZ))

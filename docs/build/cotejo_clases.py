@@ -18,7 +18,8 @@ import diagramas as dg  # noqa: E402
 import diagramas_clases as dc  # noqa: E402
 
 RAIZ = dc.jf.RAIZ
-IMAGENES = ["diagrama_clases_configuracion", "diagrama_clases_materias", "modelo_logico", "secuencia_registrar_materia"]
+IMAGENES = ["diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
+            "modelo_logico", "secuencia_registrar_materia", "secuencia_planificar_sesion"]
 
 
 def cotejar_clases(errores):
@@ -44,8 +45,10 @@ def cotejar_imagenes(errores):
         try:
             dc.clases_configuracion()
             dc.clases_materias()
+            dc.clases_sesiones()
             dc.modelo_logico()
             dc.secuencia_registrar_materia()
+            dc.secuencia_planificar_sesion()
         finally:
             dg.OUT = carpeta_real
         for nombre in IMAGENES:

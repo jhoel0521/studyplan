@@ -68,10 +68,10 @@
 
 ## Bloque 6 — Documentación académica, diagramas y auditoría IA
 
-- [ ] 6.1 Actualizar `docs/build/diagramas_clases.py` y `docs/build/cotejo_clases.py` con las nuevas clases de E3 en `domain`, `application.*`, `adapter.out.persistence` y `adapter.in.ui`, añadir generación del modelo lógico y diccionario desde `app/schemas/.../3.json`, añadir diagrama de clases de E3 y secuencia de planificar/completar sesión, y regenerar figuras con `python docs/build/diagramas.py` y `python docs/build/diagramas_clases.py`.
-- [ ] 6.2 Actualizar `docs/documento/capitulos/04-diseno-del-software.md` (secciones 4.2, 4.3 y 4.4 con las figuras regeneradas y la máquina de estados / migración v3) y ejecutar `python docs/build/cotejo_clases.py` comprobando que pasa sin desfases.
-- [ ] 6.3 Actualizar `docs/auditoria-ia/bitacora.md` con las sesiones de implementación de E3, validar con `python .apa/scripts/revisar.py --doc docs/documento`, generar el `.docx` con `python .apa/scripts/generar_docx.py --doc docs/documento` y confirmar `openspec validate add-sesiones-estudio --strict`.
-- [ ] 6.4 Realizar `git commit` por ruta explícita (`docs: actualizar diagramas, capitulo 4 y bitacora para epica E3`) y ejecutar `git push`.
+- [x] 6.1 Actualizar `docs/build/diagramas_clases.py` y `docs/build/cotejo_clases.py` con las nuevas clases de E3 en `domain`, `application.*`, `adapter.out.persistence` y `adapter.in.ui`, añadir generación del modelo lógico y diccionario desde `app/schemas/.../3.json`, añadir diagrama de clases de E3 y secuencia de planificar/completar sesión, y regenerar figuras con `python docs/build/diagramas.py` y `python docs/build/diagramas_clases.py`.
+- [x] 6.2 Actualizar `docs/documento/capitulos/04-diseno-del-software.md` (secciones 4.2, 4.3 y 4.4 con las figuras regeneradas y la máquina de estados / migración v3) y ejecutar `python docs/build/cotejo_clases.py` comprobando que pasa sin desfases.
+- [x] 6.3 Actualizar `docs/auditoria-ia/bitacora.md` con las sesiones de implementación de E3, validar con `python .apa/scripts/revisar.py --doc docs/documento`, generar el `.docx` con `python .apa/scripts/generar_docx.py --doc docs/documento` y confirmar `openspec validate add-sesiones-estudio --strict`.
+- [x] 6.4 Realizar `git commit` por ruta explícita (`docs: actualizar diagramas, capitulo 4 y bitacora para epica E3`) y ejecutar `git push`.
 
 ---
 
