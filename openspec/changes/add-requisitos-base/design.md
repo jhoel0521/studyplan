@@ -56,5 +56,5 @@ El proyecto parte de la plantilla *Empty Views Activity* de Android Studio: Java
 
 ## Open Questions
 
-- Si el docente acepta cambiar "3.3.1 Casos de Uso" por "User Story Mapping". No afecta a las specs.
+- ~~Si el docente acepta cambiar "3.3.1 Casos de Uso" por "User Story Mapping".~~ Resuelto por el estudiante (13-nov-2026): la sección 3.3.1 se renombra «Historias de Usuario»; no se usan casos de uso. No afecta a las specs.
 - RN-12 (solo se eliminan sesiones Pendientes) se derivó de RN-09 y el Product Owner debe confirmarla.
