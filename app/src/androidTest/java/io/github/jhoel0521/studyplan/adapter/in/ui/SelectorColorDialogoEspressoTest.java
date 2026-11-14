@@ -10,7 +10,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.widget.EditText;
@@ -112,7 +112,7 @@ public class SelectorColorDialogoEspressoTest {
                 String texto = ((EditText) vista).getText().toString();
                 assertEquals("Debe haber seis dígitos hexadecimales: " + texto, 6, texto.length());
                 assertTrue(texto.matches("[0-9A-F]{6}"));
-                assertFalse("El color no cambió", texto.equals("1E88E5"));
+                assertNotEquals("El color no cambió", "1E88E5", texto);
             });
             onView(withId(android.R.id.button1)).perform(click());
         }

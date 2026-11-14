@@ -92,6 +92,8 @@ public final class SelectorColorDialogo {
     }
 
     private void prepararAtajos() {
+        // TypedArray solo es AutoCloseable desde la API 31 y el proyecto usa minSdk 24: se cierra con recycle() en finally.
+        //noinspection resource
         TypedArray colores = contexto.getResources().obtainTypedArray(R.array.paleta_materias);
         try {
             LayoutInflater inflador = LayoutInflater.from(contexto);
