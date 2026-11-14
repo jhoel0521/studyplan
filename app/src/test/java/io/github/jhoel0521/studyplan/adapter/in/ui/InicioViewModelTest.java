@@ -1,7 +1,9 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
@@ -11,12 +13,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
 import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
 import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Perfil;
 import io.github.jhoel0521.studyplan.domain.ResumenInicio;
+import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakePerfilRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
@@ -33,13 +38,15 @@ public class InicioViewModelTest {
     public InstantTaskExecutorRule reglaInstantanea = new InstantTaskExecutorRule();
 
     private FakePerfilRepository perfiles;
+    private FakeMateriaRepository materias;
+    private FakeSesionRepository sesiones;
     private InicioViewModel modelo;
 
     @Before
     public void preparar() {
         perfiles = new FakePerfilRepository();
-        FakeSesionRepository sesiones = new FakeSesionRepository();
-        FakeMateriaRepository materias = new FakeMateriaRepository();
+        sesiones = new FakeSesionRepository();
+        materias = new FakeMateriaRepository();
         FakeReloj reloj = new FakeReloj(
                 Fecha.de(2026, 11, 14).valor(), Hora.de(10, 0).valor());
         modelo = new InicioViewModel(
@@ -49,6 +56,7 @@ public class InicioViewModelTest {
                         materias,
                         reloj,
                         new VencerSesionesPendientesService(sesiones, reloj)),
+                new ListarMateriasService(materias, sesiones),
                 Runnable::run);
     }
 
@@ -59,6 +67,29 @@ public class InicioViewModelTest {
         assertEquals("Ana", resumen().nombre());
         assertEquals(0, resumen().horasRealizadas(), 0);
         assertEquals(20, resumen().metaSemanalHoras(), 0);
+        assertFalse(Boolean.TRUE.equals(modelo.hayMateriasActivas().getValue()));
+    }
+
+    @Test
+    public void publicaMateriasActivasProximaSesionYSesionesDeHoy() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        long materiaId = materias.guardar(Materia.crear("Cálculo", 0xFF1E88E5, null).valor()).id();
+        Fecha hoy = Fecha.de(2026, 11, 14).valor();
+        sesiones.guardar(SesionEstudio.planificar(
+                materiaId,
+                hoy,
+                hoy,
+                Hora.de(14, 0).valor(),
+                Hora.de(15, 0).valor(),
+                null,
+                null).valor());
+
+        modelo.cargar();
+
+        assertTrue(Boolean.TRUE.equals(modelo.hayMateriasActivas().getValue()));
+        assertTrue(resumen().proximaSesion() != null);
+        assertEquals(1, resumen().sesionesDeHoy().size());
+        assertEquals("Cálculo", resumen().sesionesDeHoy().get(0).nombreMateria());
     }
 
     @Test

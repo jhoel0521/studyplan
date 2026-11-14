@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".adapter.in.ui.SesionDetalleActivity"
+    tools:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barraSuperior"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationContentDescription="@string/volver"
+        app:navigationIcon="@drawable/ic_volver"
+        app:title="@string/sesion_detalle_titulo" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/textoSesionNoEncontrada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="600dp"
+                android:text="@string/sesion_no_encontrada"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:visibility="gone"
+                tools:text="La sesión solicitada no existe" />
+
+            <LinearLayout
+                android:id="@+id/contenedorDetalle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/colorMateriaDetalle"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_circulo"
+                        tools:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/nombreMateriaDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:maxWidth="600dp"
+                        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                        tools:text="Cálculo Diferencial" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iconoEstadoDetalle"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_estado_pendiente"
+                        tools:tint="?attr/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/etiquetaEstadoDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:maxWidth="600dp"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        tools:text="Pendiente" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textoHorarioDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:maxWidth="600dp"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    tools:text="2026-11-14 · 10:00 – 11:30" />
+
+                <TextView
+                    android:id="@+id/textoDuracionPlanificadaDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:maxWidth="600dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    tools:text="Planificada: 90 min" />
+
+                <TextView
+                    android:id="@+id/textoDuracionRealDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:maxWidth="600dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:visibility="gone"
+                    tools:text="Real estudiada: 85 min"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:maxWidth="600dp"
+                    android:text="@string/sesion_detalle_notas"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    tools:text="Notas" />
+
+                <TextView
+                    android:id="@+id/textoNotasDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:maxWidth="600dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    tools:text="Repasar ejercicios del capítulo 3" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonVerReprogramada"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:minHeight="48dp"
+                    android:visibility="gone"
+                    tools:text="Ver sesión reprogramada (2026-11-16 · 09:00 – 10:00)"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textoPlazoVencido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:maxWidth="600dp"
+                    android:text="@string/sesion_detalle_plazo_vencido"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorError"
+                    android:visibility="gone"
+                    tools:text="El plazo de 3 días para el registro tardío venció. Aún puedes reprogramarla." />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/grupoDuracionRealDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/sesion_form_duracion_real"
+                    android:maxWidth="400dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/campoDuracionRealDetalle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxWidth="400dp"
+                        android:minHeight="48dp"
+                        tools:text="90" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/textoErrorDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:maxWidth="600dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorError"
+                    android:visibility="gone"
+                    tools:text="Solo puedes completar la sesión el mismo día programado" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonCompletarSesion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:minHeight="48dp"
+                    android:text="@string/sesion_detalle_completar"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonRegistrarTardio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:minHeight="48dp"
+                    android:text="@string/sesion_detalle_registrar_tardio"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonReprogramarSesion"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:minHeight="48dp"
+                    android:text="@string/sesion_detalle_reprogramar"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonEliminarSesion"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:minHeight="48dp"
+                    android:text="@string/sesion_detalle_eliminar"
+                    android:textColor="?attr/colorError"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

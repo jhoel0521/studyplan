@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Contenido de Inicio, compartido por el envoltorio de teléfono y el de pantallas de 600 dp o más. -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".adapter.in.ui.MainActivity"
     tools:fitsSystemWindows="true">
 
@@ -12,85 +13,225 @@
         android:id="@+id/barraSuperior"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_inicio"
         app:title="@string/app_name" />
 
-    <TextView
-        android:id="@+id/saludo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:textAppearance="?attr/textAppearanceHeadlineMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barraSuperior"
-        app:layout_constraintWidth_max="600dp"
-        tools:text="¡Hola, Ana!" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/tituloProgreso"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/inicio_progreso_semana"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/saludo"
-        app:layout_constraintWidth_max="600dp"
-        tools:text="Progreso de la semana" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/barraProgreso"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="24dp"
-        android:contentDescription="@string/inicio_progreso_semana"
-        android:max="100"
-        android:progress="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tituloProgreso"
-        app:layout_constraintWidth_max="600dp" />
+            <TextView
+                android:id="@+id/saludo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="600dp"
+                tools:text="¡Hola, Ana!" />
 
-    <TextView
-        android:id="@+id/textoProgreso"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barraProgreso"
-        app:layout_constraintWidth_max="600dp"
-        tools:text="0 / 20 h" />
+            <TextView
+                android:id="@+id/tituloProgreso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/inicio_progreso_semana"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/saludo"
+                app:layout_constraintWidth_max="600dp"
+                tools:text="Progreso de la semana" />
 
-    <TextView
-        android:id="@+id/estadoVacio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/inicio_sin_sesiones"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textoProgreso"
-        app:layout_constraintWidth_max="600dp"
-        tools:text="Aún no tienes sesiones planificadas." />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/barraProgreso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:contentDescription="@string/inicio_progreso_semana"
+                android:max="100"
+                android:progress="0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tituloProgreso"
+                app:layout_constraintWidth_max="600dp" />
+
+            <TextView
+                android:id="@+id/textoProgreso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/barraProgreso"
+                app:layout_constraintWidth_max="600dp"
+                tools:text="1,5 / 20 h" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonNuevaSesion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:minHeight="48dp"
+                android:text="@string/inicio_nueva_sesion"
+                app:icon="@drawable/ic_agregar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textoProgreso" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tarjetaProximaSesion"
+                style="?attr/materialCardViewOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="72dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/botonNuevaSesion"
+                app:layout_constraintWidth_max="600dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="600dp"
+                        android:text="@string/inicio_proxima_sesion"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        tools:text="Próxima sesión pendiente" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/colorMateriaProxima"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_circulo"
+                            tools:tint="?attr/colorPrimary" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/nombreMateriaProxima"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxWidth="600dp"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                tools:text="Cálculo Diferencial" />
+
+                            <TextView
+                                android:id="@+id/horarioProxima"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:maxWidth="600dp"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                tools:text="2026-11-15 · 09:00 – 10:30 · 90 min" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/iconoEstadoProxima"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_estado_pendiente"
+                                    tools:tint="?attr/colorPrimary" />
+
+                                <TextView
+                                    android:id="@+id/etiquetaEstadoProxima"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:maxWidth="600dp"
+                                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                                    tools:text="Pendiente" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tituloSesionesHoy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/inicio_sesiones_hoy"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tarjetaProximaSesion"
+                app:layout_constraintWidth_max="600dp"
+                app:layout_goneMarginTop="24dp"
+                tools:text="Sesiones de hoy" />
+
+            <TextView
+                android:id="@+id/estadoVacio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/inicio_sin_sesiones_hoy"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tituloSesionesHoy"
+                app:layout_constraintWidth_max="600dp"
+                tools:text="No tienes sesiones para hoy" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/listaSesionesHoy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/estadoVacio"
+                app:layout_constraintWidth_max="600dp"
+                app:layout_goneMarginTop="8dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

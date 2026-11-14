@@ -81,4 +81,40 @@ public final class DetalleSesionInicio {
     public CodigoEstadoSesion estado() {
         return estado;
     }
+
+    @Override
+    public boolean equals(Object otro) {
+        if (this == otro) {
+            return true;
+        }
+        if (!(otro instanceof DetalleSesionInicio)) {
+            return false;
+        }
+        DetalleSesionInicio that = (DetalleSesionInicio) otro;
+        return sesionId == that.sesionId
+                && materiaId == that.materiaId
+                && colorMateria == that.colorMateria
+                && duracionPlanificadaMinutos == that.duracionPlanificadaMinutos
+                && Objects.equals(nombreMateria, that.nombreMateria)
+                && Objects.equals(fecha, that.fecha)
+                && Objects.equals(horaInicio, that.horaInicio)
+                && Objects.equals(horaFin, that.horaFin)
+                && Objects.equals(duracionRealMinutos, that.duracionRealMinutos)
+                && estado == that.estado;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                sesionId,
+                materiaId,
+                nombreMateria,
+                colorMateria,
+                fecha,
+                horaInicio,
+                horaFin,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                estado);
+    }
 }

@@ -28,8 +28,9 @@
             android:padding="24dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="600dp"
                 android:text="@string/ajustes_tema"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 tools:text="Tema" />
@@ -62,9 +63,10 @@
             </RadioGroup>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:maxWidth="600dp"
                 android:text="@string/ajustes_idioma"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 tools:text="Idioma" />
@@ -90,9 +92,10 @@
             </RadioGroup>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:maxWidth="600dp"
                 android:text="@string/ajustes_seguridad"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 tools:text="Seguridad" />

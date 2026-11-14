@@ -17,7 +17,6 @@
     <string name="inicio_saludo">Hello, %1$s!</string>
     <string name="inicio_progreso_semana">Progress this week</string>
     <string name="inicio_progreso">%1$s / %2$s h</string>
-    <string name="inicio_sin_sesiones">You have no planned sessions yet.</string>
 
     <!-- Bottom bar -->
     <string name="nav_inicio">Home</string>
@@ -91,4 +90,81 @@
     <string name="materia_color_selector">Color picker: drag to choose</string>
     <string name="materia_color_brillo">Brightness</string>
     <string name="materia_color_rapidos">Quick colors</string>
+
+    <!-- Full Home screen and study sessions (HU-02, HU-10 to HU-15) -->
+    <string name="inicio_nueva_sesion">+ New session</string>
+    <string name="inicio_sin_materias_aviso">Add an active subject first to schedule your study</string>
+    <string name="inicio_ir_materias">Go to subjects</string>
+    <string name="inicio_proxima_sesion">Next pending session</string>
+    <string name="inicio_sesiones_hoy">Today\'s sessions</string>
+    <string name="inicio_sin_sesiones_hoy">No sessions scheduled for today</string>
+    <string name="sesion_rango_horario">%1$s – %2$s</string>
+    <string name="sesion_fecha_y_rango">%1$s · %2$s – %3$s</string>
+    <string name="sesion_duracion_minutos">%1$d min</string>
+    <string name="sesion_duracion_real_minutos">%1$d min actual</string>
+
+    <!-- Session states (RNF-06, RN-07) -->
+    <string name="estado_sesion_pendiente">Pending</string>
+    <string name="estado_sesion_en_curso">In progress</string>
+    <string name="estado_sesion_no_realizada">Not completed</string>
+    <string name="estado_sesion_completada">Completed</string>
+    <string name="estado_sesion_completada_tardia">Completed (late log)</string>
+    <string name="estado_sesion_reprogramada">Rescheduled</string>
+
+    <!-- Session form (HU-10, HU-11, HU-14) -->
+    <string name="sesion_form_titulo_planificar">New session</string>
+    <string name="sesion_form_titulo_pasada">Log past session</string>
+    <string name="sesion_form_titulo_reprogramar">Reschedule session</string>
+    <string name="sesion_form_modo_planificar">Schedule</string>
+    <string name="sesion_form_modo_pasada">Past session</string>
+    <string name="sesion_form_materia">Subject</string>
+    <string name="sesion_form_fecha">Date (YYYY-MM-DD)</string>
+    <string name="sesion_form_elegir_fecha">Choose date from calendar</string>
+    <string name="sesion_form_hora_inicio">Start time (HH:mm)</string>
+    <string name="sesion_form_elegir_hora_inicio">Choose start time</string>
+    <string name="sesion_form_hora_fin">End time (HH:mm)</string>
+    <string name="sesion_form_elegir_hora_fin">Choose end time</string>
+    <string name="sesion_form_duracion_planificada">Planned duration: %1$d min</string>
+    <string name="sesion_form_duracion_planificada_invalida">Choose an end time after start time</string>
+    <string name="sesion_form_duracion_real">Actual duration studied (min)</string>
+    <string name="sesion_form_notas">Notes (optional)</string>
+    <string name="sesion_form_guardar">Save session</string>
+    <string name="sesion_form_sin_materias">No active subjects available</string>
+
+    <!-- Session detail (HU-12 to HU-15) -->
+    <string name="sesion_detalle_titulo">Session details</string>
+    <string name="sesion_detalle_planificada">Planned: %1$d min</string>
+    <string name="sesion_detalle_real">Actual studied: %1$d min</string>
+    <string name="sesion_detalle_notas">Notes</string>
+    <string name="sesion_detalle_sin_notas">No notes recorded</string>
+    <string name="sesion_detalle_enlace_destino">View rescheduled session (%1$s · %2$s – %3$s)</string>
+    <string name="sesion_detalle_completar">Complete session</string>
+    <string name="sesion_detalle_registrar_tardio">Log late</string>
+    <string name="sesion_detalle_plazo_vencido">The 3-day late-log window has expired. You can still reschedule it.</string>
+    <string name="sesion_detalle_reprogramar">Reschedule</string>
+    <string name="sesion_detalle_eliminar">Delete session</string>
+    <string name="sesion_eliminar_titulo">Delete session</string>
+    <string name="sesion_eliminar_mensaje">Delete this pending session? This action cannot be undone.</string>
+    <string name="sesion_eliminar_confirmar">Delete</string>
+    <string name="sesion_no_encontrada">The requested session does not exist</string>
+
+    <!-- Session validation errors (RN-04 to RN-12, RNF-08) -->
+    <string name="error_sesion_materia_obligatoria">Select an active subject</string>
+    <string name="error_sesion_materia_inactiva">The selected subject is archived</string>
+    <string name="error_sesion_fecha_obligatoria">Enter the session date</string>
+    <string name="error_sesion_fecha_invalida">Use a valid date in YYYY-MM-DD format</string>
+    <string name="error_sesion_fecha_pasada">You cannot schedule on a past date</string>
+    <string name="error_sesion_pasada_fuera_ventana">You can only log past sessions from the last 3 days</string>
+    <string name="error_sesion_hora_inicio_obligatoria">Enter the start time</string>
+    <string name="error_sesion_hora_fin_obligatoria">Enter the end time</string>
+    <string name="error_sesion_hora_invalida">Use a valid 24-hour time in HH:mm format</string>
+    <string name="error_sesion_horario_fin_no_posterior">End time must be after start time</string>
+    <string name="error_sesion_duracion_real_invalida">Actual duration must be greater than 0 minutes</string>
+    <string name="error_sesion_notas_largas">Notes can have up to 500 characters</string>
+    <string name="error_sesion_solapada">Conflicts with another session at that time</string>
+    <string name="error_sesion_solapada_detalle">Conflicts with “%1$s” (%2$s – %3$s)</string>
+    <string name="error_sesion_transicion_no_permitida">The current session state does not allow this action</string>
+    <string name="error_sesion_completar_mismo_dia">You can only complete the session on its scheduled day</string>
+    <string name="error_sesion_registro_tardio_vencido">Late logging is only allowed up to 3 days after the session</string>
+    <string name="error_sesion_no_eliminable">Only Pending sessions can be deleted</string>
 </resources>

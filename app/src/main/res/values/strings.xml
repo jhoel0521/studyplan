@@ -17,7 +17,6 @@
     <string name="inicio_saludo">¡Hola, %1$s!</string>
     <string name="inicio_progreso_semana">Progreso de la semana</string>
     <string name="inicio_progreso">%1$s / %2$s h</string>
-    <string name="inicio_sin_sesiones">Aún no tienes sesiones planificadas.</string>
 
     <!-- Barra inferior -->
     <string name="nav_inicio">Inicio</string>
@@ -91,4 +90,81 @@
     <string name="materia_color_selector">Selector de color: arrastra para elegir</string>
     <string name="materia_color_brillo">Brillo</string>
     <string name="materia_color_rapidos">Colores rápidos</string>
+
+    <!-- Inicio completo y sesiones de estudio (HU-02, HU-10 a HU-15) -->
+    <string name="inicio_nueva_sesion">+ Nueva sesión</string>
+    <string name="inicio_sin_materias_aviso">Registra primero una materia activa para planificar tu estudio</string>
+    <string name="inicio_ir_materias">Ir a materias</string>
+    <string name="inicio_proxima_sesion">Próxima sesión pendiente</string>
+    <string name="inicio_sesiones_hoy">Sesiones de hoy</string>
+    <string name="inicio_sin_sesiones_hoy">No tienes sesiones para hoy</string>
+    <string name="sesion_rango_horario">%1$s – %2$s</string>
+    <string name="sesion_fecha_y_rango">%1$s · %2$s – %3$s</string>
+    <string name="sesion_duracion_minutos">%1$d min</string>
+    <string name="sesion_duracion_real_minutos">%1$d min reales</string>
+
+    <!-- Estados de sesión (RNF-06, RN-07) -->
+    <string name="estado_sesion_pendiente">Pendiente</string>
+    <string name="estado_sesion_en_curso">En curso</string>
+    <string name="estado_sesion_no_realizada">No realizada</string>
+    <string name="estado_sesion_completada">Completada</string>
+    <string name="estado_sesion_completada_tardia">Completada (registro tardío)</string>
+    <string name="estado_sesion_reprogramada">Reprogramada</string>
+
+    <!-- Formulario de sesión (HU-10, HU-11, HU-14) -->
+    <string name="sesion_form_titulo_planificar">Nueva sesión</string>
+    <string name="sesion_form_titulo_pasada">Registrar sesión pasada</string>
+    <string name="sesion_form_titulo_reprogramar">Reprogramar sesión</string>
+    <string name="sesion_form_modo_planificar">Planificar</string>
+    <string name="sesion_form_modo_pasada">Sesión pasada</string>
+    <string name="sesion_form_materia">Materia</string>
+    <string name="sesion_form_fecha">Fecha (YYYY-MM-DD)</string>
+    <string name="sesion_form_elegir_fecha">Elegir fecha en calendario</string>
+    <string name="sesion_form_hora_inicio">Hora inicio (HH:mm)</string>
+    <string name="sesion_form_elegir_hora_inicio">Elegir hora de inicio</string>
+    <string name="sesion_form_hora_fin">Hora fin (HH:mm)</string>
+    <string name="sesion_form_elegir_hora_fin">Elegir hora de fin</string>
+    <string name="sesion_form_duracion_planificada">Duración planificada: %1$d min</string>
+    <string name="sesion_form_duracion_planificada_invalida">Elige hora de fin posterior a la de inicio</string>
+    <string name="sesion_form_duracion_real">Duración real estudiada (min)</string>
+    <string name="sesion_form_notas">Notas (opcional)</string>
+    <string name="sesion_form_guardar">Guardar sesión</string>
+    <string name="sesion_form_sin_materias">No hay materias activas disponibles</string>
+
+    <!-- Detalle de sesión (HU-12 a HU-15) -->
+    <string name="sesion_detalle_titulo">Detalle de sesión</string>
+    <string name="sesion_detalle_planificada">Planificada: %1$d min</string>
+    <string name="sesion_detalle_real">Real estudiada: %1$d min</string>
+    <string name="sesion_detalle_notas">Notas</string>
+    <string name="sesion_detalle_sin_notas">Sin notas registradas</string>
+    <string name="sesion_detalle_enlace_destino">Ver sesión reprogramada (%1$s · %2$s – %3$s)</string>
+    <string name="sesion_detalle_completar">Completar sesión</string>
+    <string name="sesion_detalle_registrar_tardio">Registrar tardío</string>
+    <string name="sesion_detalle_plazo_vencido">El plazo de 3 días para el registro tardío venció. Aún puedes reprogramarla.</string>
+    <string name="sesion_detalle_reprogramar">Reprogramar</string>
+    <string name="sesion_detalle_eliminar">Eliminar sesión</string>
+    <string name="sesion_eliminar_titulo">Eliminar sesión</string>
+    <string name="sesion_eliminar_mensaje">¿Eliminar esta sesión planificada? Esta acción no se puede deshacer.</string>
+    <string name="sesion_eliminar_confirmar">Eliminar</string>
+    <string name="sesion_no_encontrada">La sesión solicitada no existe</string>
+
+    <!-- Errores de validación de sesiones (RN-04 a RN-12, RNF-08) -->
+    <string name="error_sesion_materia_obligatoria">Selecciona una materia activa</string>
+    <string name="error_sesion_materia_inactiva">La materia seleccionada está archivada</string>
+    <string name="error_sesion_fecha_obligatoria">Ingresa la fecha de la sesión</string>
+    <string name="error_sesion_fecha_invalida">Usa una fecha válida en formato YYYY-MM-DD</string>
+    <string name="error_sesion_fecha_pasada">No puedes planificar en una fecha anterior a hoy</string>
+    <string name="error_sesion_pasada_fuera_ventana">Solo puedes registrar sesiones pasadas de los últimos 3 días</string>
+    <string name="error_sesion_hora_inicio_obligatoria">Ingresa la hora de inicio</string>
+    <string name="error_sesion_hora_fin_obligatoria">Ingresa la hora de fin</string>
+    <string name="error_sesion_hora_invalida">Usa una hora válida de 24 h en formato HH:mm</string>
+    <string name="error_sesion_horario_fin_no_posterior">La hora de fin debe ser posterior a la de inicio</string>
+    <string name="error_sesion_duracion_real_invalida">La duración real debe ser mayor que 0 minutos</string>
+    <string name="error_sesion_notas_largas">Las notas pueden tener hasta 500 caracteres</string>
+    <string name="error_sesion_solapada">Se cruza con otra sesión en ese horario</string>
+    <string name="error_sesion_solapada_detalle">Se cruza con «%1$s» (%2$s – %3$s)</string>
+    <string name="error_sesion_transicion_no_permitida">El estado actual de la sesión no permite esa acción</string>
+    <string name="error_sesion_completar_mismo_dia">Solo puedes completar la sesión el mismo día programado</string>
+    <string name="error_sesion_registro_tardio_vencido">Solo se admite registro tardío hasta 3 días después de la sesión</string>
+    <string name="error_sesion_no_eliminable">Solo se pueden eliminar sesiones en estado Pendiente</string>
 </resources>

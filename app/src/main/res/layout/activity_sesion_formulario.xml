@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".adapter.in.ui.SesionFormularioActivity"
+    tools:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barraSuperior"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationContentDescription="@string/volver"
+        app:navigationIcon="@drawable/ic_volver"
+        app:title="@string/sesion_form_titulo_planificar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <RadioGroup
+                android:id="@+id/grupoModo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioPlanificar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:minHeight="48dp"
+                    android:text="@string/sesion_form_modo_planificar" />
+
+                <RadioButton
+                    android:id="@+id/radioPasada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:minHeight="48dp"
+                    android:text="@string/sesion_form_modo_pasada" />
+            </RadioGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/grupoMateria"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="16dp"
+                android:hint="@string/sesion_form_materia"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/selectorMateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="Matemáticas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/grupoFecha"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:hint="@string/sesion_form_fecha"
+                    android:maxWidth="400dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/campoFecha"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="date"
+                        android:maxWidth="400dp"
+                        android:minHeight="48dp"
+                        tools:text="2026-11-14" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonElegirFecha"
+                    style="@style/Widget.Material3.Button.IconButton.Outlined"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:contentDescription="@string/sesion_form_elegir_fecha"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:icon="@drawable/ic_calendario" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/grupoHoraInicio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:hint="@string/sesion_form_hora_inicio"
+                    android:maxWidth="400dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/campoHoraInicio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="time"
+                        android:maxWidth="400dp"
+                        android:minHeight="48dp"
+                        tools:text="10:00" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonElegirHoraInicio"
+                    style="@style/Widget.Material3.Button.IconButton.Outlined"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:contentDescription="@string/sesion_form_elegir_hora_inicio"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:icon="@drawable/ic_reloj" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/grupoHoraFin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:hint="@string/sesion_form_hora_fin"
+                    android:maxWidth="400dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/campoHoraFin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="time"
+                        android:maxWidth="400dp"
+                        android:minHeight="48dp"
+                        tools:text="11:30" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonElegirHoraFin"
+                    style="@style/Widget.Material3.Button.IconButton.Outlined"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:contentDescription="@string/sesion_form_elegir_hora_fin"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:icon="@drawable/ic_reloj" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textoDuracionPlanificada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:maxWidth="600dp"
+                android:text="@string/sesion_form_duracion_planificada_invalida"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                tools:text="Duración planificada: 90 min" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/grupoDuracionReal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="16dp"
+                android:hint="@string/sesion_form_duracion_real"
+                android:maxWidth="400dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoDuracionReal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="90" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/grupoNotas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="16dp"
+                android:hint="@string/sesion_form_notas"
+                android:maxWidth="400dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="500">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoNotas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLines="4"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    android:minLines="2"
+                    tools:text="Repasar integrales por partes" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textoErrorFormulario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorError"
+                android:visibility="gone"
+                tools:text="Se cruza con otra sesión en ese horario"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonGuardarSesion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:minHeight="48dp"
+                android:text="@string/sesion_form_guardar" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

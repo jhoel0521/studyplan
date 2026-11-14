@@ -33,15 +33,17 @@
 
         <TextView
             android:id="@+id/nombreMateria"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="600dp"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             tools:text="Matemáticas" />
 
         <TextView
             android:id="@+id/docenteMateria"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="600dp"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="Dra. Ruiz" />
     </LinearLayout>

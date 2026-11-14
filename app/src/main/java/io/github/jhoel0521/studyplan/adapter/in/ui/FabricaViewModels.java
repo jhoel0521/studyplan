@@ -25,7 +25,26 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
             return (T) new PerfilInicialViewModel(app.configurarPerfil(), app.ejecutor());
         }
         if (clase.isAssignableFrom(InicioViewModel.class)) {
-            return (T) new InicioViewModel(app.obtenerResumenInicio(), app.ejecutor());
+            return (T) new InicioViewModel(
+                    app.obtenerResumenInicio(), app.listarMaterias(), app.ejecutor());
+        }
+        if (clase.isAssignableFrom(SesionFormularioViewModel.class)) {
+            return (T) new SesionFormularioViewModel(
+                    app.planificarSesion(),
+                    app.registrarSesionPasada(),
+                    app.reprogramarSesion(),
+                    app.listarMaterias(),
+                    app.consultarSesion(),
+                    app.reloj(),
+                    app.ejecutor());
+        }
+        if (clase.isAssignableFrom(SesionDetalleViewModel.class)) {
+            return (T) new SesionDetalleViewModel(
+                    app.consultarSesion(),
+                    app.completarSesion(),
+                    app.registrarSesionTardia(),
+                    app.eliminarSesion(),
+                    app.ejecutor());
         }
         if (clase.isAssignableFrom(ProteccionViewModel.class)) {
             return (T) new ProteccionViewModel(app.consultarEstadoArranque(), app.ejecutor());
