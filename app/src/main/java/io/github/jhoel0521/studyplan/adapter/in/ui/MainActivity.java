@@ -33,7 +33,7 @@ public class MainActivity extends ActividadProtegida {
         setContentView(R.layout.activity_main);
         aplicarInsets();
         enlazarVistas();
-        enlazarBarraInferior(R.id.nav_inicio);
+        enlazarBarraInferior(DestinoPrincipal.INICIO);
         modelo = viewModel(InicioViewModel.class);
         modelo.resumen().observe(this, this::onResumen);
     }

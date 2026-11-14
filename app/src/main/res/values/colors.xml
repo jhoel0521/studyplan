@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Paleta PROVISIONAL de las materias: el Product Owner define la definitiva al final, en una especificación propia.
+         El color se guarda como entero ARGB, así que cambiar esta lista no exige migrar datos. -->
+    <color name="materia_azul">#1E88E5</color>
+    <color name="materia_verde">#43A047</color>
+    <color name="materia_naranja">#FB8C00</color>
+    <color name="materia_rojo">#E53935</color>
+    <color name="materia_morado">#8E24AA</color>
+    <color name="materia_turquesa">#00897B</color>
+    <color name="materia_rosa">#D81B60</color>
+    <color name="materia_gris">#546E7A</color>
 </resources>

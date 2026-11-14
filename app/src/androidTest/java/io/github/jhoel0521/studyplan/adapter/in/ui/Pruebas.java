@@ -1,6 +1,7 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
@@ -40,6 +41,23 @@ final class Pruebas {
             AplicadorApariencia.aplicarIdioma(Idioma.ES);
         });
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
+    /** Espera hasta 8 s a que ninguna vista cumpla el criterio (las listas animan las filas que desaparecen). */
+    @SuppressWarnings("BusyWait") // sondeo con tope
+    static void esperarAusente(Matcher<View> criterio) throws InterruptedException {
+        long limite = System.currentTimeMillis() + ESPERA_MAXIMA_MS;
+        while (true) {
+            try {
+                onView(criterio).check(doesNotExist());
+                return;
+            } catch (AssertionError e) {
+                if (System.currentTimeMillis() > limite) {
+                    throw e;
+                }
+                Thread.sleep(150);
+            }
+        }
     }
 
     /** Espera hasta 8 s a que la vista cumpla el criterio (las lecturas de datos ocurren en segundo plano). */

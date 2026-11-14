@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contenido del modal de selección de color (SelectorColorDialogo). -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".adapter.in.ui.MateriaFormularioActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="8dp">
+
+        <com.skydoves.colorpickerview.ColorPickerView
+            android:id="@+id/selectorColor"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:contentDescription="@string/materia_color_selector" />
+
+        <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+            android:id="@+id/barraBrillo"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_marginTop="12dp"
+            android:contentDescription="@string/materia_color_brillo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/vistaPreviaDialogo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_circulo" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contenedorColorHex"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:hint="@string/materia_color_hex"
+                app:prefixText="#">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoColorHex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="0123456789abcdefABCDEF"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapCharacters|textNoSuggestions"
+                    android:maxLength="6"
+                    android:minHeight="48dp"
+                    tools:text="1E88E5" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/materia_color_rapidos"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            tools:text="Colores rápidos" />
+
+        <GridLayout
+            android:id="@+id/atajosColores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:columnCount="4" />
+    </LinearLayout>
+</ScrollView>

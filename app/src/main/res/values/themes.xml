@@ -6,4 +6,12 @@
     </style>
 
     <style name="Theme.StudyPlan" parent="Base.Theme.StudyPlan" />
+
+    <!-- Botón de un grupo de botones unidos (como btn-group de Bootstrap): relleno del color primario y una línea fina
+         clara que separa un botón del siguiente. -->
+    <style name="Widget.StudyPlan.BotonGrupo" parent="Widget.Material3.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOnPrimary</item>
+    </style>
 </resources>

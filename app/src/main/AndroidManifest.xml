@@ -38,6 +38,13 @@
         <activity
             android:name=".adapter.in.ui.BorrarDatosActivity"
             android:exported="false" />
+        <activity
+            android:name=".adapter.in.ui.MateriasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.in.ui.MateriaFormularioActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- Guarda el idioma elegido en Android 12 o anterior (HU-03) -->
         <service

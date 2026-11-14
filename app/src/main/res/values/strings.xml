@@ -53,4 +53,42 @@
     <string name="borrar_continuar">Continuar</string>
     <string name="borrar_segunda_confirmacion">Esta acción es definitiva y no se puede deshacer. ¿Confirmas el borrado?</string>
     <string name="borrar_confirmar">Borrar todo</string>
+
+    <!-- Materias (HU-06 a HU-09, HU-46) -->
+    <string name="materias_vacia">Aún no tienes materias. Toca «+» para registrar la primera.</string>
+    <string name="materias_archivadas">Archivadas (%1$d)</string>
+    <string name="materias_horas">%1$s h</string>
+    <string name="materias_agregar">Nueva materia</string>
+    <string name="materia_nueva">Nueva materia</string>
+    <string name="materia_editar">Editar materia</string>
+    <string name="materia_nombre">Nombre de la materia</string>
+    <string name="materia_docente">Docente (opcional)</string>
+    <string name="materia_color">Color</string>
+    <string name="materia_color_n">Color %1$d</string>
+    <string name="materia_guardar">Guardar</string>
+    <string name="materia_archivar">Archivar</string>
+    <string name="materia_desarchivar">Desarchivar</string>
+    <string name="materia_eliminar">Eliminar</string>
+    <string name="materia_eliminar_titulo">Eliminar materia</string>
+    <string name="materia_eliminar_mensaje">¿Eliminar «%1$s» definitivamente? No se puede deshacer.</string>
+    <string name="materia_eliminar_confirmar">Eliminar</string>
+    <string name="error_materia_nombre_vacio">Ingresa el nombre de la materia</string>
+    <string name="error_materia_nombre_largo">El nombre puede tener hasta 50 caracteres</string>
+    <string name="error_materia_duplicada">Ya existe una materia con ese nombre</string>
+    <string name="error_materia_con_sesiones">Esta materia tiene sesiones y no se puede eliminar: archívala</string>
+    <string name="error_materia_ya_activa">La materia ya está activa</string>
+    <string name="error_materia_no_encontrada">No se encontró la materia</string>
+    <string name="indicador_plegado">▾</string>
+    <string name="indicador_desplegado">▴</string>
+    <string name="materias_archivadas_plegadas">Archivadas (%1$d), plegadas. Toca para desplegar</string>
+    <string name="materias_archivadas_desplegadas">Archivadas (%1$d), desplegadas. Toca para plegar</string>
+    <string name="materia_color_hex">Color en hexadecimal</string>
+    <string name="error_color_hex">Usa 3 o 6 dígitos hexadecimales, por ejemplo 1E88E5</string>
+    <string name="materia_color_tocar">Toca para cambiar</string>
+    <string name="materia_color_descripcion">Color %1$s. Toca para cambiar</string>
+    <string name="materia_color_titulo">Elegir color</string>
+    <string name="materia_color_elegir">Elegir</string>
+    <string name="materia_color_selector">Selector de color: arrastra para elegir</string>
+    <string name="materia_color_brillo">Brillo</string>
+    <string name="materia_color_rapidos">Colores rápidos</string>
 </resources>

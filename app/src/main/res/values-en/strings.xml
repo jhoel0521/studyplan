@@ -53,4 +53,42 @@
     <string name="borrar_continuar">Continue</string>
     <string name="borrar_segunda_confirmacion">This is final and cannot be undone. Do you confirm the deletion?</string>
     <string name="borrar_confirmar">Delete everything</string>
+
+    <!-- Subjects (HU-06 to HU-09, HU-46) -->
+    <string name="materias_vacia">You have no subjects yet. Tap “+” to add the first one.</string>
+    <string name="materias_archivadas">Archived (%1$d)</string>
+    <string name="materias_horas">%1$s h</string>
+    <string name="materias_agregar">New subject</string>
+    <string name="materia_nueva">New subject</string>
+    <string name="materia_editar">Edit subject</string>
+    <string name="materia_nombre">Subject name</string>
+    <string name="materia_docente">Teacher (optional)</string>
+    <string name="materia_color">Color</string>
+    <string name="materia_color_n">Color %1$d</string>
+    <string name="materia_guardar">Save</string>
+    <string name="materia_archivar">Archive</string>
+    <string name="materia_desarchivar">Unarchive</string>
+    <string name="materia_eliminar">Delete</string>
+    <string name="materia_eliminar_titulo">Delete subject</string>
+    <string name="materia_eliminar_mensaje">Delete “%1$s” permanently? This cannot be undone.</string>
+    <string name="materia_eliminar_confirmar">Delete</string>
+    <string name="error_materia_nombre_vacio">Enter the subject name</string>
+    <string name="error_materia_nombre_largo">The name can have up to 50 characters</string>
+    <string name="error_materia_duplicada">A subject with that name already exists</string>
+    <string name="error_materia_con_sesiones">This subject has sessions and cannot be deleted: archive it instead</string>
+    <string name="error_materia_ya_activa">The subject is already active</string>
+    <string name="error_materia_no_encontrada">Subject not found</string>
+    <string name="indicador_plegado">▾</string>
+    <string name="indicador_desplegado">▴</string>
+    <string name="materias_archivadas_plegadas">Archived (%1$d), collapsed. Tap to expand</string>
+    <string name="materias_archivadas_desplegadas">Archived (%1$d), expanded. Tap to collapse</string>
+    <string name="materia_color_hex">Color in hexadecimal</string>
+    <string name="error_color_hex">Use 3 or 6 hexadecimal digits, for example 1E88E5</string>
+    <string name="materia_color_tocar">Tap to change</string>
+    <string name="materia_color_descripcion">Color %1$s. Tap to change</string>
+    <string name="materia_color_titulo">Choose color</string>
+    <string name="materia_color_elegir">Choose</string>
+    <string name="materia_color_selector">Color picker: drag to choose</string>
+    <string name="materia_color_brillo">Brightness</string>
+    <string name="materia_color_rapidos">Quick colors</string>
 </resources>

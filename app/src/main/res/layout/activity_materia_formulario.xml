@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".adapter.in.ui.MateriaFormularioActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barraSuperior"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationContentDescription="@string/volver"
+        app:navigationIcon="@drawable/ic_volver"
+        app:title="@string/materia_nueva" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contenedorNombreMateria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/materia_nombre"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoNombreMateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:minHeight="48dp"
+                    tools:text="Matemáticas" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/materia_docente"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoDocenteMateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:minHeight="48dp"
+                    tools:text="Dra. Ruiz" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/materia_color"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="Color" />
+
+            <LinearLayout
+                android:id="@+id/filaColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/vistaPreviaColor"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_circulo" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codigoColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        tools:text="#1E88E5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/materia_color_tocar"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        tools:text="Toca para cambiar" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Grupo de botones unidos, como el btn-group de Bootstrap: mismo color y esquinas redondeadas solo en los extremos. -->
+            <LinearLayout
+                android:id="@+id/grupoBotonesMateria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonGuardarMateria"
+                    style="@style/Widget.StudyPlan.BotonGrupo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/materia_guardar" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonArchivarMateria"
+                    style="@style/Widget.StudyPlan.BotonGrupo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-1dp"
+                    android:text="@string/materia_archivar" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonEliminarMateria"
+                    style="@style/Widget.StudyPlan.BotonGrupo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-1dp"
+                    android:text="@string/materia_eliminar" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

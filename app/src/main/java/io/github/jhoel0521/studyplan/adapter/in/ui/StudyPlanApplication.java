@@ -10,26 +10,42 @@ import java.util.concurrent.Executors;
 
 import io.github.jhoel0521.studyplan.adapter.out.persistence.AjustesRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.AlmacenDatosRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.MateriaRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.PerfilRepositoryRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.SinSesionesDeMateria;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.StudyPlanDatabase;
 import io.github.jhoel0521.studyplan.adapter.out.security.DisponibilidadBloqueoBiometrico;
+import io.github.jhoel0521.studyplan.application.port.in.ArchivarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.BorrarDatos;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarPerfil;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadoArranque;
+import io.github.jhoel0521.studyplan.application.port.in.ConsultarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarPerfil;
 import io.github.jhoel0521.studyplan.application.port.in.ControlarSesionBloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.DesarchivarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.EditarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.EliminarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
+import io.github.jhoel0521.studyplan.application.port.in.RegistrarMateria;
+import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.BorrarDatosService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarAparienciaService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarBloqueoService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarPerfilService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarEstadoArranqueService;
+import io.github.jhoel0521.studyplan.application.service.ConsultarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarPerfilService;
+import io.github.jhoel0521.studyplan.application.service.DesarchivarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.EditarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.EliminarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
 import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
+import io.github.jhoel0521.studyplan.application.service.RegistrarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
 
@@ -51,6 +67,13 @@ public class StudyPlanApplication extends Application {
     private ConsultarEstadoArranque consultarEstadoArranque;
     private ObtenerResumenInicio obtenerResumenInicio;
     private BorrarDatos borrarDatos;
+    private RegistrarMateria registrarMateria;
+    private EditarMateria editarMateria;
+    private ConsultarMateria consultarMateria;
+    private ListarMaterias listarMaterias;
+    private ArchivarMateria archivarMateria;
+    private DesarchivarMateria desarchivarMateria;
+    private EliminarMateria eliminarMateria;
     private FabricaViewModels fabrica;
 
     /** @return la aplicación a la que pertenece el contexto */
@@ -72,6 +95,7 @@ public class StudyPlanApplication extends Application {
         PerfilRepositoryRoom perfiles = new PerfilRepositoryRoom(base.perfilDao());
         AjustesRepositoryRoom ajustes = new AjustesRepositoryRoom(base.ajustesDao());
         AlmacenDatosRoom almacen = new AlmacenDatosRoom(base);
+        MateriaRepositoryRoom materias = new MateriaRepositoryRoom(base.materiaDao());
         DisponibilidadBloqueoBiometrico disponibilidad = new DisponibilidadBloqueoBiometrico(this);
         SesionBloqueo sesion = new SesionBloqueo();
 
@@ -84,6 +108,13 @@ public class StudyPlanApplication extends Application {
         consultarEstadoArranque = new ConsultarEstadoArranqueService(perfiles, ajustes, sesion);
         obtenerResumenInicio = new ObtenerResumenInicioService(perfiles);
         borrarDatos = new BorrarDatosService(almacen, sesion);
+        registrarMateria = new RegistrarMateriaService(materias);
+        editarMateria = new EditarMateriaService(materias);
+        consultarMateria = new ConsultarMateriaService(materias);
+        listarMaterias = new ListarMateriasService(materias);
+        archivarMateria = new ArchivarMateriaService(materias);
+        desarchivarMateria = new DesarchivarMateriaService(materias);
+        eliminarMateria = new EliminarMateriaService(materias, new SinSesionesDeMateria());
         fabrica = new FabricaViewModels(this);
     }
 
@@ -141,5 +172,33 @@ public class StudyPlanApplication extends Application {
 
     public BorrarDatos borrarDatos() {
         return borrarDatos;
+    }
+
+    public RegistrarMateria registrarMateria() {
+        return registrarMateria;
+    }
+
+    public EditarMateria editarMateria() {
+        return editarMateria;
+    }
+
+    public ConsultarMateria consultarMateria() {
+        return consultarMateria;
+    }
+
+    public ListarMaterias listarMaterias() {
+        return listarMaterias;
+    }
+
+    public ArchivarMateria archivarMateria() {
+        return archivarMateria;
+    }
+
+    public DesarchivarMateria desarchivarMateria() {
+        return desarchivarMateria;
+    }
+
+    public EliminarMateria eliminarMateria() {
+        return eliminarMateria;
     }
 }

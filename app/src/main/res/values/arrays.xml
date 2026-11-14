@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta provisional de colores de materia (ver colors.xml). -->
+    <array name="paleta_materias">
+        <item>@color/materia_azul</item>
+        <item>@color/materia_verde</item>
+        <item>@color/materia_naranja</item>
+        <item>@color/materia_rojo</item>
+        <item>@color/materia_morado</item>
+        <item>@color/materia_turquesa</item>
+        <item>@color/materia_rosa</item>
+        <item>@color/materia_gris</item>
+    </array>
+</resources>

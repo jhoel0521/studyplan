@@ -2,10 +2,11 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
-import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.navigation.NavigationBarView;
@@ -24,6 +25,7 @@ import io.github.jhoel0521.studyplan.domain.EstadoArranque;
 public abstract class ActividadProtegida extends ActividadBase {
 
     private ProteccionViewModel proteccion;
+    private DestinoPrincipal destinoActivo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,16 +92,44 @@ public abstract class ActividadProtegida extends ActividadBase {
     }
 
     /**
-     * Prepara la barra de navegación reutilizable (inferior en teléfonos, riel lateral desde 600 dp): marca la pestaña activa y deshabilita las pantallas que
-     * aún no existen.
+     * Prepara la barra de navegación reutilizable (inferior en teléfonos, riel lateral desde 600 dp): marca la pestaña
+     * activa, habilita solo las pestañas implementadas y navega al elegir otra.
      *
-     * @param itemActivo id del elemento del menú de la pantalla actual
+     * <p>Regla de la pila de retroceso: siempre es {@code [Inicio, pestaña]}. Inicio se abre limpiando lo que tenga
+     * encima; cualquier otra pestaña se inicia y, si la actual no es Inicio, esta se cierra. Atrás desde una pestaña
+     * vuelve a Inicio y desde Inicio sale de la app.
+     *
+     * @param destinoActivo pestaña de la pantalla actual
      */
-    protected void enlazarBarraInferior(@IdRes int itemActivo) {
+    protected void enlazarBarraInferior(DestinoPrincipal destinoActivo) {
+        this.destinoActivo = destinoActivo;
         NavigationBarView barra = findViewById(R.id.barraInferior);
-        barra.getMenu().findItem(R.id.nav_calendario).setEnabled(false);
-        barra.getMenu().findItem(R.id.nav_estadisticas).setEnabled(false);
-        barra.getMenu().findItem(R.id.nav_materias).setEnabled(false);
-        barra.setSelectedItemId(itemActivo);
+        for (DestinoPrincipal destino : DestinoPrincipal.values()) {
+            barra.getMenu().findItem(destino.idMenu()).setEnabled(destino.implementado());
+        }
+        barra.setSelectedItemId(destinoActivo.idMenu());
+        barra.setOnItemSelectedListener(this::onDestinoElegido);
+    }
+
+    private boolean onDestinoElegido(@NonNull MenuItem opcion) {
+        DestinoPrincipal elegido = DestinoPrincipal.deIdMenu(opcion.getItemId());
+        if (elegido == null || !elegido.implementado()) {
+            return false;
+        }
+        if (elegido == destinoActivo) {
+            return true;
+        }
+        Intent intento = new Intent(this, elegido.actividad());
+        if (elegido == DestinoPrincipal.INICIO) {
+            intento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intento);
+            return false;
+        }
+        startActivity(intento);
+        if (destinoActivo != DestinoPrincipal.INICIO) {
+            finish();
+        }
+        // Se devuelve false para que la barra de esta pantalla conserve su pestaña: Atrás vuelve a ella.
+        return false;
     }
 }

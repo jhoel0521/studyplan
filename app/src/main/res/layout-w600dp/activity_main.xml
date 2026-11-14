@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Variante para pantallas de 600 dp o más: el riel de navegación va a la izquierda y el contenido a su derecha. -->
+<!-- 600 dp o más: riel de navegación a la izquierda y el contenido a su derecha. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,81 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/barraSuperior"
+    <include
+        layout="@layout/contenido_inicio"
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/barraInferior"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_inicio"
-        app:title="@string/app_name" />
-
-    <TextView
-        android:id="@+id/saludo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:textAppearance="?attr/textAppearanceHeadlineMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/barraInferior"
-        app:layout_constraintTop_toBottomOf="@id/barraSuperior"
-        tools:text="¡Hola, Ana!" />
-
-    <TextView
-        android:id="@+id/tituloProgreso"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/inicio_progreso_semana"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/barraInferior"
-        app:layout_constraintTop_toBottomOf="@id/saludo"
-        tools:text="Progreso de la semana" />
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/barraProgreso"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="24dp"
-        android:max="100"
-        android:progress="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/barraInferior"
-        app:layout_constraintTop_toBottomOf="@id/tituloProgreso" />
-
-    <TextView
-        android:id="@+id/textoProgreso"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/barraInferior"
-        app:layout_constraintTop_toBottomOf="@id/barraProgreso"
-        tools:text="0 / 20 h" />
-
-    <TextView
-        android:id="@+id/estadoVacio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/inicio_sin_sesiones"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/barraInferior"
-        app:layout_constraintTop_toBottomOf="@id/textoProgreso"
-        tools:text="Aún no tienes sesiones planificadas." />
-
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

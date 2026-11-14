@@ -7,5 +7,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     app:labelVisibilityMode="labeled"
+    app:paddingStartSystemWindowInsets="false"
+    app:paddingTopSystemWindowInsets="false"
     app:menu="@menu/menu_barra_inferior"
     tools:context=".adapter.in.ui.MainActivity" />

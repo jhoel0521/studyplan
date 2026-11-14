@@ -29,7 +29,10 @@ public abstract class ActividadBase extends AppCompatActivity {
 
     private WindowInsetsCompat onInsets(View vista, WindowInsetsCompat insets) {
         Insets barras = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-        vista.setPadding(barras.left, barras.top, barras.right, barras.bottom);
+        // Las pantallas con barra de navegación (inferior o riel) la dejan reservar su propio espacio bajo los botones
+        // del sistema: si además se rellenara aquí, quedaría una franja en blanco doble.
+        int abajo = vista.findViewById(R.id.barraInferior) != null ? 0 : barras.bottom;
+        vista.setPadding(barras.left, barras.top, barras.right, abajo);
         return insets;
     }
 
