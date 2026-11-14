@@ -29,12 +29,6 @@ public final class ListarMateriasService implements ListarMaterias {
         this.sesiones = sesiones;
     }
 
-    /** Constructor provisional hasta conectar el adaptador Room v3 en Bloque 3. */
-    @Deprecated
-    public ListarMateriasService(MateriaRepository repositorio) {
-        this(repositorio, null);
-    }
-
     @Override
     public ListadoMaterias ejecutar() {
         List<Materia> activas = new ArrayList<>(repositorio.activas());

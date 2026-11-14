@@ -12,14 +12,20 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
+import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Perfil;
 import io.github.jhoel0521.studyplan.domain.ResumenInicio;
+import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakePerfilRepository;
+import io.github.jhoel0521.studyplan.fakes.FakeReloj;
+import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
 
 /**
  * Pruebas del ViewModel de Inicio.
  *
- * <p>Verifica, de forma parcial: HU-02 (saludo y progreso {@code 0 / meta}).
+ * <p>Verifica: HU-02.
  */
 public class InicioViewModelTest {
 
@@ -32,7 +38,18 @@ public class InicioViewModelTest {
     @Before
     public void preparar() {
         perfiles = new FakePerfilRepository();
-        modelo = new InicioViewModel(new ObtenerResumenInicioService(perfiles), Runnable::run);
+        FakeSesionRepository sesiones = new FakeSesionRepository();
+        FakeMateriaRepository materias = new FakeMateriaRepository();
+        FakeReloj reloj = new FakeReloj(
+                Fecha.de(2026, 11, 14).valor(), Hora.de(10, 0).valor());
+        modelo = new InicioViewModel(
+                new ObtenerResumenInicioService(
+                        perfiles,
+                        sesiones,
+                        materias,
+                        reloj,
+                        new VencerSesionesPendientesService(sesiones, reloj)),
+                Runnable::run);
     }
 
     @Test

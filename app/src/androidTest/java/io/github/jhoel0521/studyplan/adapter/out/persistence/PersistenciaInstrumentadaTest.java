@@ -17,9 +17,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.Tema;
 
 /**
@@ -37,6 +40,7 @@ public class PersistenciaInstrumentadaTest {
     private AjustesRepositoryRoom ajustes;
     private AlmacenDatosRoom almacen;
     private MateriaRepositoryRoom materias;
+    private SesionRepositoryRoom sesiones;
 
     @Before
     public void abrirBase() {
@@ -46,6 +50,7 @@ public class PersistenciaInstrumentadaTest {
         ajustes = new AjustesRepositoryRoom(base.ajustesDao());
         almacen = new AlmacenDatosRoom(base);
         materias = new MateriaRepositoryRoom(base.materiaDao());
+        sesiones = new SesionRepositoryRoom(base.sesionDao());
     }
 
     @After
@@ -54,8 +59,8 @@ public class PersistenciaInstrumentadaTest {
     }
 
     @Test
-    public void laBaseAbreConLaVersionDos() {
-        assertEquals(2, base.getOpenHelper().getWritableDatabase().getVersion());
+    public void laBaseAbreConLaVersionTres() {
+        assertEquals(3, base.getOpenHelper().getWritableDatabase().getVersion());
     }
 
     @Test
@@ -92,10 +97,15 @@ public class PersistenciaInstrumentadaTest {
     public void borrarTodoVaciaLasTablasYRestableceLosAjustes() {
         perfiles.guardar(Perfil.crear("Ana", 20).valor());
         ajustes.guardar(new Ajustes(Tema.OSCURO, Idioma.EN, true));
-        materias.guardar(Materia.crear("Física", 0xFF2196F3, null).valor());
+        Materia fisica = materias.guardar(Materia.crear("Física", 0xFF2196F3, null).valor());
+        Fecha hoy = Fecha.de(2026, 11, 14).valor();
+        sesiones.guardar(SesionEstudio.planificar(
+                fisica.id(), hoy, hoy, Hora.de(10, 0).valor(), Hora.de(11, 0).valor(), null, null)
+                .valor());
         almacen.borrarTodo();
         assertFalse(perfiles.obtener().isPresent());
         assertTrue(materias.activas().isEmpty());
+        assertTrue(sesiones.listarPorFecha(hoy).isEmpty());
         assertNull(base.ajustesDao().obtener());
         assertEquals(Ajustes.porDefecto(), ajustes.obtener());
     }

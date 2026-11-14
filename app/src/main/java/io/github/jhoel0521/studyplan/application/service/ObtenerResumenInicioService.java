@@ -47,16 +47,6 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
         this.vencerPendientes = Objects.requireNonNull(vencerPendientes, "vencerPendientes");
     }
 
-    /** Constructor provisional hasta conectar el adaptador Room v3 en Bloque 3. */
-    @Deprecated
-    public ObtenerResumenInicioService(PerfilRepository perfiles) {
-        this.perfiles = Objects.requireNonNull(perfiles, "perfiles");
-        this.sesiones = null;
-        this.materias = null;
-        this.reloj = null;
-        this.vencerPendientes = null;
-    }
-
     @Override
     public Optional<ResumenInicio> ejecutar() {
         Optional<Perfil> perfilOpt = perfiles.obtener();

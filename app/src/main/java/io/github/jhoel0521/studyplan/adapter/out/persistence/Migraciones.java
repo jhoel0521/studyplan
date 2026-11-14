@@ -25,4 +25,28 @@ public final class Migraciones {
             base.execSQL("CREATE INDEX IF NOT EXISTS `index_materia_nombre_clave` ON `materia` (`nombre_clave`)");
         }
     };
+
+    /** Versión 2 a versión 3: crea la tabla {@code sesion_estudio} con FKs e índices (HU-10 a HU-15). */
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase base) {
+            base.execSQL("CREATE TABLE IF NOT EXISTS `sesion_estudio` ("
+                    + "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + "`materia_id` INTEGER NOT NULL, "
+                    + "`fecha` TEXT NOT NULL, "
+                    + "`hora_inicio` TEXT NOT NULL, "
+                    + "`hora_fin` TEXT NOT NULL, "
+                    + "`duracion_planificada_minutos` INTEGER NOT NULL, "
+                    + "`duracion_real_minutos` INTEGER, "
+                    + "`estado` TEXT NOT NULL, "
+                    + "`notas` TEXT, "
+                    + "`sesion_origen_id` INTEGER, "
+                    + "FOREIGN KEY(`materia_id`) REFERENCES `materia`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , "
+                    + "FOREIGN KEY(`sesion_origen_id`) REFERENCES `sesion_estudio`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_materia_id` ON `sesion_estudio` (`materia_id`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_fecha` ON `sesion_estudio` (`fecha`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_estado` ON `sesion_estudio` (`estado`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_sesion_origen_id` ON `sesion_estudio` (`sesion_origen_id`)");
+        }
+    };
 }

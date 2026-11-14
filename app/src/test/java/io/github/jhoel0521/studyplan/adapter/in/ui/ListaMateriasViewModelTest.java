@@ -17,6 +17,7 @@ import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
 import io.github.jhoel0521.studyplan.application.service.RegistrarMateriaService;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
+import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
 
 /**
  * Pruebas del ViewModel de la lista de materias con ejecución instantánea.
@@ -38,7 +39,9 @@ public class ListaMateriasViewModelTest {
     public void preparar() {
         repositorio = new FakeMateriaRepository();
         registrar = new RegistrarMateriaService(repositorio);
-        modelo = new ListaMateriasViewModel(new ListarMateriasService(repositorio), Runnable::run);
+        modelo = new ListaMateriasViewModel(
+                new ListarMateriasService(repositorio, new FakeSesionRepository()),
+                Runnable::run);
     }
 
     private List<FilaMateria> filas() {

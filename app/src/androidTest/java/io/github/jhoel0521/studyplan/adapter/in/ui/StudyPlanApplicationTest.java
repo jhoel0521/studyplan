@@ -27,6 +27,15 @@ public class StudyPlanApplicationTest {
         assertNotNull(app.consultarEstadoArranque());
         assertNotNull(app.obtenerResumenInicio());
         assertNotNull(app.borrarDatos());
+        assertNotNull(app.reloj());
+        assertNotNull(app.vencerSesionesPendientes());
+        assertNotNull(app.planificarSesion());
+        assertNotNull(app.registrarSesionPasada());
+        assertNotNull(app.completarSesion());
+        assertNotNull(app.registrarSesionTardia());
+        assertNotNull(app.reprogramarSesion());
+        assertNotNull(app.consultarSesion());
+        assertNotNull(app.eliminarSesion());
         assertNotNull(app.ejecutor());
         assertNotNull(app.fabrica());
     }

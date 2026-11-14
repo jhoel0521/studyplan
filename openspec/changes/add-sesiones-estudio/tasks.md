@@ -40,10 +40,10 @@
 
 ## Bloque 3 — Persistencia Room v3, migración y adaptadores reales (`adapter.out.persistence`)
 
-- [ ] 3.1 Crear `SesionEntity` (`sesion_estudio`, FK a `materia(id) ON DELETE RESTRICT`, autorreferencia `sesion_origen_id` con `ON DELETE SET NULL`, 4 índices), `SesionDao` (con `@Transaction` para reprogramación atómica y consultas parametrizadas), `SesionMapper` y `RelojSistema`. Actualizar `StudyPlanDatabase` a `version = 3` con `Migraciones.MIGRATION_2_3` y exportar `app/schemas/.../3.json`.
-- [ ] 3.2 Implementar `SesionRepositoryRoom` y reemplazar `SinSesionesDeMateria` por `SesionesDeMateriaRoom` conectado a `SesionDao.contarPorMateria`, actualizando `StudyPlanApplication` para componer el repositorio real, `RelojSistema`, `SesionesDeMateriaRoom` y los nuevos casos de uso (`HU-08`, `RN-03`).
-- [ ] 3.3 Escribir `SesionRepositoryRoomTest` (CRUD, consultas por fecha y rango, suma real por materia y semana excluyendo no completadas, reprogramación transaccional, búsqueda de sesión hija, `ON DELETE RESTRICT` y `borrarTodo()`) y `Migracion3InstrumentalTest` con `MigrationTestHelper` (`v2 → v3` contra `3.json` conservando perfil, ajustes y materias, más actualización del test de versión actual).
-- [ ] 3.4 Ejecutar `./gradlew assembleDebug testDebugUnitTest lintDebug` (y pruebas instrumentadas de BD/migración si hay emulador), realizar `git commit` por ruta explícita (`feat(HU-10): agregar persistencia Room v3 y adaptadores reales de sesiones`) y ejecutar `git push`.
+- [x] 3.1 Crear `SesionEntity` (`sesion_estudio`, FK a `materia(id) ON DELETE RESTRICT`, autorreferencia `sesion_origen_id` con `ON DELETE SET NULL`, 4 índices), `SesionDao` (con `@Transaction` para reprogramación atómica y consultas parametrizadas), `SesionMapper` y `RelojSistema`. Actualizar `StudyPlanDatabase` a `version = 3` con `Migraciones.MIGRATION_2_3` y exportar `app/schemas/.../3.json`. *(Mapeo integrado en `Mapeadores.java`)*.
+- [x] 3.2 Implementar `SesionRepositoryRoom` y reemplazar `SinSesionesDeMateria` por `SesionesDeMateriaRoom` conectado a `SesionDao.contarPorMateria`, actualizando `StudyPlanApplication` para componer el repositorio real, `RelojSistema`, `SesionesDeMateriaRoom` y los nuevos casos de uso (`HU-08`, `RN-03`).
+- [x] 3.3 Escribir `SesionRepositoryRoomTest` (CRUD, consultas por fecha y rango, suma real por materia y semana excluyendo no completadas, reprogramación transaccional, búsqueda de sesión hija, `ON DELETE RESTRICT` y `borrarTodo()`) y `Migracion3InstrumentalTest` con `MigrationTestHelper` (`v2 → v3` contra `3.json` conservando perfil, ajustes y materias, más actualización del test de versión actual).
+- [x] 3.4 Ejecutar `./gradlew assembleDebug testDebugUnitTest lintDebug` (y pruebas instrumentadas de BD/migración si hay emulador), realizar `git commit` por ruta explícita (`feat(HU-10): agregar persistencia Room v3 y adaptadores reales de sesiones`) y ejecutar `git push`.
 
 ---
 
