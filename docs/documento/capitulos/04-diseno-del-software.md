@@ -2,7 +2,7 @@
 
 ## Arquitectura del Software
 
-StudyPlan adopta una arquitectura hexagonal (de puertos y adaptadores) organizada en tres capas: presentación, núcleo de la aplicación e infraestructura [[pendiente: citar la fuente de la arquitectura hexagonal y verificarla]]. El núcleo, formado por los casos de uso y el dominio, no depende de Android ni de ninguna tecnología externa: se comunica con el exterior solo a través de puertos, que son interfaces Java. Los adaptadores de entrada conducen el núcleo (pantallas, widget y notificaciones) y los adaptadores de salida son llamados por él (Room, Google Drive, huella o PIN, alarmas); cada adaptador de salida implementa un puerto de salida, de modo que las dependencias siempre apuntan hacia el núcleo.
+StudyPlan adopta una arquitectura hexagonal (de puertos y adaptadores) organizada en tres capas: presentación, núcleo de la aplicación e infraestructura (Cockburn, 2005). El núcleo, formado por los casos de uso y el dominio, no depende de Android ni de ninguna tecnología externa: se comunica con el exterior solo a través de puertos, que son interfaces Java. Los adaptadores de entrada conducen el núcleo (pantallas, widget y notificaciones) y los adaptadores de salida son llamados por él (Room, Google Drive, huella o PIN, alarmas); cada adaptador de salida implementa un puerto de salida, de modo que las dependencias siempre apuntan hacia el núcleo.
 
 El patrón MVVM, fijado en el marco tecnológico, se conserva dentro de la capa de presentación: la Activity o el Fragment y su ViewModel forman el adaptador de entrada. La separación facilita los principios SOLID: responsabilidad única (un caso de uso por clase), inversión de dependencias (el núcleo depende de interfaces y no de Room ni de Android) y segregación de interfaces (puertos pequeños y específicos). Como el dominio no importa clases de Android, sus reglas, entre ellas la máquina de estados de la sesión, se prueban con JUnit sin emulador. La @figura:arq_hexagonal muestra las tres capas y la @tabla:capas resume su correspondencia con los paquetes del proyecto.
 
@@ -24,11 +24,43 @@ Nota: Elaboración propia. Los paquetes cuelgan de io.github.jhoel0521.studyplan
 
 ### Modelo Lógico
 
-[[pendiente: modelo lógico (tablas, claves y relaciones) a partir del modelo de dominio del Anexo A, cuando se diseñe la capa de persistencia con Room]]
+El esquema de Room está en la versión 2 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
+
+![Modelo lógico de la base de datos de StudyPlan](../recursos/diagramas/modelo_logico.png){#modelo_logico ancho=16.5}
+
+Nota: Elaboración propia, generada desde el esquema de Room.
 
 ### Diccionario de Datos
 
-[[pendiente: diccionario de datos de cada tabla (campo, tipo, restricciones y descripción)]]
+Cada tabla se describe en una tabla del documento. La columna *Restricciones* sale del esquema de Room y la descripción, de las reglas de negocio (RN) y las historias de usuario (HU) que la originan.
+
+Tabla: Diccionario de datos de la tabla perfil (Perfil del estudiante) {#diccionario_perfil anchos=3.4,2.2,3.6,6.8 tam=9}
+
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| id | INTEGER | PK, NOT NULL | Identificador de la única fila del perfil (siempre 1, RN-01). |
+| nombre | TEXT | NOT NULL | Nombre del estudiante, sin espacios en los extremos (HU-01). |
+| metaSemanalHoras | REAL | NOT NULL | Meta semanal predeterminada en horas, mayor que 0 y hasta 168 (RN-14). |
+
+Tabla: Diccionario de datos de la tabla ajustes (Ajustes de la aplicación) {#diccionario_ajustes anchos=3.4,2.2,3.6,6.8 tam=9}
+
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| id | INTEGER | PK, NOT NULL | Identificador de la única fila de ajustes (siempre 1). |
+| tema | TEXT | NOT NULL | Tema visual: SISTEMA, CLARO u OSCURO (HU-03). |
+| idioma | TEXT | NOT NULL | Idioma de la aplicación: ES o EN (HU-03). |
+| bloqueoActivo | INTEGER | NOT NULL | 1 si la app pide huella o PIN al abrirse y al volver a primer plano (HU-04). |
+
+Tabla: Diccionario de datos de la tabla materia (Materias del estudiante) {#diccionario_materia anchos=3.4,2.2,3.6,6.8 tam=9}
+
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| id | INTEGER | PK autoincremental, NOT NULL | Identificador autogenerado de la materia. |
+| nombre | TEXT | NOT NULL | Nombre saneado de la materia, de 1 a 50 caracteres (RN-02). |
+| nombre_clave | TEXT | NOT NULL | Nombre sin acentos y en mayúsculas: decide la unicidad entre las materias activas (RN-02). |
+| color | INTEGER | NOT NULL | Color de la materia como entero ARGB (paleta provisional). |
+| docente | TEXT | Admite nulo | Docente de la materia; vacío si no se indicó (texto libre opcional). |
+| archivada | INTEGER | NOT NULL | 1 si la materia está archivada (HU-08); 0 si está activa. |
 
 ## Diseño de la Interfaz de Usuario (UI/UX)
 
@@ -47,8 +79,8 @@ Tabla: Pantallas de StudyPlan, lo que se hace en cada una y su trazabilidad {#pa
 | Inicio | Muestra el saludo, las horas realizadas sobre la meta semanal, la próxima sesión y las sesiones de hoy. | HU-02, HU-25, HU-27 | OG |
 | Calendario | Ofrece las vistas Día, Semana y Mes con el estado de cada sesión; permite crear sesiones. | HU-16 a HU-21 | OE3 |
 | Estadísticas | Muestra horas, comparación semanal, cumplimiento, distribución y concentración. | HU-29 a HU-31, HU-45 | OE5 |
-| Materias | Lista las materias con sus horas y su meta semanal; da acceso al formulario. | HU-06, HU-09, HU-26 | OE2 |
-| Formulario de materia | Registra o edita nombre, color, docente y meta; archiva o elimina. | HU-06 a HU-08, HU-26 | OE2 |
+| Materias | Lista las materias activas en orden alfabético con color, docente y horas (hoy `0 h`, hasta que existan sesiones), la sección plegable de archivadas y el botón «+». | HU-06, HU-08, HU-09, HU-46 | OE2 |
+| Formulario de materia | Registra o edita nombre, color y docente (la meta por materia llega con las metas, HU-26); archiva, desarchiva o elimina con confirmación. | HU-06 a HU-08, HU-26, HU-46 | OE2 |
 | Registrar sesión | Planifica una sesión validando horario y cruces; registra sesiones pasadas (hasta 3 días). | HU-10, HU-11, HU-34 | OE2 |
 | Sesión en curso | Cronómetro libre o Pomodoro, pausar o reanudar y detener; modo No molestar. | HU-22 a HU-24 | OE4 |
 | Al volver a la app | Pregunta si el estudiante siguió estudiando tras salir de la app. | HU-40, HU-41 | OE4 |
@@ -61,6 +93,8 @@ Tabla: Pantallas de StudyPlan, lo que se hace en cada una y su trazabilidad {#pa
 | Borrar mis datos | Borra del teléfono, de Drive o de ambos con doble confirmación. | HU-38 | OE6 |
 
 Nota: Elaboración propia a partir de las especificaciones de OpenSpec.
+
+**Navegación entre pestañas.** Cada pestaña de la barra de navegación es una Activity y la pila de retroceso es siempre `[Inicio, pestaña]`: Atrás desde una pestaña vuelve a Inicio y Atrás desde Inicio sale de la aplicación. En teléfonos la barra va abajo y desde los 600 dp se sustituye por un riel lateral; cada pantalla principal tiene su envoltorio de teléfono y su variante `layout-w600dp`, que comparten el mismo contenido. Solo las pestañas implementadas están habilitadas.
 
 ### Wireframes y Mockups
 
@@ -75,5 +109,19 @@ La primera épica implementada reúne el perfil inicial (HU-01), el Inicio parci
 ![Diagrama de clases de la épica Configuración inicial](../recursos/diagramas/diagrama_clases_configuracion.png){#clases_configuracion ancho=16.5}
 
 Nota: Elaboración propia. Cada clase del diagrama existe en el código y cada clase de los paquetes aparece en el diagrama; el cotejo se repite con `python docs/build/cotejo_clases.py`.
+
+### Épica Gestión de materias
+
+La segunda épica implementada reúne el registro, la edición, el archivado y la eliminación de materias, la lista con sus horas y el desarchivado (HU-06 a HU-09 y HU-46). La @figura:clases_materias muestra sus clases: en la capa de presentación se detallan los métodos de las Activities y los ViewModel; en el núcleo, los campos y métodos de `Materia`; y en la infraestructura, la entidad, el DAO y el adaptador de Room. Las firmas salen del código fuente, no se escriben a mano.
+
+![Diagrama de clases de la épica Gestión de materias](../recursos/diagramas/diagrama_clases_materias.png){#clases_materias ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba que no se desfasa.
+
+El nombre de la materia se sanea antes de guardarse (se recortan los espacios de los extremos y se colapsan los repetidos) y la unicidad entre las materias activas se decide con una clave sin acentos ni mayúsculas (RN-02, ampliada por el Product Owner). La @figura:secuencia_registrar_materia recorre las tres capas al registrar una materia: cada mensaje del diagrama corresponde a un método real y el script que lo dibuja falla si alguno deja de existir.
+
+![Secuencia de registrar una materia a través de las tres capas](../recursos/diagramas/secuencia_registrar_materia.png){#secuencia_registrar_materia ancho=16.5}
+
+Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
 [[pendiente: diagramas de clases de las épicas siguientes, con los métodos del ciclo de vida (onCreate) y de los listeners (onClick), a medida que se implementen]]

@@ -17,9 +17,9 @@ respaldo en Google Drive. Funciona offline-first.
 |---|---|---|
 | 1 | Cap. 1 a 3.2.2 (introducción, marco teórico, metodología y requisitos) + Auditoría IA | En revisión |
 
-Requisitos de la línea base: 45 historias de usuario, 30 reglas de negocio y 19 requisitos no
+Requisitos de la línea base: 46 historias de usuario, 30 reglas de negocio y 19 requisitos no
 funcionales (ISO/IEC 25010:2023), especificados en
-[`openspec/changes/add-requisitos-base`](openspec/changes/add-requisitos-base).
+[`openspec/specs`](openspec/specs) (la línea base archivada está en [`openspec/changes/archive`](openspec/changes/archive)).
 
 ## Estructura
 
@@ -42,7 +42,7 @@ El documento se escribe en Markdown y se genera con [apa-kit](https://github.com
 python docs/build/diagramas.py                                  # diagramas y wireframes (Pillow)
 cp docs/documento/.env.example docs/documento/.env              # completar portada (autor, materia, docente...)
 python .apa/scripts/generar_docx.py --doc docs/documento        # genera docs/documento/dist/StudyPlan_Entrega1.docx
-openspec validate add-requisitos-base --strict                  # valida las specs
+openspec validate --specs --strict                              # valida las specs
 ```
 
 Los documentos finales (`*.docx`, `*.pdf`), `dist/`, `original/` y `docs/documento/.env` **no se versionan**.

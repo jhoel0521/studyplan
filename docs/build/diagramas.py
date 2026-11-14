@@ -442,7 +442,7 @@ def flujo_pantallas():
     # grupo de navegación inferior: el usuario pasa libremente entre las 4 pestañas
     gx0, gy0, gx1, gy1 = 845, 520, 3300, 905
     d.rounded_rectangle([gx0, gy0, gx1, gy1], 40, fill=(246, 246, 246), outline=GRAY, width=3)
-    d.text((gx0 + 24, gy1 - 14), "Navegación inferior, siempre visible: de cualquier pestaña a cualquier otra",
+    d.text((gx0 + 24, gy1 - 14), "Navegación inferior, siempre visible (hoy solo Inicio y Materias están habilitadas)",
            font=font(22, italic=True), fill=GRAY, anchor="lb")
 
     caja("perfil", C0, Y1, "Perfil inicial", "Primer uso · HU-01",
@@ -450,24 +450,24 @@ def flujo_pantallas():
          "OG", LIGHT)
     caja("auth", C0, Y2, "Autenticación", "HU-04",
          ["Huella o PIN del teléfono", "Solo si el bloqueo está activo", "Se pide al volver a primer plano"],
-         "OE6")
+         "OE6", LIGHT)
     caja("inicio", C1, Y2 + 20, "Inicio", "HU-02, HU-25, HU-27",
          ["Horas realizadas / meta semanal", "Próxima sesión y sesiones de hoy", "Acceso rápido «+ Nueva sesión»"],
-         "OG")
+         "OG", LIGHT)
     caja("cal", C2, Y2 + 20, "Calendario", "HU-16 a HU-21",
          ["Vistas Día · Semana · Mes", "Mes: tocar un día abre el Día", "Semana y Día: crear sesión"],
          "OE3")
     caja("est", C3, Y2 + 20, "Estadísticas", "HU-29 a HU-31, HU-45",
          ["Horas y comparación semanal", "Cumplimiento y distribución", "Concentración y respeto del tiempo"],
          "OE5")
-    caja("mat", C4, Y2 + 20, "Materias", "HU-06, HU-09, HU-26",
-         ["Lista con horas y meta semanal", "Archivadas", "Botón «+» nueva materia"],
-         "OE2")
+    caja("mat", C4, Y2 + 20, "Materias", "HU-06, HU-08, HU-09, HU-46",
+         ["Lista alfabética con horas", "«Archivadas (n)»: tocar despliega", "Botón «+» nueva materia"],
+         "OE2", LIGHT)
 
     caja("borrar", 1280, Y1, "Borrar mis datos", "HU-38",
-         ["Elegir: teléfono, Drive o ambos", "Doble confirmación (RN-21)", "Cancelar no borra nada"], "OE6")
+         ["Elegir: teléfono, Drive o ambos", "Doble confirmación (RN-21)", "Cancelar no borra nada"], "OE6", LIGHT)
     caja("ajustes", 2000, Y1, "Ajustes", "HU-03, HU-04, HU-23, HU-24",
-         ["Tema e idioma", "Bloqueo con huella o PIN", "Pomodoro, No molestar y Privacidad"], "OG")
+         ["Tema e idioma", "Bloqueo con huella o PIN", "Pomodoro, No molestar y Privacidad"], "OG", LIGHT)
     caja("resp", 2760, Y1, "Copia de seguridad", "HU-35 a HU-37",
          ["Cuenta Google y frecuencia", "Cifrado con contraseña (opcional)", "Respaldar ahora · Restaurar"], "OE6")
 
@@ -481,8 +481,9 @@ def flujo_pantallas():
          ["Cronómetro libre o Pomodoro", "Pausar / reanudar · Detener", "No molestar (opcional)"], "OE4")
     caja("rep", C3, Y3, "Reporte", "HU-32, HU-33",
          ["Plan vs. real por materia", "Sesiones no realizadas", "Compartir PDF o CSV"], "OE5")
-    caja("fmat", C4, Y3, "Formulario de materia", "HU-06 a HU-08, HU-26",
-         ["Nombre, color, docente y meta", "Nombre duplicado: se rechaza", "Archivar o eliminar (RN-03)"], "OE2")
+    caja("fmat", C4, Y3, "Formulario de materia", "HU-06 a HU-08, HU-26, HU-46",
+         ["Nombre, color y docente (meta: E6)", "Nombre duplicado: se rechaza", "Archivar o desarchivar · Eliminar"],
+         "OE2", LIGHT)
 
     caja("volver", 1250, Y4, "Al volver a la app", "HU-40, HU-41",
          ["«¿Seguiste estudiando?»", "Sí, hasta HH:MM → Completada", "Sigo estudiando → continúa"], "OE4")
@@ -544,7 +545,7 @@ def flujo_pantallas():
            "historias de usuario (los wireframes W1 a W15 son solo referencia).", font=font(23, italic=True),
            fill=GRAY, anchor="ld")
     d.text((60, H - 105), "Línea continua: aparece en las specs. Discontinua: deducida, por confirmar con el Product Owner. "
-           "Flecha doble: ida y vuelta. ● inicio. Si cada pantalla es Activity o Fragment, lo decide el diseño.",
+           "Flecha doble: ida y vuelta. ● inicio. Fondo gris: pantalla ya implementada (una Activity por pantalla).",
            font=font(23, italic=True), fill=GRAY, anchor="ld")
     d.text((60, H - 70), "OG objetivo general · OE2 materias y sesiones · OE3 calendario · OE4 concentración · "
            "OE5 metas, estadísticas y reportes · OE6 protección de datos (OE1 y OE7 son de proceso: sin pantallas).",
@@ -659,124 +660,6 @@ def arquitectura_hexagonal():
     for i, n in enumerate(notas):
         d.text((60, yb + 135 + i * 38), n, font=font(23, italic=True), fill=GRAY, anchor="lt")
     img.save(OUT / "arquitectura_hexagonal.png", dpi=(200, 200))
-
-
-# ---------------------------------------------------------------- diagrama de clases (change add-configuracion-inicial)
-# Clases del diagrama; docs/build/diagramas.py y el código se cotejan con docs/build/cotejo_clases.py
-CLASES_PRESENTACION = ["ActividadBase", "ActividadProtegida", "MainActivity", "PerfilInicialActivity",
-                       "AjustesActivity", "AutenticacionActivity", "BorrarDatosActivity",
-                       "PerfilInicialViewModel", "InicioViewModel", "ProteccionViewModel", "AjustesViewModel",
-                       "BorrarDatosViewModel", "StudyPlanApplication", "FabricaViewModels", "ContadorActividades",
-                       "AplicadorApariencia", "FormatoHoras"]
-CLASES_PUERTOS_ENTRADA = ["BorrarDatos", "ConfigurarApariencia", "ConfigurarBloqueo", "ConfigurarPerfil",
-                          "ConsultarAjustes", "ConsultarEstadoArranque", "ConsultarPerfil",
-                          "ControlarSesionBloqueo", "ObtenerResumenInicio"]
-CLASES_SERVICIOS = ["BorrarDatosService", "ConfigurarAparienciaService", "ConfigurarBloqueoService",
-                    "ConfigurarPerfilService", "ConsultarAjustesService", "ConsultarEstadoArranqueService",
-                    "ConsultarPerfilService", "ObtenerResumenInicioService", "SesionBloqueo"]
-CLASES_PUERTOS_SALIDA = ["AjustesRepository", "AlmacenDatos", "DisponibilidadBloqueo", "PerfilRepository"]
-CLASES_DOMINIO = ["Ajustes", "AlcanceBorrado", "ErrorValidacion", "EstadoArranque", "Idioma", "Perfil", "Resultado",
-                  "ResumenInicio", "Tema"]
-CLASES_PERSISTENCIA = ["AjustesDao", "AjustesEntity", "AjustesRepositoryRoom", "AlmacenDatosRoom", "Mapeadores",
-                       "PerfilDao", "PerfilEntity", "PerfilRepositoryRoom", "StudyPlanDatabase"]
-CLASES_SEGURIDAD = ["DisponibilidadBloqueoBiometrico"]
-
-
-def diagrama_clases_configuracion():
-    """Clases del change add-configuracion-inicial: presentación (con sus métodos onCreate y listeners), núcleo e
-    infraestructura, agrupadas por paquete."""
-    W, H = 3240, 2480
-    img = Image.new("RGB", (W, H), WHITE)
-    d = ImageDraw.Draw(img)
-    xs = [40, 840, 1640, 2440]
-    ancho = 760
-
-    d.text((40, 20), "1. Presentación · adapter.in.ui (MVVM: Activity + ViewModel)", font=font(34, True), fill=BLACK)
-    base = UMLBox("ActividadBase", [], ["# aplicarInsets(): void", "# app(): StudyPlanApplication",
-                                        "# viewModel(clase): T"], xs[0], 80, w=ancho, stereotype="abstract")
-    prot = UMLBox("ActividadProtegida", [], ["# onCreate(estado): void", "# onStart(): void",
-                                             "- onEstadoArranque(estado): void", "# alEstarListo(): void",
-                                             "# enlazarBarraInferior(item): void"],
-                  xs[1], 80, w=ancho, stereotype="abstract")
-    main = UMLBox("MainActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
-                                       "# alEstarListo(): void", "- onResumen(resumen): void",
-                                       "- onAjustesClick(opcion): boolean"], xs[2], 80, w=ancho)
-    perfil = UMLBox("PerfilInicialActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
-                                                  "- onGuardarClick(vista): void",
-                                                  "- onResultado(resultado): void"], xs[3], 80, w=ancho)
-    fila1 = max(b.h for b in (base, prot, main, perfil))
-    y2 = 80 + fila1 + 70
-    ajustes = UMLBox("AjustesActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
-                                             "# alEstarListo(): void", "- onAjustes(ajustes): void",
-                                             "- onTemaCambiado(grupo, id): void",
-                                             "- onIdiomaCambiado(grupo, id): void",
-                                             "- onBloqueoCambiado(boton, activo): void",
-                                             "- onPrivacidadClick(vista): void", "- onVolverClick(vista): void"],
-                     xs[0], y2, w=ancho)
-    auth = UMLBox("AutenticacionActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
-                                                "- onAutenticado(): void",
-                                                "- onErrorDeAutenticacion(texto): void",
-                                                "- onReintentarClick(vista): void", "- onAtras(): void"],
-                  xs[1], y2, w=ancho)
-    borrar = UMLBox("BorrarDatosActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
-                                                "- onBorrarClick(vista): void", "- onVolverClick(vista): void",
-                                                "- onPaso(paso): void", "# onDestroy(): void"],
-                    xs[2], y2, w=ancho)
-    vms = UMLBox("ViewModels", ["PerfilInicialViewModel", "InicioViewModel", "ProteccionViewModel",
-                                "AjustesViewModel", "BorrarDatosViewModel"], None, xs[3], y2, w=ancho,
-                 stereotype="paquete")
-    y3 = y2 + max(b.h for b in (ajustes, auth, borrar, vms)) + 70
-    soporte = UMLBox("Soporte de presentación", ["StudyPlanApplication (raíz de composición)", "FabricaViewModels",
-                                                 "ContadorActividades", "AplicadorApariencia", "FormatoHoras"],
-                     None, xs[0], y3, w=ancho, stereotype="paquete")
-    for b in (base, prot, main, perfil, ajustes, auth, borrar, vms, soporte):
-        b.draw(d)
-
-    # herencia entre Activities (una línea de la base a cada hija)
-    d.line([base.right(0.5), prot.left(0.5)], fill=BLACK, width=3)
-    arrow_head(d, prot.left(0.5), base.right(0.5), open_=True)
-    label(d, ((base.x + base.w + prot.x) / 2, base.y + base.h / 2 - 24), "extiende", bold=True)
-    d.text((xs[2], y3 + 10), "PerfilInicialActivity y AutenticacionActivity extienden ActividadBase;",
-           font=font(24, italic=True), fill=GRAY)
-    d.text((xs[2], y3 + 46), "MainActivity, AjustesActivity y BorrarDatosActivity extienden ActividadProtegida.",
-           font=font(24, italic=True), fill=GRAY)
-    d.text((xs[2], y3 + 82), "Cada Activity pide su ViewModel a FabricaViewModels (inyección manual).",
-           font=font(24, italic=True), fill=GRAY)
-
-    y4 = y3 + soporte.h + 80
-    d.line([40, y4 - 30, W - 40, y4 - 30], fill=MID, width=3)
-    d.text((40, y4), "2. Núcleo de la aplicación · Java puro, sin android.*", font=font(34, True), fill=BLACK)
-    y4 += 60
-    puertos_in = UMLBox("application.port.in", CLASES_PUERTOS_ENTRADA, None, xs[3], y4, w=ancho,
-                        stereotype="interfaces: casos de uso")
-    servicios = UMLBox("application.service", CLASES_SERVICIOS, None, xs[2], y4, w=ancho, stereotype="implementan")
-    puertos_out = UMLBox("application.port.out", CLASES_PUERTOS_SALIDA, None, xs[1], y4, w=ancho,
-                         stereotype="interfaces: puertos de salida")
-    dominio = UMLBox("domain", CLASES_DOMINIO, None, xs[0], y4, w=ancho, stereotype="modelo y reglas")
-    for b in (puertos_in, servicios, puertos_out, dominio):
-        b.draw(d)
-    # flechas del núcleo
-    assoc(d, vms.bottom(0.5), puertos_in.top(0.5), "usan", None, None, name_off=(60, 0))
-    assoc(d, servicios.right(0.3), puertos_in.left(0.3), "implementan", None, None)
-    assoc(d, servicios.left(0.3), puertos_out.right(0.3), "usan", None, None)
-    assoc(d, puertos_out.left(0.3), dominio.right(0.3), "usan", None, None)
-
-    y5 = y4 + max(b.h for b in (puertos_in, servicios, puertos_out, dominio)) + 90
-    d.line([40, y5 - 30, W - 40, y5 - 30], fill=MID, width=3)
-    d.text((40, y5), "3. Infraestructura · adapter.out", font=font(34, True), fill=BLACK)
-    y5 += 60
-    pers = UMLBox("adapter.out.persistence", CLASES_PERSISTENCIA, None, xs[0], y5, w=ancho * 2 + 40,
-                  stereotype="Room: implementa PerfilRepository, AjustesRepository y AlmacenDatos")
-    seg = UMLBox("adapter.out.security", CLASES_SEGURIDAD, None, xs[2], y5, w=ancho,
-                 stereotype="BiometricManager: implementa DisponibilidadBloqueo")
-    for b in (pers, seg):
-        b.draw(d)
-    assoc(d, puertos_out.bottom(0.35), (puertos_out.x + puertos_out.w * 0.35, pers.y), "implementan",
-          None, None, name_off=(80, 0))
-    d.line([puertos_out.bottom(0.8), seg.top(0.2)], fill=BLACK, width=3)
-    label(d, ((puertos_out.x + puertos_out.w * 0.8 + seg.x + seg.w * 0.2) / 2,
-              (puertos_out.y + puertos_out.h + seg.y) / 2), "implementa", bold=True)
-    img.save(OUT / "diagrama_clases_configuracion.png", dpi=(200, 200))
 
 
 # ---------------------------------------------------------------- ciclo Scrum + SDD
@@ -1433,9 +1316,10 @@ if __name__ == "__main__":
     maquina_estados()
     flujo_pantallas()
     arquitectura_hexagonal()
-    diagrama_clases_configuracion()
     ciclo_scrum_sdd()
     for nombre, pantallas in WIREFRAMES:
         wireframes(nombre, pantallas)
+    import diagramas_clases  # clases, modelo lógico y secuencia: se dibujan desde el código y el esquema de Room
+    diagramas_clases.generar()
     for f in sorted(OUT.glob("*.png")):
         print(f.relative_to(ROOT))

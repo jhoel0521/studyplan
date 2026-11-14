@@ -17,7 +17,7 @@ Tabla: Roles de Scrum adaptados al proyecto {#tabla3}
 ### Eventos y artefactos
 
 - **Sprints de una semana**, con *Sprint Planning* (selección de historias), revisión diaria del avance, *Sprint Review* (demostración del incremento) y *Retrospectiva*.
-- **Product Backlog**: las historias de usuario HU-01 a HU-45 (sección 3.2.1), priorizadas con MoSCoW y estimadas en puntos de historia (serie de Fibonacci).
+- **Product Backlog**: las historias de usuario HU-01 a HU-46 (sección 3.2.1), priorizadas con MoSCoW y estimadas en puntos de historia (serie de Fibonacci).
 - **Sprint Backlog**: un *change* de OpenSpec por épica o grupo de historias, cuyo tasks.md contiene las tareas del sprint.
 - **Incremento**: APK funcional que cumple la *Definition of Done*. El primer entregable funcional es la versión 0.1.0.
 
@@ -55,6 +55,8 @@ Tabla: Decisiones del Product Owner obtenidas en la entrevista de levantamiento 
 | Usuarios | ¿Quiénes usan la app? | Es una app de autocontrol: solo el estudiante en la v0.1.0 | RN-01 |
 | Metas | ¿Meta total o por materia? | Ambas, independientes entre sí | HU-25, HU-26, RN-14 |
 | Alcance | ¿Qué funciones extra incluir? | Recordatorios, cronómetro, Pomodoro, No molestar, exportar, mensaje motivacional; todo en la v0.1.0 | HU-22 a HU-24, HU-28, HU-33, HU-34 |
+| Materias | ¿Cómo se comparan los nombres? | Se guardan saneados y son únicos sin distinguir mayúsculas, acentos ni espacios repetidos (la ñ se conserva); el docente es un texto libre opcional | HU-06, HU-07, RN-02 |
+| Materias | ¿Se puede reactivar una materia archivada? | Sí, para practicar | HU-46 |
 | Respaldo | ¿Cómo respaldar? | Como WhatsApp: frecuencia Nunca, Diaria, Semanal, Mensual o Solo manual; contraseña opcional | HU-35, HU-36, RN-19, RN-20 |
 | Sesiones | ¿Registrar fechas pasadas? | Sí, con límite de 3 días | HU-11, RN-06 |
 | Sesiones | ¿Se permiten cruces de horario? | No, se bloquea | RN-05 |
@@ -97,7 +99,7 @@ Tabla: Épicas del producto y su especificación en OpenSpec {#tabla6}
 | Épica | Nombre | Historias | Especificación (OpenSpec) |
 |---|---|---|---|
 | E1 | Perfil, inicio y ajustes | HU-01, HU-02, HU-03, HU-04, HU-05 | specs/perfil-ajustes/spec.md |
-| E2 | Gestión de materias | HU-06, HU-07, HU-08, HU-09 | specs/gestion-materias/spec.md |
+| E2 | Gestión de materias | HU-06, HU-07, HU-08, HU-09, HU-46 | specs/gestion-materias/spec.md |
 | E3 | Sesiones de estudio | HU-10, HU-11, HU-12, HU-13, HU-14, HU-15 | specs/sesiones-estudio/spec.md |
 | E4 | Calendario de estudio | HU-16, HU-17, HU-18, HU-19, HU-20, HU-21 | specs/calendario-estudio/spec.md |
 | E5 | Técnicas y eventos de estudio | HU-22, HU-23, HU-24, HU-39, HU-40, HU-41, HU-42, HU-43, HU-44 | specs/tecnicas-estudio/spec.md |
@@ -107,7 +109,7 @@ Tabla: Épicas del producto y su especificación en OpenSpec {#tabla6}
 | E9 | Recordatorios | HU-34 | specs/recordatorios/spec.md |
 | E10 | Respaldo y privacidad | HU-35, HU-36, HU-37, HU-38 | specs/respaldo-privacidad/spec.md |
 
-Nota: Las rutas son relativas a openspec/changes/add-requisitos-base/.
+Nota: Las rutas son relativas a openspec/.
 
 ### Requisitos Funcionales
 
@@ -126,6 +128,7 @@ Tabla: Product Backlog de StudyPlan v0.1.0 {#tabla7}
 | HU-07 | E2 | Editar materia | Must | 2 |
 | HU-08 | E2 | Archivar o eliminar materia | Should | 3 |
 | HU-09 | E2 | Listar materias con horas acumuladas | Must | 2 |
+| HU-46 | E2 | Desarchivar materia | Could | 2 |
 | HU-10 | E3 | Planificar sesión de estudio | Must | 5 |
 | HU-11 | E3 | Registrar sesión pasada (registro tardío) | Must | 3 |
 | HU-12 | E3 | Completar una sesión | Must | 3 |
@@ -163,7 +166,7 @@ Tabla: Product Backlog de StudyPlan v0.1.0 {#tabla7}
 | HU-37 | E10 | Restaurar copia de seguridad | Must | 5 |
 | HU-38 | E10 | Borrar mi información | Must | 3 |
 
-Nota: Prioridad MoSCoW: Must = imprescindible; Should = importante; Could = deseable. Estimación en puntos de historia (Fibonacci). Total: 45 historias, 172 puntos (111 puntos Must). Por decisión del Product Owner, todas forman parte de la versión 0.1.0; la prioridad ordena los sprints.
+Nota: Prioridad MoSCoW: Must = imprescindible; Should = importante; Could = deseable. Estimación en puntos de historia (Fibonacci). Total: 46 historias, 174 puntos (111 puntos Must). Por decisión del Product Owner, todas forman parte de la versión 0.1.0; la prioridad ordena los sprints.
 
 Tabla: Historias de usuario de la épica E1: Perfil, inicio y ajustes {#tabla8}
 
@@ -189,7 +192,7 @@ Tabla: Historias de usuario de la épica E1: Perfil, inicio y ajustes {#tabla8}
 | **Prioridad / Est.** | Could · 5 puntos |
 | **Criterios de aceptación** | 1. **Widget.** *Dado* que el estudiante agregó el widget de StudyPlan, *cuando* completa una sesión, *entonces* el widget actualiza las horas realizadas sobre la meta.<br>2. **Abrir desde el widget.** *Dado* que el widget está visible, *cuando* el estudiante lo toca, *entonces* se abre la pantalla de inicio de la aplicación. |
 | **Criterios de calidad** | RNF-01, RNF-07, RNF-08, RNF-12, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/perfil-ajustes/spec.md |
+| **Spec OpenSpec** | openspec/specs/perfil-ajustes/spec.md |
 
 Tabla: Historias de usuario de la épica E2: Gestión de materias {#tabla9}
 
@@ -210,8 +213,12 @@ Tabla: Historias de usuario de la épica E2: Gestión de materias {#tabla9}
 | **Historia** | Como estudiante, quiero ver mis materias activas con las horas estudiadas en cada una para detectar a qué asignaturas les dedico poco tiempo. |
 | **Prioridad / Est.** | Must · 2 puntos |
 | **Criterios de aceptación** | 1. **Lista.** *Dado* que existen materias activas, *cuando* el estudiante abre Materias, *entonces* el sistema muestra cada materia con su color, nombre y horas realizadas, en orden alfabético.<br>2. **Lista vacía.** *Dado* que no existen materias, *cuando* el estudiante abre Materias, *entonces* el sistema invita a registrar la primera materia. |
+| **HU-46** | **Desarchivar materia** |
+| **Historia** | Como estudiante, quiero reactivar una materia archivada para volver a usarla cuando retome la asignatura. |
+| **Prioridad / Est.** | Could · 2 puntos |
+| **Criterios de aceptación** | 1. **Desarchivar.** *Dado* que existe una materia archivada, *cuando* el estudiante elige «Desarchivar», *entonces* la materia vuelve a la lista de activas y a las listas de selección.<br>2. **Nombre ya en uso.** *Dado* que existe una materia archivada «Física» y una materia activa «física», *cuando* el estudiante intenta desarchivar la archivada, *entonces* el sistema lo rechaza con «Ya existe una materia con ese nombre» y sugiere renombrarla antes (RN-02). |
 | **Criterios de calidad** | RNF-06, RNF-14, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/gestion-materias/spec.md |
+| **Spec OpenSpec** | openspec/specs/gestion-materias/spec.md |
 
 Tabla: Historias de usuario de la épica E3: Sesiones de estudio {#tabla10}
 
@@ -241,7 +248,7 @@ Tabla: Historias de usuario de la épica E3: Sesiones de estudio {#tabla10}
 | **Prioridad / Est.** | Should · 2 puntos |
 | **Criterios de aceptación** | 1. **Eliminar Pendiente.** *Dado* que existe una sesión Pendiente, *cuando* el estudiante la elimina y confirma, *entonces* el sistema la borra y recalcula los resúmenes.<br>2. **Historial protegido.** *Dado* que una sesión está Completada, No realizada o Reprogramada, *cuando* el estudiante busca la opción de eliminar, *entonces* el sistema no la ofrece (RN-12). |
 | **Criterios de calidad** | RNF-02, RNF-04, RNF-14, RNF-15, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/sesiones-estudio/spec.md |
+| **Spec OpenSpec** | openspec/specs/sesiones-estudio/spec.md |
 
 Tabla: Historias de usuario de la épica E4: Calendario de estudio {#tabla11}
 
@@ -271,7 +278,7 @@ Tabla: Historias de usuario de la épica E4: Calendario de estudio {#tabla11}
 | **Prioridad / Est.** | Should · 3 puntos |
 | **Criterios de aceptación** | 1. **Filtro.** *Dado* que hay sesiones de varias materias, *cuando* el estudiante filtra por «Matemáticas», *entonces* todas las vistas muestran solo las sesiones de esa materia hasta quitar el filtro.<br>2. **Resumen.** *Dado* que una vista está abierta, *cuando* el estudiante consulta la cabecera, *entonces* el sistema muestra las horas planificadas y realizadas del día, la semana o el mes visible. |
 | **Criterios de calidad** | RNF-02, RNF-04, RNF-06, RNF-19, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/calendario-estudio/spec.md |
+| **Spec OpenSpec** | openspec/specs/calendario-estudio/spec.md |
 
 Tabla: Historias de usuario de la épica E5: Técnicas y eventos de estudio {#tabla12}
 
@@ -313,7 +320,7 @@ Tabla: Historias de usuario de la épica E5: Técnicas y eventos de estudio {#ta
 | **Prioridad / Est.** | Should · 5 puntos |
 | **Criterios de aceptación** | 1. **Repartir.** *Dado* que Matemáticas (10:00–11:00) estuvo En curso hasta las 12:10 e Inglés estaba planificada de 11:00 a 12:00, *cuando* el estudiante detiene y elige «Repartir»: Matemáticas hasta las 11:05 e Inglés el resto, *entonces* Matemáticas queda Completada con 65 min e Inglés Completada con 65 min (RN-28).<br>2. **Sin sesiones siguientes.** *Dado* que no hay sesiones Pendientes consecutivas, *cuando* el estudiante detiene, *entonces* no se ofrece repartir. |
 | **Criterios de calidad** | RNF-03, RNF-10, RNF-18, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/tecnicas-estudio/spec.md |
+| **Spec OpenSpec** | openspec/specs/tecnicas-estudio/spec.md |
 
 Tabla: Historias de usuario de la épica E6: Metas semanales {#tabla13}
 
@@ -335,7 +342,7 @@ Tabla: Historias de usuario de la épica E6: Metas semanales {#tabla13}
 | **Prioridad / Est.** | Could · 2 puntos |
 | **Criterios de aceptación** | 1. **Meta alcanzada.** *Dado* que el progreso es menor que la meta, *cuando* una sesión completada hace que la alcance, *entonces* el sistema muestra «¡Sigue así!» con el botón «Volver al inicio».<br>2. **Una vez.** *Dado* que ya se mostró la felicitación de esa meta esta semana, *cuando* se completa otra sesión, *entonces* no se vuelve a mostrar (RN-16). |
 | **Criterios de calidad** | RNF-05, RNF-15, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/metas-semanales/spec.md |
+| **Spec OpenSpec** | openspec/specs/metas-semanales/spec.md |
 
 Tabla: Historias de usuario de la épica E7: Estadísticas {#tabla14}
 
@@ -357,7 +364,7 @@ Tabla: Historias de usuario de la épica E7: Estadísticas {#tabla14}
 | **Prioridad / Est.** | Should · 5 puntos |
 | **Criterios de aceptación** | 1. **Métricas.** *Dado* que en la semana hubo sesiones con eventos, *cuando* el estudiante abre Estadísticas > Concentración, *entonces* el sistema muestra concentración (%), interrupciones por hora, puntualidad promedio, respeto del tiempo (%) y tiempo fuera de la app (RN-30).<br>2. **Autodeclarado separado.** *Dado* que hubo tramos de estudio con la app cerrada, *cuando* se calculan las métricas, *entonces* esos tramos suman horas reales pero se muestran aparte y no entran en el índice de concentración. |
 | **Criterios de calidad** | RNF-02, RNF-06, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/estadisticas/spec.md |
+| **Spec OpenSpec** | openspec/specs/estadisticas/spec.md |
 
 Tabla: Historias de usuario de la épica E8: Reportes {#tabla15}
 
@@ -371,7 +378,7 @@ Tabla: Historias de usuario de la épica E8: Reportes {#tabla15}
 | **Prioridad / Est.** | Should · 5 puntos |
 | **Criterios de aceptación** | 1. **PDF.** *Dado* que hay un reporte generado, *cuando* el estudiante elige Compartir > PDF, *entonces* el sistema crea el PDF y abre el selector para compartir de Android.<br>2. **CSV.** *Dado* que hay un reporte generado, *cuando* elige Compartir > CSV, *entonces* el sistema genera un CSV en UTF-8 con una fila por materia. |
 | **Criterios de calidad** | RNF-11, RNF-15, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/reportes/spec.md |
+| **Spec OpenSpec** | openspec/specs/reportes/spec.md |
 
 Tabla: Historias de usuario de la épica E9: Recordatorios {#tabla16}
 
@@ -381,7 +388,7 @@ Tabla: Historias de usuario de la épica E9: Recordatorios {#tabla16}
 | **Prioridad / Est.** | Must · 3 puntos |
 | **Criterios de aceptación** | 1. **Notificación.** *Dado* que existe una sesión Pendiente a las 10:00 con aviso de 15 minutos, *cuando* el reloj marca las 09:45, *entonces* el sistema muestra una notificación con la materia y el horario, con acceso directo para iniciarla.<br>2. **Permiso.** *Dado* que el teléfono usa Android 13 o superior y no se concedió el permiso de notificaciones, *cuando* el estudiante activa un recordatorio, *entonces* el sistema explica para qué sirve y solicita el permiso.<br>3. **Cancelación.** *Dado* que la sesión se reprogramó, eliminó o completó antes, *cuando* llega la hora del aviso original, *entonces* no se muestra la notificación. |
 | **Criterios de calidad** | RNF-03, RNF-18, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/recordatorios/spec.md |
+| **Spec OpenSpec** | openspec/specs/recordatorios/spec.md |
 
 Tabla: Historias de usuario de la épica E10: Respaldo y privacidad {#tabla17}
 
@@ -403,7 +410,7 @@ Tabla: Historias de usuario de la épica E10: Respaldo y privacidad {#tabla17}
 | **Prioridad / Est.** | Must · 3 puntos |
 | **Criterios de aceptación** | 1. **Elegir alcance.** *Dado* que el estudiante está en Ajustes > Privacidad, *cuando* elige «Borrar del teléfono y de Drive» y confirma dos veces, *entonces* el sistema elimina los datos locales y el respaldo, y vuelve a la pantalla de primer uso (RN-21).<br>2. **Cancelar.** *Dado* que aparece la segunda confirmación, *cuando* el estudiante cancela, *entonces* no se borra nada. |
 | **Criterios de calidad** | RNF-10, RNF-11, RNF-12, RNF-13, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
-| **Spec OpenSpec** | openspec/changes/add-requisitos-base/specs/respaldo-privacidad/spec.md |
+| **Spec OpenSpec** | openspec/specs/respaldo-privacidad/spec.md |
 
 #### Reglas de negocio y máquina de estados de la sesión
 
@@ -414,7 +421,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | ID | Regla | Origen |
 |---|---|---|
 | RN-01 | Existe un único usuario por dispositivo: el estudiante. No hay cuentas ni roles adicionales en la v0.1.0. | Entrevista |
-| RN-02 | El nombre de una materia activa es único (sin distinguir mayúsculas) y tiene de 1 a 50 caracteres. | Propuesta IA, aceptada |
+| RN-02 | El nombre de una materia se guarda sin espacios sobrantes (se recortan los extremos y se colapsan los repetidos) y tiene de 1 a 50 caracteres. El nombre de una materia activa es único: dos nombres son el mismo si solo difieren en mayúsculas, acentos o espacios (la ñ cuenta como otra letra: «Año» y «Ano» son nombres distintos). | Propuesta IA, aceptada; ampliada por decisión del Product Owner (14-nov-2026); la excepción de la ñ es una decisión de la IA por confirmar |
 | RN-03 | Una materia con sesiones registradas no se elimina: solo se archiva, para conservar el historial. | Propuesta IA, aceptada |
 | RN-04 | La hora de fin de una sesión debe ser posterior a su hora de inicio. | Propuesta IA, aceptada |
 | RN-05 | Dos sesiones no pueden cruzarse en el mismo horario: el sistema bloquea el registro. | Entrevista |

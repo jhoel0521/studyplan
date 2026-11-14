@@ -45,6 +45,7 @@ Tabla: Trazabilidad entre historias de usuario, especificaciones, prototipo y cr
 | HU-07 | gestion-materias | 1 | W2 | — | RNF-06, RNF-14 |
 | HU-08 | gestion-materias | 3 | W2 | RN-03 | RNF-06, RNF-14 |
 | HU-09 | gestion-materias | 2 | W2 | — | RNF-06, RNF-14 |
+| HU-46 | gestion-materias | 2 | W2 | RN-02 | RNF-06, RNF-14 |
 | HU-10 | sesiones-estudio | 3 | W3 | RN-04, RN-05 | RNF-02, RNF-04, RNF-14, RNF-15 |
 | HU-11 | sesiones-estudio | 2 | W3 | RN-06 | RNF-02, RNF-04, RNF-14, RNF-15 |
 | HU-12 | sesiones-estudio | 2 | W4–W6 | RN-07 | RNF-02, RNF-04, RNF-14, RNF-15 |
@@ -82,7 +83,7 @@ Tabla: Trazabilidad entre historias de usuario, especificaciones, prototipo y cr
 | HU-37 | respaldo-privacidad | 2 | W11 | — | RNF-10, RNF-11, RNF-12, RNF-13 |
 | HU-38 | respaldo-privacidad | 2 | W12 | RN-21 | RNF-10, RNF-11, RNF-12, RNF-13 |
 
-Nota: Total: 45 historias y 101 escenarios, más 13 escenarios de la máquina de estados (RN-07). Las columnas de código y prueba se agregarán en cada sprint de implementación.
+Nota: Total: 46 historias y 103 escenarios, más 13 escenarios de la máquina de estados (RN-07). Las columnas de código y prueba se agregarán en cada sprint de implementación.
 
 ## Anexo E: Glosario de Términos
 

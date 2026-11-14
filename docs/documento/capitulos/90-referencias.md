@@ -11,6 +11,7 @@ Britton, B. K., & Tesser, A. (1991). Effects of time-management practices on col
 Brooke, J. (1996). SUS: A “quick and dirty” usability scale. En P. W. Jordan, B. Thomas, B. A. Weerdmeester, & I. L. McClelland (Eds.), *Usability evaluation in industry* (pp. 189–194). Taylor & Francis.
 Cirillo, F. (2018). *The Pomodoro Technique: The life-changing time-management system*. Currency.
 Clegg, D., & Barker, R. (1994). *Case method fast-track: A RAD approach*. Addison-Wesley.
+Cockburn, A. (2005, 4 de septiembre). *Hexagonal architecture* (HaT Technical Report 2005.02). https://alistair.cockburn.us/hexagonal-architecture/
 Cohn, M. (2004). *User stories applied: For agile software development*. Addison-Wesley.
 Fission-AI. (2026). *OpenSpec* (Versión 1.14.3) [Software]. GitHub. https://github.com/Fission-AI/OpenSpec
 Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design patterns: Elements of reusable object-oriented software*. Addison-Wesley.
