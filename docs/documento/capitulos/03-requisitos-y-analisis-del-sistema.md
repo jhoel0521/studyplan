@@ -41,7 +41,7 @@ Una historia de usuario se considera terminada cuando:
 
 ### Coherencia metodológica
 
-Para evitar un error frecuente en proyectos académicos, la mezcla de métodos ágiles con métodos tradicionales, este proyecto usa **solo artefactos ágiles**. Los requisitos funcionales se expresan como historias de usuario con criterios de aceptación, **no** como casos de uso ni como especificación IEEE 830; las reglas de negocio se referencian desde los criterios de aceptación; y los no funcionales se expresan como criterios de calidad vinculados a la *Definition of Done*. Por coherencia, se propone al docente que la sección 3.3.1 del índice (*Casos de uso*) se aborde en la siguiente entrega como **mapa de historias de usuario** (*User Story Mapping*; Patton, 2014), técnica ágil equivalente para analizar el recorrido del usuario.
+Para evitar un error frecuente en proyectos académicos, la mezcla de métodos ágiles con métodos tradicionales, este proyecto usa **solo artefactos ágiles**. Los requisitos funcionales se expresan como historias de usuario con criterios de aceptación, **no** como casos de uso ni como especificación IEEE 830; las reglas de negocio se referencian desde los criterios de aceptación; y los no funcionales se expresan como criterios de calidad vinculados a la *Definition of Done*. Por coherencia, la sección 3.3.1 del índice del docente, que se titula *Casos de Uso*, se renombra **Historias de Usuario** en este documento.
 
 ## Requisitos
 
@@ -424,7 +424,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-09 | Reprogramar no borra ni modifica el horario original: la sesión original pasa a «Reprogramada» y se crea una sesión nueva Pendiente enlazada a ella. Así queda registro del día no estudiado. | Entrevista |
 | RN-10 | Una sesión «No realizada» puede pasar a «Completada (registro tardío)» solo si su fecha está dentro de los últimos 3 días. | Entrevista |
 | RN-11 | Solo las sesiones Completadas y Completadas (registro tardío) suman horas reales; con Pomodoro solo suman los bloques de trabajo, no los descansos. | Entrevista |
-| RN-12 | Solo se pueden eliminar sesiones Pendientes; las demás forman parte del historial. | Derivada de RN-09 (confirmar) |
+| RN-12 | Solo se pueden eliminar sesiones Pendientes; las demás forman parte del historial. | Derivada de RN-09, confirmada por el Product Owner |
 | RN-13 | La semana de estudio va de lunes a domingo. | Mockup (calendario L–D) |
 | RN-14 | La meta semanal total y las metas por materia son independientes entre sí; cada una debe ser mayor que 0 y menor o igual a 168 horas. | Entrevista |
 | RN-15 | Si no se define una meta total para la semana, se aplica la meta predeterminada del perfil. | Propuesta IA, aceptada |
@@ -441,7 +441,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-26 | Se registra siempre la duración real, menor o mayor que la planificada; no existen estados parciales. | Entrevista |
 | RN-27 | Si durante una sesión En curso llega la hora de otra sesión, se avisa y el estudiante decide seguir o cambiar; cambiar completa la actual y pone En curso la siguiente sin detener el tiempo. | Entrevista |
 | RN-28 | Un tramo continuo de estudio puede repartirse al detener entre la sesión actual y las sesiones Pendientes consecutivas del mismo día. | Entrevista |
-| RN-29 | Una sesión En curso no pasa a No realizada al terminar el día; el estudiante puede declarar su fin hasta 3 días después y, vencido ese plazo, se cierra en la última marca registrada dentro de la app. | Derivada de RN-06 y RN-24 (confirmar) |
+| RN-29 | Una sesión En curso no pasa a No realizada al terminar el día; el estudiante puede declarar su fin hasta 3 días después y, vencido ese plazo, se cierra en la última marca registrada dentro de la app. | Derivada de RN-06 y RN-24, confirmada por el Product Owner |
 | RN-30 | Métricas de estudio: concentración = tiempo en la app ÷ (tiempo en la app + pausas); interrupciones por hora; puntualidad = inicio real − inicio planificado; respeto del tiempo = duración real ÷ planificada; tiempo fuera de la app (informativo, no descuenta horas). | Propuesta IA, aceptada |
 
 La regla RN-07 establece que el ciclo de vida de una sesión de estudio es una **máquina de estados** (@figura:figura2). Siguiendo el patrón State, cada estado conoce únicamente las acciones que admite y su estado siguiente. Reprogramar no borra la sesión original: la marca como *Reprogramada* y crea una sesión nueva enlazada, de modo que queda constancia del día en que no se estudió.

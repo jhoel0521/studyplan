@@ -373,6 +373,412 @@ def maquina_estados():
     img.save(OUT / "maquina_estados.png", dpi=(200, 200))
 
 
+# ---------------------------------------------------------------- flujo entre pantallas
+def flujo_pantallas():
+    """Diagrama de estados de la navegación. Cada estado es una pantalla del producto y cada flecha una acción del
+    usuario. Parte de la primera apertura y cierra el ciclo en «Borrar mis datos». Las pantallas se derivan de los
+    objetivos (OG y OE2 a OE6) y de las HU; los wireframes W1-W15 son solo referencia."""
+    W, H = 3600, 2450
+    img = Image.new("RGB", (W, H), WHITE)
+    d = ImageDraw.Draw(img)
+    BW = 540
+    B = {}
+
+    def caja(clave, cx, cy, titulo, sub, lineas, oe, fill=WHITE):
+        h = 24 + 40 + 32 + len(lineas) * 31 + 18
+        B[clave] = (cx, cy, BW, h)
+        x0, y0, x1, y1 = cx - BW / 2, cy - h / 2, cx + BW / 2, cy + h / 2
+        d.rounded_rectangle([x0 + 8, y0 + 8, x1 + 8, y1 + 8], 34, fill=MID)
+        d.rounded_rectangle([x0, y0, x1, y1], 34, fill=fill, outline=BLACK, width=4)
+        y = y0 + 22
+        d.text((cx, y), titulo, font=font(31, True), fill=BLACK, anchor="mt")
+        d.text((cx, y + 40), sub, font=font(21, italic=True), fill=GRAY, anchor="mt")
+        d.line([x0 + 30, y + 76, x1 - 30, y + 76], fill=MID, width=2)
+        for i, ln in enumerate(lineas):
+            d.text((x0 + 28, y + 92 + i * 31), ln, font=font(23), fill=BLACK, anchor="lt")
+        tw = text_w(d, oe, font(20, True)) + 20
+        d.rounded_rectangle([x1 - tw - 12, y0 + 12, x1 - 12, y0 + 46], 12, fill=BLACK)
+        d.text((x1 - 12 - tw / 2, y0 + 29), oe, font=font(20, True), fill=WHITE, anchor="mm")
+
+    def top(k, dx=0):
+        cx, cy, w, h = B[k]
+        return (cx + dx, cy - h / 2)
+
+    def bot(k, dx=0):
+        cx, cy, w, h = B[k]
+        return (cx + dx, cy + h / 2)
+
+    def izq(k, dy=0):
+        cx, cy, w, h = B[k]
+        return (cx - w / 2, cy + dy)
+
+    def der(k, dy=0):
+        cx, cy, w, h = B[k]
+        return (cx + w / 2, cy + dy)
+
+    def flecha(pts, discontinua=False, doble=False):
+        pts = [(float(x), float(y)) for x, y in pts]
+        if discontinua:
+            dashed_line(d, pts, width=4)
+        else:
+            d.line(pts, fill=BLACK, width=4, joint="curve")
+        arrow_head(d, pts[-2], pts[-1], size=26)
+        if doble:
+            arrow_head(d, pts[1], pts[0], size=26)
+
+    def rotulo(x, y, texto, ancla="mm", negrita=False):
+        lineas = texto.split("\n")
+        f = font(22, negrita)
+        w = max(text_w(d, s, f) for s in lineas) + 16
+        h = len(lineas) * 28 + 6
+        x0 = x - w / 2 if ancla == "mm" else (x if ancla == "lm" else x - w)
+        d.rectangle([x0, y - h / 2, x0 + w, y + h / 2], fill=WHITE)
+        for i, s in enumerate(lineas):
+            d.text((x0 + 8, y - h / 2 + 3 + i * 28), s, font=f, fill=BLACK, anchor="lt")
+
+    C0, C1, C2, C3, C4 = 520, 1140, 1760, 2380, 3000
+    Y1, Y2, Y3, Y4 = 250, 720, 1400, 2060
+
+    # grupo de navegación inferior: el usuario pasa libremente entre las 4 pestañas
+    gx0, gy0, gx1, gy1 = 845, 520, 3300, 905
+    d.rounded_rectangle([gx0, gy0, gx1, gy1], 40, fill=(246, 246, 246), outline=GRAY, width=3)
+    d.text((gx0 + 24, gy1 - 14), "Navegación inferior, siempre visible: de cualquier pestaña a cualquier otra",
+           font=font(22, italic=True), fill=GRAY, anchor="lb")
+
+    caja("perfil", C0, Y1, "Perfil inicial", "Primer uso · HU-01",
+         ["Pide nombre y meta semanal", "Nombre vacío: «Ingresa tu nombre»", "También: restaurar copia (HU-37)"],
+         "OG", LIGHT)
+    caja("auth", C0, Y2, "Autenticación", "HU-04",
+         ["Huella o PIN del teléfono", "Solo si el bloqueo está activo", "Se pide al volver a primer plano"],
+         "OE6")
+    caja("inicio", C1, Y2 + 20, "Inicio", "HU-02, HU-25, HU-27",
+         ["Horas realizadas / meta semanal", "Próxima sesión y sesiones de hoy", "Acceso rápido «+ Nueva sesión»"],
+         "OG")
+    caja("cal", C2, Y2 + 20, "Calendario", "HU-16 a HU-21",
+         ["Vistas Día · Semana · Mes", "Mes: tocar un día abre el Día", "Semana y Día: crear sesión"],
+         "OE3")
+    caja("est", C3, Y2 + 20, "Estadísticas", "HU-29 a HU-31, HU-45",
+         ["Horas y comparación semanal", "Cumplimiento y distribución", "Concentración y respeto del tiempo"],
+         "OE5")
+    caja("mat", C4, Y2 + 20, "Materias", "HU-06, HU-09, HU-26",
+         ["Lista con horas y meta semanal", "Archivadas", "Botón «+» nueva materia"],
+         "OE2")
+
+    caja("borrar", 1280, Y1, "Borrar mis datos", "HU-38",
+         ["Elegir: teléfono, Drive o ambos", "Doble confirmación (RN-21)", "Cancelar no borra nada"], "OE6")
+    caja("ajustes", 2000, Y1, "Ajustes", "HU-03, HU-04, HU-23, HU-24",
+         ["Tema e idioma", "Bloqueo con huella o PIN", "Pomodoro, No molestar y Privacidad"], "OG")
+    caja("resp", 2760, Y1, "Copia de seguridad", "HU-35 a HU-37",
+         ["Cuenta Google y frecuencia", "Cifrado con contraseña (opcional)", "Respaldar ahora · Restaurar"], "OE6")
+
+    caja("det", C0, Y3, "Detalle de sesión", "HU-14, HU-39",
+         ["Línea de tiempo de eventos", "Salidas, regresos y tiempo extra", "Enlace a la sesión reprogramada"],
+         "OE4")
+    caja("reg", C1, Y3, "Registrar sesión", "HU-10, HU-11, HU-34",
+         ["Materia, fecha, horas y aviso", "Fin > inicio; sin cruces (RN-04, 05)", "Fecha pasada ≤ 3 días: tardío"],
+         "OE2")
+    caja("ses", C2, Y3, "Sesión en curso", "HU-22 a HU-24 · estados RN-07",
+         ["Cronómetro libre o Pomodoro", "Pausar / reanudar · Detener", "No molestar (opcional)"], "OE4")
+    caja("rep", C3, Y3, "Reporte", "HU-32, HU-33",
+         ["Plan vs. real por materia", "Sesiones no realizadas", "Compartir PDF o CSV"], "OE5")
+    caja("fmat", C4, Y3, "Formulario de materia", "HU-06 a HU-08, HU-26",
+         ["Nombre, color, docente y meta", "Nombre duplicado: se rechaza", "Archivar o eliminar (RN-03)"], "OE2")
+
+    caja("volver", 1250, Y4, "Al volver a la app", "HU-40, HU-41",
+         ["«¿Seguiste estudiando?»", "Sí, hasta HH:MM → Completada", "Sigo estudiando → continúa"], "OE4")
+    caja("repartir", 2270, Y4, "Decidir al fin del tiempo", "HU-42 a HU-44",
+         ["Fin planificado: Sigo / Terminé", "Hora de otra sesión: cambiar", "Repartir el tramo → Completadas"],
+         "OE4")
+    caja("meta", 3000, Y4, "Meta alcanzada", "HU-28",
+         ["Mensaje «¡Sigue así!»", "Una sola vez por semana (RN-16)", "Botón «Volver al inicio»"], "OE5")
+
+    # entrada: primera apertura y aperturas siguientes
+    dot = (90, 485)
+    d.ellipse([dot[0] - 20, dot[1] - 20, dot[0] + 20, dot[1] + 20], fill=BLACK)
+    flecha([dot, (90, Y1), izq("perfil")])
+    flecha([dot, (90, Y2), izq("auth")])
+    rotulo(170, 380, "primera\napertura")
+    rotulo(170, 600, "siguientes\naperturas")
+    flecha([bot("perfil", 120), (640, 485), (940, 485), (940, top("inicio")[1])])
+    rotulo(790, 462, "Confirmar", "mm", True)
+    flecha([der("auth"), izq("inicio", -20)])
+    rotulo(818, 676, "ok")
+    d.text((112, 522), "Sin bloqueo activo: directo a Inicio.", font=font(20, italic=True), fill=GRAY, anchor="lt")
+
+    # ciclo de vida de los datos: Ajustes > Privacidad > Borrar > primer uso
+    flecha([izq("ajustes"), der("borrar")])
+    rotulo(1630, Y1 - 36, "Privacidad", "mm")
+    flecha([izq("borrar"), der("perfil")])
+    rotulo(900, Y1 - 52, "vuelve al\nprimer uso", "mm", True)
+    flecha([der("ajustes"), izq("resp")], discontinua=True)
+    rotulo(2380, Y1 - 36, "copia")
+    flecha([(1300, top("inicio")[1]), (1300, 470), (1900, 470), (1900, bot("ajustes")[1])], discontinua=True)
+    rotulo(1600, 447, "Ajustes (a confirmar cómo se llega)")
+
+    # pantallas hijas
+    flecha([(C1, gy1), top("reg")])
+    rotulo(C1 + 14, 1000, "«+ Nueva sesión» (Inicio) o\ncrear desde Semana o Día (HU-20)", "lm")
+    flecha([(C2 + 70, gy1), top("ses", 70)])
+    rotulo(C2 + 90, 1010, "Iniciar sesión: desde la\nlista o la notificación de\nrecordatorio (HU-34)", "lm")
+    flecha([top("ses", -70), (C2 - 70, gy1)])
+    rotulo(C2 - 90, 1130, "Detener sin tramo\ncontinuo: Completada\ny vuelve a la pestaña", "rm")
+    flecha([(C3, gy1), top("rep")], discontinua=True)
+    rotulo(C3 + 14, 1050, "«Ver reporte»\n(a confirmar)", "lm")
+    flecha([(C4, gy1), top("fmat")])
+    rotulo(C4 + 14, 1050, "«+» o tocar\nuna materia", "lm")
+    flecha([(950, gy1), (950, 1010), (C0, 1010), top("det")], discontinua=True)
+    rotulo(740, 988, "abrir una sesión terminada (a confirmar)")
+
+    # la sesión en curso: salir de la app, decisiones de fin y meta alcanzada
+    flecha([bot("ses", -110), (C2 - 110, 1810), (1250, 1810), top("volver")], doble=True)
+    rotulo(1480, 1783, "sale de la app (HU-40) ↔\nvuelve (Sigo estudiando)")
+    flecha([bot("ses", 110), (C2 + 110, 1810), (2270, 1810), top("repartir")], doble=True)
+    rotulo(2075, 1852, "fin planificado, otra sesión\no Detener con tramo ↔ Seguir")
+    flecha([bot("ses", 200), (C2 + 200, 1700), (3000, 1700), top("meta")])
+    rotulo(2480, 1673, "Completada alcanza la meta semanal", "mm")
+    flecha([der("meta"), (3470, Y4), (3470, 810), (gx1, 810)])
+    rotulo(3470, 1500, "«Volver al inicio»:\nabre la pestaña\nInicio", "mm", True)
+
+    # leyenda
+    d.text((60, H - 140), "Cada caja es una pantalla; cada flecha, una acción del usuario. Se derivan de los objetivos y de las "
+           "historias de usuario (los wireframes W1 a W15 son solo referencia).", font=font(23, italic=True),
+           fill=GRAY, anchor="ld")
+    d.text((60, H - 105), "Línea continua: aparece en las specs. Discontinua: deducida, por confirmar con el Product Owner. "
+           "Flecha doble: ida y vuelta. ● inicio. Si cada pantalla es Activity o Fragment, lo decide el diseño.",
+           font=font(23, italic=True), fill=GRAY, anchor="ld")
+    d.text((60, H - 70), "OG objetivo general · OE2 materias y sesiones · OE3 calendario · OE4 concentración · "
+           "OE5 metas, estadísticas y reportes · OE6 protección de datos (OE1 y OE7 son de proceso: sin pantallas).",
+           font=font(23, italic=True), fill=GRAY, anchor="ld")
+    img.save(OUT / "flujo_pantallas.png", dpi=(200, 200))
+
+
+# ---------------------------------------------------------------- arquitectura hexagonal
+def arquitectura_hexagonal():
+    """Arquitectura hexagonal (puertos y adaptadores) de StudyPlan en tres capas. Las dependencias apuntan hacia el
+    núcleo: ni el dominio ni la aplicación importan android.*."""
+    W, H = 3560, 1500
+    img = Image.new("RGB", (W, H), WHITE)
+    d = ImageDraw.Draw(img)
+
+    def caja(x0, y0, x1, y1, titulo, lineas, fill=WHITE, tam=29):
+        d.rounded_rectangle([x0 + 7, y0 + 7, x1 + 7, y1 + 7], 28, fill=MID)
+        d.rounded_rectangle([x0, y0, x1, y1], 28, fill=fill, outline=BLACK, width=4)
+        d.text(((x0 + x1) / 2, y0 + 18), titulo, font=font(tam, True), fill=BLACK, anchor="mt")
+        for i, ln in enumerate(lineas):
+            d.text((x0 + 26, y0 + 18 + tam + 20 + i * 31), ln, font=font(23), fill=BLACK, anchor="lt")
+
+    def flecha(pts, discontinua=False):
+        pts = [(float(x), float(y)) for x, y in pts]
+        if discontinua:
+            dashed_line(d, pts, width=4)
+        else:
+            d.line(pts, fill=BLACK, width=4)
+        arrow_head(d, pts[-2], pts[-1], size=26)
+
+    LA0, LA1 = 40, 680          # adaptadores de entrada
+    LP0, LP1 = 740, 1120        # puertos de entrada
+    RP0, RP1 = 2560, 2940       # puertos de salida
+    RA0, RA1 = 3000, 3520       # adaptadores de salida
+    cx, hw = 1840, 650          # hexágono del núcleo (punta izquierda 1190, derecha 2490)
+
+    for x0, x1, t in ((LA0, LA1, "CAPA 1 · Presentación (entrada)"),
+                      (LP0 - 20, RP1 + 20, "CAPA 2 · Núcleo de la aplicación (puertos, aplicación y dominio)"),
+                      (RA0, RA1, "CAPA 3 · Infraestructura (salida)")):
+        d.line([x0, 118, x1, 118], fill=BLACK, width=5)
+        d.text(((x0 + x1) / 2, 84), t, font=font(28, True), fill=BLACK, anchor="mm")
+
+    ent = [
+        ("Activity / Fragment", ["onCreate, onStart, onResume…", "onClick y listeners con nombre", "Diálogo BiometricPrompt (bloqueo)",
+                              "Solo delegan: sin lógica de negocio"]),
+        ("ViewModel + LiveData", ["Estado de la pantalla", "Llama a los casos de uso", "Sin Context ni Views"]),
+        ("Layouts XML (Material 3)", ["activity_*.xml · fragment_*.xml", "Enlazados con su Activity por", "setContentView y los ids de las vistas"]),
+        ("Disparadores del sistema", ["Widget · notificaciones", "WorkManager y AlarmManager"]),
+    ]
+    sal = [
+        ("Persistencia: Room (SQLite)", ["Entity, DAO y mapper a dominio", "Offline-first · fuera del hilo principal"]),
+        ("Respaldo: Google Drive", ["appDataFolder · cifrado AES-256-GCM", "Único uso de INTERNET"]),
+        ("Seguridad del dispositivo", ["Disponibilidad de huella o PIN", "BiometricManager · Android Keystore"]),
+        ("Avisos y reloj del sistema", ["Notificaciones · AlarmManager", "WorkManager · hora del dispositivo"]),
+    ]
+    Y0, sep = 200, 55
+    y = Y0
+    ys_ent = []
+    for t, ls in ent:
+        h = 18 + 29 + 20 + len(ls) * 31 + 22
+        caja(LA0, y, LA1, y + h, t, ls)
+        ys_ent.append(y + h / 2)
+        y += h + sep
+    y_fin = y - sep
+    y = Y0
+    ys_sal = []
+    for t, ls in sal:
+        h = 18 + 29 + 20 + len(ls) * 31 + 22
+        caja(RA0, y, RA1, y + h, t, ls)
+        ys_sal.append(y + h / 2)
+        y += h + sep
+
+    caja(LP0, Y0, LP1, y_fin, "Puertos de entrada",
+         ["Interfaces de los casos de", "uso. Los adaptadores los", "llaman.", "", "ConfigurarPerfil", "ConfigurarBloqueo",
+          "PlanificarSesión", "CompletarSesión", "ObtenerEstadísticas", "…"], fill=LIGHT)
+    caja(RP0, Y0, RP1, y_fin, "Puertos de salida",
+         ["Interfaces que exige el", "núcleo. Los adaptadores", "las implementan.", "", "PerfilRepository", "SesionRepository",
+          "RespaldoRemoto", "DisponibilidadBloqueo", "Notificador", "…"], fill=LIGHT)
+
+    cy = (Y0 + y_fin) / 2
+    hh = 480
+    hexa = [(cx - hw, cy), (cx - hw / 2, cy - hh), (cx + hw / 2, cy - hh), (cx + hw, cy), (cx + hw / 2, cy + hh),
+            (cx - hw / 2, cy + hh)]
+    d.polygon([(x + 8, y + 8) for x, y in hexa], fill=MID)
+    d.polygon(hexa, fill=(247, 247, 247), outline=BLACK, width=5)
+    caja(cx - 320, cy - 420, cx + 320, cy - 170, "Aplicación",
+         ["Servicios que implementan los casos", "de uso y orquestan el dominio a", "través de los puertos"], tam=30)
+    caja(cx - 320, cy - 120, cx + 320, cy + 400, "Dominio (Java puro)",
+         ["Perfil · Materia · SesiónEstudio", "MetaSemanal · Ajustes", "Máquina de estados de la sesión (RN-07)",
+          "Reglas de negocio RN-xx", "Sin android.*: se prueba con JUnit"], tam=30)
+    d.text((cx, cy + hh - 28), "inversión de dependencias (la D de SOLID)", font=font(22, italic=True), fill=GRAY,
+           anchor="mm")
+
+    # las dependencias apuntan hacia el núcleo
+    for ye in ys_ent:
+        flecha([(LA1, ye), (LP0, ye)])
+    flecha([(LP1, cy), (cx - hw, cy)])
+    flecha([(cx + hw, cy), (RP0, cy)])
+    for ys in ys_sal:
+        flecha([(RA0, ys), (RP1, ys)], discontinua=True)
+
+    # franja inferior
+    yb = y_fin + 90
+    d.line([40, yb, W - 40, yb], fill=MID, width=3)
+    d.text((60, yb + 30), "Paquetes (io.github.jhoel0521.studyplan):", font=font(26, True), fill=BLACK, anchor="lt")
+    d.text((60, yb + 75), "adapter.in.ui  →  application.port.in  ·  application.service  ·  domain  ·  application.port.out  ←  "
+           "adapter.out.persistence · adapter.out.drive · adapter.out.security", font=font(25), fill=BLACK, anchor="lt")
+    notas = ["Regla de dependencia: las flechas continuas apuntan hacia el núcleo. Línea discontinua: el adaptador implementa un "
+             "puerto de salida.",
+             "MVVM sigue vigente dentro de la capa 1: Activity o Fragment y ViewModel son el adaptador de entrada.",
+             "Los nombres de puertos son ejemplos del dominio; los definitivos se fijan en el diseño de cada change."]
+    for i, n in enumerate(notas):
+        d.text((60, yb + 135 + i * 38), n, font=font(23, italic=True), fill=GRAY, anchor="lt")
+    img.save(OUT / "arquitectura_hexagonal.png", dpi=(200, 200))
+
+
+# ---------------------------------------------------------------- diagrama de clases (change add-configuracion-inicial)
+# Clases del diagrama; docs/build/diagramas.py y el código se cotejan con docs/build/cotejo_clases.py
+CLASES_PRESENTACION = ["ActividadBase", "ActividadProtegida", "MainActivity", "PerfilInicialActivity",
+                       "AjustesActivity", "AutenticacionActivity", "BorrarDatosActivity",
+                       "PerfilInicialViewModel", "InicioViewModel", "ProteccionViewModel", "AjustesViewModel",
+                       "BorrarDatosViewModel", "StudyPlanApplication", "FabricaViewModels", "ContadorActividades",
+                       "AplicadorApariencia", "FormatoHoras"]
+CLASES_PUERTOS_ENTRADA = ["BorrarDatos", "ConfigurarApariencia", "ConfigurarBloqueo", "ConfigurarPerfil",
+                          "ConsultarAjustes", "ConsultarEstadoArranque", "ConsultarPerfil",
+                          "ControlarSesionBloqueo", "ObtenerResumenInicio"]
+CLASES_SERVICIOS = ["BorrarDatosService", "ConfigurarAparienciaService", "ConfigurarBloqueoService",
+                    "ConfigurarPerfilService", "ConsultarAjustesService", "ConsultarEstadoArranqueService",
+                    "ConsultarPerfilService", "ObtenerResumenInicioService", "SesionBloqueo"]
+CLASES_PUERTOS_SALIDA = ["AjustesRepository", "AlmacenDatos", "DisponibilidadBloqueo", "PerfilRepository"]
+CLASES_DOMINIO = ["Ajustes", "AlcanceBorrado", "ErrorValidacion", "EstadoArranque", "Idioma", "Perfil", "Resultado",
+                  "ResumenInicio", "Tema"]
+CLASES_PERSISTENCIA = ["AjustesDao", "AjustesEntity", "AjustesRepositoryRoom", "AlmacenDatosRoom", "Mapeadores",
+                       "PerfilDao", "PerfilEntity", "PerfilRepositoryRoom", "StudyPlanDatabase"]
+CLASES_SEGURIDAD = ["DisponibilidadBloqueoBiometrico"]
+
+
+def diagrama_clases_configuracion():
+    """Clases del change add-configuracion-inicial: presentación (con sus métodos onCreate y listeners), núcleo e
+    infraestructura, agrupadas por paquete."""
+    W, H = 3240, 2480
+    img = Image.new("RGB", (W, H), WHITE)
+    d = ImageDraw.Draw(img)
+    xs = [40, 840, 1640, 2440]
+    ancho = 760
+
+    d.text((40, 20), "1. Presentación · adapter.in.ui (MVVM: Activity + ViewModel)", font=font(34, True), fill=BLACK)
+    base = UMLBox("ActividadBase", [], ["# aplicarInsets(): void", "# app(): StudyPlanApplication",
+                                        "# viewModel(clase): T"], xs[0], 80, w=ancho, stereotype="abstract")
+    prot = UMLBox("ActividadProtegida", [], ["# onCreate(estado): void", "# onStart(): void",
+                                             "- onEstadoArranque(estado): void", "# alEstarListo(): void",
+                                             "# enlazarBarraInferior(item): void"],
+                  xs[1], 80, w=ancho, stereotype="abstract")
+    main = UMLBox("MainActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
+                                       "# alEstarListo(): void", "- onResumen(resumen): void",
+                                       "- onAjustesClick(opcion): boolean"], xs[2], 80, w=ancho)
+    perfil = UMLBox("PerfilInicialActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
+                                                  "- onGuardarClick(vista): void",
+                                                  "- onResultado(resultado): void"], xs[3], 80, w=ancho)
+    fila1 = max(b.h for b in (base, prot, main, perfil))
+    y2 = 80 + fila1 + 70
+    ajustes = UMLBox("AjustesActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
+                                             "# alEstarListo(): void", "- onAjustes(ajustes): void",
+                                             "- onTemaCambiado(grupo, id): void",
+                                             "- onIdiomaCambiado(grupo, id): void",
+                                             "- onBloqueoCambiado(boton, activo): void",
+                                             "- onPrivacidadClick(vista): void", "- onVolverClick(vista): void"],
+                     xs[0], y2, w=ancho)
+    auth = UMLBox("AutenticacionActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
+                                                "- onAutenticado(): void",
+                                                "- onErrorDeAutenticacion(texto): void",
+                                                "- onReintentarClick(vista): void", "- onAtras(): void"],
+                  xs[1], y2, w=ancho)
+    borrar = UMLBox("BorrarDatosActivity", [], ["# onCreate(estado): void", "- enlazarVistas(): void",
+                                                "- onBorrarClick(vista): void", "- onVolverClick(vista): void",
+                                                "- onPaso(paso): void", "# onDestroy(): void"],
+                    xs[2], y2, w=ancho)
+    vms = UMLBox("ViewModels", ["PerfilInicialViewModel", "InicioViewModel", "ProteccionViewModel",
+                                "AjustesViewModel", "BorrarDatosViewModel"], None, xs[3], y2, w=ancho,
+                 stereotype="paquete")
+    y3 = y2 + max(b.h for b in (ajustes, auth, borrar, vms)) + 70
+    soporte = UMLBox("Soporte de presentación", ["StudyPlanApplication (raíz de composición)", "FabricaViewModels",
+                                                 "ContadorActividades", "AplicadorApariencia", "FormatoHoras"],
+                     None, xs[0], y3, w=ancho, stereotype="paquete")
+    for b in (base, prot, main, perfil, ajustes, auth, borrar, vms, soporte):
+        b.draw(d)
+
+    # herencia entre Activities (una línea de la base a cada hija)
+    d.line([base.right(0.5), prot.left(0.5)], fill=BLACK, width=3)
+    arrow_head(d, prot.left(0.5), base.right(0.5), open_=True)
+    label(d, ((base.x + base.w + prot.x) / 2, base.y + base.h / 2 - 24), "extiende", bold=True)
+    d.text((xs[2], y3 + 10), "PerfilInicialActivity y AutenticacionActivity extienden ActividadBase;",
+           font=font(24, italic=True), fill=GRAY)
+    d.text((xs[2], y3 + 46), "MainActivity, AjustesActivity y BorrarDatosActivity extienden ActividadProtegida.",
+           font=font(24, italic=True), fill=GRAY)
+    d.text((xs[2], y3 + 82), "Cada Activity pide su ViewModel a FabricaViewModels (inyección manual).",
+           font=font(24, italic=True), fill=GRAY)
+
+    y4 = y3 + soporte.h + 80
+    d.line([40, y4 - 30, W - 40, y4 - 30], fill=MID, width=3)
+    d.text((40, y4), "2. Núcleo de la aplicación · Java puro, sin android.*", font=font(34, True), fill=BLACK)
+    y4 += 60
+    puertos_in = UMLBox("application.port.in", CLASES_PUERTOS_ENTRADA, None, xs[3], y4, w=ancho,
+                        stereotype="interfaces: casos de uso")
+    servicios = UMLBox("application.service", CLASES_SERVICIOS, None, xs[2], y4, w=ancho, stereotype="implementan")
+    puertos_out = UMLBox("application.port.out", CLASES_PUERTOS_SALIDA, None, xs[1], y4, w=ancho,
+                         stereotype="interfaces: puertos de salida")
+    dominio = UMLBox("domain", CLASES_DOMINIO, None, xs[0], y4, w=ancho, stereotype="modelo y reglas")
+    for b in (puertos_in, servicios, puertos_out, dominio):
+        b.draw(d)
+    # flechas del núcleo
+    assoc(d, vms.bottom(0.5), puertos_in.top(0.5), "usan", None, None, name_off=(60, 0))
+    assoc(d, servicios.right(0.3), puertos_in.left(0.3), "implementan", None, None)
+    assoc(d, servicios.left(0.3), puertos_out.right(0.3), "usan", None, None)
+    assoc(d, puertos_out.left(0.3), dominio.right(0.3), "usan", None, None)
+
+    y5 = y4 + max(b.h for b in (puertos_in, servicios, puertos_out, dominio)) + 90
+    d.line([40, y5 - 30, W - 40, y5 - 30], fill=MID, width=3)
+    d.text((40, y5), "3. Infraestructura · adapter.out", font=font(34, True), fill=BLACK)
+    y5 += 60
+    pers = UMLBox("adapter.out.persistence", CLASES_PERSISTENCIA, None, xs[0], y5, w=ancho * 2 + 40,
+                  stereotype="Room: implementa PerfilRepository, AjustesRepository y AlmacenDatos")
+    seg = UMLBox("adapter.out.security", CLASES_SEGURIDAD, None, xs[2], y5, w=ancho,
+                 stereotype="BiometricManager: implementa DisponibilidadBloqueo")
+    for b in (pers, seg):
+        b.draw(d)
+    assoc(d, puertos_out.bottom(0.35), (puertos_out.x + puertos_out.w * 0.35, pers.y), "implementan",
+          None, None, name_off=(80, 0))
+    d.line([puertos_out.bottom(0.8), seg.top(0.2)], fill=BLACK, width=3)
+    label(d, ((puertos_out.x + puertos_out.w * 0.8 + seg.x + seg.w * 0.2) / 2,
+              (puertos_out.y + puertos_out.h + seg.y) / 2), "implementa", bold=True)
+    img.save(OUT / "diagrama_clases_configuracion.png", dpi=(200, 200))
+
+
 # ---------------------------------------------------------------- ciclo Scrum + SDD
 def ciclo_scrum_sdd():
     W, H = 2120, 1440
@@ -1025,6 +1431,9 @@ WIREFRAMES = [
 if __name__ == "__main__":
     modelo_dominio()
     maquina_estados()
+    flujo_pantallas()
+    arquitectura_hexagonal()
+    diagrama_clases_configuracion()
     ciclo_scrum_sdd()
     for nombre, pantallas in WIREFRAMES:
         wireframes(nombre, pantallas)

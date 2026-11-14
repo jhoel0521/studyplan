@@ -21,7 +21,6 @@ Jahoda, P. (2019). *MPAndroidChart* (Versión 3.1.0) [Software]. GitHub. https:/
 Locke, E. A., & Latham, G. P. (2002). Building a practically useful theory of goal setting and task motivation: A 35-year odyssey. *American Psychologist, 57*(9), 705–717. https://doi.org/10.1037/0003-066X.57.9.705
 Macan, T. H., Shahani, C., Dipboye, R. L., & Phillips, A. P. (1990). College students' time management: Correlations with academic performance and stress. *Journal of Educational Psychology, 82*(4), 760–768. https://doi.org/10.1037/0022-0663.82.4.760
 North, D. (2006). Introducing BDD. *Better Software*. https://dannorth.net/introducing-bdd/
-Patton, J. (2014). *User story mapping: Discover the whole story, build the right product*. O'Reilly Media.
 Schwaber, K., & Sutherland, J. (2020). *La Guía Scrum: La guía definitiva de Scrum: Las reglas del juego*. https://scrumguides.org/
 Steel, P. (2007). The nature of procrastination: A meta-analytic and theoretical review of quintessential self-regulatory failure. *Psychological Bulletin, 133*(1), 65–94. https://doi.org/10.1037/0033-2909.133.1.65
 Turan, M. S., Barker, E., Burr, W., & Chen, L. (2010). *Recommendation for password-based key derivation: Part 1: Storage applications* (NIST Special Publication 800-132). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.SP.800-132
