@@ -5,7 +5,7 @@ package io.github.jhoel0521.studyplan.domain;
  * traduce cada código a su mensaje en {@code strings.xml} (RNF-08).
  *
  * <p>Implementa: HU-01 (nombre obligatorio), RN-14 (rango de la meta), HU-06 a HU-08 y HU-46 (materias, RN-02 y
- * RN-03) y RNF-14 (validación de entradas).
+ * RN-03), HU-10 a HU-15 (sesiones de estudio, RN-04 a RN-08) y RNF-14 (validación de entradas).
  */
 public enum ErrorValidacion {
     /** El nombre quedó vacío tras recortar los espacios (HU-01 y HU-06). */

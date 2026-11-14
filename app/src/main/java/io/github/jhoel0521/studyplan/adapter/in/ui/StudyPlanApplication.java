@@ -42,6 +42,7 @@ import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionTardia;
 import io.github.jhoel0521.studyplan.application.port.in.ReprogramarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.BorrarDatosService;
 import io.github.jhoel0521.studyplan.application.service.CompletarSesionService;
@@ -72,7 +73,7 @@ import io.github.jhoel0521.studyplan.domain.Ajustes;
  * Raíz de composición: crea la base, los adaptadores y los servicios a mano y los expone a las Activities y a los
  * ViewModel. Un único hilo en segundo plano ejecuta todo el acceso a datos.
  *
- * <p>Implementa: HU-01, HU-02, HU-03, HU-04 y HU-38 (conecta los adaptadores con el núcleo).
+ * <p>Implementa: HU-01 a HU-04, HU-06 a HU-15, HU-38 y HU-46 (conecta los adaptadores con el núcleo).
  */
 public class StudyPlanApplication extends Application {
 
@@ -94,6 +95,7 @@ public class StudyPlanApplication extends Application {
     private DesarchivarMateria desarchivarMateria;
     private EliminarMateria eliminarMateria;
     private Reloj reloj;
+    private SesionRepository sesionRepository;
     private VencerSesionesPendientes vencerSesionesPendientes;
     private PlanificarSesion planificarSesion;
     private RegistrarSesionPasada registrarSesionPasada;
@@ -132,6 +134,7 @@ public class StudyPlanApplication extends Application {
 
         sesionBloqueo = sesion;
         reloj = relojSistema;
+        sesionRepository = sesiones;
         vencerSesionesPendientes = new VencerSesionesPendientesService(sesiones, relojSistema);
         configurarPerfil = new ConfigurarPerfilService(perfiles);
         consultarPerfil = new ConsultarPerfilService(perfiles);
@@ -278,5 +281,10 @@ public class StudyPlanApplication extends Application {
 
     public EliminarSesion eliminarSesion() {
         return eliminarSesion;
+    }
+
+    /** Acceso interno al repositorio de sesiones para sembrar escenarios de prueba instrumentados. */
+    SesionRepository sesionRepository() {
+        return sesionRepository;
     }
 }

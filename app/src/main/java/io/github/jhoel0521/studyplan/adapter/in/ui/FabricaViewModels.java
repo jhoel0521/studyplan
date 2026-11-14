@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 /**
  * Crea los ViewModel con los casos de uso que expone {@link StudyPlanApplication} (inyección manual).
  *
- * <p>Implementa: HU-01, HU-02, HU-03, HU-04 y HU-38 (conecta las pantallas con el núcleo).
+ * <p>Implementa: HU-01 a HU-04, HU-06 a HU-15, HU-38 y HU-46 (conecta las pantallas con el núcleo).
  */
 public class FabricaViewModels implements ViewModelProvider.Factory {
 

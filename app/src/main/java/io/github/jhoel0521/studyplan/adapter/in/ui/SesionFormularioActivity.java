@@ -42,9 +42,9 @@ import io.github.jhoel0521.studyplan.domain.SesionEstudio;
  * reprogramar sesiones pendientes o no realizadas, con soporte de selector Material o entrada directa y
  * conservación de estado ante rotación.
  *
- * <p>Implementa: HU-10, HU-11, HU-14 y RNF-10.
+ * <p>Implementa: HU-04, HU-10, HU-11, HU-14, RNF-10 y RNF-12.
  */
-public class SesionFormularioActivity extends ActividadBase {
+public class SesionFormularioActivity extends ActividadProtegida {
 
     public static final String EXTRA_MODO = "extra_modo";
     public static final String EXTRA_FECHA = "extra_fecha";
@@ -116,6 +116,10 @@ public class SesionFormularioActivity extends ActividadBase {
                 campoFecha.setText(fechaInicial);
             }
         }
+    }
+
+    @Override
+    protected void alEstarListo() {
         modelo.cargar(MODO_REPROGRAMAR.equals(modoActual) ? sesionBaseId : -1L);
     }
 
@@ -284,13 +288,11 @@ public class SesionFormularioActivity extends ActividadBase {
         }
         var fInicio = getSupportFragmentManager().findFragmentByTag(TAG_SELECTOR_HORA_INICIO);
         if (fInicio instanceof MaterialTimePicker) {
-            ((MaterialTimePicker) fInicio).addOnPositiveButtonClickListener(
-                    v -> aplicarHoraDePicker((MaterialTimePicker) fInicio, campoHoraInicio));
+            ((MaterialTimePicker) fInicio).addOnPositiveButtonClickListener(this::onHoraInicioConfirmada);
         }
         var fFin = getSupportFragmentManager().findFragmentByTag(TAG_SELECTOR_HORA_FIN);
         if (fFin instanceof MaterialTimePicker) {
-            ((MaterialTimePicker) fFin).addOnPositiveButtonClickListener(
-                    v -> aplicarHoraDePicker((MaterialTimePicker) fFin, campoHoraFin));
+            ((MaterialTimePicker) fFin).addOnPositiveButtonClickListener(this::onHoraFinConfirmada);
         }
     }
 
@@ -335,8 +337,25 @@ public class SesionFormularioActivity extends ActividadBase {
                 .setMinute(minutoInicial)
                 .setTitleText(tituloRes)
                 .build();
-        picker.addOnPositiveButtonClickListener(v -> aplicarHoraDePicker(picker, destino));
+        picker.addOnPositiveButtonClickListener(
+                TAG_SELECTOR_HORA_INICIO.equals(tag)
+                        ? this::onHoraInicioConfirmada
+                        : this::onHoraFinConfirmada);
         picker.show(getSupportFragmentManager(), tag);
+    }
+
+    private void onHoraInicioConfirmada(View vista) {
+        var fragmento = getSupportFragmentManager().findFragmentByTag(TAG_SELECTOR_HORA_INICIO);
+        if (fragmento instanceof MaterialTimePicker) {
+            aplicarHoraDePicker((MaterialTimePicker) fragmento, campoHoraInicio);
+        }
+    }
+
+    private void onHoraFinConfirmada(View vista) {
+        var fragmento = getSupportFragmentManager().findFragmentByTag(TAG_SELECTOR_HORA_FIN);
+        if (fragmento instanceof MaterialTimePicker) {
+            aplicarHoraDePicker((MaterialTimePicker) fragmento, campoHoraFin);
+        }
     }
 
     private void aplicarHoraDePicker(MaterialTimePicker picker, TextInputEditText destino) {
@@ -425,8 +444,14 @@ public class SesionFormularioActivity extends ActividadBase {
                 grupoHoraFin.setError(mensaje);
                 break;
             case HORA_FORMATO_INVALIDO:
-                grupoHoraInicio.setError(mensaje);
-                grupoHoraFin.setError(mensaje);
+                boolean inicioInvalida = !Hora.parsear(textoDe(campoHoraInicio)).esValido();
+                boolean finInvalida = !Hora.parsear(textoDe(campoHoraFin)).esValido();
+                if (inicioInvalida || !finInvalida) {
+                    grupoHoraInicio.setError(mensaje);
+                }
+                if (finInvalida || !inicioInvalida) {
+                    grupoHoraFin.setError(mensaje);
+                }
                 break;
             case DURACION_REAL_INVALIDA:
                 grupoDuracionReal.setError(mensaje);

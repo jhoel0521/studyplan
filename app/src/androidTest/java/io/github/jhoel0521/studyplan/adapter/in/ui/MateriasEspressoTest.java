@@ -23,7 +23,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.ListadoMaterias;
+import io.github.jhoel0521.studyplan.domain.Materia;
 
 /**
  * Flujo completo de materias en pantalla: registrar, rechazar un nombre repetido, editar, archivar y desarchivar,
@@ -194,5 +197,46 @@ public class MateriasEspressoTest {
             Pruebas.esperarVisible(allOf(withId(R.id.botonEliminarMateria), isEnabled()));
         }
         assertFalse(Pruebas.app().listarMaterias().ejecutar().estaVacio());
+    }
+
+    @Test
+    @SuppressWarnings("unused") // el escenario solo se usa para cerrarse con try-with-resources
+    public void laListaMuestraLasHorasRealesAcumuladasPorMateria() throws InterruptedException {
+        Materia materia = Pruebas.app().registrarMateria().ejecutar("Historia", COLOR, null).valor();
+        Fecha ayer = Pruebas.app().reloj().hoy().sumarDias(-1);
+        Pruebas.app().registrarSesionPasada().ejecutar(
+                materia.id(),
+                ayer,
+                Hora.de(10, 0).valor(),
+                Hora.de(11, 30).valor(),
+                90,
+                null);
+        try (ActivityScenario<MateriasActivity> escenario = ActivityScenario.launch(MateriasActivity.class)) {
+            Pruebas.esperarVisible(withText("Historia"));
+            Pruebas.esperarVisible(withText("1,5 h"));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unused") // el escenario solo se usa para cerrarse con try-with-resources
+    public void unaMateriaConSesionesNoSePuedeEliminarYSeDebeArchivar() throws InterruptedException {
+        Materia materia = Pruebas.app().registrarMateria().ejecutar("Biología", COLOR, null).valor();
+        Fecha manana = Pruebas.app().reloj().hoy().sumarDias(1);
+        Pruebas.app().planificarSesion().ejecutar(
+                materia.id(),
+                manana,
+                Hora.de(9, 0).valor(),
+                Hora.de(10, 0).valor(),
+                null);
+        try (ActivityScenario<MateriasActivity> escenario = ActivityScenario.launch(MateriasActivity.class)) {
+            Pruebas.esperarVisible(withText("Biología"));
+            onView(withText("Biología")).perform(click());
+            Pruebas.esperarVisible(allOf(withId(R.id.botonEliminarMateria), isEnabled()));
+            onView(withId(R.id.botonEliminarMateria)).perform(scrollTo(), click());
+            Pruebas.esperarVisible(withId(android.R.id.button1));
+            onView(withId(android.R.id.button1)).perform(click());
+            Pruebas.esperarVisible(withText(R.string.error_materia_con_sesiones));
+        }
+        assertEquals(1, Pruebas.app().listarMaterias().ejecutar().activas().size());
     }
 }

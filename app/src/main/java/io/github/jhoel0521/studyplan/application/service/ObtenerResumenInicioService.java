@@ -54,9 +54,6 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             return Optional.empty();
         }
         Perfil perfil = perfilOpt.get();
-        if (sesiones == null || materias == null || reloj == null || vencerPendientes == null) {
-            return Optional.of(new ResumenInicio(perfil.nombre(), 0.0, perfil.metaSemanalHoras()));
-        }
 
         vencerPendientes.ejecutar();
 

@@ -27,9 +27,9 @@ import io.github.jhoel0521.studyplan.domain.SesionEstudio;
  * Pantalla de detalle completo de una sesión de estudio y punto de transición de estados
  * (completar el mismo día, registrar tardíamente hasta 3 días, reprogramar o eliminar en Pendiente).
  *
- * <p>Implementa: HU-12, HU-13, HU-14, HU-15, RNF-06 y RNF-10.
+ * <p>Implementa: HU-04, HU-12, HU-13, HU-14, HU-15, RNF-06, RNF-10 y RNF-12.
  */
-public class SesionDetalleActivity extends ActividadBase {
+public class SesionDetalleActivity extends ActividadProtegida {
 
     public static final String EXTRA_SESION_ID = "extra_sesion_id";
 
@@ -76,8 +76,7 @@ public class SesionDetalleActivity extends ActividadBase {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void alEstarListo() {
         modelo.cargar(sesionId);
     }
 

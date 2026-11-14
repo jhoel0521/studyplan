@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
  * Migraciones escritas a mano de la base de datos. No se usa migración destructiva: cada cambio de versión exige una
  * migración aquí y su prueba (RNF-12).
  *
- * <p>Implementa: HU-06 a HU-09 (la tabla de materias llega en la versión 2) y conserva los datos de HU-01, HU-03 y HU-04.
+ * <p>Implementa: HU-06 a HU-09 (materias en v2), HU-10 a HU-15 (sesiones de estudio en v3) y conserva los datos de HU-01, HU-03 y HU-04.
  */
 public final class Migraciones {
 

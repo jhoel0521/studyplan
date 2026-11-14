@@ -60,9 +60,9 @@
 
 ## Bloque 5 — Pruebas instrumentadas E2E y validación de calidad
 
-- [ ] 5.1 Escribir `SesionesActivityEspressoTest` verificando en UI: planificar sesión válida (`HU-10`), bloqueo de horario inválido (`RN-04`) y cruce indicando sesión en conflicto (`RN-05`), registrar sesión pasada ≤ 3 días y rechazo a ≥ 4 días (`HU-11`), completar sesión del día con duración editada (`HU-12`), transición desde `NO_REALIZADA` (`HU-13`), reprogramación conservando enlace navegable a nueva sesión (`HU-14`) y eliminación confirmada de `PENDIENTE` más ocultación de eliminar en completada/reprogramada (`HU-15`), y rotación sin pérdida de estado (`RNF-10`).
-- [ ] 5.2 Actualizar `InicioActivityEspressoTest` (resumen con datos reales y acceso rápido «+ Nueva sesión» con hoy preseleccionado, `HU-02`) y `MateriasActivityEspressoTest` (horas acumuladas reales `HU-09` y rechazo real al eliminar materia con sesiones `HU-08` / `RN-03`).
-- [ ] 5.3 Ejecutar revisión con el agente `revisor-java` (`.claude/agents/revisor-java.md`) sobre todo el código y XML de E3, corregir hallazgos, comprobar `./gradlew assembleDebug test lint` y `connectedDebugAndroidTest` (en emuladores disponibles según `RNF-17`), realizar `git commit` por ruta explícita (`test(HU-10): agregar pruebas Espresso E2E y cierre de E3`) y ejecutar `git push`.
+- [x] 5.1 Escribir `SesionesActivityEspressoTest` verificando en UI: planificar sesión válida (`HU-10`), bloqueo de horario inválido (`RN-04`) y cruce indicando sesión en conflicto (`RN-05`), registrar sesión pasada ≤ 3 días y rechazo a ≥ 4 días (`HU-11`), completar sesión del día con duración editada (`HU-12`), transición desde `NO_REALIZADA` (`HU-13`), reprogramación conservando enlace navegable a nueva sesión (`HU-14`) y eliminación confirmada de `PENDIENTE` más ocultación de eliminar en completada/reprogramada (`HU-15`), y rotación sin pérdida de estado (`RNF-10`).
+- [x] 5.2 Actualizar `InicioActivityEspressoTest` (resumen con datos reales y acceso rápido «+ Nueva sesión» con hoy preseleccionado, `HU-02`) y `MateriasActivityEspressoTest` (horas acumuladas reales `HU-09` y rechazo real al eliminar materia con sesiones `HU-08` / `RN-03`).
+- [x] 5.3 Ejecutar revisión con el agente `revisor-java` (`.claude/agents/revisor-java.md`) sobre todo el código y XML de E3, corregir hallazgos, comprobar `./gradlew assembleDebug test lint` y `connectedDebugAndroidTest` (en emuladores disponibles según `RNF-17`), realizar `git commit` por ruta explícita (`test(HU-10): agregar pruebas Espresso E2E y cierre de E3`) y ejecutar `git push`.
 
 ---
 

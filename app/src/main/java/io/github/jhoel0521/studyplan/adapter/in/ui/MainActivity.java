@@ -130,7 +130,7 @@ public class MainActivity extends ActividadProtegida {
         }
         Intent intento = new Intent(this, SesionFormularioActivity.class);
         intento.putExtra(SesionFormularioActivity.EXTRA_MODO, SesionFormularioActivity.MODO_PLANIFICAR);
-        if (ultimoResumen != null) {
+        if (ultimoResumen != null && ultimoResumen.hoy() != null) {
             intento.putExtra(SesionFormularioActivity.EXTRA_FECHA, ultimoResumen.hoy().iso());
         }
         startActivity(intento);

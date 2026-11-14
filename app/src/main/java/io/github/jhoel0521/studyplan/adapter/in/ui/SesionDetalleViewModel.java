@@ -77,7 +77,7 @@ public class SesionDetalleViewModel extends ViewModel {
     /** Marca la sesión como completada en el mismo día con la duración real ingresada (HU-12). */
     public void completar(long sesionId, String duracionRealTxt) {
         int minutos = parsearEntero(duracionRealTxt);
-        ejecutor.execute(() -> {
+        ejecutarConCandado(() -> {
             Resultado<SesionEstudio> r = completarSesion.ejecutar(sesionId, minutos);
             if (r.esValido()) {
                 recargar(sesionId);
