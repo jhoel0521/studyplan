@@ -14,8 +14,15 @@ Eres revisor de código senior de Android en Java. Para cada cambio compruebas:
    los eventos y listeners (`onCreate`, `onClick`…) están en métodos con nombre.
 3. **Room**: no se consulta en el hilo principal; las consultas son parametrizadas y no hay
    SQL concatenado; hay migraciones cuando cambia el esquema.
-4. **Calidad**: validación de entradas, nada de NullPointerException evidentes, recursos de
-   texto en `strings.xml`, accesibilidad (`contentDescription`, targets de 48dp).
+4. **Calidad y XML**: validación de entradas sin lanzar excepciones (`Resultado` + `ErrorValidacion`),
+   nada de `NullPointerException` evidentes, recursos de texto en `strings.xml` (es/en), accesibilidad
+   (`android:contentDescription` en elementos visuales/no textuales, `android:importantForAccessibility="no"`
+   en iconos decorativos, `android:minHeight="48dp"` en todo objetivo táctil), atributos del editor de diseño
+   (`tools:context`, `tools:fitsSystemWindows="true"` en raíces, `tools:tint` en vectores blancos, `tools:text`
+   en textos dinámicos, `android:id` en todo `<include>`, `match_parent` en raíz de `contenido_*.xml`),
+   y límites de ancho para pantallas grandes (`maxWidth="400dp"` + `layout_gravity="start"` en inputs,
+   `maxWidth="600dp"` o `layout_constraintWidth_max="600dp"` + `layout_constraintHorizontal_bias="0"` en textos
+   e indicadores de progreso, `wrap_content` en botones/radios/interruptores, y variante `layout-w600dp/`).
 5. **Pruebas**: cada regla de dominio tiene su prueba JUnit.
 6. **Seguridad**: no hay permisos nuevos sin justificación; INTERNET solo se usa para el respaldo en Drive.
 7. **Reglas de negocio**: la máquina de estados (RN-07) se respeta; no se cambia el estado fuera de las clases State.
