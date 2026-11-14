@@ -6,28 +6,33 @@ import java.util.List;
 
 import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.ListadoMaterias;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.ResumenMateria;
 
 /**
- * Implementa {@link ListarMaterias}: ordena alfabéticamente por la clave (sin acentos ni mayúsculas) y, a igualdad,
- * por el nombre. Las horas realizadas son cero hasta que existan sesiones.
- *
- * <p>Implementa: HU-09 y HU-08.
+ * Implementa {@link ListarMaterias}: ordena alfabéticamente por la clave (sin acentos ni
+ * mayúsculas) y, a igualdad, por el nombre, acumulando las horas reales de sesiones completadas o
+ * completadas tardíamente (HU-09, HU-08, RN-11).
  */
 public final class ListarMateriasService implements ListarMaterias {
-
-    /** Horas realizadas mientras no existan sesiones (las completa el change de sesiones). */
-    static final double HORAS_SIN_SESIONES = 0;
 
     private static final Comparator<Materia> ALFABETICO =
             Comparator.comparing(Materia::clave).thenComparing(Materia::nombre);
 
     private final MateriaRepository repositorio;
+    private final SesionRepository sesiones;
 
-    public ListarMateriasService(MateriaRepository repositorio) {
+    public ListarMateriasService(MateriaRepository repositorio, SesionRepository sesiones) {
         this.repositorio = repositorio;
+        this.sesiones = sesiones;
+    }
+
+    /** Constructor provisional hasta conectar el adaptador Room v3 en Bloque 3. */
+    @Deprecated
+    public ListarMateriasService(MateriaRepository repositorio) {
+        this(repositorio, null);
     }
 
     @Override
@@ -36,7 +41,10 @@ public final class ListarMateriasService implements ListarMaterias {
         activas.sort(ALFABETICO);
         List<ResumenMateria> resumenes = new ArrayList<>();
         for (Materia activa : activas) {
-            resumenes.add(new ResumenMateria(activa, HORAS_SIN_SESIONES));
+            double horas = sesiones == null
+                    ? 0.0
+                    : sesiones.sumarMinutosRealesPorMateria(activa.id()) / 60.0;
+            resumenes.add(new ResumenMateria(activa, horas));
         }
         List<Materia> archivadas = new ArrayList<>(repositorio.archivadas());
         archivadas.sort(ALFABETICO);

@@ -1,0 +1,84 @@
+package io.github.jhoel0521.studyplan.application.service;
+
+import java.util.List;
+
+import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
+import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
+import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+
+/**
+ * Utilidad interna compartida por los servicios de sesiones para validar materia activa, detectar
+ * cruces horarios (RN-05) y construir elementos de lectura sin duplicar lógica.
+ */
+final class ValidadorSesiones {
+
+    private ValidadorSesiones() {
+    }
+
+    static Resultado<Materia> obtenerMateriaActiva(MateriaRepository materias, long materiaId) {
+        if (materiaId <= 0) {
+            return Resultado.error(ErrorValidacion.MATERIA_SESION_OBLIGATORIA);
+        }
+        Materia materia = materias.obtener(materiaId).orElse(null);
+        if (materia == null) {
+            return Resultado.error(ErrorValidacion.MATERIA_NO_ENCONTRADA);
+        }
+        if (materia.archivada()) {
+            return Resultado.error(ErrorValidacion.MATERIA_INACTIVA);
+        }
+        return Resultado.ok(materia);
+    }
+
+    static ConflictoHorario buscarConflictoHorario(
+            SesionRepository sesiones,
+            MateriaRepository materias,
+            Fecha fecha,
+            Hora inicio,
+            Hora fin,
+            Long idExcluido) {
+        List<SesionEstudio> existentes = sesiones.listarPorFecha(fecha);
+        for (SesionEstudio existente : existentes) {
+            if (idExcluido != null && idExcluido.equals(existente.id())) {
+                continue;
+            }
+            if (existente.seSolapaCon(fecha, inicio, fin)) {
+                String nombreMateria = materias.obtener(existente.materiaId())
+                        .map(Materia::nombre)
+                        .orElse("");
+                long sesionId = existente.id() == null ? 0L : existente.id();
+                return new ConflictoHorario(
+                        sesionId,
+                        existente.materiaId(),
+                        nombreMateria,
+                        existente.fecha(),
+                        existente.horaInicio(),
+                        existente.horaFin());
+            }
+        }
+        return null;
+    }
+
+    static DetalleSesionInicio aDetalleInicio(SesionEstudio sesion, Materia materia) {
+        String nombreMateria = materia == null ? "" : materia.nombre();
+        int colorMateria = materia == null ? 0 : materia.color();
+        long sesionId = sesion.id() == null ? 0L : sesion.id();
+        return new DetalleSesionInicio(
+                sesionId,
+                sesion.materiaId(),
+                nombreMateria,
+                colorMateria,
+                sesion.fecha(),
+                sesion.horaInicio(),
+                sesion.horaFin(),
+                sesion.duracionPlanificadaMinutos(),
+                sesion.duracionRealMinutos(),
+                sesion.codigoEstado());
+    }
+}
