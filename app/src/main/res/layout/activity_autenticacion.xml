@@ -7,7 +7,8 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp"
-    tools:context=".adapter.in.ui.AutenticacionActivity">
+    tools:context=".adapter.in.ui.AutenticacionActivity"
+    tools:fitsSystemWindows="true">
 
     <TextView
         android:layout_width="wrap_content"

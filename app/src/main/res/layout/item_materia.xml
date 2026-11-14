@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:minHeight="72dp"
     android:orientation="horizontal"
@@ -13,14 +13,16 @@
     android:paddingTop="12dp"
     android:paddingEnd="24dp"
     android:paddingBottom="12dp"
-    tools:context=".adapter.in.ui.MateriasActivity">
+    tools:context=".adapter.in.ui.MateriasActivity"
+    tools:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/colorMateria"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_circulo" />
+        android:src="@drawable/ic_circulo"
+        tools:tint="?attr/colorPrimary" />
 
     <LinearLayout
         android:layout_width="0dp"

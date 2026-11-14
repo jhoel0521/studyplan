@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".adapter.in.ui.PerfilInicialActivity">
+    tools:context=".adapter.in.ui.PerfilInicialActivity"
+    tools:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,18 +16,20 @@
         android:padding="24dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
+            android:maxWidth="600dp"
             android:text="@string/perfil_titulo"
             android:textAppearance="?attr/textAppearanceHeadlineMedium"
             tools:text="Bienvenido a StudyPlan" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="32dp"
+            android:maxWidth="600dp"
             android:text="@string/perfil_subtitulo"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="Cuéntanos cómo te llamas y cuántas horas quieres estudiar por semana." />
@@ -34,8 +37,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contenedorNombre"
             android:layout_width="match_parent"
-            android:maxWidth="400dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:maxWidth="400dp"
             android:hint="@string/perfil_nombre">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -43,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName|textCapWords"
+                android:maxWidth="400dp"
                 android:minHeight="48dp"
                 tools:text="Ana" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -50,8 +55,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contenedorMeta"
             android:layout_width="match_parent"
-            android:maxWidth="400dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:maxWidth="400dp"
             android:layout_marginTop="16dp"
             android:hint="@string/perfil_meta"
             app:helperText="@string/perfil_meta_ayuda">
@@ -61,6 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
+                android:maxWidth="400dp"
                 android:minHeight="48dp"
                 tools:text="20" />
         </com.google.android.material.textfield.TextInputLayout>

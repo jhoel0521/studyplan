@@ -6,7 +6,9 @@
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".adapter.in.ui.MateriaFormularioActivity">
+    android:contentDescription="@string/materia_color"
+    tools:context=".adapter.in.ui.MateriaFormularioActivity"
+    tools:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/colorCirculo"
@@ -14,7 +16,8 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_circulo" />
+        android:src="@drawable/ic_circulo"
+        tools:tint="?attr/colorPrimary" />
 
     <ImageView
         android:id="@+id/colorCheck"
@@ -23,5 +26,6 @@
         android:layout_gravity="center"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_check"
+        tools:tint="?attr/colorOnPrimary"
         android:visibility="gone" />
 </FrameLayout>

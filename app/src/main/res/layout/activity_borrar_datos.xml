@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".adapter.in.ui.BorrarDatosActivity">
+    tools:context=".adapter.in.ui.BorrarDatosActivity"
+    tools:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barraSuperior"
@@ -23,8 +24,9 @@
         android:padding="24dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="600dp"
             android:text="@string/borrar_explicacion"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="Se eliminarán tu perfil, tus ajustes y todos tus datos de este teléfono. No se puede deshacer." />

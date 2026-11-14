@@ -6,9 +6,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".adapter.in.ui.MainActivity">
+    tools:context=".adapter.in.ui.MainActivity"
+    tools:fitsSystemWindows="true">
 
     <include
+        android:id="@+id/barraInferior"
         layout="@layout/layout_barra_inferior"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -17,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/contenidoInicio"
         layout="@layout/contenido_inicio"
         android:layout_width="0dp"
         android:layout_height="0dp"

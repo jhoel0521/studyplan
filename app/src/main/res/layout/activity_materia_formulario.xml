@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".adapter.in.ui.MateriaFormularioActivity">
+    tools:context=".adapter.in.ui.MateriaFormularioActivity"
+    tools:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barraSuperior"
@@ -30,6 +31,7 @@
                 android:id="@+id/contenedorNombreMateria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:hint="@string/materia_nombre"
                 android:maxWidth="400dp">
 
@@ -38,13 +40,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapWords"
+                    android:maxWidth="400dp"
                     android:minHeight="48dp"
                     tools:text="Matemáticas" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contenedorDocenteMateria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_marginTop="16dp"
                 android:hint="@string/materia_docente"
                 android:maxWidth="400dp">
@@ -54,6 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName|textCapWords"
+                    android:maxWidth="400dp"
                     android:minHeight="48dp"
                     tools:text="Dra. Ruiz" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -71,9 +77,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:foreground="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:minHeight="56dp"
                 android:orientation="horizontal"
@@ -84,7 +90,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_circulo" />
+                    android:src="@drawable/ic_circulo"
+                    tools:tint="?attr/colorPrimary" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -129,7 +136,6 @@
                     style="@style/Widget.StudyPlan.BotonGrupo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="-1dp"
                     android:text="@string/materia_archivar" />
 
                 <com.google.android.material.button.MaterialButton
@@ -137,7 +143,6 @@
                     style="@style/Widget.StudyPlan.BotonGrupo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="-1dp"
                     android:text="@string/materia_eliminar" />
             </LinearLayout>
         </LinearLayout>

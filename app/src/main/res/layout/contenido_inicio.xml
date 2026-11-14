@@ -3,9 +3,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    tools:context=".adapter.in.ui.MainActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".adapter.in.ui.MainActivity"
+    tools:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barraSuperior"
@@ -24,8 +25,10 @@
         android:layout_marginEnd="24dp"
         android:textAppearance="?attr/textAppearanceHeadlineMedium"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperior"
+        app:layout_constraintWidth_max="600dp"
         tools:text="¡Hola, Ana!" />
 
     <TextView
@@ -38,8 +41,10 @@
         android:text="@string/inicio_progreso_semana"
         android:textAppearance="?attr/textAppearanceTitleMedium"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/saludo"
+        app:layout_constraintWidth_max="600dp"
         tools:text="Progreso de la semana" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -49,11 +54,14 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
+        android:contentDescription="@string/inicio_progreso_semana"
         android:max="100"
         android:progress="0"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tituloProgreso" />
+        app:layout_constraintTop_toBottomOf="@id/tituloProgreso"
+        app:layout_constraintWidth_max="600dp" />
 
     <TextView
         android:id="@+id/textoProgreso"
@@ -64,8 +72,10 @@
         android:layout_marginEnd="24dp"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraProgreso"
+        app:layout_constraintWidth_max="600dp"
         tools:text="0 / 20 h" />
 
     <TextView
@@ -78,7 +88,9 @@
         android:text="@string/inicio_sin_sesiones"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textoProgreso"
+        app:layout_constraintWidth_max="600dp"
         tools:text="Aún no tienes sesiones planificadas." />
 </androidx.constraintlayout.widget.ConstraintLayout>

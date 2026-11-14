@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".adapter.in.ui.MateriaFormularioActivity">
+    tools:context=".adapter.in.ui.MateriaFormularioActivity"
+    tools:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
         <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
             android:id="@+id/barraBrillo"
             android:layout_width="match_parent"
-            android:layout_height="28dp"
+            android:layout_height="48dp"
             android:layout_marginTop="12dp"
             android:contentDescription="@string/materia_color_brillo" />
 
@@ -41,14 +42,15 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_circulo" />
+                android:src="@drawable/ic_circulo"
+                app:tint="?attr/colorPrimary"
+                tools:tint="#1E88E5" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/contenedorColorHex"
-                android:layout_width="0dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_weight="1"
                 android:hint="@string/materia_color_hex"
                 app:prefixText="#">
 

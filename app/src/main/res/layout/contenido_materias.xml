@@ -3,9 +3,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    tools:context=".adapter.in.ui.MateriasActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".adapter.in.ui.MateriasActivity"
+    tools:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/barraSuperiorMaterias"
@@ -40,8 +41,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barraSuperiorMaterias"
-        tools:text="Aún no tienes materias. Toca «+» para registrar la primera."
-        tools:visibility="visible" />
+        app:layout_constraintWidth_max="600dp"
+        tools:text="Aún no tienes materias. Toca «+» para registrar la primera." />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/botonAgregarMateria"
