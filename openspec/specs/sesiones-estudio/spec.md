@@ -24,9 +24,9 @@ El estado de una sesión SHALL cambiar únicamente por las transiciones listadas
 - **THEN** la sesión pasa a Completada — Guarda la duración real medida
 
 #### Scenario: Pendiente → Completada (marcar completada)
-- **GIVEN** una sesión en estado Pendiente
-- **WHEN** ocurre el evento «marcar completada»
-- **THEN** la sesión pasa a Completada — El mismo día de la sesión
+- **GIVEN** una sesión en estado Pendiente del mismo día
+- **WHEN** el estudiante desea completarla en el flujo normal
+- **THEN** el sistema no permite completarla directamente con minutos editables; debe pasar por «iniciar» (En curso) y luego «detener» para calcular la duración real desde los eventos registrados
 
 #### Scenario: Pendiente → No realizada (fin del día)
 - **GIVEN** una sesión en estado Pendiente
@@ -105,12 +105,12 @@ Como estudiante, quiero registrar una sesión que ya estudié en los últimos 3 
 - **THEN** el sistema rechaza la fecha e informa el límite de 3 días
 
 ### Requirement: HU-12 Completar una sesión
-Como estudiante, quiero marcar como completada una sesión Pendiente del día para llevar el control real de lo que estudié. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 3 pts).
+Como estudiante, quiero completar mi sesión Pendiente del día ejecutándola en vivo para registrar el tiempo real estudiado sin introducir duraciones manuales arbitrarias. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 3 pts).
 
 #### Scenario: Completar
 - **GIVEN** que existe una sesión Pendiente de hoy
-- **WHEN** el estudiante la marca como completada
-- **THEN** el sistema la pasa a Completada, registra la duración real (editable) y la suma al progreso semanal
+- **WHEN** el estudiante abre su detalle
+- **THEN** el sistema no muestra campo editable de minutos ni botón de completado directo; la sesión se completa iniciándola (En curso) y deteniéndola (o declarando fin al volver) para calcular la duración real desde los eventos (RN-07)
 
 #### Scenario: Transición inválida
 - **GIVEN** que una sesión está Reprogramada

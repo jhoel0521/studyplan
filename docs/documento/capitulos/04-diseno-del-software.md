@@ -24,7 +24,7 @@ Nota: Elaboración propia. Los paquetes cuelgan de io.github.jhoel0521.studyplan
 
 ### Modelo Lógico
 
-El esquema de Room está en la versión 3 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
+El esquema de Room está en la versión 4 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
 
 ![Modelo lógico de la base de datos de StudyPlan](../recursos/diagramas/modelo_logico.png){#modelo_logico ancho=16.5}
 
@@ -50,6 +50,11 @@ Tabla: Diccionario de datos de la tabla ajustes (Ajustes de la aplicación) {#di
 | tema | TEXT | NOT NULL | Tema visual: SISTEMA, CLARO u OSCURO (HU-03). |
 | idioma | TEXT | NOT NULL | Idioma de la aplicación: ES o EN (HU-03). |
 | bloqueoActivo | INTEGER | NOT NULL | 1 si la app pide huella o PIN al abrirse y al volver a primer plano (HU-04). |
+| no_molestar_global | INTEGER | NOT NULL | 1 si el modo No molestar se activa de forma predeterminada al estudiar (HU-24). |
+| pomodoro_trabajo_min | INTEGER | NOT NULL | Duración en minutos de cada bloque de trabajo Pomodoro (HU-23, RN-22). |
+| pomodoro_descanso_corto_min | INTEGER | NOT NULL | Duración en minutos del descanso corto Pomodoro (HU-23, RN-22). |
+| pomodoro_descanso_largo_min | INTEGER | NOT NULL | Duración en minutos del descanso largo Pomodoro (HU-23, RN-22). |
+| pomodoro_ciclos_hasta_largo | INTEGER | NOT NULL | Cantidad de ciclos de trabajo hasta un descanso largo Pomodoro (HU-23, RN-22). |
 
 Tabla: Diccionario de datos de la tabla materia (Materias del estudiante) {#diccionario_materia anchos=3.4,2.2,3.6,6.8 tam=9}
 
@@ -76,6 +81,24 @@ Tabla: Diccionario de datos de la tabla sesion_estudio (Sesiones de estudio) {#d
 | estado | TEXT | NOT NULL | Código de estado según el patrón State (RN-07): PENDIENTE, EN_CURSO, NO_REALIZADA, COMPLETADA, COMPLETADA_TARDIA o REPROGRAMADA. |
 | notas | TEXT | Admite nulo | Notas u observaciones opcionales de la sesión (hasta 500 caracteres). |
 | sesion_origen_id | INTEGER | Admite nulo | Identificador de la sesión original cuando procede de una reprogramación (HU-14); nulo si no aplica. |
+| tecnica | TEXT | NOT NULL | Técnica elegida al iniciar: LIBRE o POMODORO; nula hasta que inicia (HU-22, HU-23). |
+| forzar_no_molestar | INTEGER | Admite nulo | Preferencia de No molestar de la sesión: HEREDAR_GLOBAL, FORZAR_ACTIVAR o FORZAR_DESACTIVAR (HU-24). |
+| pomodoro_trabajo_min | INTEGER | Admite nulo | Minutos de trabajo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
+| pomodoro_descanso_corto_min | INTEGER | Admite nulo | Minutos de descanso corto de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
+| pomodoro_descanso_largo_min | INTEGER | Admite nulo | Minutos de descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
+| pomodoro_ciclos_hasta_largo | INTEGER | Admite nulo | Ciclos hasta descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
+
+Tabla: Diccionario de datos de la tabla evento_estudio (Eventos de ejecución de sesiones) {#diccionario_evento_estudio anchos=3.4,2.2,3.6,6.8 tam=9}
+
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| id | INTEGER | PK autoincremental, NOT NULL | Identificador autogenerado del evento de ejecución. |
+| sesion_id | INTEGER | NOT NULL | Identificador de la sesión asociada; clave foránea a sesion_estudio(id) con ON DELETE CASCADE (HU-39). |
+| tipo | TEXT | NOT NULL | Tipo de evento cronológico: INICIO, PAUSA, REANUDACION, FIN, CAMBIO_FASE, SALIDA_APP o REGRESO_APP (HU-39, RN-23). |
+| instante_milis | INTEGER | NOT NULL | Marca temporal exacta en milisegundos UTC desde epoch (RN-23). |
+| fecha | TEXT | NOT NULL | Fecha local del evento en formato ISO AAAA-MM-DD. |
+| hora | TEXT | NOT NULL | Hora local del evento en formato HH:mm. |
+| nota | TEXT | Admite nulo | Nota breve o detalle opcional del evento (por ejemplo, fase Pomodoro o resolución de regreso). |
 
 ## Diseño de la Interfaz de Usuario (UI/UX)
 
@@ -165,4 +188,16 @@ Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_
 
 Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
-[[pendiente: diagramas de clases de las épicas siguientes (temporizador, metas, estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
+### Épica Técnicas de estudio y ejecución en vivo
+
+La quinta épica implementada (`add-tecnicas-estudio`) reemplaza la finalización directa desde `PENDIENTE` por el flujo obligatorio en vivo (`PENDIENTE → EN_CURSO → COMPLETADA`, `RN-07`), incorporando las técnicas **Libre** (`HU-22`) y **Pomodoro** (`HU-23`, con instantánea inmutable de parámetros al iniciar `RN-22`), la configuración opcional de **No molestar** sin bloqueo ante denegación (`HU-24`, `RNF-18`), la línea de tiempo cronológica de eventos persistidos en Room v4 (`evento_estudio`, `MIGRATION_3_4`, `HU-39`, `RN-23`), la recuperación tras salida de la app mediante el diálogo `W13` (`HU-40`, `HU-41`), los avisos de hitos con `AlarmManager` y el reparto interactivo de tramo continuo `W14` (`HU-42` a `HU-44`). La @figura:clases_tecnicas presenta sus clases agrupadas por capa, incluyendo el nuevo paquete `adapter.out.system`, y la @figura:secuencia_ejecucion_sesion ilustra el inicio de una sesión en vivo con persistencia del evento `INICIO`, aplicación opcional de No molestar y programación de avisos.
+
+![Diagrama de clases de la épica Técnicas de estudio y ejecución en vivo](../recursos/diagramas/diagrama_clases_tecnicas.png){#clases_tecnicas ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
+
+![Secuencia de iniciar y ejecutar una sesión en vivo a través de las tres capas](../recursos/diagramas/secuencia_ejecucion_sesion.png){#secuencia_ejecucion_sesion ancho=16.5}
+
+Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
+
+[[pendiente: diagramas de clases de las épicas siguientes (metas, estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]

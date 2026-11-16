@@ -79,15 +79,36 @@ DOMINIO_CALENDARIO = ["BloqueHorarioCalendario", "CalculadorRangoHorario", "Celd
                       "FiltroCalendario", "ItemSesionCalendario", "PeriodoCalendario", "ResumenPeriodoCalendario",
                       "VistaCalendario"]
 
+# add-tecnicas-estudio
+PRESENTACION_TECNICAS = ["DialogoRecuperacionSesion", "EventoEstudioAdapter", "NotificadorSesion",
+                         "ReceptorAvisosSesion", "RepartoSesionActivity", "RepartoSesionViewModel",
+                         "SesionEnCursoActivity", "SesionEnCursoViewModel"]
+ENTRADA_TECNICAS = ["ConfigurarAjustesEstudio", "ConsultarEjecucionSesion", "DecidirFinPlanificadoOInvasion",
+                    "DetenerSesion", "EvaluarRecuperacionSesion", "IniciarSesion", "PausarReanudarSesion",
+                    "RegistrarSalidaApp", "RepartirTramoSesion", "ResolverRegresoApp"]
+SERVICIOS_TECNICAS = ["ConfigurarAjustesEstudioService", "ConsultarEjecucionSesionService",
+                      "DecidirFinPlanificadoOInvasionService", "DetenerSesionService", "EjecucionHitos",
+                      "EvaluarRecuperacionSesionService", "IniciarSesionService", "PausarReanudarSesionService",
+                      "RegistrarSalidaAppService", "RepartirTramoSesionService", "ResolverRegresoAppService"]
+SALIDA_TECNICAS = ["ControladorNoMolestar", "EventoEstudioRepository", "MarcadorSalidaApp",
+                   "ProgramadorAvisosSesion"]
+DOMINIO_TECNICAS = ["CalculadorPomodoro", "CalculadorRepartoTramo", "CalculadorTiempoReal", "CandidataInvasion",
+                    "ConfiguracionPomodoro", "DiagnosticoRegresoApp", "EstadoPomodoroCalculado", "EventoEstudio",
+                    "FasePomodoro", "IntervaloEfectivo", "PreferenciaNoMolestar", "ResultadoReparto",
+                    "ResumenEjecucionSesion", "TecnicaEstudio", "TipoEventoEstudio"]
+PERSISTENCIA_TECNICAS = ["EventoEstudioDao", "EventoEstudioEntity", "EventoEstudioRepositoryRoom"]
+SISTEMA_TECNICAS = ["ControladorNoMolestarSistema", "MarcadorSalidaAppPrefs", "ProgramadorAvisosAlarmManager"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO,
-    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO,
-    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS,
+    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS,
+    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS,
     "adapter/out/security": SEGURIDAD_CONFIG,
+    "adapter/out/system": SISTEMA_TECNICAS,
 }
 
 
@@ -359,6 +380,58 @@ def clases_calendario():
     img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_calendario.png", dpi=(200, 200))
 
 
+def clases_tecnicas():
+    """Clases de la épica E5: técnicas de estudio, ejecución en vivo, recuperación y reparto."""
+    W, H = 3760, 4400
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, w1 = [40, 980, 1920, 2860], 860
+    fila1 = [caja_con_metodos("SesionEnCursoActivity", xs1[0], 80, w1),
+             caja_con_metodos("SesionEnCursoViewModel", xs1[1], 80, w1),
+             caja_con_metodos("RepartoSesionActivity", xs1[2], 80, w1),
+             caja_con_metodos("RepartoSesionViewModel", xs1[3], 80, w1)]
+    y1b = 80 + alto(fila1) + 50
+    fila1b = [caja_con_metodos("DialogoRecuperacionSesion", xs1[0], y1b, w1),
+              caja_con_metodos("EventoEstudioAdapter", xs1[1], y1b, w1),
+              caja_con_metodos("ReceptorAvisosSesion", xs1[2], y1b, w1),
+              caja_con_metodos("NotificadorSesion", xs1[3], y1b, w1)]
+    for c in fila1 + fila1b:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.2), fila1[1].left(0.2), "observa", None, None)
+    dg.assoc(d, fila1[2].right(0.2), fila1[3].left(0.2), "observa", None, None)
+
+    y2 = y1b + alto(fila1b) + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    nucleo = [
+        caja_de_paquete("domain (modelos y calculadores)", DOMINIO_TECNICAS, xs1[0], y2, w1, "domain"),
+        caja_de_paquete("application.port.in (casos de uso)", ENTRADA_TECNICAS, xs1[1], y2, w1, "port.in"),
+        caja_de_paquete("application.service", SERVICIOS_TECNICAS, xs1[2], y2, w1, "implementan"),
+        caja_de_paquete("application.port.out", SALIDA_TECNICAS, xs1[3], y2, w1, "port.out"),
+    ]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, nucleo[2].left(0.3), nucleo[1].right(0.3), "implementan", None, None)
+    dg.assoc(d, nucleo[2].right(0.3), nucleo[3].left(0.3), "usan", None, None)
+
+    y3 = y2 + alto(nucleo) + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Infraestructura · adapter.out.persistence y adapter.out.system", font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("EventoEstudioEntity", xs1[0], y3, w1, "Entity", con_campos=True),
+             caja_con_metodos("EventoEstudioDao", xs1[1], y3, w1, "Dao"),
+             caja_con_metodos("EventoEstudioRepositoryRoom", xs1[2], y3, w1),
+             caja_de_paquete("adapter.out.system", SISTEMA_TECNICAS, xs1[3], y3, w1, "Android/System")]
+    for c in infra:
+        c.draw(d)
+    dg.assoc(d, infra[2].right(0.3), nucleo[3].bottom(0.2), "implementa", None, None)
+    dg.assoc(d, infra[3].top(0.5), nucleo[3].bottom(0.7), "implementan", None, None)
+    img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_tecnicas.png", dpi=(200, 200))
+
+
 # ---------------------------------------------------------------- modelo lógico y diccionario de datos
 DESCRIPCIONES = {
     ("perfil", "id"): "Identificador de la única fila del perfil (siempre 1, RN-01).",
@@ -368,6 +441,11 @@ DESCRIPCIONES = {
     ("ajustes", "tema"): "Tema visual: SISTEMA, CLARO u OSCURO (HU-03).",
     ("ajustes", "idioma"): "Idioma de la aplicación: ES o EN (HU-03).",
     ("ajustes", "bloqueoActivo"): "1 si la app pide huella o PIN al abrirse y al volver a primer plano (HU-04).",
+    ("ajustes", "no_molestar_global"): "1 si el modo No molestar se activa de forma predeterminada al estudiar (HU-24).",
+    ("ajustes", "pomodoro_trabajo_min"): "Duración en minutos de cada bloque de trabajo Pomodoro (HU-23, RN-22).",
+    ("ajustes", "pomodoro_descanso_corto_min"): "Duración en minutos del descanso corto Pomodoro (HU-23, RN-22).",
+    ("ajustes", "pomodoro_descanso_largo_min"): "Duración en minutos del descanso largo Pomodoro (HU-23, RN-22).",
+    ("ajustes", "pomodoro_ciclos_hasta_largo"): "Cantidad de ciclos de trabajo hasta un descanso largo Pomodoro (HU-23, RN-22).",
     ("materia", "id"): "Identificador autogenerado de la materia.",
     ("materia", "nombre"): "Nombre saneado de la materia, de 1 a 50 caracteres (RN-02).",
     ("materia", "nombre_clave"): "Nombre sin acentos y en mayúsculas: decide la unicidad entre las materias activas (RN-02).",
@@ -384,9 +462,23 @@ DESCRIPCIONES = {
     ("sesion_estudio", "estado"): "Código de estado según el patrón State (RN-07): PENDIENTE, EN_CURSO, NO_REALIZADA, COMPLETADA, COMPLETADA_TARDIA o REPROGRAMADA.",
     ("sesion_estudio", "notas"): "Notas u observaciones opcionales de la sesión (hasta 500 caracteres).",
     ("sesion_estudio", "sesion_origen_id"): "Identificador de la sesión original cuando procede de una reprogramación (HU-14); nulo si no aplica.",
+    ("sesion_estudio", "tecnica"): "Técnica elegida al iniciar: LIBRE o POMODORO; nula hasta que inicia (HU-22, HU-23).",
+    ("sesion_estudio", "forzar_no_molestar"): "Preferencia de No molestar de la sesión: HEREDAR_GLOBAL, FORZAR_ACTIVAR o FORZAR_DESACTIVAR (HU-24).",
+    ("sesion_estudio", "pomodoro_trabajo_min"): "Minutos de trabajo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
+    ("sesion_estudio", "pomodoro_descanso_corto_min"): "Minutos de descanso corto de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
+    ("sesion_estudio", "pomodoro_descanso_largo_min"): "Minutos de descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
+    ("sesion_estudio", "pomodoro_ciclos_hasta_largo"): "Ciclos hasta descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
+    ("evento_estudio", "id"): "Identificador autogenerado del evento de ejecución.",
+    ("evento_estudio", "sesion_id"): "Identificador de la sesión asociada; clave foránea a sesion_estudio(id) con ON DELETE CASCADE (HU-39).",
+    ("evento_estudio", "tipo"): "Tipo de evento cronológico: INICIO, PAUSA, REANUDACION, FIN, CAMBIO_FASE, SALIDA_APP o REGRESO_APP (HU-39, RN-23).",
+    ("evento_estudio", "instante_milis"): "Marca temporal exacta en milisegundos UTC desde epoch (RN-23).",
+    ("evento_estudio", "fecha"): "Fecha local del evento en formato ISO AAAA-MM-DD.",
+    ("evento_estudio", "hora"): "Hora local del evento en formato HH:mm.",
+    ("evento_estudio", "nota"): "Nota breve o detalle opcional del evento (por ejemplo, fase Pomodoro o resolución de regreso).",
 }
 TABLAS_DE_NEGOCIO = {"perfil": "Perfil del estudiante", "ajustes": "Ajustes de la aplicación",
-                     "materia": "Materias del estudiante", "sesion_estudio": "Sesiones de estudio"}
+                     "materia": "Materias del estudiante", "sesion_estudio": "Sesiones de estudio",
+                     "evento_estudio": "Eventos de ejecución de sesiones"}
 
 
 def _ultimo_esquema():
@@ -450,6 +542,7 @@ def modelo_logico():
     notas = [
         "sesion_estudio.materia_id referencia a materia(id) con ON DELETE RESTRICT (RN-03: no se elimina una materia con sesiones).",
         "sesion_estudio.sesion_origen_id referencia a sesion_estudio(id) con ON DELETE SET NULL (HU-14: enlace de reprogramación).",
+        "evento_estudio.sesion_id referencia a sesion_estudio(id) con ON DELETE CASCADE (HU-39: línea de tiempo de ejecución).",
         "perfil y ajustes mantienen una única fila (id fijo en 1).",
     ]
     for i, linea in enumerate(notas):
@@ -659,21 +752,55 @@ def secuencia_consultar_calendario():
     )
 
 
+PARTICIPANTES_EJECUCION = [
+    ("SesionDetalleActivity", "adapter.in.ui"),
+    ("IniciarSesionService", "application"),
+    ("SesionRepositoryRoom", "adapter.out"),
+    ("EventoEstudioRepositoryRoom", "adapter.out"),
+    ("ControladorNoMolestarSistema", "adapter.out.system"),
+    ("ProgramadorAvisosAlarmManager", "adapter.out.system"),
+]
+
+MENSAJES_EJECUCION = [
+    (0, 1, "ejecutar(sesionId, tecnica, prefDnd)", ("IniciarSesionService", "ejecutar"), False),
+    (1, 2, "buscarPorId(sesionId) / guardar(sesionEnCurso)", ("SesionRepositoryRoom", "guardar"), False),
+    (2, 1, "SesionEstudio (EN_CURSO + snapshot)", None, True),
+    (1, 3, "guardar(EventoEstudio.INICIO)", ("EventoEstudioRepositoryRoom", "guardar"), False),
+    (1, 4, "aplicar(activar) [HU-24, RNF-18]", ("ControladorNoMolestarSistema", "aplicar"), False),
+    (1, 5, "programarSiguienteHito(sesionId, instante, hito)", ("ProgramadorAvisosAlarmManager", "programarSiguienteHito"), False),
+    (1, 0, "Resultado<SesionEstudio> -> abre SesionEnCursoActivity", None, True),
+]
+
+
+def secuencia_ejecucion_sesion():
+    _dibujar_secuencia(
+        "Secuencia · iniciar y ejecutar sesión en vivo (HU-22 a HU-24, HU-39, RN-22)",
+        PARTICIPANTES_EJECUCION,
+        MENSAJES_EJECUCION,
+        1,
+        6,
+        "secuencia_ejecucion_sesion.png",
+    )
+
+
 def generar():
     clases_configuracion()
     clases_materias()
     clases_sesiones()
     clases_calendario()
+    clases_tecnicas()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()
     secuencia_planificar_sesion()
     secuencia_consultar_calendario()
+    secuencia_ejecucion_sesion()
 
 
 if __name__ == "__main__":
     generar()
     for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
-              "diagrama_clases_calendario", "modelo_logico", "secuencia_registrar_materia",
-              "secuencia_planificar_sesion", "secuencia_consultar_calendario"):
+              "diagrama_clases_calendario", "diagrama_clases_tecnicas", "modelo_logico",
+              "secuencia_registrar_materia", "secuencia_planificar_sesion", "secuencia_consultar_calendario",
+              "secuencia_ejecucion_sesion"):
         print((dg.OUT / f"{f}.png").relative_to(RAIZ))

@@ -330,9 +330,6 @@ def maquina_estados():
     # En curso -> Completada
     arrow([R("EN_CURSO"), L("COMPLETADA")], "detener · declarar fin", (1490, 270), size=19)
     label(d, (1490, 332), "cambiar de sesión · plazo vencido", size=19)
-    # Pendiente -> Completada (mismo día)
-    arrow([T("PENDIENTE", -80), (S["PENDIENTE"][0] - 80, 110), (S["COMPLETADA"][0], 110), T("COMPLETADA")],
-          "marcar completada [mismo día]", (1130, 80))
     # Pendiente -> Reprogramada
     arrow([(S["PENDIENTE"][0] + bw / 2, 620), (S["REPROGRAMADA"][0] - bw / 2, 620)], "reprogramar",
           (780, 592))
@@ -664,22 +661,22 @@ def arquitectura_hexagonal():
 
 # ---------------------------------------------------------------- ciclo Scrum + SDD
 def ciclo_scrum_sdd():
-    W, H = 2120, 1440
+    W, H = 2160, 1460
     img = Image.new("RGB", (W, H), WHITE)
     d = ImageDraw.Draw(img)
-    cx, cy, rx, ry = W / 2, H / 2 + 10, 800, 500
+    cx, cy, rx, ry = W / 2, H / 2 + 10, 815, 505
     pasos = [
-        ("1. Product Backlog", "Historias HU-xx priorizadas", "H"),
-        ("2. Sprint Planning", "Selección de HU del sprint", "H"),
-        ("3. /opsx:propose", "proposal · specs · design · tasks", "IA"),
-        ("4. Revisión de specs", "Aprobación humana del change", "H"),
-        ("5. /opsx:apply", "La IA genera código Java + pruebas", "IA"),
-        ("6. Revisión y pruebas", "revisor-java · JUnit · Lint", "H+IA"),
-        ("7. Sprint Review / Retro", "Demo al Product Owner", "H"),
-        ("8. /opsx:archive", "Specs → fuente de verdad", "IA"),
+        ("1. Product Backlog", ["Historias HU-xx priorizadas"], "H"),
+        ("2. Sprint Planning", ["Selección de HU del sprint", "/opsx:explore · egm-brainstorm"], "H"),
+        ("3. /opsx:propose", ["egm-draft (diseño técnico)", "proposal · specs · design · tasks"], "IA"),
+        ("4. Revisión de specs", ["egm-review (auditoría de diseño)", "Aprobación humana del change"], "H+IA"),
+        ("5. /opsx:apply", ["La IA genera código Java + pruebas"], "IA"),
+        ("6. Revisión y pruebas", ["revisor-java · JUnit · Lint"], "H+IA"),
+        ("7. Sprint Review / Retro", ["Demo al Product Owner"], "H"),
+        ("8. /opsx:archive", ["Specs → fuente de verdad"], "IA"),
     ]
     n = len(pasos)
-    bw, bh = 440, 140
+    bw, bh = 470, 156
     centers = []
     for i in range(n):
         ang = -math.pi / 2 + 2 * math.pi * i / n
@@ -699,24 +696,29 @@ def ciclo_scrum_sdd():
         d.line([p1, p2], fill=BLACK, width=4)
         arrow_head(d, p1, p2, size=26, open_=False)
 
-    for (t, s, who), (x, y) in zip(pasos, centers):
+    for (t, subs, who), (x, y) in zip(pasos, centers):
         fill = LIGHT if "IA" == who else WHITE
         if who == "H+IA":
             fill = (240, 240, 240)
         d.rounded_rectangle([x - bw / 2 + 8, y - bh / 2 + 8, x + bw / 2 + 8, y + bh / 2 + 8], 22, fill=MID)
         d.rounded_rectangle([x - bw / 2, y - bh / 2, x + bw / 2, y + bh / 2], 22, fill=fill, outline=BLACK,
                             width=4 if "H" in who else 2)
-        d.text((x, y - 28), t, font=font(32, True), fill=BLACK, anchor="mm")
-        d.text((x, y + 18), s, font=font(23), fill=BLACK, anchor="mm")
+        if len(subs) == 1:
+            d.text((x, y - 30), t, font=font(31, True), fill=BLACK, anchor="mm")
+            d.text((x, y + 16), subs[0], font=font(22), fill=BLACK, anchor="mm")
+        else:
+            d.text((x, y - 40), t, font=font(31, True), fill=BLACK, anchor="mm")
+            d.text((x, y + 2), subs[0], font=font(21), fill=BLACK, anchor="mm")
+            d.text((x, y + 32), subs[1], font=font(21), fill=BLACK, anchor="mm")
         tag = {"H": "Humano", "IA": "IA", "H+IA": "Humano + IA"}[who]
-        d.text((x + bw / 2 - 16, y + bh / 2 - 14), tag, font=font(19, italic=True), fill=GRAY, anchor="rb")
+        d.text((x + bw / 2 - 16, y + bh / 2 - 12), tag, font=font(18, italic=True), fill=GRAY, anchor="rb")
 
     # centro: bitácora
     d.ellipse([cx - 260, cy - 120, cx + 260, cy + 120], fill=WHITE, outline=BLACK, width=3)
     d.text((cx, cy - 34), "Auditoría IA", font=font(34, True), fill=BLACK, anchor="mm")
     d.text((cx, cy + 10), "docs/auditoria-ia/bitacora.md", font=font(22), fill=BLACK, anchor="mm")
     d.text((cx, cy + 46), "registra cada paso", font=font(22, italic=True), fill=GRAY, anchor="mm")
-    for i in (2, 4, 5, 7):
+    for i in (2, 3, 4, 5, 7):
         x, y = centers[i]
         ang = math.atan2(y - cy, x - cx)
         dx, dy = math.cos(ang), math.sin(ang)
@@ -726,9 +728,9 @@ def ciclo_scrum_sdd():
         L = math.hypot(x - cx, y - cy) - tb - 10
         dashed_line(d, [(cx + dx * (t0 + 8), cy + dy * (t0 + 8)), (cx + dx * L, cy + dy * L)],
                     fill=GRAY, width=2)
-    d.text((40, H - 40), "Borde grueso = decisión humana · Relleno gris = artefacto generado por IA",
+    d.text((40, H - 40), "Borde grueso = decisión humana · Relleno gris = artefacto o apoyo de IA",
            font=font(22, italic=True), fill=GRAY, anchor="ld")
-    d.text((40, 40), "Sprint de 1 semana", font=font(26, True), fill=GRAY)
+    d.text((40, 40), "Sprint de 1 semana · SDD + EGM", font=font(26, True), fill=GRAY)
     img.save(OUT / "ciclo_scrum_sdd.png", dpi=(200, 200))
 
 
