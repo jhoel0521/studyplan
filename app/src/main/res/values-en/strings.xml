@@ -210,4 +210,95 @@
     <string name="calendario_filtros_restablecer">Reset</string>
     <string name="calendario_filtro_activo_chip">Filter active</string>
     <string name="calendario_mas_materias">+%1$d</string>
+
+    <!-- Study techniques & live execution (HU-22 to HU-24, HU-39 to HU-44) -->
+    <string name="canal_sesion_activa_nombre">Active session</string>
+    <string name="canal_avisos_estudio_nombre">Study alerts</string>
+    <string name="notif_volver_titulo">Your session is still running — return</string>
+    <string name="notif_volver_cuerpo">Tap to resume %1$s or log your progress</string>
+    <string name="notif_fin_plan_titulo">Still studying?</string>
+    <string name="notif_fin_plan_cuerpo">Planned end time reached for %1$s</string>
+    <string name="notif_pomodoro_titulo">Pomodoro phase change</string>
+    <string name="notif_pomodoro_cuerpo">Check your %1$s session</string>
+    <string name="notif_invasion_titulo">Next session starting</string>
+    <string name="notif_invasion_cuerpo">You are entering %1$s time slot</string>
+    <string name="notif_accion_sigo">Continue</string>
+    <string name="notif_accion_termine">Finished</string>
+
+    <string name="sesion_detalle_tecnica">Study technique</string>
+    <string name="sesion_tecnica_libre">Free</string>
+    <string name="sesion_tecnica_pomodoro">Pomodoro</string>
+    <string name="sesion_detalle_no_molestar">Do Not Disturb for this session</string>
+    <string name="sesion_dnd_heredar">Inherit global setting</string>
+    <string name="sesion_dnd_activar">Enable for this session</string>
+    <string name="sesion_dnd_desactivar">Disable for this session</string>
+    <string name="sesion_detalle_iniciar">Start session</string>
+    <string name="sesion_detalle_ir_en_curso">Go to active session</string>
+    <string name="sesion_detalle_eventos_titulo">Event timeline</string>
+    <string name="sesion_detalle_sin_eventos">No events recorded yet.</string>
+
+    <string name="evento_inicio">Start</string>
+    <string name="evento_pausa">Pause</string>
+    <string name="evento_reanudacion">Resume</string>
+    <string name="evento_salida_app">Left app</string>
+    <string name="evento_regreso_app">Returned to app</string>
+    <string name="evento_fin_planificado">Planned end</string>
+    <string name="evento_tiempo_extra">Extra time</string>
+    <string name="evento_estudio_app_cerrada">Studied with app closed</string>
+    <string name="evento_cambio_sesion">Switched to next session</string>
+    <string name="evento_ajuste_manual">Manual adjustment</string>
+    <string name="evento_fin">End</string>
+
+    <string name="sesion_en_curso_titulo">Session in progress</string>
+    <string name="sesion_en_curso_pausada">Paused</string>
+    <string name="sesion_en_curso_activa">Studying</string>
+    <string name="sesion_en_curso_pausar">Pause</string>
+    <string name="sesion_en_curso_reanudar">Resume</string>
+    <string name="sesion_en_curso_detener">Stop</string>
+    <string name="sesion_en_curso_no_molestar">Do Not Disturb</string>
+    <string name="sesion_en_curso_fase_trabajo">Work · Cycle %1$d/%2$d</string>
+    <string name="sesion_en_curso_fase_descanso_corto">Short break · Cycle %1$d/%2$d</string>
+    <string name="sesion_en_curso_fase_descanso_largo">Long break · Cycle %1$d/%2$d</string>
+    <string name="sesion_en_curso_fase_extra">Free extra time</string>
+    <string name="sesion_en_curso_extender_titulo">Planned Pomodoros completed</string>
+    <string name="sesion_en_curso_mas_pomodoro">+1 pomodoro</string>
+    <string name="sesion_en_curso_tiempo_extra_libre">Free extra time</string>
+    <string name="sesion_en_curso_fin_plan_titulo">Still studying?</string>
+    <string name="sesion_en_curso_sigo">Continue</string>
+    <string name="sesion_en_curso_termine">Finished</string>
+    <string name="sesion_en_curso_invasion_titulo">Overlapping %1$s (%2$s – %3$s)</string>
+    <string name="sesion_en_curso_cambiar_siguiente">Switch to next</string>
+    <string name="sesion_en_curso_repartir">Split time</string>
+
+    <string name="recuperacion_titulo">You left at %1$s, did you keep studying?</string>
+    <string name="recuperacion_sigkill_titulo">The app closed since %1$s, did you keep studying?</string>
+    <string name="recuperacion_opcion_no_segui">No, I stopped when leaving</string>
+    <string name="recuperacion_opcion_hasta_hora">Yes, until a specific time</string>
+    <string name="recuperacion_opcion_sigo">I am still studying</string>
+    <string name="recuperacion_hora_fin">Time you studied until (HH:mm)</string>
+    <string name="recuperacion_nota">Optional note (e.g. group study)</string>
+    <string name="recuperacion_confirmar">Confirm</string>
+    <string name="recuperacion_vencida_aviso">Your previous session expired after 3 days of inactivity and was closed automatically.</string>
+
+    <string name="reparto_titulo">Split study block</string>
+    <string name="reparto_resumen">%1$s: %2$d min · %3$s: %4$d min</string>
+    <string name="reparto_hora_corte">Cut time: %1$s</string>
+    <string name="reparto_menos_5">− 5 min</string>
+    <string name="reparto_mas_5">+ 5 min</string>
+    <string name="reparto_confirmar">Save split</string>
+
+    <string name="ajustes_tecnicas_titulo">Study techniques</string>
+    <string name="ajustes_no_molestar_global">Enable Do Not Disturb while studying</string>
+    <string name="ajustes_no_molestar_dialogo_titulo">Do Not Disturb permission</string>
+    <string name="ajustes_no_molestar_dialogo_msg">StudyPlan needs Do Not Disturb access to silence notifications automatically while you study. You can skip this and silence manually.</string>
+    <string name="ajustes_no_molestar_ir">Open settings</string>
+    <string name="ajustes_pomodoro_trabajo">Work (min)</string>
+    <string name="ajustes_pomodoro_corto">Short break (min)</string>
+    <string name="ajustes_pomodoro_largo">Long break (min)</string>
+    <string name="ajustes_pomodoro_ciclos">Cycles before long break</string>
+    <string name="ajustes_pomodoro_guardar">Save Pomodoro</string>
+    <string name="ajustes_pomodoro_guardado">Pomodoro settings saved</string>
+    <string name="error_pomodoro_invalido">Check ranges: work 1–180, short 1–60, long 1–90, cycles 1–12</string>
+    <string name="error_hora_declarada_rango">Time must be between leaving and now</string>
+    <string name="error_corte_reparto">Cut time must fall within the studied interval</string>
 </resources>

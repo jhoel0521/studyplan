@@ -1,27 +1,35 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
+import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Tema;
 
 /**
- * Pantalla de ajustes: tema, idioma, bloqueo con huella o PIN y acceso a Privacidad (borrar datos).
+ * Pantalla de ajustes: tema, idioma, bloqueo con huella o PIN, técnicas de estudio (Pomodoro y
+ * No molestar) y acceso a Privacidad (borrar datos).
  *
- * <p>Implementa: HU-03 (tema e idioma) y HU-04 (bloqueo).
+ * <p>Implementa: HU-03, HU-04, HU-23, HU-24, RN-17 y RN-18.
  */
 public class AjustesActivity extends ActividadProtegida {
 
@@ -29,6 +37,12 @@ public class AjustesActivity extends ActividadProtegida {
     private RadioGroup grupoTema;
     private RadioGroup grupoIdioma;
     private MaterialSwitch interruptorBloqueo;
+    private MaterialSwitch interruptorNoMolestarGlobal;
+    private TextInputEditText campoPomodoroTrabajo;
+    private TextInputEditText campoPomodoroCorto;
+    private TextInputEditText campoPomodoroLargo;
+    private TextInputEditText campoPomodoroCiclos;
+    private TextView textoErrorPomodoro;
     private boolean actualizando;
 
     @Override
@@ -40,6 +54,8 @@ public class AjustesActivity extends ActividadProtegida {
         modelo = viewModel(AjustesViewModel.class);
         modelo.ajustes().observe(this, this::onAjustes);
         modelo.avisoSinBloqueo().observe(this, this::onAvisoSinBloqueo);
+        modelo.pomodoroGuardado().observe(this, this::onPomodoroGuardado);
+        modelo.errorPomodoro().observe(this, this::onErrorPomodoro);
     }
 
     private void enlazarVistas() {
@@ -47,11 +63,20 @@ public class AjustesActivity extends ActividadProtegida {
         grupoTema = findViewById(R.id.grupoTema);
         grupoIdioma = findViewById(R.id.grupoIdioma);
         interruptorBloqueo = findViewById(R.id.interruptorBloqueo);
+        interruptorNoMolestarGlobal = findViewById(R.id.interruptorNoMolestarGlobal);
+        campoPomodoroTrabajo = findViewById(R.id.campoPomodoroTrabajo);
+        campoPomodoroCorto = findViewById(R.id.campoPomodoroCorto);
+        campoPomodoroLargo = findViewById(R.id.campoPomodoroLargo);
+        campoPomodoroCiclos = findViewById(R.id.campoPomodoroCiclos);
+        textoErrorPomodoro = findViewById(R.id.textoErrorPomodoro);
+        MaterialButton botonGuardarPomodoro = findViewById(R.id.botonGuardarPomodoro);
         MaterialButton botonPrivacidad = findViewById(R.id.botonPrivacidad);
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         grupoTema.setOnCheckedChangeListener(this::onTemaCambiado);
         grupoIdioma.setOnCheckedChangeListener(this::onIdiomaCambiado);
         interruptorBloqueo.setOnCheckedChangeListener(this::onBloqueoCambiado);
+        interruptorNoMolestarGlobal.setOnCheckedChangeListener(this::onNoMolestarCambiado);
+        botonGuardarPomodoro.setOnClickListener(this::onGuardarPomodoroClick);
         botonPrivacidad.setOnClickListener(this::onPrivacidadClick);
     }
 
@@ -65,6 +90,12 @@ public class AjustesActivity extends ActividadProtegida {
         grupoTema.check(idDeTema(ajustes.tema()));
         grupoIdioma.check(ajustes.idioma() == Idioma.EN ? R.id.idiomaIngles : R.id.idiomaEspanol);
         interruptorBloqueo.setChecked(ajustes.bloqueoActivo());
+        interruptorNoMolestarGlobal.setChecked(ajustes.noMolestarGlobal());
+        ConfiguracionPomodoro pom = ajustes.pomodoro();
+        campoPomodoroTrabajo.setText(String.valueOf(pom.trabajoMinutos()));
+        campoPomodoroCorto.setText(String.valueOf(pom.descansoCortoMinutos()));
+        campoPomodoroLargo.setText(String.valueOf(pom.descansoLargoMinutos()));
+        campoPomodoroCiclos.setText(String.valueOf(pom.ciclosHastaLargo()));
         actualizando = false;
         AplicadorApariencia.aplicarTema(ajustes.tema());
         protegerCapturas();
@@ -108,6 +139,69 @@ public class AjustesActivity extends ActividadProtegida {
             return;
         }
         modelo.cambiarBloqueo(activado);
+    }
+
+    private void onNoMolestarCambiado(CompoundButton boton, boolean activado) {
+        if (actualizando) {
+            return;
+        }
+        if (activado && !app().controladorNoMolestar().tienePermiso()
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.ajustes_no_molestar_dialogo_titulo)
+                    .setMessage(R.string.ajustes_no_molestar_dialogo_msg)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.ajustes_no_molestar_ir, (d, w) ->
+                            startActivity(new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)))
+                    .show();
+        }
+        guardarEstudioDesdeFormulario(false);
+    }
+
+    private void onGuardarPomodoroClick(View vista) {
+        guardarEstudioDesdeFormulario(true);
+    }
+
+    private void guardarEstudioDesdeFormulario(boolean notificar) {
+        int trabajo = parsearEntero(campoPomodoroTrabajo);
+        int corto = parsearEntero(campoPomodoroCorto);
+        int largo = parsearEntero(campoPomodoroLargo);
+        int ciclos = parsearEntero(campoPomodoroCiclos);
+        modelo.guardarEstudio(
+                interruptorNoMolestarGlobal.isChecked(),
+                trabajo,
+                corto,
+                largo,
+                ciclos,
+                notificar);
+    }
+
+    private void onPomodoroGuardado(@Nullable Boolean guardado) {
+        if (guardado != null && guardado) {
+            modelo.consumirPomodoroGuardado();
+            Snackbar.make(findViewById(R.id.main), R.string.ajustes_pomodoro_guardado,
+                    Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onErrorPomodoro(@Nullable ErrorValidacion error) {
+        if (error == null) {
+            textoErrorPomodoro.setVisibility(View.GONE);
+        } else {
+            textoErrorPomodoro.setText(R.string.error_pomodoro_invalido);
+            textoErrorPomodoro.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private static int parsearEntero(TextInputEditText campo) {
+        if (campo.getText() == null) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(campo.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     private void onPrivacidadClick(View vista) {

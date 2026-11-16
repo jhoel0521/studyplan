@@ -315,7 +315,7 @@ public class CalendarioActivity extends ActividadProtegida
         capaBloquesHorario.post(() -> {
             posicionarBloquesYLineaActual(datos, columnas);
             int scrollY = Math.round(datos.minutoScrollInicial() * (alturaHoraPx / 60f));
-            scrollHorario.smoothScrollTo(0, Math.max(0, scrollY));
+            scrollHorario.scrollTo(0, Math.max(0, scrollY));
         });
     }
 

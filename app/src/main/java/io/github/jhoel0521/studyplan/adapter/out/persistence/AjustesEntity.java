@@ -1,13 +1,14 @@
 package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 /**
  * Fila de la tabla de ajustes (una sola fila). Tema e idioma se guardan como texto con el nombre de la enumeración.
  *
- * <p>Implementa: HU-03 y HU-04.
+ * <p>Implementa: HU-03, HU-04, HU-23 y HU-24.
  */
 @Entity(tableName = "ajustes")
 public class AjustesEntity {
@@ -25,4 +26,19 @@ public class AjustesEntity {
     public String idioma = "";
 
     public boolean bloqueoActivo;
+
+    @ColumnInfo(name = "no_molestar_global")
+    public boolean noMolestarGlobal;
+
+    @ColumnInfo(name = "pomodoro_trabajo_min")
+    public int pomodoroTrabajoMin = 25;
+
+    @ColumnInfo(name = "pomodoro_descanso_corto_min")
+    public int pomodoroDescansoCortoMin = 5;
+
+    @ColumnInfo(name = "pomodoro_descanso_largo_min")
+    public int pomodoroDescansoLargoMin = 15;
+
+    @ColumnInfo(name = "pomodoro_ciclos_hasta_largo")
+    public int pomodoroCiclosHastaLargo = 4;
 }

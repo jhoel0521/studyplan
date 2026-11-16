@@ -18,7 +18,7 @@ public final class EstadoPendiente implements EstadoSesion {
 
     @Override
     public boolean puedeCompletar(Fecha sesionFecha, Fecha hoy) {
-        return sesionFecha != null && hoy != null && sesionFecha.equals(hoy);
+        return false;
     }
 
     @Override

@@ -57,5 +57,13 @@ public enum ErrorValidacion {
     /** Una sesión no realizada solo admite registro tardío hasta 3 días después de su fecha (RN-10). */
     REGISTRO_TARDIO_FUERA_DE_VENTANA,
     /** Solo pueden eliminarse sesiones en estado Pendiente (RN-12). */
-    SESION_NO_ELIMINABLE
+    SESION_NO_ELIMINABLE,
+    /** Los parámetros de Pomodoro están fuera de sus rangos válidos (HU-23, RN-17). */
+    CONFIGURACION_POMODORO_INVALIDA,
+    /** Ya existe otra sesión en estado En curso que debe resolverse primero (HU-22). */
+    SESION_YA_EN_CURSO,
+    /** La hora declarada al volver no es posterior a la salida ni anterior o igual a ahora (RN-24). */
+    HORA_DECLARADA_FUERA_DE_RANGO,
+    /** La hora de corte elegida para repartir un tramo no cae dentro del intervalo efectivo (RN-28). */
+    CORTE_REPARTO_INVALIDO
 }

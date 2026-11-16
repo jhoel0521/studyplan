@@ -210,4 +210,95 @@
     <string name="calendario_filtros_restablecer">Restablecer</string>
     <string name="calendario_filtro_activo_chip">Filtro activo</string>
     <string name="calendario_mas_materias">+%1$d</string>
+
+    <!-- Técnicas de estudio y ejecución en vivo (HU-22 a HU-24, HU-39 a HU-44) -->
+    <string name="canal_sesion_activa_nombre">Sesión en curso</string>
+    <string name="canal_avisos_estudio_nombre">Avisos de estudio</string>
+    <string name="notif_volver_titulo">Tu sesión sigue en curso — volver</string>
+    <string name="notif_volver_cuerpo">Toca para retomar %1$s o registrar tu avance</string>
+    <string name="notif_fin_plan_titulo">¿Sigues estudiando?</string>
+    <string name="notif_fin_plan_cuerpo">Llegó la hora planificada de fin para %1$s</string>
+    <string name="notif_pomodoro_titulo">Cambio de fase Pomodoro</string>
+    <string name="notif_pomodoro_cuerpo">Revisa tu sesión de %1$s</string>
+    <string name="notif_invasion_titulo">Siguiente sesión próxima</string>
+    <string name="notif_invasion_cuerpo">Estás en el horario de %1$s</string>
+    <string name="notif_accion_sigo">Sigo</string>
+    <string name="notif_accion_termine">Terminé</string>
+
+    <string name="sesion_detalle_tecnica">Técnica de estudio</string>
+    <string name="sesion_tecnica_libre">Libre</string>
+    <string name="sesion_tecnica_pomodoro">Pomodoro</string>
+    <string name="sesion_detalle_no_molestar">No molestar en esta sesión</string>
+    <string name="sesion_dnd_heredar">Heredar ajuste global</string>
+    <string name="sesion_dnd_activar">Activar en esta sesión</string>
+    <string name="sesion_dnd_desactivar">Desactivar en esta sesión</string>
+    <string name="sesion_detalle_iniciar">Iniciar sesión</string>
+    <string name="sesion_detalle_ir_en_curso">Ir a sesión en curso</string>
+    <string name="sesion_detalle_eventos_titulo">Línea de tiempo de eventos</string>
+    <string name="sesion_detalle_sin_eventos">Sin eventos registrados aún.</string>
+
+    <string name="evento_inicio">Inicio</string>
+    <string name="evento_pausa">Pausa</string>
+    <string name="evento_reanudacion">Reanudación</string>
+    <string name="evento_salida_app">Salida de la app</string>
+    <string name="evento_regreso_app">Regreso a la app</string>
+    <string name="evento_fin_planificado">Fin planificado</string>
+    <string name="evento_tiempo_extra">Tiempo extra</string>
+    <string name="evento_estudio_app_cerrada">Estudio con la app cerrada</string>
+    <string name="evento_cambio_sesion">Cambio a siguiente sesión</string>
+    <string name="evento_ajuste_manual">Ajuste manual</string>
+    <string name="evento_fin">Fin</string>
+
+    <string name="sesion_en_curso_titulo">Sesión en curso</string>
+    <string name="sesion_en_curso_pausada">En pausa</string>
+    <string name="sesion_en_curso_activa">Estudiando</string>
+    <string name="sesion_en_curso_pausar">Pausar</string>
+    <string name="sesion_en_curso_reanudar">Reanudar</string>
+    <string name="sesion_en_curso_detener">Detener</string>
+    <string name="sesion_en_curso_no_molestar">Modo No molestar</string>
+    <string name="sesion_en_curso_fase_trabajo">Trabajo · Ciclo %1$d/%2$d</string>
+    <string name="sesion_en_curso_fase_descanso_corto">Descanso corto · Ciclo %1$d/%2$d</string>
+    <string name="sesion_en_curso_fase_descanso_largo">Descanso largo · Ciclo %1$d/%2$d</string>
+    <string name="sesion_en_curso_fase_extra">Tiempo extra libre</string>
+    <string name="sesion_en_curso_extender_titulo">Pomodoros planificados completados</string>
+    <string name="sesion_en_curso_mas_pomodoro">+1 pomodoro</string>
+    <string name="sesion_en_curso_tiempo_extra_libre">Tiempo extra libre</string>
+    <string name="sesion_en_curso_fin_plan_titulo">¿Sigues estudiando?</string>
+    <string name="sesion_en_curso_sigo">Sigo</string>
+    <string name="sesion_en_curso_termine">Terminé</string>
+    <string name="sesion_en_curso_invasion_titulo">Invadiendo horario de %1$s (%2$s – %3$s)</string>
+    <string name="sesion_en_curso_cambiar_siguiente">Cambiar a siguiente</string>
+    <string name="sesion_en_curso_repartir">Repartir tramo</string>
+
+    <string name="recuperacion_titulo">Saliste a las %1$s, ¿seguiste estudiando?</string>
+    <string name="recuperacion_sigkill_titulo">La app se cerró desde %1$s, ¿seguiste estudiando?</string>
+    <string name="recuperacion_opcion_no_segui">No, terminé al salir</string>
+    <string name="recuperacion_opcion_hasta_hora">Sí, hasta una hora específica</string>
+    <string name="recuperacion_opcion_sigo">Sigo estudiando</string>
+    <string name="recuperacion_hora_fin">Hora hasta la que estudiaste (HH:mm)</string>
+    <string name="recuperacion_nota">Nota opcional (ej. en grupo)</string>
+    <string name="recuperacion_confirmar">Confirmar</string>
+    <string name="recuperacion_vencida_aviso">Tu sesión anterior venció tras 3 días sin actividad y se cerró automáticamente.</string>
+
+    <string name="reparto_titulo">Repartir tramo de estudio</string>
+    <string name="reparto_resumen">%1$s: %2$d min · %3$s: %4$d min</string>
+    <string name="reparto_hora_corte">Hora de corte: %1$s</string>
+    <string name="reparto_menos_5">− 5 min</string>
+    <string name="reparto_mas_5">+ 5 min</string>
+    <string name="reparto_confirmar">Guardar reparto</string>
+
+    <string name="ajustes_tecnicas_titulo">Técnicas de estudio</string>
+    <string name="ajustes_no_molestar_global">Activar No molestar al estudiar</string>
+    <string name="ajustes_no_molestar_dialogo_titulo">Permiso de No molestar</string>
+    <string name="ajustes_no_molestar_dialogo_msg">StudyPlan necesita acceso a No molestar para silenciar notificaciones automáticamente mientras estudias. Puedes usarlo sin permiso, pero deberás silenciarlo manualmente.</string>
+    <string name="ajustes_no_molestar_ir">Ir a ajustes</string>
+    <string name="ajustes_pomodoro_trabajo">Trabajo (min)</string>
+    <string name="ajustes_pomodoro_corto">Descanso corto (min)</string>
+    <string name="ajustes_pomodoro_largo">Descanso largo (min)</string>
+    <string name="ajustes_pomodoro_ciclos">Ciclos hasta descanso largo</string>
+    <string name="ajustes_pomodoro_guardar">Guardar Pomodoro</string>
+    <string name="ajustes_pomodoro_guardado">Configuración Pomodoro guardada</string>
+    <string name="error_pomodoro_invalido">Revisa los rangos: trabajo 1–180, corto 1–60, largo 1–90, ciclos 1–12</string>
+    <string name="error_hora_declarada_rango">La hora debe estar entre la salida y el momento actual</string>
+    <string name="error_corte_reparto">La hora de corte debe estar dentro del tramo estudiado</string>
 </resources>

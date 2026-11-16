@@ -7,10 +7,14 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -19,9 +23,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
  * Pantalla de detalle completo de una sesión de estudio y punto de transición de estados
@@ -55,10 +62,16 @@ public class SesionDetalleActivity extends ActividadProtegida {
     private TextInputLayout grupoDuracionRealDetalle;
     private TextInputEditText campoDuracionRealDetalle;
     private TextView textoErrorDetalle;
-    private MaterialButton botonCompletarSesion;
+    private LinearLayout contenedorInicioSesion;
+    private RadioGroup grupoTecnicaDetalle;
+    private RadioGroup grupoDndDetalle;
+    private MaterialButton botonIniciarSesion;
+    private MaterialButton botonIrEnCurso;
     private MaterialButton botonRegistrarTardio;
     private MaterialButton botonReprogramarSesion;
     private MaterialButton botonEliminarSesion;
+    private TextView textoSinEventosDetalle;
+    private EventoEstudioAdapter adaptadorEventos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,14 +116,24 @@ public class SesionDetalleActivity extends ActividadProtegida {
         grupoDuracionRealDetalle = findViewById(R.id.grupoDuracionRealDetalle);
         campoDuracionRealDetalle = findViewById(R.id.campoDuracionRealDetalle);
         textoErrorDetalle = findViewById(R.id.textoErrorDetalle);
-        botonCompletarSesion = findViewById(R.id.botonCompletarSesion);
+        contenedorInicioSesion = findViewById(R.id.contenedorInicioSesion);
+        grupoTecnicaDetalle = findViewById(R.id.grupoTecnicaDetalle);
+        grupoDndDetalle = findViewById(R.id.grupoDndDetalle);
+        botonIniciarSesion = findViewById(R.id.botonIniciarSesion);
+        botonIrEnCurso = findViewById(R.id.botonIrEnCurso);
         botonRegistrarTardio = findViewById(R.id.botonRegistrarTardio);
         botonReprogramarSesion = findViewById(R.id.botonReprogramarSesion);
         botonEliminarSesion = findViewById(R.id.botonEliminarSesion);
+        textoSinEventosDetalle = findViewById(R.id.textoSinEventosDetalle);
+        RecyclerView listaEventosDetalle = findViewById(R.id.listaEventosDetalle);
+        adaptadorEventos = new EventoEstudioAdapter();
+        listaEventosDetalle.setLayoutManager(new LinearLayoutManager(this));
+        listaEventosDetalle.setAdapter(adaptadorEventos);
 
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         botonVerReprogramada.setOnClickListener(this::onVerReprogramadaClick);
-        botonCompletarSesion.setOnClickListener(this::onCompletarClick);
+        botonIniciarSesion.setOnClickListener(this::onIniciarClick);
+        botonIrEnCurso.setOnClickListener(this::onIrEnCursoClick);
         botonRegistrarTardio.setOnClickListener(this::onRegistrarTardioClick);
         botonReprogramarSesion.setOnClickListener(this::onReprogramarClick);
         botonEliminarSesion.setOnClickListener(this::onEliminarClick);
@@ -173,7 +196,7 @@ public class SesionDetalleActivity extends ActividadProtegida {
             botonVerReprogramada.setVisibility(View.GONE);
         }
 
-        boolean requiereDuracionEditable = detalle.puedeCompletar() || detalle.puedeRegistrarTardio();
+        boolean requiereDuracionEditable = detalle.puedeRegistrarTardio();
         grupoDuracionRealDetalle.setVisibility(requiereDuracionEditable ? View.VISIBLE : View.GONE);
         if (requiereDuracionEditable && !duracionInicialAplicada && textoDe(campoDuracionRealDetalle).isEmpty()) {
             duracionInicialAplicada = true;
@@ -181,10 +204,16 @@ public class SesionDetalleActivity extends ActividadProtegida {
         }
 
         textoPlazoVencido.setVisibility(detalle.noRealizadaFueraDePlazoTardio() ? View.VISIBLE : View.GONE);
-        botonCompletarSesion.setVisibility(detalle.puedeCompletar() ? View.VISIBLE : View.GONE);
+        contenedorInicioSesion.setVisibility(detalle.puedeIniciar() ? View.VISIBLE : View.GONE);
+        botonIrEnCurso.setVisibility(
+                s.codigoEstado() == CodigoEstadoSesion.EN_CURSO ? View.VISIBLE : View.GONE);
         botonRegistrarTardio.setVisibility(detalle.puedeRegistrarTardio() ? View.VISIBLE : View.GONE);
         botonReprogramarSesion.setVisibility(detalle.puedeReprogramar() ? View.VISIBLE : View.GONE);
         botonEliminarSesion.setVisibility(detalle.puedeEliminar() ? View.VISIBLE : View.GONE);
+
+        adaptadorEventos.submitList(detalle.eventos());
+        textoSinEventosDetalle.setVisibility(
+                detalle.eventos().isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void onVerReprogramadaClick(View vista) {
@@ -196,9 +225,25 @@ public class SesionDetalleActivity extends ActividadProtegida {
         startActivity(intento);
     }
 
-    private void onCompletarClick(View vista) {
+    private void onIniciarClick(View vista) {
         limpiarErrores();
-        modelo.completar(sesionId, textoDe(campoDuracionRealDetalle));
+        TecnicaEstudio tecnica = grupoTecnicaDetalle.getCheckedRadioButtonId() == R.id.radioPomodoroDetalle
+                ? TecnicaEstudio.POMODORO
+                : TecnicaEstudio.LIBRE;
+        int dndId = grupoDndDetalle.getCheckedRadioButtonId();
+        PreferenciaNoMolestar pref = PreferenciaNoMolestar.HEREDAR_GLOBAL;
+        if (dndId == R.id.radioDndActivar) {
+            pref = PreferenciaNoMolestar.FORZAR_ACTIVAR;
+        } else if (dndId == R.id.radioDndDesactivar) {
+            pref = PreferenciaNoMolestar.FORZAR_DESACTIVAR;
+        }
+        modelo.iniciar(sesionId, tecnica, pref);
+    }
+
+    private void onIrEnCursoClick(View vista) {
+        Intent intento = new Intent(this, SesionEnCursoActivity.class);
+        intento.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, sesionId);
+        startActivity(intento);
     }
 
     private void onRegistrarTardioClick(View vista) {
@@ -262,7 +307,19 @@ public class SesionDetalleActivity extends ActividadProtegida {
             finish();
             return;
         }
+        if (evento.tipo() == EventoSesion.Tipo.INICIADA) {
+            Intent intento = new Intent(this, SesionEnCursoActivity.class);
+            intento.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, sesionId);
+            startActivity(intento);
+            return;
+        }
         if (evento.tipo() == EventoSesion.Tipo.ERROR && evento.error() != null) {
+            if (evento.error() == ErrorValidacion.SESION_YA_EN_CURSO) {
+                app().ejecutor().execute(() -> app().evaluarRecuperacionSesion().ejecutar().ifPresent(
+                        diag -> runOnUiThread(() -> DialogoRecuperacionSesion.mostrar(
+                                this, diag, this::alEstarListo))));
+                return;
+            }
             String mensaje = MensajesDeError.textoSesion(this, evento.error(), evento.conflicto());
             if (evento.error() == ErrorValidacion.DURACION_REAL_INVALIDA) {
                 grupoDuracionRealDetalle.setError(mensaje);

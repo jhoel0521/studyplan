@@ -184,7 +184,7 @@ public class SesionRepositoryRoomTest {
                 Fecha.de(2026, 12, 1).valor(), Fecha.de(2026, 12, 7).valor());
         assertTrue(vacio.isEmpty());
 
-        assertEquals(3, base.getOpenHelper().getReadableDatabase().getVersion());
+        assertEquals(4, base.getOpenHelper().getReadableDatabase().getVersion());
         Context contexto = ApplicationProvider.getApplicationContext();
         String[] permisos = contexto.getPackageManager()
                 .getPackageInfo(contexto.getPackageName(), android.content.pm.PackageManager.GET_PERMISSIONS)
@@ -192,11 +192,7 @@ public class SesionRepositoryRoomTest {
         if (permisos != null) {
             for (String p : permisos) {
                 assertFalse(p.endsWith(".INTERNET")
-                        || p.endsWith(".POST_NOTIFICATIONS")
-                        || p.endsWith(".SCHEDULE_EXACT_ALARM")
-                        || p.endsWith(".RECEIVE_BOOT_COMPLETED")
-                        || p.endsWith(".VIBRATE")
-                        || p.endsWith(".ACCESS_NOTIFICATION_POLICY"));
+                        || p.endsWith(".SCHEDULE_EXACT_ALARM"));
             }
         }
     }

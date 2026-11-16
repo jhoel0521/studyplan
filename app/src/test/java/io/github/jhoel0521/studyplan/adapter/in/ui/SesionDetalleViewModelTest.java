@@ -75,7 +75,8 @@ public class SesionDetalleViewModelTest {
 
         modelo.cargar(s.id());
         DetalleSesion inicial = Objects.requireNonNull(modelo.detalle().getValue());
-        assertTrue(inicial.puedeCompletar());
+        assertFalse(inicial.puedeCompletar());
+        assertTrue(inicial.puedeIniciar());
 
         modelo.completar(s.id(), "55");
         assertEquals(

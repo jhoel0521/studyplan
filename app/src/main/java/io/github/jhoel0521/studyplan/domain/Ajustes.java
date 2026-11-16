@@ -14,16 +14,29 @@ public final class Ajustes {
     private final Tema tema;
     private final Idioma idioma;
     private final boolean bloqueoActivo;
+    private final boolean noMolestarGlobal;
+    private final ConfiguracionPomodoro pomodoro;
 
     public Ajustes(Tema tema, Idioma idioma, boolean bloqueoActivo) {
+        this(tema, idioma, bloqueoActivo, false, ConfiguracionPomodoro.porDefecto());
+    }
+
+    public Ajustes(
+            Tema tema,
+            Idioma idioma,
+            boolean bloqueoActivo,
+            boolean noMolestarGlobal,
+            ConfiguracionPomodoro pomodoro) {
         this.tema = Objects.requireNonNull(tema);
         this.idioma = Objects.requireNonNull(idioma);
         this.bloqueoActivo = bloqueoActivo;
+        this.noMolestarGlobal = noMolestarGlobal;
+        this.pomodoro = Objects.requireNonNull(pomodoro);
     }
 
     /** @return los ajustes que tiene la aplicación antes de que el estudiante cambie algo */
     public static Ajustes porDefecto() {
-        return new Ajustes(Tema.SISTEMA, Idioma.ES, false);
+        return new Ajustes(Tema.SISTEMA, Idioma.ES, false, false, ConfiguracionPomodoro.porDefecto());
     }
 
     public Tema tema() {
@@ -38,16 +51,32 @@ public final class Ajustes {
         return bloqueoActivo;
     }
 
+    public boolean noMolestarGlobal() {
+        return noMolestarGlobal;
+    }
+
+    public ConfiguracionPomodoro pomodoro() {
+        return pomodoro;
+    }
+
     public Ajustes conTema(Tema nuevo) {
-        return new Ajustes(nuevo, idioma, bloqueoActivo);
+        return new Ajustes(nuevo, idioma, bloqueoActivo, noMolestarGlobal, pomodoro);
     }
 
     public Ajustes conIdioma(Idioma nuevo) {
-        return new Ajustes(tema, nuevo, bloqueoActivo);
+        return new Ajustes(tema, nuevo, bloqueoActivo, noMolestarGlobal, pomodoro);
     }
 
     public Ajustes conBloqueoActivo(boolean activo) {
-        return new Ajustes(tema, idioma, activo);
+        return new Ajustes(tema, idioma, activo, noMolestarGlobal, pomodoro);
+    }
+
+    public Ajustes conNoMolestarGlobal(boolean activo) {
+        return new Ajustes(tema, idioma, bloqueoActivo, activo, pomodoro);
+    }
+
+    public Ajustes conPomodoro(ConfiguracionPomodoro nueva) {
+        return new Ajustes(tema, idioma, bloqueoActivo, noMolestarGlobal, nueva);
     }
 
     @Override
@@ -59,12 +88,16 @@ public final class Ajustes {
             return false;
         }
         Ajustes a = (Ajustes) otro;
-        return tema == a.tema && idioma == a.idioma && bloqueoActivo == a.bloqueoActivo;
+        return tema == a.tema
+                && idioma == a.idioma
+                && bloqueoActivo == a.bloqueoActivo
+                && noMolestarGlobal == a.noMolestarGlobal
+                && Objects.equals(pomodoro, a.pomodoro);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tema, idioma, bloqueoActivo);
+        return Objects.hash(tema, idioma, bloqueoActivo, noMolestarGlobal, pomodoro);
     }
 
     @Override

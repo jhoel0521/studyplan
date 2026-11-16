@@ -24,6 +24,12 @@ public final class SesionEstudio {
     private final EstadoSesion estado;
     private final String notas;
     private final Long sesionOrigenId;
+    private final TecnicaEstudio tecnica;
+    private final PreferenciaNoMolestar preferenciaNoMolestar;
+    private final Integer pomodoroTrabajoMinutos;
+    private final Integer pomodoroDescansoCortoMinutos;
+    private final Integer pomodoroDescansoLargoMinutos;
+    private final Integer pomodoroCiclosHastaLargo;
 
     private SesionEstudio(
             Long id,
@@ -35,7 +41,13 @@ public final class SesionEstudio {
             Integer duracionRealMinutos,
             EstadoSesion estado,
             String notas,
-            Long sesionOrigenId) {
+            Long sesionOrigenId,
+            TecnicaEstudio tecnica,
+            PreferenciaNoMolestar preferenciaNoMolestar,
+            Integer pomodoroTrabajoMinutos,
+            Integer pomodoroDescansoCortoMinutos,
+            Integer pomodoroDescansoLargoMinutos,
+            Integer pomodoroCiclosHastaLargo) {
         this.id = id;
         this.materiaId = materiaId;
         this.fecha = Objects.requireNonNull(fecha, "fecha");
@@ -46,6 +58,14 @@ public final class SesionEstudio {
         this.estado = Objects.requireNonNull(estado, "estado");
         this.notas = notas == null ? "" : notas;
         this.sesionOrigenId = sesionOrigenId;
+        this.tecnica = tecnica == null ? TecnicaEstudio.LIBRE : tecnica;
+        this.preferenciaNoMolestar = preferenciaNoMolestar == null
+                ? PreferenciaNoMolestar.HEREDAR_GLOBAL
+                : preferenciaNoMolestar;
+        this.pomodoroTrabajoMinutos = pomodoroTrabajoMinutos;
+        this.pomodoroDescansoCortoMinutos = pomodoroDescansoCortoMinutos;
+        this.pomodoroDescansoLargoMinutos = pomodoroDescansoLargoMinutos;
+        this.pomodoroCiclosHastaLargo = pomodoroCiclosHastaLargo;
     }
 
     /**
@@ -81,7 +101,13 @@ public final class SesionEstudio {
                 null,
                 EstadoPendiente.INSTANCIA,
                 notasSaneadas,
-                sesionOrigenId));
+                sesionOrigenId,
+                TecnicaEstudio.LIBRE,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL,
+                null,
+                null,
+                null,
+                null));
     }
 
     /**
@@ -121,10 +147,16 @@ public final class SesionEstudio {
                 duracionRealMinutos,
                 EstadoCompletadaTardia.INSTANCIA,
                 notasSaneadas,
+                null,
+                TecnicaEstudio.LIBRE,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL,
+                null,
+                null,
+                null,
                 null));
     }
 
-    /** Reconstruye una sesión leída desde almacenamiento persistente. */
+    /** Reconstruye una sesión leída desde almacenamiento persistente v3. */
     public static SesionEstudio restaurar(
             Long id,
             long materiaId,
@@ -136,6 +168,43 @@ public final class SesionEstudio {
             CodigoEstadoSesion codigoEstado,
             String notas,
             Long sesionOrigenId) {
+        return restaurar(
+                id,
+                materiaId,
+                fecha,
+                horaInicio,
+                horaFin,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                codigoEstado,
+                notas,
+                sesionOrigenId,
+                TecnicaEstudio.LIBRE,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    /** Reconstruye una sesión leída desde almacenamiento persistente v4 con técnica y Pomodoro. */
+    public static SesionEstudio restaurar(
+            Long id,
+            long materiaId,
+            Fecha fecha,
+            Hora horaInicio,
+            Hora horaFin,
+            int duracionPlanificadaMinutos,
+            Integer duracionRealMinutos,
+            CodigoEstadoSesion codigoEstado,
+            String notas,
+            Long sesionOrigenId,
+            TecnicaEstudio tecnica,
+            PreferenciaNoMolestar preferenciaNoMolestar,
+            Integer pomodoroTrabajoMinutos,
+            Integer pomodoroDescansoCortoMinutos,
+            Integer pomodoroDescansoLargoMinutos,
+            Integer pomodoroCiclosHastaLargo) {
         return new SesionEstudio(
                 id,
                 materiaId,
@@ -146,7 +215,13 @@ public final class SesionEstudio {
                 duracionRealMinutos,
                 EstadoSesion.de(codigoEstado),
                 sanearNotas(notas),
-                sesionOrigenId);
+                sesionOrigenId,
+                tecnica,
+                preferenciaNoMolestar,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo);
     }
 
     /** Sanea el texto de notas opcionales recortando espacios extremos. */
@@ -198,6 +273,58 @@ public final class SesionEstudio {
         return sesionOrigenId;
     }
 
+    public TecnicaEstudio tecnica() {
+        return tecnica;
+    }
+
+    public PreferenciaNoMolestar preferenciaNoMolestar() {
+        return preferenciaNoMolestar;
+    }
+
+    public Integer pomodoroTrabajoMinutos() {
+        return pomodoroTrabajoMinutos;
+    }
+
+    public Integer pomodoroDescansoCortoMinutos() {
+        return pomodoroDescansoCortoMinutos;
+    }
+
+    public Integer pomodoroDescansoLargoMinutos() {
+        return pomodoroDescansoLargoMinutos;
+    }
+
+    public Integer pomodoroCiclosHastaLargo() {
+        return pomodoroCiclosHastaLargo;
+    }
+
+    /** Devuelve el snapshot Pomodoro almacenado o {@code null} si la sesión es Libre. */
+    public ConfiguracionPomodoro configuracionPomodoroSnapshot() {
+        if (pomodoroTrabajoMinutos == null
+                || pomodoroDescansoCortoMinutos == null
+                || pomodoroDescansoLargoMinutos == null
+                || pomodoroCiclosHastaLargo == null) {
+            return null;
+        }
+        return ConfiguracionPomodoro.restaurar(
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo);
+    }
+
+    /** Indica si esta sesión debe activar No molestar según su preferencia y el ajuste global. */
+    public boolean debeActivarNoMolestar(boolean noMolestarGlobal) {
+        switch (preferenciaNoMolestar) {
+            case FORZAR_ACTIVAR:
+                return true;
+            case FORZAR_DESACTIVAR:
+                return false;
+            case HEREDAR_GLOBAL:
+            default:
+                return noMolestarGlobal;
+        }
+    }
+
     /** Devuelve una copia con el identificador asignado por persistencia. */
     public SesionEstudio conId(long nuevoId) {
         return new SesionEstudio(
@@ -210,7 +337,53 @@ public final class SesionEstudio {
                 duracionRealMinutos,
                 estado,
                 notas,
-                sesionOrigenId);
+                sesionOrigenId,
+                tecnica,
+                preferenciaNoMolestar,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo);
+    }
+
+    public SesionEstudio conPreferenciaNoMolestar(PreferenciaNoMolestar nuevaPreferencia) {
+        return new SesionEstudio(
+                id,
+                materiaId,
+                fecha,
+                horaInicio,
+                horaFin,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                estado,
+                notas,
+                sesionOrigenId,
+                tecnica,
+                nuevaPreferencia == null ? PreferenciaNoMolestar.HEREDAR_GLOBAL : nuevaPreferencia,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo);
+    }
+
+    public SesionEstudio conTecnica(TecnicaEstudio nuevaTecnica) {
+        return new SesionEstudio(
+                id,
+                materiaId,
+                fecha,
+                horaInicio,
+                horaFin,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                estado,
+                notas,
+                sesionOrigenId,
+                nuevaTecnica == null ? TecnicaEstudio.LIBRE : nuevaTecnica,
+                preferenciaNoMolestar,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo);
     }
 
     /**
@@ -260,6 +433,61 @@ public final class SesionEstudio {
         return aplicarTransicion(estado.registrarTardio(diasAntiguedad, duracionReal), duracionReal);
     }
 
+    /** Inicia la sesión en vivo fijando la técnica y el snapshot Pomodoro si aplica (HU-22, HU-23, RN-07, RN-17). */
+    public Resultado<SesionEstudio> iniciar(
+            TecnicaEstudio tecnicaElegida, ConfiguracionPomodoro snapshotPomodoro) {
+        Resultado<EstadoSesion> transicion = estado.iniciar();
+        if (!transicion.esValido()) {
+            return Resultado.error(transicion.error());
+        }
+        TecnicaEstudio efectiva = tecnicaElegida == null ? TecnicaEstudio.LIBRE : tecnicaElegida;
+        ConfiguracionPomodoro snap = efectiva == TecnicaEstudio.POMODORO
+                ? (snapshotPomodoro == null ? ConfiguracionPomodoro.porDefecto() : snapshotPomodoro)
+                : null;
+        return Resultado.ok(new SesionEstudio(
+                id,
+                materiaId,
+                fecha,
+                horaInicio,
+                horaFin,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                transicion.valor(),
+                notas,
+                sesionOrigenId,
+                efectiva,
+                preferenciaNoMolestar,
+                snap == null ? null : snap.trabajoMinutos(),
+                snap == null ? null : snap.descansoCortoMinutos(),
+                snap == null ? null : snap.descansoLargoMinutos(),
+                snap == null ? null : snap.ciclosHastaLargo()));
+    }
+
+    /** Registra pausa o reanudación manteniendo el estado {@code EN_CURSO} (RN-07). */
+    public Resultado<SesionEstudio> pausarOReanudar() {
+        return aplicarTransicion(estado.pausarReanudar(), duracionRealMinutos);
+    }
+
+    /** Detiene la sesión en curso y la marca {@code COMPLETADA} con los minutos reales medidos (HU-22, RN-07). */
+    public Resultado<SesionEstudio> detener(int duracionReal) {
+        return aplicarTransicion(estado.detener(duracionReal), duracionReal);
+    }
+
+    /** Completa la sesión en curso al cambiar directamente a la siguiente sesión (HU-43, RN-07, RN-27). */
+    public Resultado<SesionEstudio> cambiarASiguiente(int duracionReal) {
+        return aplicarTransicion(estado.cambiarASiguiente(duracionReal), duracionReal);
+    }
+
+    /** Completa la sesión en curso al declarar fin al volver a la app (HU-41, RN-07, RN-24). */
+    public Resultado<SesionEstudio> declararFinAlVolver(int duracionReal) {
+        return aplicarTransicion(estado.declararFinAlVolver(duracionReal), duracionReal);
+    }
+
+    /** Cierra la sesión en curso tras vencer el plazo de 3 días sin regreso (HU-41, RN-07, RN-29). */
+    public Resultado<SesionEstudio> cerrarPorPlazoVencido(int duracionReal) {
+        return aplicarTransicion(estado.cerrarPorPlazoVencido(duracionReal), duracionReal);
+    }
+
     /** Valida si esta sesión puede eliminarse permanentemente según RN-12 (HU-15). */
     public Resultado<SesionEstudio> validarEliminacion() {
         Resultado<Boolean> permitido = estado.validarEliminacion();
@@ -284,7 +512,13 @@ public final class SesionEstudio {
                 nuevaDuracionReal,
                 transicion.valor(),
                 notas,
-                sesionOrigenId));
+                sesionOrigenId,
+                tecnica,
+                preferenciaNoMolestar,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo));
     }
 
     private static ErrorValidacion validarDatosComunes(

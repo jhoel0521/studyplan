@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 import io.github.jhoel0521.studyplan.adapter.out.persistence.AjustesRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.AlmacenDatosRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.EventoEstudioRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.MateriaRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.PerfilRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.RelojSistema;
@@ -17,56 +18,81 @@ import io.github.jhoel0521.studyplan.adapter.out.persistence.SesionRepositoryRoo
 import io.github.jhoel0521.studyplan.adapter.out.persistence.SesionesDeMateriaRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.StudyPlanDatabase;
 import io.github.jhoel0521.studyplan.adapter.out.security.DisponibilidadBloqueoBiometrico;
+import io.github.jhoel0521.studyplan.adapter.out.system.ControladorNoMolestarSistema;
+import io.github.jhoel0521.studyplan.adapter.out.system.MarcadorSalidaAppPrefs;
+import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
 import io.github.jhoel0521.studyplan.application.port.in.ArchivarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.BorrarDatos;
 import io.github.jhoel0521.studyplan.application.port.in.CompletarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.ConfigurarAjustesEstudio;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarPerfil;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarCalendario;
+import io.github.jhoel0521.studyplan.application.port.in.ConsultarEjecucionSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadoArranque;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarPerfil;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ControlarSesionBloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.application.port.in.DesarchivarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.DetenerSesion;
 import io.github.jhoel0521.studyplan.application.port.in.EditarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.EvaluarRecuperacionSesion;
+import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
+import io.github.jhoel0521.studyplan.application.port.in.PausarReanudarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.PlanificarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.RegistrarSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionPasada;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionTardia;
+import io.github.jhoel0521.studyplan.application.port.in.RepartirTramoSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ReprogramarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
 import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
+import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.BorrarDatosService;
 import io.github.jhoel0521.studyplan.application.service.CompletarSesionService;
+import io.github.jhoel0521.studyplan.application.service.ConfigurarAjustesEstudioService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarAparienciaService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarBloqueoService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarPerfilService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarCalendarioService;
+import io.github.jhoel0521.studyplan.application.service.ConsultarEjecucionSesionService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarEstadoArranqueService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarPerfilService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarSesionService;
+import io.github.jhoel0521.studyplan.application.service.DecidirFinPlanificadoOInvasionService;
 import io.github.jhoel0521.studyplan.application.service.DesarchivarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.DetenerSesionService;
 import io.github.jhoel0521.studyplan.application.service.EditarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.EliminarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.EliminarSesionService;
+import io.github.jhoel0521.studyplan.application.service.EvaluarRecuperacionSesionService;
+import io.github.jhoel0521.studyplan.application.service.IniciarSesionService;
 import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
 import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
+import io.github.jhoel0521.studyplan.application.service.PausarReanudarSesionService;
 import io.github.jhoel0521.studyplan.application.service.PlanificarSesionService;
 import io.github.jhoel0521.studyplan.application.service.RegistrarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.RegistrarSalidaAppService;
 import io.github.jhoel0521.studyplan.application.service.RegistrarSesionPasadaService;
 import io.github.jhoel0521.studyplan.application.service.RegistrarSesionTardiaService;
+import io.github.jhoel0521.studyplan.application.service.RepartirTramoSesionService;
 import io.github.jhoel0521.studyplan.application.service.ReprogramarSesionService;
+import io.github.jhoel0521.studyplan.application.service.ResolverRegresoAppService;
 import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
 import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
@@ -108,6 +134,19 @@ public class StudyPlanApplication extends Application {
     private EliminarSesion eliminarSesion;
     private ConsultarCalendario consultarCalendario;
     private PreferenciaVistaCalendario preferenciaVistaCalendario;
+    private EventoEstudioRepository eventoEstudioRepository;
+    private ControladorNoMolestar controladorNoMolestar;
+    private ConfigurarAjustesEstudio configurarAjustesEstudio;
+    private IniciarSesion iniciarSesion;
+    private PausarReanudarSesion pausarReanudarSesion;
+    private DetenerSesion detenerSesion;
+    private ConsultarEjecucionSesion consultarEjecucionSesion;
+    private RegistrarSalidaApp registrarSalidaApp;
+    private EvaluarRecuperacionSesion evaluarRecuperacionSesion;
+    private ResolverRegresoApp resolverRegresoApp;
+    private DecidirFinPlanificadoOInvasion decidirFinPlanificadoOInvasion;
+    private RepartirTramoSesion repartirTramoSesion;
+    private ContadorActividades contadorActividades;
     private FabricaViewModels fabrica;
 
     /** @return la aplicación a la que pertenece el contexto */
@@ -119,7 +158,9 @@ public class StudyPlanApplication extends Application {
     public void onCreate() {
         super.onCreate();
         componer();
-        registerActivityLifecycleCallbacks(new ContadorActividades(sesionBloqueo));
+        contadorActividades = new ContadorActividades(
+                sesionBloqueo, registrarSalidaApp, ejecutor, this);
+        registerActivityLifecycleCallbacks(contadorActividades);
         aplicarTemaGuardado();
     }
 
@@ -131,15 +172,23 @@ public class StudyPlanApplication extends Application {
         AlmacenDatosRoom almacen = new AlmacenDatosRoom(base);
         MateriaRepositoryRoom materias = new MateriaRepositoryRoom(base.materiaDao());
         SesionRepositoryRoom sesiones = new SesionRepositoryRoom(base.sesionDao());
+        EventoEstudioRepositoryRoom eventos = new EventoEstudioRepositoryRoom(base.eventoEstudioDao());
         SesionesDeMateriaRoom sesionesDeMateria = new SesionesDeMateriaRoom(base.sesionDao());
         RelojSistema relojSistema = new RelojSistema();
         DisponibilidadBloqueoBiometrico disponibilidad = new DisponibilidadBloqueoBiometrico(this);
+        ControladorNoMolestarSistema noMolestar = new ControladorNoMolestarSistema(this);
+        ProgramadorAvisosAlarmManager programador = new ProgramadorAvisosAlarmManager(
+                this, ReceptorAvisosSesion.class, SesionEnCursoActivity.class);
+        MarcadorSalidaAppPrefs marcadorSalida = new MarcadorSalidaAppPrefs(this);
         SesionBloqueo sesion = new SesionBloqueo();
 
         sesionBloqueo = sesion;
         reloj = relojSistema;
         sesionRepository = sesiones;
-        vencerSesionesPendientes = new VencerSesionesPendientesService(sesiones, relojSistema);
+        eventoEstudioRepository = eventos;
+        controladorNoMolestar = noMolestar;
+        vencerSesionesPendientes = new VencerSesionesPendientesService(
+                sesiones, eventos, noMolestar, programador, relojSistema);
         configurarPerfil = new ConfigurarPerfilService(perfiles);
         consultarPerfil = new ConsultarPerfilService(perfiles);
         consultarAjustes = new ConsultarAjustesService(ajustes);
@@ -148,7 +197,7 @@ public class StudyPlanApplication extends Application {
         consultarEstadoArranque = new ConsultarEstadoArranqueService(perfiles, ajustes, sesion);
         obtenerResumenInicio = new ObtenerResumenInicioService(
                 perfiles, sesiones, materias, relojSistema, vencerSesionesPendientes);
-        borrarDatos = new BorrarDatosService(almacen, sesion);
+        borrarDatos = new BorrarDatosService(almacen, sesion, marcadorSalida, noMolestar);
         registrarMateria = new RegistrarMateriaService(materias);
         editarMateria = new EditarMateriaService(materias);
         consultarMateria = new ConsultarMateriaService(materias);
@@ -162,11 +211,32 @@ public class StudyPlanApplication extends Application {
         registrarSesionTardia = new RegistrarSesionTardiaService(sesiones, relojSistema);
         reprogramarSesion = new ReprogramarSesionService(sesiones, materias, relojSistema);
         consultarSesion = new ConsultarSesionService(
-                sesiones, materias, relojSistema, vencerSesionesPendientes);
+                sesiones, materias, eventos, relojSistema, vencerSesionesPendientes);
         eliminarSesion = new EliminarSesionService(sesiones);
         consultarCalendario = new ConsultarCalendarioService(
                 sesiones, materias, relojSistema, vencerSesionesPendientes);
         preferenciaVistaCalendario = new PreferenciaVistaCalendario(this);
+
+        configurarAjustesEstudio = new ConfigurarAjustesEstudioService(ajustes);
+        iniciarSesion = new IniciarSesionService(
+                sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, relojSistema);
+        pausarReanudarSesion = new PausarReanudarSesionService(
+                sesiones, eventos, materias, ajustes, noMolestar, programador, relojSistema);
+        detenerSesion = new DetenerSesionService(
+                sesiones, eventos, noMolestar, programador, marcadorSalida, relojSistema);
+        consultarEjecucionSesion = new ConsultarEjecucionSesionService(
+                sesiones, eventos, materias, ajustes, noMolestar, relojSistema);
+        registrarSalidaApp = new RegistrarSalidaAppService(
+                sesiones, eventos, marcadorSalida, relojSistema);
+        evaluarRecuperacionSesion = new EvaluarRecuperacionSesionService(
+                sesiones, eventos, materias, noMolestar, programador, marcadorSalida, relojSistema);
+        resolverRegresoApp = new ResolverRegresoAppService(
+                sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, relojSistema);
+        decidirFinPlanificadoOInvasion = new DecidirFinPlanificadoOInvasionService(
+                sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida,
+                detenerSesion, relojSistema);
+        repartirTramoSesion = new RepartirTramoSesionService(
+                sesiones, eventos, noMolestar, programador, marcadorSalida, relojSistema);
         fabrica = new FabricaViewModels(this);
     }
 
@@ -296,6 +366,54 @@ public class StudyPlanApplication extends Application {
 
     public PreferenciaVistaCalendario preferenciaVistaCalendario() {
         return preferenciaVistaCalendario;
+    }
+
+    public EventoEstudioRepository eventoEstudioRepository() {
+        return eventoEstudioRepository;
+    }
+
+    public ControladorNoMolestar controladorNoMolestar() {
+        return controladorNoMolestar;
+    }
+
+    public ConfigurarAjustesEstudio configurarAjustesEstudio() {
+        return configurarAjustesEstudio;
+    }
+
+    public IniciarSesion iniciarSesion() {
+        return iniciarSesion;
+    }
+
+    public PausarReanudarSesion pausarReanudarSesion() {
+        return pausarReanudarSesion;
+    }
+
+    public DetenerSesion detenerSesion() {
+        return detenerSesion;
+    }
+
+    public ConsultarEjecucionSesion consultarEjecucionSesion() {
+        return consultarEjecucionSesion;
+    }
+
+    public EvaluarRecuperacionSesion evaluarRecuperacionSesion() {
+        return evaluarRecuperacionSesion;
+    }
+
+    public ResolverRegresoApp resolverRegresoApp() {
+        return resolverRegresoApp;
+    }
+
+    public DecidirFinPlanificadoOInvasion decidirFinPlanificadoOInvasion() {
+        return decidirFinPlanificadoOInvasion;
+    }
+
+    public RepartirTramoSesion repartirTramoSesion() {
+        return repartirTramoSesion;
+    }
+
+    public ContadorActividades contadorActividades() {
+        return contadorActividades;
     }
 
     /** Acceso interno al repositorio de sesiones para sembrar escenarios de prueba instrumentados. */

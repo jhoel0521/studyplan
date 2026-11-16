@@ -42,7 +42,7 @@ public final class EstadoEnCurso implements EstadoSesion {
     }
 
     private static Resultado<EstadoSesion> completarConDuracion(int duracionRealMinutos) {
-        if (duracionRealMinutos <= 0) {
+        if (duracionRealMinutos < 0) {
             return Resultado.error(ErrorValidacion.DURACION_REAL_INVALIDA);
         }
         return Resultado.ok(EstadoCompletada.INSTANCIA);

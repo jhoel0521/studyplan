@@ -18,9 +18,10 @@ import androidx.room.RoomDatabase;
                 PerfilEntity.class,
                 AjustesEntity.class,
                 MateriaEntity.class,
-                SesionEntity.class
+                SesionEntity.class,
+                EventoEstudioEntity.class
         },
-        version = 3)
+        version = 4)
 public abstract class StudyPlanDatabase extends RoomDatabase {
 
     public static final String NOMBRE = "studyplan.db";
@@ -33,10 +34,15 @@ public abstract class StudyPlanDatabase extends RoomDatabase {
 
     public abstract SesionDao sesionDao();
 
+    public abstract EventoEstudioDao eventoEstudioDao();
+
     /** Abre la base en disco. */
     public static StudyPlanDatabase abrir(Context contexto) {
         return Room.databaseBuilder(contexto.getApplicationContext(), StudyPlanDatabase.class, NOMBRE)
-                .addMigrations(Migraciones.MIGRATION_1_2, Migraciones.MIGRATION_2_3)
+                .addMigrations(
+                        Migraciones.MIGRATION_1_2,
+                        Migraciones.MIGRATION_2_3,
+                        Migraciones.MIGRATION_3_4)
                 .build();
     }
 }

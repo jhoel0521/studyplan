@@ -49,4 +49,35 @@ public final class Migraciones {
             base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_sesion_origen_id` ON `sesion_estudio` (`sesion_origen_id`)");
         }
     };
+
+    /** Versión 3 a versión 4: añade ajustes Pomodoro/DND, columnas de técnica en sesión y tabla {@code evento_estudio}. */
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase base) {
+            base.execSQL("ALTER TABLE `ajustes` ADD COLUMN `no_molestar_global` INTEGER NOT NULL DEFAULT 0");
+            base.execSQL("ALTER TABLE `ajustes` ADD COLUMN `pomodoro_trabajo_min` INTEGER NOT NULL DEFAULT 25");
+            base.execSQL("ALTER TABLE `ajustes` ADD COLUMN `pomodoro_descanso_corto_min` INTEGER NOT NULL DEFAULT 5");
+            base.execSQL("ALTER TABLE `ajustes` ADD COLUMN `pomodoro_descanso_largo_min` INTEGER NOT NULL DEFAULT 15");
+            base.execSQL("ALTER TABLE `ajustes` ADD COLUMN `pomodoro_ciclos_hasta_largo` INTEGER NOT NULL DEFAULT 4");
+
+            base.execSQL("ALTER TABLE `sesion_estudio` ADD COLUMN `tecnica` TEXT NOT NULL DEFAULT 'LIBRE'");
+            base.execSQL("ALTER TABLE `sesion_estudio` ADD COLUMN `forzar_no_molestar` INTEGER");
+            base.execSQL("ALTER TABLE `sesion_estudio` ADD COLUMN `pomodoro_trabajo_min` INTEGER");
+            base.execSQL("ALTER TABLE `sesion_estudio` ADD COLUMN `pomodoro_descanso_corto_min` INTEGER");
+            base.execSQL("ALTER TABLE `sesion_estudio` ADD COLUMN `pomodoro_descanso_largo_min` INTEGER");
+            base.execSQL("ALTER TABLE `sesion_estudio` ADD COLUMN `pomodoro_ciclos_hasta_largo` INTEGER");
+
+            base.execSQL("CREATE TABLE IF NOT EXISTS `evento_estudio` ("
+                    + "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + "`sesion_id` INTEGER NOT NULL, "
+                    + "`tipo` TEXT NOT NULL, "
+                    + "`instante_milis` INTEGER NOT NULL, "
+                    + "`fecha` TEXT NOT NULL, "
+                    + "`hora` TEXT NOT NULL, "
+                    + "`nota` TEXT, "
+                    + "FOREIGN KEY(`sesion_id`) REFERENCES `sesion_estudio`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_evento_estudio_sesion_id` ON `evento_estudio` (`sesion_id`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_evento_estudio_instante_milis` ON `evento_estudio` (`instante_milis`)");
+        }
+    };
 }

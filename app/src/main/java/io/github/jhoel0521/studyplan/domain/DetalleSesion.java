@@ -1,11 +1,14 @@
 package io.github.jhoel0521.studyplan.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Modelo de lectura completo de una sesión para su pantalla de detalle, incluyendo datos de su
- * materia, capacidades permitidas por {@link EstadoSesion} y enlace de reprogramación
- * (HU-12, HU-13, HU-14, HU-15, RN-07, RN-09, RN-10, RN-12).
+ * materia, capacidades permitidas por {@link EstadoSesion}, eventos de estudio y enlace de
+ * reprogramación (HU-12, HU-13, HU-14, HU-15, HU-39, RN-07, RN-09, RN-10, RN-12).
  */
 public final class DetalleSesion {
 
@@ -18,6 +21,8 @@ public final class DetalleSesion {
     private final boolean puedeEliminar;
     private final boolean noRealizadaFueraDePlazoTardio;
     private final SesionEstudio sesionDestino;
+    private final List<EventoEstudio> eventos;
+    private final boolean puedeIniciar;
 
     public DetalleSesion(
             SesionEstudio sesion,
@@ -29,6 +34,32 @@ public final class DetalleSesion {
             boolean puedeEliminar,
             boolean noRealizadaFueraDePlazoTardio,
             SesionEstudio sesionDestino) {
+        this(
+                sesion,
+                nombreMateria,
+                colorMateria,
+                puedeCompletar,
+                puedeRegistrarTardio,
+                puedeReprogramar,
+                puedeEliminar,
+                noRealizadaFueraDePlazoTardio,
+                sesionDestino,
+                Collections.emptyList(),
+                false);
+    }
+
+    public DetalleSesion(
+            SesionEstudio sesion,
+            String nombreMateria,
+            int colorMateria,
+            boolean puedeCompletar,
+            boolean puedeRegistrarTardio,
+            boolean puedeReprogramar,
+            boolean puedeEliminar,
+            boolean noRealizadaFueraDePlazoTardio,
+            SesionEstudio sesionDestino,
+            List<EventoEstudio> eventos,
+            boolean puedeIniciar) {
         this.sesion = Objects.requireNonNull(sesion, "sesion");
         this.nombreMateria = Objects.requireNonNull(nombreMateria, "nombreMateria");
         this.colorMateria = colorMateria;
@@ -38,6 +69,10 @@ public final class DetalleSesion {
         this.puedeEliminar = puedeEliminar;
         this.noRealizadaFueraDePlazoTardio = noRealizadaFueraDePlazoTardio;
         this.sesionDestino = sesionDestino;
+        this.eventos = eventos == null
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(new ArrayList<>(eventos));
+        this.puedeIniciar = puedeIniciar;
     }
 
     public SesionEstudio sesion() {
@@ -74,5 +109,13 @@ public final class DetalleSesion {
 
     public SesionEstudio sesionDestino() {
         return sesionDestino;
+    }
+
+    public List<EventoEstudio> eventos() {
+        return eventos;
+    }
+
+    public boolean puedeIniciar() {
+        return puedeIniciar;
     }
 }

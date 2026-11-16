@@ -70,4 +70,28 @@ public class SesionEntity {
     @Nullable
     @ColumnInfo(name = "sesion_origen_id")
     public Long sesionOrigenId;
+
+    @NonNull
+    @ColumnInfo(name = "tecnica")
+    public String tecnica = "LIBRE";
+
+    @Nullable
+    @ColumnInfo(name = "forzar_no_molestar")
+    public Boolean forzarNoMolestar;
+
+    @Nullable
+    @ColumnInfo(name = "pomodoro_trabajo_min")
+    public Integer pomodoroTrabajoMin;
+
+    @Nullable
+    @ColumnInfo(name = "pomodoro_descanso_corto_min")
+    public Integer pomodoroDescansoCortoMin;
+
+    @Nullable
+    @ColumnInfo(name = "pomodoro_descanso_largo_min")
+    public Integer pomodoroDescansoLargoMin;
+
+    @Nullable
+    @ColumnInfo(name = "pomodoro_ciclos_hasta_largo")
+    public Integer pomodoroCiclosHastaLargo;
 }

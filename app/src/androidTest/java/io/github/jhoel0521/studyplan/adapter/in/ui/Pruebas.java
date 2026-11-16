@@ -36,6 +36,11 @@ final class Pruebas {
     /** Borra todos los datos y devuelve el tema y el idioma a sus valores por defecto. */
     static void reiniciarEstado() {
         app().borrarDatos().ejecutar(AlcanceBorrado.TELEFONO);
+        android.content.Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        ctx.getSharedPreferences("marcador_salida_app_prefs", android.content.Context.MODE_PRIVATE)
+                .edit().clear().commit();
+        ctx.getSharedPreferences("preferencias_no_molestar_sistema", android.content.Context.MODE_PRIVATE)
+                .edit().clear().commit();
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             AplicadorApariencia.aplicarTema(Tema.SISTEMA);
             AplicadorApariencia.aplicarIdioma(Idioma.ES);

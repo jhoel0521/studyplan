@@ -62,4 +62,16 @@ public abstract class SesionDao {
 
     @Query("DELETE FROM sesion_estudio WHERE id = :id")
     public abstract void eliminarPorId(long id);
+
+    @Query("SELECT * FROM sesion_estudio WHERE estado = 'EN_CURSO' ORDER BY id ASC LIMIT 1")
+    public abstract SesionEntity buscarEnCurso();
+
+    @Query("SELECT * FROM sesion_estudio WHERE estado = 'EN_CURSO' ORDER BY id ASC")
+    public abstract List<SesionEntity> listarEnCurso();
+
+    @Transaction
+    public void completarReparto(SesionEntity primeraCompletada, SesionEntity segundaCompletada) {
+        actualizar(primeraCompletada);
+        actualizar(segundaCompletada);
+    }
 }

@@ -57,4 +57,16 @@ public interface SesionRepository {
 
     /** Elimina permanentemente una sesión por su identificador (HU-15). */
     void eliminarPorId(long id);
+
+    /** Busca la sesión actualmente en estado {@code EN_CURSO}, si existe (HU-22). */
+    Optional<SesionEstudio> buscarEnCurso();
+
+    /** Lista todas las sesiones en estado {@code EN_CURSO} (para detección y vencimiento RN-29). */
+    List<SesionEstudio> listarEnCurso();
+
+    /**
+     * Completa en una única transacción atómica la sesión actual y la sesión invadida repartida
+     * (HU-44, RN-28).
+     */
+    void completarReparto(SesionEstudio primeraCompletada, SesionEstudio segundaCompletada);
 }

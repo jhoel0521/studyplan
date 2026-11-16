@@ -5,13 +5,18 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.Optional;
+
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
 import io.github.jhoel0521.studyplan.domain.EstadoArranque;
 
 /**
@@ -26,6 +31,7 @@ public abstract class ActividadProtegida extends ActividadBase {
 
     private ProteccionViewModel proteccion;
     private DestinoPrincipal destinoActivo;
+    private AlertDialog dialogoRecuperacion;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +90,41 @@ public abstract class ActividadProtegida extends ActividadBase {
                     findViewById(R.id.main).setVisibility(View.VISIBLE);
                 }
                 alEstarListo();
+                comprobarRecuperacionSesionActiva();
         }
+    }
+
+    private void comprobarRecuperacionSesionActiva() {
+        if (this instanceof SesionEnCursoActivity
+                || this instanceof RepartoSesionActivity
+                || app().evaluarRecuperacionSesion() == null) {
+            return;
+        }
+        if (app().contadorActividades() != null
+                && !app().contadorActividades().consumirEvaluacionRecuperacion()) {
+            return;
+        }
+        app().ejecutor().execute(() -> {
+            Optional<DiagnosticoRegresoApp> diagOpt = app().evaluarRecuperacionSesion().ejecutar();
+            if (!diagOpt.isPresent()) {
+                return;
+            }
+            DiagnosticoRegresoApp diag = diagOpt.get();
+            runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+                if (diag.vencidaPorTresDias()) {
+                    Toast.makeText(this, R.string.recuperacion_vencida_aviso, Toast.LENGTH_LONG).show();
+                    alEstarListo();
+                    return;
+                }
+                if (dialogoRecuperacion == null || !dialogoRecuperacion.isShowing()) {
+                    dialogoRecuperacion = DialogoRecuperacionSesion.mostrar(
+                            this, diag, this::alEstarListo);
+                }
+            });
+        });
     }
 
     /** Se llama cuando la app está lista (hay perfil y no hay nada que autenticar): aquí se cargan los datos. */

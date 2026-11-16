@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".adapter.in.ui.RepartoSesionActivity"
+    tools:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barraSuperior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/ic_volver"
+        app:title="@string/reparto_titulo" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/barraPrimeraReparto"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    tools:background="#1565C0" />
+
+                <View
+                    android:id="@+id/barraSegundaReparto"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    tools:background="#2E7D32" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textoResumenReparto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="Matemáticas: 65 min · Inglés: 65 min" />
+
+            <TextView
+                android:id="@+id/textoHoraCorteReparto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                tools:text="Hora de corte: 11:05" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/sliderCorteReparto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:contentDescription="@string/reparto_titulo"
+                android:stepSize="5.0"
+                android:valueFrom="0.0"
+                android:valueTo="100.0" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonMenos5Min"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/reparto_menos_5" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonMas5Min"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:minHeight="48dp"
+                    android:text="@string/reparto_mas_5" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textoErrorReparto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:maxWidth="600dp"
+                android:textColor="?attr/colorError"
+                android:visibility="gone"
+                tools:text="Error" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonConfirmarReparto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:minHeight="48dp"
+                android:text="@string/reparto_confirmar" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

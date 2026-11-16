@@ -1,29 +1,34 @@
 package io.github.jhoel0521.studyplan.application.service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.EstadoSesion;
+import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 
 /**
- * Implementa {@link ConsultarSesion}: actualiza sesiones vencidas, carga materia y capacidades del
- * estado actual y resuelve la sesión destino si está {@code REPROGRAMADA}
- * (HU-12, HU-13, HU-14, HU-15, RN-07, RN-09, RN-10, RN-12).
+ * Implementa {@link ConsultarSesion}: actualiza sesiones vencidas, carga materia, eventos de
+ * estudio y capacidades del estado actual y resuelve la sesión destino si está {@code REPROGRAMADA}
+ * (HU-12, HU-13, HU-14, HU-15, HU-22, HU-39, RN-07, RN-09, RN-10, RN-12).
  */
 public final class ConsultarSesionService implements ConsultarSesion {
 
     private final SesionRepository sesiones;
     private final MateriaRepository materias;
+    private final EventoEstudioRepository eventos;
     private final Reloj reloj;
     private final VencerSesionesPendientes vencerPendientes;
 
@@ -32,8 +37,18 @@ public final class ConsultarSesionService implements ConsultarSesion {
             MateriaRepository materias,
             Reloj reloj,
             VencerSesionesPendientes vencerPendientes) {
+        this(sesiones, materias, null, reloj, vencerPendientes);
+    }
+
+    public ConsultarSesionService(
+            SesionRepository sesiones,
+            MateriaRepository materias,
+            EventoEstudioRepository eventos,
+            Reloj reloj,
+            VencerSesionesPendientes vencerPendientes) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.materias = Objects.requireNonNull(materias, "materias");
+        this.eventos = eventos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
         this.vencerPendientes = Objects.requireNonNull(vencerPendientes, "vencerPendientes");
     }
@@ -58,11 +73,16 @@ public final class ConsultarSesionService implements ConsultarSesion {
         boolean puedeEliminar = estado.puedeEliminar();
         boolean fueraDePlazoTardio =
                 estado.codigo() == CodigoEstadoSesion.NO_REALIZADA && !puedeRegistrarTardio;
+        boolean puedeIniciar =
+                estado.codigo() == CodigoEstadoSesion.PENDIENTE && sesion.fecha().equals(hoy);
 
         SesionEstudio sesionDestino = null;
         if (estado.codigo() == CodigoEstadoSesion.REPROGRAMADA && sesion.id() != null) {
             sesionDestino = sesiones.buscarReprogramadaHijaDe(sesion.id()).orElse(null);
         }
+        List<EventoEstudio> listaEventos = eventos == null
+                ? Collections.emptyList()
+                : eventos.listarPorSesion(sesionId);
         return Optional.of(new DetalleSesion(
                 sesion,
                 nombreMateria,
@@ -72,6 +92,8 @@ public final class ConsultarSesionService implements ConsultarSesion {
                 puedeReprogramar,
                 puedeEliminar,
                 fueraDePlazoTardio,
-                sesionDestino));
+                sesionDestino,
+                listaEventos,
+                puedeIniciar));
     }
 }

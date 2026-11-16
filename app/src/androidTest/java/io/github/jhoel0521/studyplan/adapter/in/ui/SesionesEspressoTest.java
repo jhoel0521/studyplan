@@ -176,7 +176,8 @@ public class SesionesEspressoTest {
 
     @Test
     @SuppressWarnings("unused")
-    public void completarSesionDeHoyConDuracionEditadaActualizaElDetalle() throws InterruptedException {
+    public void sesionPendienteDeHoyExigeFlujoEnVivoYNoMuestraCompletadoDirecto()
+            throws InterruptedException {
         Fecha hoy = Pruebas.app().reloj().hoy();
         SesionEstudio s = Pruebas.app().planificarSesion().ejecutar(
                 materiaCalculo.id(),
@@ -187,15 +188,14 @@ public class SesionesEspressoTest {
 
         try (ActivityScenario<SesionDetalleActivity> escenario =
                      ActivityScenario.launch(intentoDetalle(s.id()))) {
-            Pruebas.esperarVisible(withId(R.id.botonCompletarSesion));
-            onView(withId(R.id.campoDuracionRealDetalle))
-                    .perform(scrollTo(), replaceText("75"), closeSoftKeyboard());
-            onView(withId(R.id.botonCompletarSesion)).perform(scrollTo(), click());
+            Pruebas.esperarVisible(withId(R.id.botonIniciarSesion));
+            onView(withId(R.id.grupoDuracionRealDetalle)).check(matches(not(isDisplayed())));
+
+            onView(withId(R.id.botonIniciarSesion)).perform(scrollTo(), click());
+            Pruebas.esperarVisible(withId(R.id.botonDetenerEnCurso));
+            onView(withId(R.id.botonDetenerEnCurso)).perform(click());
 
             Pruebas.esperarVisible(withText(R.string.estado_sesion_completada));
-            Pruebas.esperarVisible(allOf(
-                    withId(R.id.textoDuracionRealDetalle),
-                    withText(containsString("75"))));
             onView(withId(R.id.botonEliminarSesion)).check(matches(not(isDisplayed())));
         }
     }

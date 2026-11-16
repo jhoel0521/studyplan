@@ -88,6 +88,25 @@ public final class SesionRepositoryRoom implements SesionRepository {
         dao.eliminarPorId(id);
     }
 
+    @Override
+    public Optional<SesionEstudio> buscarEnCurso() {
+        SesionEntity e = dao.buscarEnCurso();
+        return e == null ? Optional.empty() : Optional.ofNullable(Mapeadores.aDominio(e));
+    }
+
+    @Override
+    public List<SesionEstudio> listarEnCurso() {
+        return mapearLista(dao.listarEnCurso());
+    }
+
+    @Override
+    public void completarReparto(
+            SesionEstudio primeraCompletada, SesionEstudio segundaCompletada) {
+        dao.completarReparto(
+                Mapeadores.aEntidad(primeraCompletada),
+                Mapeadores.aEntidad(segundaCompletada));
+    }
+
     private static List<SesionEstudio> mapearLista(List<SesionEntity> entidades) {
         List<SesionEstudio> resultado = new ArrayList<>(entidades.size());
         for (SesionEntity entidad : entidades) {

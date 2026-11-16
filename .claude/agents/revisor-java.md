@@ -17,7 +17,7 @@ Eres revisor de código senior de Android en Java. Para cada cambio compruebas:
 4. **Calidad y XML**: validación de entradas sin lanzar excepciones (`Resultado` + `ErrorValidacion`),
    nada de `NullPointerException` evidentes, recursos de texto en `strings.xml` (es/en), accesibilidad
    (`android:contentDescription` en elementos visuales/no textuales, `android:importantForAccessibility="no"`
-   en iconos decorativos, `android:minHeight="48dp"` en todo objetivo táctil), atributos del editor de diseño
+   en iconos decorativos, `android:minHeight="48dp"` en controles estándar de formulario/lista eximiendo celdas de cuadrícula de 7 columnas y bloques horarios proporcionales en pantallas pequeñas), atributos del editor de diseño
    (`tools:context`, `tools:fitsSystemWindows="true"` en raíces, `tools:tint` en vectores blancos, `tools:text`
    en textos dinámicos, `android:id` en todo `<include>`, `match_parent` en raíz de `contenido_*.xml`),
    y límites de ancho para pantallas grandes (`maxWidth="400dp"` + `layout_gravity="start"` en inputs,

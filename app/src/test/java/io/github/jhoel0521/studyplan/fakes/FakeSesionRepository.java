@@ -154,4 +154,32 @@ public final class FakeSesionRepository implements SesionRepository {
             }
         }
     }
+
+    @Override
+    public Optional<SesionEstudio> buscarEnCurso() {
+        for (SesionEstudio s : sesiones) {
+            if (s.codigoEstado() == CodigoEstadoSesion.EN_CURSO) {
+                return Optional.of(s);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<SesionEstudio> listarEnCurso() {
+        List<SesionEstudio> resultado = new ArrayList<>();
+        for (SesionEstudio s : sesiones) {
+            if (s.codigoEstado() == CodigoEstadoSesion.EN_CURSO) {
+                resultado.add(s);
+            }
+        }
+        return resultado;
+    }
+
+    @Override
+    public void completarReparto(
+            SesionEstudio primeraCompletada, SesionEstudio segundaCompletada) {
+        actualizar(primeraCompletada);
+        actualizar(segundaCompletada);
+    }
 }

@@ -18,6 +18,7 @@ public final class EventoSesion {
         PLANIFICADA,
         PASADA_REGISTRADA,
         REPROGRAMADA,
+        INICIADA,
         COMPLETADA,
         TARDIA_REGISTRADA,
         ELIMINADA,

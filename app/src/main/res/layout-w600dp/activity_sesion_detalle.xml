@@ -200,15 +200,98 @@
                     android:visibility="gone"
                     tools:text="Solo puedes completar la sesión el mismo día programado" />
 
+                <LinearLayout
+                    android:id="@+id/contenedorInicioSesion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="600dp"
+                        android:text="@string/sesion_detalle_tecnica"
+                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                    <RadioGroup
+                        android:id="@+id/grupoTecnicaDetalle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioLibreDetalle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:minHeight="48dp"
+                            android:text="@string/sesion_tecnica_libre" />
+
+                        <RadioButton
+                            android:id="@+id/radioPomodoroDetalle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:minHeight="48dp"
+                            android:text="@string/sesion_tecnica_pomodoro" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:maxWidth="600dp"
+                        android:text="@string/sesion_detalle_no_molestar"
+                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                    <RadioGroup
+                        android:id="@+id/grupoDndDetalle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RadioButton
+                            android:id="@+id/radioDndHeredar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:minHeight="48dp"
+                            android:text="@string/sesion_dnd_heredar" />
+
+                        <RadioButton
+                            android:id="@+id/radioDndActivar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:text="@string/sesion_dnd_activar" />
+
+                        <RadioButton
+                            android:id="@+id/radioDndDesactivar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:text="@string/sesion_dnd_desactivar" />
+                    </RadioGroup>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonIniciarSesion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:minHeight="48dp"
+                        android:text="@string/sesion_detalle_iniciar" />
+                </LinearLayout>
+
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/botonCompletarSesion"
+                    android:id="@+id/botonIrEnCurso"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     android:minHeight="48dp"
-                    android:text="@string/sesion_detalle_completar"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
+                    android:text="@string/sesion_detalle_ir_en_curso"
+                    android:visibility="gone" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonRegistrarTardio"
@@ -241,6 +324,32 @@
                     android:textColor="?attr/colorError"
                     android:visibility="gone"
                     tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textoTituloEventosDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:maxWidth="600dp"
+                    android:text="@string/sesion_detalle_eventos_titulo"
+                    android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                <TextView
+                    android:id="@+id/textoSinEventosDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:maxWidth="600dp"
+                    android:text="@string/sesion_detalle_sin_eventos"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listaEventosDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:nestedScrollingEnabled="false" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

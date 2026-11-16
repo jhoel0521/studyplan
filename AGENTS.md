@@ -64,7 +64,7 @@ Ningún código entra sin una spec aprobada.
 - No accedas a la base de datos desde el hilo principal.
 - Cada layout XML abre en el editor de diseño de Android Studio y declara `tools:context` de su Activity o Fragment; la clase enlaza sus vistas por id.
 - Los eventos del ciclo de vida y los listeners (`onCreate`, `onClick`…) van en métodos con nombre, para que se vean en la revisión de código.
-- Paquetes bajo `io.github.jhoel0521.studyplan`: `domain`, `application.port.in`, `application.port.out`, `application.service`, `adapter.in.ui`, `adapter.out.persistence`, `adapter.out.drive`, `adapter.out.security`.
+- Paquetes bajo `io.github.jhoel0521.studyplan`: `domain`, `application.port.in`, `application.port.out`, `application.service`, `adapter.in.ui`, `adapter.out.persistence`, `adapter.out.drive`, `adapter.out.security`, `adapter.out.system`.
 - Toda entrada de usuario se valida (por ejemplo, hora fin > hora inicio).
 
 ### 6.1 Principios SOLID y Arquitectura Hexagonal en Java
@@ -78,7 +78,7 @@ Ningún layout nuevo o modificado (`activity_*.xml`, `contenido_*.xml`, `dialog_
 - **Nodo raíz:** declarar `xmlns:android`, `xmlns:app`, `xmlns:tools` (cuando aplique), `tools:context=".adapter.in.ui.NombreActivity"` y `tools:fitsSystemWindows="true"` para previsualización limpia en el editor de diseño.
 - **Layouts incluidos (`contenido_*.xml` y `<include>`):** el nodo raíz de `contenido_*.xml` declara `android:layout_width="match_parent"` y `android:layout_height="match_parent"` para que su vista previa individual no colapse; la etiqueta `<include>` en el layout padre define obligatoriamente `android:id="@+id/..."`, `android:layout_width="0dp"`, `android:layout_height="0dp"` y las restricciones `app:layout_constraint*`.
 - **Accesibilidad (`RNF-06`, TalkBack y Accessibility Scanner):**
-  - Todo control táctil o interactivo (`MaterialButton`, `TextInputEditText`, `RadioButton`, `MaterialSwitch`, `CheckBox`, filas clicables, selectores) declara `android:minHeight="48dp"` (o altura explícita `>= 48dp`, y `android:minWidth="48dp"` en botones o iconos compactos).
+  - Los controles táctiles estándar de formulario y navegación (`MaterialButton`, `TextInputEditText`, `RadioButton`, `MaterialSwitch`, `CheckBox`, filas de lista estándar) declaran `android:minHeight="48dp"` (o altura explícita `>= 48dp`). **Excepción en pantallas pequeñas y vistas densas:** las celdas de cuadrícula de calendario (7 columnas L–D) y los bloques horarios cuya dimensión es proporcional al ancho de pantalla o a la duración de la sesión no exigen `48dp` mínimos, para no desbordar ni deformar la rejilla en pantallas pequeñas.
   - Todo componente visual sin texto propio que transmita información o sea interactivo (`FloatingActionButton`, `ImageButton`, `LinearProgressIndicator`, selectores de color/brillo, celdas) declara `android:contentDescription="@string/..."`.
   - Todo `ImageView` o vista puramente decorativa acompañada de texto descriptivo declara `android:importantForAccessibility="no"`.
   - Ningún estado depende únicamente del color (`RNF-06`): siempre se acompaña de icono y etiqueta textual.

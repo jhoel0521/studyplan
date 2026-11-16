@@ -107,6 +107,113 @@
                 android:minHeight="48dp"
                 android:text="@string/ajustes_bloqueo" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:maxWidth="600dp"
+                android:text="@string/ajustes_tecnicas_titulo"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="Técnicas de estudio" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/interruptorNoMolestarGlobal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/ajustes_no_molestar_global" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:hint="@string/ajustes_pomodoro_trabajo"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoPomodoroTrabajo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="25" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:hint="@string/ajustes_pomodoro_corto"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoPomodoroCorto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="5" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:hint="@string/ajustes_pomodoro_largo"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoPomodoroLargo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="15" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:hint="@string/ajustes_pomodoro_ciclos"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoPomodoroCiclos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textoErrorPomodoro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:maxWidth="600dp"
+                android:textColor="?attr/colorError"
+                android:visibility="gone"
+                tools:text="Revisa los rangos" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonGuardarPomodoro"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="48dp"
+                android:text="@string/ajustes_pomodoro_guardar" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonPrivacidad"
                 style="@style/Widget.Material3.Button.OutlinedButton"

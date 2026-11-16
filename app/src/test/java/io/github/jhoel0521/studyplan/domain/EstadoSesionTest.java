@@ -33,7 +33,7 @@ public class EstadoSesionTest {
         assertFalse(pendiente.esFinal());
         assertFalse(pendiente.sumaHorasReales());
         assertTrue(pendiente.ocupaHorario());
-        assertTrue(pendiente.puedeCompletar(HOY, HOY));
+        assertFalse(pendiente.puedeCompletar(HOY, HOY));
         assertFalse(pendiente.puedeCompletar(AYER, HOY));
         assertFalse(pendiente.puedeCompletar(MANIANA, HOY));
         assertFalse(pendiente.puedeRegistrarTardio(1));
@@ -95,9 +95,10 @@ public class EstadoSesionTest {
         // Escenario 2: En curso -> En curso (pausar / reanudar)
         assertEquals(CodigoEstadoSesion.EN_CURSO, enCurso.pausarReanudar().valor().codigo());
 
-        // Escenario 3: En curso -> Completada (detener)
+        // Escenario 3: En curso -> Completada (detener, admite 0 min en el primer minuto HU-22)
         assertEquals(CodigoEstadoSesion.COMPLETADA, enCurso.detener(45).valor().codigo());
-        assertEquals(ErrorValidacion.DURACION_REAL_INVALIDA, enCurso.detener(0).error());
+        assertEquals(CodigoEstadoSesion.COMPLETADA, enCurso.detener(0).valor().codigo());
+        assertEquals(ErrorValidacion.DURACION_REAL_INVALIDA, enCurso.detener(-1).error());
 
         // Escenario 10: En curso -> Completada (cambiar a siguiente sesión, RN-27)
         assertEquals(

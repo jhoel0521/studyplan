@@ -6,32 +6,45 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.concurrent.Executor;
 
+import io.github.jhoel0521.studyplan.application.port.in.ConfigurarAjustesEstudio;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Idioma;
+import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.Tema;
 
 /**
- * Estado de la pantalla de ajustes: tema, idioma y bloqueo.
+ * Estado de la pantalla de ajustes: tema, idioma, bloqueo, No molestar y Pomodoro.
  *
- * <p>Implementa: HU-03 (tema e idioma) y HU-04 (activar el bloqueo, con aviso si el teléfono no tiene método).
+ * <p>Implementa: HU-03, HU-04, HU-23, HU-24, RN-17 y RN-18.
  */
 public class AjustesViewModel extends ViewModel {
 
     private final ConsultarAjustes consultarAjustes;
     private final ConfigurarApariencia apariencia;
     private final ConfigurarBloqueo bloqueo;
+    private final ConfigurarAjustesEstudio configurarEstudio;
     private final Executor ejecutor;
     private final MutableLiveData<Ajustes> ajustes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> avisoSinBloqueo = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> pomodoroGuardado = new MutableLiveData<>();
+    private final MutableLiveData<ErrorValidacion> errorPomodoro = new MutableLiveData<>();
 
     public AjustesViewModel(ConsultarAjustes consultarAjustes, ConfigurarApariencia apariencia,
                             ConfigurarBloqueo bloqueo, Executor ejecutor) {
+        this(consultarAjustes, apariencia, bloqueo, null, ejecutor);
+    }
+
+    public AjustesViewModel(ConsultarAjustes consultarAjustes, ConfigurarApariencia apariencia,
+                            ConfigurarBloqueo bloqueo, ConfigurarAjustesEstudio configurarEstudio,
+                            Executor ejecutor) {
         this.consultarAjustes = consultarAjustes;
         this.apariencia = apariencia;
         this.bloqueo = bloqueo;
+        this.configurarEstudio = configurarEstudio;
         this.ejecutor = ejecutor;
     }
 
@@ -77,5 +90,42 @@ public class AjustesViewModel extends ViewModel {
 
     public void consumirAviso() {
         avisoSinBloqueo.setValue(null);
+    }
+
+    public LiveData<Boolean> pomodoroGuardado() {
+        return pomodoroGuardado;
+    }
+
+    public LiveData<ErrorValidacion> errorPomodoro() {
+        return errorPomodoro;
+    }
+
+    public void guardarEstudio(
+            boolean noMolestarGlobal,
+            int trabajo,
+            int corto,
+            int largo,
+            int ciclos,
+            boolean notificarGuardado) {
+        if (configurarEstudio == null) {
+            return;
+        }
+        ejecutor.execute(() -> {
+            Resultado<Ajustes> res = configurarEstudio.ejecutar(
+                    noMolestarGlobal, trabajo, corto, largo, ciclos);
+            if (!res.esValido()) {
+                errorPomodoro.postValue(res.error());
+                return;
+            }
+            errorPomodoro.postValue(null);
+            ajustes.postValue(res.valor());
+            if (notificarGuardado) {
+                pomodoroGuardado.postValue(true);
+            }
+        });
+    }
+
+    public void consumirPomodoroGuardado() {
+        pomodoroGuardado.setValue(null);
     }
 }

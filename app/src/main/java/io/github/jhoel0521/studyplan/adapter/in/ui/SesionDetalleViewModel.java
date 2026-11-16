@@ -11,16 +11,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.github.jhoel0521.studyplan.application.port.in.CompletarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionTardia;
 import io.github.jhoel0521.studyplan.domain.DetalleSesion;
+import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
- * Estado de la pantalla de detalle de una sesión: lectura enriquecida, acciones según máquina de
- * estados (completar, registrar tardío, eliminar) y confirmación de borrado resiliente a rotación.
+ * Estado de la pantalla de detalle de una sesión: lectura enriquecida, inicio en vivo, acciones
+ * según máquina de estados y confirmación de borrado resiliente a rotación.
  *
- * <p>Implementa: HU-12, HU-13, HU-14, HU-15 y RNF-10.
+ * <p>Implementa: HU-12, HU-13, HU-14, HU-15, HU-22 a HU-24, HU-39 y RNF-10.
  */
 public class SesionDetalleViewModel extends ViewModel {
 
@@ -28,6 +31,7 @@ public class SesionDetalleViewModel extends ViewModel {
     private final CompletarSesion completarSesion;
     private final RegistrarSesionTardia registrarSesionTardia;
     private final EliminarSesion eliminarSesion;
+    private final IniciarSesion iniciarSesion;
     private final Executor ejecutor;
 
     private final MutableLiveData<DetalleSesion> detalle = new MutableLiveData<>();
@@ -42,10 +46,21 @@ public class SesionDetalleViewModel extends ViewModel {
             RegistrarSesionTardia registrarSesionTardia,
             EliminarSesion eliminarSesion,
             Executor ejecutor) {
+        this(consultarSesion, completarSesion, registrarSesionTardia, eliminarSesion, null, ejecutor);
+    }
+
+    public SesionDetalleViewModel(
+            ConsultarSesion consultarSesion,
+            CompletarSesion completarSesion,
+            RegistrarSesionTardia registrarSesionTardia,
+            EliminarSesion eliminarSesion,
+            IniciarSesion iniciarSesion,
+            Executor ejecutor) {
         this.consultarSesion = consultarSesion;
         this.completarSesion = completarSesion;
         this.registrarSesionTardia = registrarSesionTardia;
         this.eliminarSesion = eliminarSesion;
+        this.iniciarSesion = iniciarSesion;
         this.ejecutor = ejecutor;
     }
 
@@ -72,6 +87,24 @@ public class SesionDetalleViewModel extends ViewModel {
             return;
         }
         ejecutor.execute(() -> recargar(sesionId));
+    }
+
+    /** Inicia la sesión en vivo con la técnica y preferencia No molestar seleccionadas (HU-22 a HU-24). */
+    public void iniciar(
+            long sesionId, TecnicaEstudio tecnica, PreferenciaNoMolestar preferenciaNoMolestar) {
+        if (iniciarSesion == null) {
+            return;
+        }
+        ejecutarConCandado(() -> {
+            Resultado<SesionEstudio> r = iniciarSesion.ejecutar(
+                    sesionId, tecnica, preferenciaNoMolestar);
+            if (r.esValido()) {
+                recargar(sesionId);
+                evento.postValue(EventoSesion.ok(EventoSesion.Tipo.INICIADA, sesionId));
+            } else {
+                evento.postValue(EventoSesion.error(r.error()));
+            }
+        });
     }
 
     /** Marca la sesión como completada en el mismo día con la duración real ingresada (HU-12). */
