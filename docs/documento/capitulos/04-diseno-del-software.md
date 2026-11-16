@@ -24,7 +24,7 @@ Nota: Elaboración propia. Los paquetes cuelgan de io.github.jhoel0521.studyplan
 
 ### Modelo Lógico
 
-El esquema de Room está en la versión 4 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
+El esquema de Room está en la versión 5 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
 
 ![Modelo lógico de la base de datos de StudyPlan](../recursos/diagramas/modelo_logico.png){#modelo_logico ancho=16.5}
 
@@ -73,9 +73,9 @@ Tabla: Diccionario de datos de la tabla sesion_estudio (Sesiones de estudio) {#d
 |---|---|---|---|
 | id | INTEGER | PK autoincremental, NOT NULL | Identificador autogenerado de la sesión de estudio. |
 | materia_id | INTEGER | NOT NULL | Identificador de la materia asociada; clave foránea a materia(id) con borrado restringido (RN-03). |
-| fecha | TEXT | NOT NULL | Fecha planificada o ejecutada en formato ISO AAAA-MM-DD (HU-10, HU-11). |
-| hora_inicio | TEXT | NOT NULL | Hora de inicio en formato HH:mm de 24 horas (RN-04). |
-| hora_fin | TEXT | NOT NULL | Hora de fin en formato HH:mm posterior a la de inicio (RN-04). |
+| plan_inicio_utc_milis | INTEGER | NOT NULL | Instante absoluto de inicio planificado en milisegundos UTC (RN-04, RN-05). |
+| plan_fin_utc_milis | INTEGER | NOT NULL | Instante absoluto de fin planificado en milisegundos UTC; si cruza medianoche cae al día siguiente (RN-04). |
+| desfase_minutos | INTEGER | NOT NULL | Desfase horario local en minutos respecto a UTC vigente al planificar (para preservar el historial ante viajes). |
 | duracion_planificada_minutos | INTEGER | NOT NULL | Duración planificada calculada en minutos entre hora_inicio y hora_fin. |
 | duracion_real_minutos | INTEGER | Admite nulo | Duración real estudiada en minutos (entre 1 y 1440); nula mientras no se complete (HU-12, HU-13). |
 | estado | TEXT | NOT NULL | Código de estado según el patrón State (RN-07): PENDIENTE, EN_CURSO, NO_REALIZADA, COMPLETADA, COMPLETADA_TARDIA o REPROGRAMADA. |
@@ -96,9 +96,16 @@ Tabla: Diccionario de datos de la tabla evento_estudio (Eventos de ejecución de
 | sesion_id | INTEGER | NOT NULL | Identificador de la sesión asociada; clave foránea a sesion_estudio(id) con ON DELETE CASCADE (HU-39). |
 | tipo | TEXT | NOT NULL | Tipo de evento cronológico: INICIO, PAUSA, REANUDACION, FIN, CAMBIO_FASE, SALIDA_APP o REGRESO_APP (HU-39, RN-23). |
 | instante_milis | INTEGER | NOT NULL | Marca temporal exacta en milisegundos UTC desde epoch (RN-23). |
-| fecha | TEXT | NOT NULL | Fecha local del evento en formato ISO AAAA-MM-DD. |
-| hora | TEXT | NOT NULL | Hora local del evento en formato HH:mm. |
+| desfase_minutos | INTEGER | NOT NULL | Desfase horario local en minutos respecto a UTC en el momento del evento (HU-39). |
 | nota | TEXT | Admite nulo | Nota breve o detalle opcional del evento (por ejemplo, fase Pomodoro o resolución de regreso). |
+
+Tabla: Diccionario de datos de la tabla tramo_diario (Minutos reales por día local (RN-31)) {#diccionario_tramo_diario anchos=3.4,2.2,3.6,6.8 tam=9}
+
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| sesion_id | INTEGER | PK, NOT NULL | Identificador de la sesión asociada; parte de la clave primaria y FK a sesion_estudio(id) con ON DELETE CASCADE (RN-31). |
+| fecha_local | TEXT | PK, NOT NULL | Fecha calendario local ISO AAAA-MM-DD en la que ocurrió el estudio (RN-31). |
+| minutos | INTEGER | NOT NULL | Minutos reales contabilizables ocurridos en esa fecha local (RN-31). |
 
 ## Diseño de la Interfaz de Usuario (UI/UX)
 

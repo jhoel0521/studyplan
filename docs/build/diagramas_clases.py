@@ -63,12 +63,14 @@ ENTRADA_SESIONES = ["CompletarSesion", "ConsultarSesion", "EliminarSesion", "Pla
 SERVICIOS_SESIONES = ["CompletarSesionService", "ConsultarSesionService", "EliminarSesionService",
                       "PlanificarSesionService", "RegistrarSesionPasadaService", "RegistrarSesionTardiaService",
                       "ReprogramarSesionService", "ValidadorSesiones", "VencerSesionesPendientesService"]
-SALIDA_SESIONES = ["Reloj", "SesionRepository"]
+SALIDA_SESIONES = ["Reloj", "SesionRepository", "TramoDiarioRepository"]
 DOMINIO_SESIONES = ["CodigoEstadoSesion", "ConflictoHorario", "DetalleSesion", "DetalleSesionInicio",
                     "EstadoCompletada", "EstadoCompletadaTardia", "EstadoEnCurso", "EstadoNoRealizada",
-                    "EstadoPendiente", "EstadoReprogramada", "EstadoSesion", "Fecha", "Hora",
-                    "ResultadoSesion", "SesionEstudio"]
-PERSISTENCIA_SESIONES = ["RelojSistema", "SesionDao", "SesionEntity", "SesionRepositoryRoom", "SesionesDeMateriaRoom"]
+                    "EstadoPendiente", "EstadoReprogramada", "EstadoSesion", "Fecha", "Hora", "Instante",
+                    "RepartidorPorDia", "ResultadoSesion", "SesionEstudio"]
+PERSISTENCIA_SESIONES = ["RelojSistema", "SesionDao", "SesionEntity", "SesionRepositoryRoom",
+                         "SesionesDeMateriaRoom", "TramoDiarioDao", "TramoDiarioEntity",
+                         "TramoDiarioRepositoryRoom"]
 
 # add-calendario-estudio
 PRESENTACION_CALENDARIO = ["CalendarioActivity", "CalendarioMesAdapter", "CalendarioViewModel",
@@ -454,6 +456,9 @@ DESCRIPCIONES = {
     ("materia", "archivada"): "1 si la materia está archivada (HU-08); 0 si está activa.",
     ("sesion_estudio", "id"): "Identificador autogenerado de la sesión de estudio.",
     ("sesion_estudio", "materia_id"): "Identificador de la materia asociada; clave foránea a materia(id) con borrado restringido (RN-03).",
+    ("sesion_estudio", "plan_inicio_utc_milis"): "Instante absoluto de inicio planificado en milisegundos UTC (RN-04, RN-05).",
+    ("sesion_estudio", "plan_fin_utc_milis"): "Instante absoluto de fin planificado en milisegundos UTC; si cruza medianoche cae al día siguiente (RN-04).",
+    ("sesion_estudio", "desfase_minutos"): "Desfase horario local en minutos respecto a UTC vigente al planificar (para preservar el historial ante viajes).",
     ("sesion_estudio", "fecha"): "Fecha planificada o ejecutada en formato ISO AAAA-MM-DD (HU-10, HU-11).",
     ("sesion_estudio", "hora_inicio"): "Hora de inicio en formato HH:mm de 24 horas (RN-04).",
     ("sesion_estudio", "hora_fin"): "Hora de fin en formato HH:mm posterior a la de inicio (RN-04).",
@@ -472,13 +477,18 @@ DESCRIPCIONES = {
     ("evento_estudio", "sesion_id"): "Identificador de la sesión asociada; clave foránea a sesion_estudio(id) con ON DELETE CASCADE (HU-39).",
     ("evento_estudio", "tipo"): "Tipo de evento cronológico: INICIO, PAUSA, REANUDACION, FIN, CAMBIO_FASE, SALIDA_APP o REGRESO_APP (HU-39, RN-23).",
     ("evento_estudio", "instante_milis"): "Marca temporal exacta en milisegundos UTC desde epoch (RN-23).",
+    ("evento_estudio", "desfase_minutos"): "Desfase horario local en minutos respecto a UTC en el momento del evento (HU-39).",
     ("evento_estudio", "fecha"): "Fecha local del evento en formato ISO AAAA-MM-DD.",
     ("evento_estudio", "hora"): "Hora local del evento en formato HH:mm.",
     ("evento_estudio", "nota"): "Nota breve o detalle opcional del evento (por ejemplo, fase Pomodoro o resolución de regreso).",
+    ("tramo_diario", "sesion_id"): "Identificador de la sesión asociada; parte de la clave primaria y FK a sesion_estudio(id) con ON DELETE CASCADE (RN-31).",
+    ("tramo_diario", "fecha_local"): "Fecha calendario local ISO AAAA-MM-DD en la que ocurrió el estudio (RN-31).",
+    ("tramo_diario", "minutos"): "Minutos reales contabilizables ocurridos en esa fecha local (RN-31).",
 }
 TABLAS_DE_NEGOCIO = {"perfil": "Perfil del estudiante", "ajustes": "Ajustes de la aplicación",
                      "materia": "Materias del estudiante", "sesion_estudio": "Sesiones de estudio",
-                     "evento_estudio": "Eventos de ejecución de sesiones"}
+                     "evento_estudio": "Eventos de ejecución de sesiones",
+                     "tramo_diario": "Minutos reales por día local (RN-31)"}
 
 
 def _ultimo_esquema():
@@ -543,6 +553,7 @@ def modelo_logico():
         "sesion_estudio.materia_id referencia a materia(id) con ON DELETE RESTRICT (RN-03: no se elimina una materia con sesiones).",
         "sesion_estudio.sesion_origen_id referencia a sesion_estudio(id) con ON DELETE SET NULL (HU-14: enlace de reprogramación).",
         "evento_estudio.sesion_id referencia a sesion_estudio(id) con ON DELETE CASCADE (HU-39: línea de tiempo de ejecución).",
+        "tramo_diario.sesion_id referencia a sesion_estudio(id) con ON DELETE CASCADE (RN-31: corte diario estricto).",
         "perfil y ajustes mantienen una única fila (id fijo en 1).",
     ]
     for i, linea in enumerate(notas):
@@ -633,7 +644,7 @@ MENSAJES_PLANIFICAR_SESION = [
     (2, 2, "ejecutor.execute(...) · hilo en segundo plano", None, False),
     (2, 3, "ejecutar(materiaId, Fecha, Hora, Hora, String)", ("PlanificarSesionService", "ejecutar"), False),
     (3, 5, "listarPorFecha(Fecha) · ValidadorSesiones (RN-05)", ("SesionRepositoryRoom", "listarPorFecha"), False),
-    (5, 6, "listarPorFecha(String)", ("SesionDao", "listarPorFecha"), False),
+    (5, 6, "listarPorRangoUtc(desde, hasta)", ("SesionDao", "listarPorRangoUtc"), False),
     (6, 5, "List<SesionEntity>", None, True),
     (5, 3, "List<SesionEstudio> (sin cruce horario)", None, True),
     (3, 4, "planificar(..., Fecha hoy) · EstadoPendiente (RN-07)", ("SesionEstudio", "planificar"), False),
@@ -732,7 +743,7 @@ MENSAJES_CALENDARIO = [
     (2, 3, "ejecutar() [RN-08 vencer pendientes]", ("VencerSesionesPendientesService", "ejecutar"), False),
     (3, 2, "int vencidas", None, True),
     (2, 4, "listarPorRango(desde, hasta)", ("SesionRepositoryRoom", "listarPorRango"), False),
-    (4, 5, "listarPorRango(desdeIso, hastaIso)", ("SesionDao", "listarPorRango"), False),
+    (4, 5, "listarPorRangoUtc(desdeUtc, hastaUtc)", ("SesionDao", "listarPorRangoUtc"), False),
     (5, 4, "List<SesionEntity>", None, True),
     (4, 2, "List<SesionEstudio>", None, True),
     (2, 2, "filtrar, construir bloques/celdas y resumen Plan/Real", None, False),

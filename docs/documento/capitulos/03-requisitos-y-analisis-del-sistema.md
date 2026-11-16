@@ -226,7 +226,7 @@ Tabla: Historias de usuario de la épica E3: Sesiones de estudio {#tabla10}
 |---|---|
 | **Historia** | Como estudiante, quiero registrar una sesión con materia, fecha, hora de inicio, hora de fin y notas opcionales para planificar cuándo voy a estudiar cada asignatura. |
 | **Prioridad / Est.** | Must · 5 puntos |
-| **Criterios de aceptación** | 1. **Registro válido.** *Dado* que existe una materia activa, *cuando* el estudiante registra una sesión de hoy o futura de 10:00 a 11:30, *entonces* el sistema la crea en estado Pendiente con 90 minutos planificados.<br>2. **Horario inválido.** *Dado* que el formulario está abierto, *cuando* la hora de fin es igual o anterior a la de inicio, *entonces* el sistema muestra «La hora de fin debe ser posterior a la de inicio» y no guarda (RN-04).<br>3. **Cruce bloqueado.** *Dado* que existe una sesión de 10:00 a 11:30 ese día, *cuando* el estudiante registra otra de 11:00 a 12:00 el mismo día, *entonces* el sistema bloquea el registro e indica con qué sesión se cruza (RN-05). |
+| **Criterios de aceptación** | 1. **Registro válido.** *Dado* que existe una materia activa, *cuando* el estudiante registra una sesión de hoy o futura de 10:00 a 11:30, *entonces* el sistema la crea en estado Pendiente con 90 minutos planificados.<br>2. **Sesión que cruza la medianoche.** *Dado* que existe una materia activa, *cuando* el estudiante registra una sesión el lunes con inicio 22:00 y fin 01:00, *entonces* el sistema la crea hasta el martes 01:00 con 180 minutos planificados e indica «Termina al día siguiente» (RN-04).<br>3. **Horario inválido.** *Dado* que el formulario está abierto, *cuando* la hora de fin es igual a la de inicio, *entonces* el sistema muestra «La hora de fin debe ser distinta de la de inicio» y no guarda (RN-04).<br>4. **Cruce bloqueado.** *Dado* que existe una sesión de 10:00 a 11:30 ese día, *cuando* el estudiante registra otra de 11:00 a 12:00 el mismo día (o entre dos días si cruza medianoche), *entonces* el sistema bloquea el registro e indica con qué sesión se cruza (RN-05). |
 | **HU-11** | **Registrar sesión pasada (registro tardío)** |
 | **Historia** | Como estudiante, quiero registrar una sesión que ya estudié en los últimos 3 días para no perder horas reales si olvidé anotarlas. |
 | **Prioridad / Est.** | Must · 3 puntos |
@@ -423,11 +423,11 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-01 | Existe un único usuario por dispositivo: el estudiante. No hay cuentas ni roles adicionales en la v0.1.0. | Entrevista |
 | RN-02 | El nombre de una materia se guarda sin espacios sobrantes (se recortan los extremos y se colapsan los repetidos) y tiene de 1 a 50 caracteres. El nombre de una materia activa es único: dos nombres son el mismo si solo difieren en mayúsculas, acentos o espacios (la ñ cuenta como otra letra: «Año» y «Ano» son nombres distintos). | Propuesta IA, aceptada; ampliada por decisión del Product Owner (14-nov-2026); la excepción de la ñ es una decisión de la IA por confirmar |
 | RN-03 | Una materia con sesiones registradas no se elimina: solo se archiva, para conservar el historial. | Propuesta IA, aceptada |
-| RN-04 | La hora de fin de una sesión debe ser posterior a su hora de inicio. | Propuesta IA, aceptada |
+| RN-04 | La hora de fin de una sesión debe ser distinta de la de inicio. Si es anterior, la sesión termina al día siguiente (duración menor de 24 horas). | Product Owner, 16-nov-2026 |
 | RN-05 | Dos sesiones no pueden cruzarse en el mismo horario: el sistema bloquea el registro. | Entrevista |
 | RN-06 | Solo se pueden registrar sesiones pasadas hasta 3 días atrás; quedan en estado «Completada (registro tardío)». | Entrevista |
 | RN-07 | El estado de una sesión cambia solo por las transiciones de la máquina de estados (Tabla de transiciones); cada estado conoce únicamente sus acciones y su estado siguiente. | Entrevista |
-| RN-08 | Al terminar el día, toda sesión Pendiente de ese día pasa automáticamente a «No realizada». | Entrevista |
+| RN-08 | Al terminar el día local en que cae el fin planificado, toda sesión Pendiente pasa automáticamente a «No realizada». | Product Owner, 16-nov-2026 |
 | RN-09 | Reprogramar no borra ni modifica el horario original: la sesión original pasa a «Reprogramada» y se crea una sesión nueva Pendiente enlazada a ella. Así queda registro del día no estudiado. | Entrevista |
 | RN-10 | Una sesión «No realizada» puede pasar a «Completada (registro tardío)» solo si su fecha está dentro de los últimos 3 días. | Entrevista |
 | RN-11 | Solo las sesiones Completadas y Completadas (registro tardío) suman horas reales; con Pomodoro solo suman los bloques de trabajo, no los descansos. | Entrevista |
@@ -450,6 +450,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-28 | Un tramo continuo de estudio puede repartirse al detener entre la sesión actual y las sesiones Pendientes consecutivas del mismo día. | Entrevista |
 | RN-29 | Una sesión En curso no pasa a No realizada al terminar el día; el estudiante puede declarar su fin hasta 3 días después y, vencido ese plazo, se cierra en la última marca registrada dentro de la app. | Derivada de RN-06 y RN-24, confirmada por el Product Owner |
 | RN-30 | Métricas de estudio: concentración = tiempo en la app ÷ (tiempo en la app + pausas); interrupciones por hora; puntualidad = inicio real − inicio planificado; respeto del tiempo = duración real ÷ planificada; tiempo fuera de la app (informativo, no descuenta horas). | Propuesta IA, aceptada |
+| RN-31 | Corte estricto por día y semana: cada minuto real estudiado se contabiliza en la fecha y semana locales en que ocurrió (dividiendo en la medianoche si el tramo la cruza). No se trasladan horas de un día o semana a otro. | Product Owner, 16-nov-2026 |
 
 La regla RN-07 establece que el ciclo de vida de una sesión de estudio es una **máquina de estados** (@figura:figura2). Siguiendo el patrón State, cada estado conoce únicamente las acciones que admite y su estado siguiente. Reprogramar no borra la sesión original: la marca como *Reprogramada* y crea una sesión nueva enlazada, de modo que queda constancia del día en que no se estudió.
 
