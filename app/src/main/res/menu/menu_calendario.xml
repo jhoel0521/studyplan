@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/accion_hoy"
+        android:icon="@drawable/ic_hoy"
+        android:title="@string/calendario_hoy"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/accion_filtros"
+        android:icon="@drawable/ic_filtro"
+        android:title="@string/calendario_filtros"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/accion_leyenda"
+        android:icon="@drawable/ic_leyenda"
+        android:title="@string/calendario_leyenda"
+        app:showAsAction="ifRoom" />
+</menu>

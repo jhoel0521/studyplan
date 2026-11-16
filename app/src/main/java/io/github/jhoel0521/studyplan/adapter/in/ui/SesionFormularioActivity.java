@@ -48,6 +48,8 @@ public class SesionFormularioActivity extends ActividadProtegida {
 
     public static final String EXTRA_MODO = "extra_modo";
     public static final String EXTRA_FECHA = "extra_fecha";
+    public static final String EXTRA_HORA_INICIO = "extra_hora_inicio";
+    public static final String EXTRA_HORA_FIN = "extra_hora_fin";
     public static final String EXTRA_SESION_ID = "extra_sesion_id";
 
     public static final String MODO_PLANIFICAR = "planificar";
@@ -114,6 +116,16 @@ public class SesionFormularioActivity extends ActividadProtegida {
             String fechaInicial = getIntent().getStringExtra(EXTRA_FECHA);
             if (fechaInicial != null && !fechaInicial.isEmpty()) {
                 campoFecha.setText(fechaInicial);
+            }
+            if (MODO_PLANIFICAR.equals(modoActual)) {
+                String horaInicioInicial = getIntent().getStringExtra(EXTRA_HORA_INICIO);
+                if (horaInicioInicial != null && !horaInicioInicial.isEmpty()) {
+                    campoHoraInicio.setText(horaInicioInicial);
+                }
+                String horaFinInicial = getIntent().getStringExtra(EXTRA_HORA_FIN);
+                if (horaFinInicial != null && !horaFinInicial.isEmpty()) {
+                    campoHoraFin.setText(horaFinInicial);
+                }
             }
         }
     }

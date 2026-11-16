@@ -167,4 +167,47 @@
     <string name="error_sesion_completar_mismo_dia">Solo puedes completar la sesión el mismo día programado</string>
     <string name="error_sesion_registro_tardio_vencido">Solo se admite registro tardío hasta 3 días después de la sesión</string>
     <string name="error_sesion_no_eliminable">Solo se pueden eliminar sesiones en estado Pendiente</string>
+
+    <!-- Calendario de estudio (HU-16 a HU-21) -->
+    <string name="calendario_titulo">Calendario</string>
+    <string name="calendario_vista_dia">Día</string>
+    <string name="calendario_vista_semana">Semana</string>
+    <string name="calendario_vista_mes">Mes</string>
+    <string name="calendario_anterior">Periodo anterior</string>
+    <string name="calendario_siguiente">Periodo siguiente</string>
+    <string name="calendario_hoy">Hoy</string>
+    <string name="calendario_filtros">Filtros</string>
+    <string name="calendario_leyenda">Leyenda</string>
+    <string name="calendario_resumen_horas">Plan %1$s · Real %2$s</string>
+    <string name="calendario_horas_compacto">%1$s h</string>
+    <string name="calendario_sesiones_del_dia">Sesiones del %1$s</string>
+    <string name="calendario_sin_sesiones_dia">No hay sesiones en este día. Mantén pulsado un día futuro o de hoy para planificar.</string>
+    <string name="calendario_sin_dia_seleccionado">Toca un día para ver sus sesiones</string>
+    <string name="calendario_dia_lunes">L</string>
+    <string name="calendario_dia_martes">M</string>
+    <string name="calendario_dia_miercoles">X</string>
+    <string name="calendario_dia_jueves">J</string>
+    <string name="calendario_dia_viernes">V</string>
+    <string name="calendario_dia_sabado">S</string>
+    <string name="calendario_dia_domingo">D</string>
+    <string name="calendario_celda_desc">%1$s, %2$d sesiones, %3$s</string>
+    <string name="calendario_celda_vacia_desc">%1$s, sin sesiones</string>
+    <string name="calendario_bloque_desc">%1$s, %2$s a %3$s, %4$s</string>
+    <string name="calendario_franja_libre_desc">Franja %1$s del %2$s</string>
+    <string name="calendario_leyenda_titulo">Leyenda de estados</string>
+    <string name="calendario_leyenda_pendiente_desc">Sesión planificada para hoy o una fecha futura.</string>
+    <string name="calendario_leyenda_en_curso_desc">Sesión actualmente en ejecución.</string>
+    <string name="calendario_leyenda_completada_desc">Sesión finalizada en su día programado.</string>
+    <string name="calendario_leyenda_tardia_desc">Sesión registrada o completada dentro del plazo tardío.</string>
+    <string name="calendario_leyenda_no_realizada_desc">Sesión pendiente cuya fecha venció sin completarse.</string>
+    <string name="calendario_leyenda_reprogramada_desc">Sesión reemplazada por una nueva fecha u horario.</string>
+    <string name="calendario_filtros_titulo">Filtrar calendario</string>
+    <string name="calendario_filtros_materia">Materia</string>
+    <string name="calendario_filtros_todas_materias">Todas las materias</string>
+    <string name="calendario_filtros_incluir_archivadas">Incluir materias archivadas</string>
+    <string name="calendario_filtros_estados">Estados visibles</string>
+    <string name="calendario_filtros_aplicar">Aplicar</string>
+    <string name="calendario_filtros_restablecer">Restablecer</string>
+    <string name="calendario_filtro_activo_chip">Filtro activo</string>
+    <string name="calendario_mas_materias">+%1$d</string>
 </resources>

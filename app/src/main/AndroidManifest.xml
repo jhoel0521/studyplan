@@ -53,6 +53,9 @@
             android:name=".adapter.in.ui.SesionDetalleActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".adapter.in.ui.CalendarioActivity"
+            android:exported="false" />
 
         <!-- Guarda el idioma elegido en Android 12 o anterior (HU-03) -->
         <service

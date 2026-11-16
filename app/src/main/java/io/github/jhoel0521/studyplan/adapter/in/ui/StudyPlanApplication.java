@@ -24,6 +24,7 @@ import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarPerfil;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
+import io.github.jhoel0521.studyplan.application.port.in.ConsultarCalendario;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadoArranque;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarPerfil;
@@ -50,6 +51,7 @@ import io.github.jhoel0521.studyplan.application.service.ConfigurarAparienciaSer
 import io.github.jhoel0521.studyplan.application.service.ConfigurarBloqueoService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarPerfilService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
+import io.github.jhoel0521.studyplan.application.service.ConsultarCalendarioService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarEstadoArranqueService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarPerfilService;
@@ -104,6 +106,8 @@ public class StudyPlanApplication extends Application {
     private ReprogramarSesion reprogramarSesion;
     private ConsultarSesion consultarSesion;
     private EliminarSesion eliminarSesion;
+    private ConsultarCalendario consultarCalendario;
+    private PreferenciaVistaCalendario preferenciaVistaCalendario;
     private FabricaViewModels fabrica;
 
     /** @return la aplicación a la que pertenece el contexto */
@@ -160,6 +164,9 @@ public class StudyPlanApplication extends Application {
         consultarSesion = new ConsultarSesionService(
                 sesiones, materias, relojSistema, vencerSesionesPendientes);
         eliminarSesion = new EliminarSesionService(sesiones);
+        consultarCalendario = new ConsultarCalendarioService(
+                sesiones, materias, relojSistema, vencerSesionesPendientes);
+        preferenciaVistaCalendario = new PreferenciaVistaCalendario(this);
         fabrica = new FabricaViewModels(this);
     }
 
@@ -281,6 +288,14 @@ public class StudyPlanApplication extends Application {
 
     public EliminarSesion eliminarSesion() {
         return eliminarSesion;
+    }
+
+    public ConsultarCalendario consultarCalendario() {
+        return consultarCalendario;
+    }
+
+    public PreferenciaVistaCalendario preferenciaVistaCalendario() {
+        return preferenciaVistaCalendario;
     }
 
     /** Acceso interno al repositorio de sesiones para sembrar escenarios de prueba instrumentados. */

@@ -13,7 +13,7 @@ import io.github.jhoel0521.studyplan.R;
  */
 public enum DestinoPrincipal {
     INICIO(R.id.nav_inicio, MainActivity.class),
-    CALENDARIO(R.id.nav_calendario, null),
+    CALENDARIO(R.id.nav_calendario, CalendarioActivity.class),
     ESTADISTICAS(R.id.nav_estadisticas, null),
     MATERIAS(R.id.nav_materias, MateriasActivity.class);
 

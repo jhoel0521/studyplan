@@ -167,4 +167,47 @@
     <string name="error_sesion_completar_mismo_dia">You can only complete the session on its scheduled day</string>
     <string name="error_sesion_registro_tardio_vencido">Late logging is only allowed up to 3 days after the session</string>
     <string name="error_sesion_no_eliminable">Only Pending sessions can be deleted</string>
+
+    <!-- Study calendar (HU-16 to HU-21) -->
+    <string name="calendario_titulo">Calendar</string>
+    <string name="calendario_vista_dia">Day</string>
+    <string name="calendario_vista_semana">Week</string>
+    <string name="calendario_vista_mes">Month</string>
+    <string name="calendario_anterior">Previous period</string>
+    <string name="calendario_siguiente">Next period</string>
+    <string name="calendario_hoy">Today</string>
+    <string name="calendario_filtros">Filters</string>
+    <string name="calendario_leyenda">Legend</string>
+    <string name="calendario_resumen_horas">Planned %1$s · Actual %2$s</string>
+    <string name="calendario_horas_compacto">%1$s h</string>
+    <string name="calendario_sesiones_del_dia">Sessions on %1$s</string>
+    <string name="calendario_sin_sesiones_dia">No sessions on this day. Long-press today or a future day to schedule.</string>
+    <string name="calendario_sin_dia_seleccionado">Tap a day to view its sessions</string>
+    <string name="calendario_dia_lunes">M</string>
+    <string name="calendario_dia_martes">T</string>
+    <string name="calendario_dia_miercoles">W</string>
+    <string name="calendario_dia_jueves">T</string>
+    <string name="calendario_dia_viernes">F</string>
+    <string name="calendario_dia_sabado">S</string>
+    <string name="calendario_dia_domingo">S</string>
+    <string name="calendario_celda_desc">%1$s, %2$d sessions, %3$s</string>
+    <string name="calendario_celda_vacia_desc">%1$s, no sessions</string>
+    <string name="calendario_bloque_desc">%1$s, %2$s to %3$s, %4$s</string>
+    <string name="calendario_franja_libre_desc">Slot %1$s on %2$s</string>
+    <string name="calendario_leyenda_titulo">State legend</string>
+    <string name="calendario_leyenda_pendiente_desc">Session scheduled for today or a future date.</string>
+    <string name="calendario_leyenda_en_curso_desc">Session currently in progress.</string>
+    <string name="calendario_leyenda_completada_desc">Session completed on its scheduled day.</string>
+    <string name="calendario_leyenda_tardia_desc">Session logged or completed within the late window.</string>
+    <string name="calendario_leyenda_no_realizada_desc">Pending session whose date passed without completion.</string>
+    <string name="calendario_leyenda_reprogramada_desc">Session replaced by a new date or time.</string>
+    <string name="calendario_filtros_titulo">Filter calendar</string>
+    <string name="calendario_filtros_materia">Subject</string>
+    <string name="calendario_filtros_todas_materias">All subjects</string>
+    <string name="calendario_filtros_incluir_archivadas">Include archived subjects</string>
+    <string name="calendario_filtros_estados">Visible states</string>
+    <string name="calendario_filtros_aplicar">Apply</string>
+    <string name="calendario_filtros_restablecer">Reset</string>
+    <string name="calendario_filtro_activo_chip">Filter active</string>
+    <string name="calendario_mas_materias">+%1$d</string>
 </resources>

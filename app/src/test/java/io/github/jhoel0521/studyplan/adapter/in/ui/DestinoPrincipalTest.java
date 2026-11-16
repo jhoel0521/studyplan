@@ -18,10 +18,10 @@ import io.github.jhoel0521.studyplan.R;
 public class DestinoPrincipalTest {
 
     @Test
-    public void soloInicioYMateriasEstanImplementados() {
+    public void inicioCalendarioYMateriasEstanImplementados() {
         assertTrue(DestinoPrincipal.INICIO.implementado());
+        assertTrue(DestinoPrincipal.CALENDARIO.implementado());
         assertTrue(DestinoPrincipal.MATERIAS.implementado());
-        assertFalse(DestinoPrincipal.CALENDARIO.implementado());
         assertFalse(DestinoPrincipal.ESTADISTICAS.implementado());
     }
 
@@ -40,6 +40,7 @@ public class DestinoPrincipalTest {
     @Test
     public void lasActividadesDeLosDestinosImplementadosSonLasEsperadas() {
         assertEquals(MainActivity.class, DestinoPrincipal.INICIO.actividad());
+        assertEquals(CalendarioActivity.class, DestinoPrincipal.CALENDARIO.actividad());
         assertEquals(MateriasActivity.class, DestinoPrincipal.MATERIAS.actividad());
     }
 }
