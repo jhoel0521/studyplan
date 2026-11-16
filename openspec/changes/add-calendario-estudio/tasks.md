@@ -53,9 +53,9 @@
 
 ## 6. Documentación académica, diagramas y auditoría IA
 
-- [ ] 6.1 Corregir `flujo_pantallas()` en `docs/build/diagramas.py` (prevalece `HU-16`: en `Mes` tocar un día lista sus sesiones debajo; `Semana`/`Día` crean por pulsación larga en `fecha >= hoy`; mantener `HU-34` en E9), actualizar `docs/build/diagramas_clases.py` y `docs/build/cotejo_clases.py` con las nuevas clases de E4 y diagrama de secuencia de consulta de calendario, y regenerar figuras comprobando `python docs/build/cotejo_clases.py` con 0 desfases.
-- [ ] 6.2 Actualizar `docs/documento/capitulos/03-requisitos-y-analisis-del-sistema.md` (criterios de `HU-20` y `HU-21` acorde con el delta spec) y `docs/documento/capitulos/04-diseno-del-software.md` (secciones 4.2, 4.3 y 4.4 con las figuras regeneradas), actualizar `docs/auditoria-ia/bitacora.md`, validar con `python .apa/scripts/revisar.py --doc docs/documento`, generar el `.docx` con `python .apa/scripts/generar_docx.py --doc docs/documento` y confirmar `openspec validate add-calendario-estudio --strict`.
-- [ ] 6.3 Realizar `git commit` por ruta explícita (`docs: actualizar diagramas, capitulos 3 y 4 y bitacora para epica E4`) y ejecutar `git push`.
+- [x] 6.1 Corregir `flujo_pantallas()` en `docs/build/diagramas.py` (prevalece `HU-16`: en `Mes` tocar un día lista sus sesiones debajo; `Semana`/`Día` crean por pulsación larga en `fecha >= hoy`; mantener `HU-34` en E9), actualizar `docs/build/diagramas_clases.py` y `docs/build/cotejo_clases.py` con las nuevas clases de E4 y diagrama de secuencia de consulta de calendario, y regenerar figuras comprobando `python docs/build/cotejo_clases.py` con 0 desfases.
+- [x] 6.2 Actualizar `docs/documento/capitulos/03-requisitos-y-analisis-del-sistema.md` (criterios de `HU-20` y `HU-21` acorde con el delta spec) y `docs/documento/capitulos/04-diseno-del-software.md` (secciones 4.2, 4.3 y 4.4 con las figuras regeneradas), actualizar `docs/auditoria-ia/bitacora.md`, validar con `python .apa/scripts/revisar.py --doc docs/documento`, generar el `.docx` con `python .apa/scripts/generar_docx.py --doc docs/documento` y confirmar `openspec validate add-calendario-estudio --strict`.
+- [x] 6.3 Realizar `git commit` por ruta explícita (`docs: actualizar diagramas, capitulos 3 y 4 y bitacora para epica E4`) y ejecutar `git push`.
 
 ---
 

@@ -153,4 +153,16 @@ Para evitar cruces horarios entre sesiones activas (`RN-05`), cada operación de
 
 Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
-[[pendiente: diagramas de clases de las épicas siguientes (temporizador, metas, calendario, estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
+### Épica Calendario de estudio
+
+La cuarta épica implementada (`add-calendario-estudio`) habilita la pestaña **Calendario** (`DestinoPrincipal.CALENDARIO` → `CalendarioActivity`) con vistas nativas **Día**, **Semana** y **Mes** construidas íntegramente en Views XML y Java sin librerías externas de calendario ni permisos nuevos (HU-16 a HU-21, RN-08, RN-11, RN-13, RNF-06, RNF-19). En el dominio puro, `PeriodoCalendario` resuelve la navegación por día/semana/mes y la conservación de foco al alternar entre vistas, mientras `CalculadorRangoHorario` determina la ventana de desplazamiento inicial (`± 2 h` sobre la rejilla de 24 horas), distribuye columnas paralelas ante coincidencias visuales entre sesiones `REPROGRAMADA` y activas, y calcula el resumen `Plan / Real` del periodo visible. La @figura:clases_calendario presenta sus clases por capa y la @figura:secuencia_consultar_calendario muestra la consulta por rango (`listarPorRango`) sobre Room v3 sin migración de esquema.
+
+![Diagrama de clases de la épica Calendario de estudio](../recursos/diagramas/diagrama_clases_calendario.png){#clases_calendario ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
+
+![Secuencia de consultar el calendario de estudio a través de las tres capas](../recursos/diagramas/secuencia_consultar_calendario.png){#secuencia_consultar_calendario ancho=16.5}
+
+Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
+
+[[pendiente: diagramas de clases de las épicas siguientes (temporizador, metas, estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]

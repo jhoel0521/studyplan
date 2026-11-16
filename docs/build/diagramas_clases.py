@@ -70,13 +70,22 @@ DOMINIO_SESIONES = ["CodigoEstadoSesion", "ConflictoHorario", "DetalleSesion", "
                     "ResultadoSesion", "SesionEstudio"]
 PERSISTENCIA_SESIONES = ["RelojSistema", "SesionDao", "SesionEntity", "SesionRepositoryRoom", "SesionesDeMateriaRoom"]
 
+# add-calendario-estudio
+PRESENTACION_CALENDARIO = ["CalendarioActivity", "CalendarioMesAdapter", "CalendarioViewModel",
+                           "PreferenciaVistaCalendario"]
+ENTRADA_CALENDARIO = ["ConsultarCalendario"]
+SERVICIOS_CALENDARIO = ["ConsultarCalendarioService"]
+DOMINIO_CALENDARIO = ["BloqueHorarioCalendario", "CalculadorRangoHorario", "CeldaDiaMes", "DatosCalendario",
+                      "FiltroCalendario", "ItemSesionCalendario", "PeriodoCalendario", "ResumenPeriodoCalendario",
+                      "VistaCalendario"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO,
     "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO,
     "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES,
     "adapter/out/security": SEGURIDAD_CONFIG,
 }
@@ -297,6 +306,57 @@ def clases_sesiones():
     dg.assoc(d, infra[2].left(0.3), infra[1].right(0.3), "usa", None, None)
     dg.assoc(d, infra[1].left(0.3), infra[0].right(0.3), "lee y escribe", None, None)
     img.crop((0, 0, W, int(y5 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_sesiones.png", dpi=(200, 200))
+
+
+def clases_calendario():
+    """Clases de la épica E4: calendario de estudio (vistas Día/Semana/Mes, filtros y consulta por rango)."""
+    W, H = 3760, 4200
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, w1 = [40, 980, 1920, 2860], 860
+    fila1 = [caja_con_metodos("CalendarioActivity", xs1[0], 80, w1),
+             caja_con_metodos("CalendarioViewModel", xs1[1], 80, w1),
+             caja_con_metodos("CalendarioMesAdapter", xs1[2], 80, w1),
+             caja_con_metodos("PreferenciaVistaCalendario", xs1[3], 80, w1)]
+    for c in fila1:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.2), fila1[1].left(0.2), "observa", None, None)
+    dg.assoc(d, fila1[1].right(0.2), fila1[3].left(0.2), "persiste vista", None, None)
+
+    y2 = 80 + alto(fila1) + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    xs2, ws2 = [40, 1020, 1980, 2880], [900, 880, 820, 840]
+    periodo = caja_con_metodos("PeriodoCalendario", xs2[0], y2, ws2[0], con_campos=True)
+    calculador = caja_con_metodos("CalculadorRangoHorario", xs2[1], y2, ws2[1])
+    paquete_dom = caja_de_paquete(
+        "Modelos de lectura y filtro (domain)",
+        ["VistaCalendario", "FiltroCalendario", "DatosCalendario", "ItemSesionCalendario",
+         "BloqueHorarioCalendario", "CeldaDiaMes", "ResumenPeriodoCalendario"],
+        xs2[2], y2, ws2[2], "domain")
+    servicio = caja_con_metodos("ConsultarCalendarioService", xs2[3], y2, ws2[3])
+    nucleo = [periodo, calculador, paquete_dom, servicio]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, servicio.left(0.3), paquete_dom.right(0.3), "construye", None, None)
+    dg.assoc(d, calculador.right(0.3), paquete_dom.left(0.3), "genera", None, None)
+
+    y3 = y2 + alto(nucleo) + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Puertos e infraestructura Room v3 (sin migración)", font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("ConsultarCalendario", xs1[0], y3, w1, "port.in"),
+             caja_con_metodos("SesionRepository", xs1[1], y3, w1, "port.out"),
+             caja_con_metodos("SesionRepositoryRoom", xs1[2], y3, w1),
+             caja_con_metodos("SesionDao", xs1[3], y3, w1, "Dao")]
+    for c in infra:
+        c.draw(d)
+    dg.assoc(d, infra[2].left(0.3), infra[1].right(0.3), "implementa", None, None)
+    dg.assoc(d, infra[2].right(0.3), infra[3].left(0.3), "listarPorRango", None, None)
+    img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_calendario.png", dpi=(200, 200))
 
 
 # ---------------------------------------------------------------- modelo lógico y diccionario de datos
@@ -564,18 +624,56 @@ def secuencia_planificar_sesion():
     )
 
 
+PARTICIPANTES_CALENDARIO = [
+    ("CalendarioActivity", "adapter.in.ui"),
+    ("CalendarioViewModel", "adapter.in.ui"),
+    ("ConsultarCalendarioService", "application"),
+    ("VencerSesionesPendientesService", "application"),
+    ("SesionRepositoryRoom", "adapter.out"),
+    ("SesionDao", "Room"),
+]
+
+MENSAJES_CALENDARIO = [
+    (0, 1, "cargar() / cambiarVista(vista)", ("CalendarioViewModel", "cargar"), False),
+    (1, 2, "ejecutar(periodo, filtro)", ("ConsultarCalendarioService", "ejecutar"), False),
+    (2, 3, "ejecutar() [RN-08 vencer pendientes]", ("VencerSesionesPendientesService", "ejecutar"), False),
+    (3, 2, "int vencidas", None, True),
+    (2, 4, "listarPorRango(desde, hasta)", ("SesionRepositoryRoom", "listarPorRango"), False),
+    (4, 5, "listarPorRango(desdeIso, hastaIso)", ("SesionDao", "listarPorRango"), False),
+    (5, 4, "List<SesionEntity>", None, True),
+    (4, 2, "List<SesionEstudio>", None, True),
+    (2, 2, "filtrar, construir bloques/celdas y resumen Plan/Real", None, False),
+    (2, 1, "DatosCalendario", None, True),
+    (1, 0, "LiveData<DatosCalendario> → onDatosActualizados()", ("CalendarioActivity", "onDatosActualizados"), True),
+]
+
+
+def secuencia_consultar_calendario():
+    _dibujar_secuencia(
+        "Secuencia · consultar calendario de estudio (HU-16 a HU-21, RN-08, RN-11)",
+        PARTICIPANTES_CALENDARIO,
+        MENSAJES_CALENDARIO,
+        1,
+        10,
+        "secuencia_consultar_calendario.png",
+    )
+
+
 def generar():
     clases_configuracion()
     clases_materias()
     clases_sesiones()
+    clases_calendario()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()
     secuencia_planificar_sesion()
+    secuencia_consultar_calendario()
 
 
 if __name__ == "__main__":
     generar()
     for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
-              "modelo_logico", "secuencia_registrar_materia", "secuencia_planificar_sesion"):
+              "diagrama_clases_calendario", "modelo_logico", "secuencia_registrar_materia",
+              "secuencia_planificar_sesion", "secuencia_consultar_calendario"):
         print((dg.OUT / f"{f}.png").relative_to(RAIZ))

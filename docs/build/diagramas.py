@@ -442,7 +442,7 @@ def flujo_pantallas():
     # grupo de navegación inferior: el usuario pasa libremente entre las 4 pestañas
     gx0, gy0, gx1, gy1 = 845, 520, 3300, 905
     d.rounded_rectangle([gx0, gy0, gx1, gy1], 40, fill=(246, 246, 246), outline=GRAY, width=3)
-    d.text((gx0 + 24, gy1 - 14), "Navegación inferior, siempre visible (hoy solo Inicio y Materias están habilitadas)",
+    d.text((gx0 + 24, gy1 - 14), "Navegación inferior, siempre visible (habilitadas: Inicio, Calendario y Materias)",
            font=font(22, italic=True), fill=GRAY, anchor="lb")
 
     caja("perfil", C0, Y1, "Perfil inicial", "Primer uso · HU-01",
@@ -455,8 +455,8 @@ def flujo_pantallas():
          ["Horas realizadas / meta semanal", "Próxima sesión y sesiones de hoy", "Acceso rápido «+ Nueva sesión»"],
          "OG", LIGHT)
     caja("cal", C2, Y2 + 20, "Calendario", "HU-16 a HU-21",
-         ["Vistas Día · Semana · Mes", "Mes: tocar un día abre el Día", "Semana y Día: crear sesión"],
-         "OE3")
+         ["Vistas Día · Semana · Mes", "Mes: tocar un día lista sus sesiones", "Semana/Día: long press en fecha >= hoy"],
+         "OE3", LIGHT)
     caja("est", C3, Y2 + 20, "Estadísticas", "HU-29 a HU-31, HU-45",
          ["Horas y comparación semanal", "Cumplimiento y distribución", "Concentración y respeto del tiempo"],
          "OE5")
