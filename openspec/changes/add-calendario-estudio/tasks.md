@@ -30,8 +30,8 @@
 
 ## 3. Persistencia Room v3 sin migración (`adapter.out.persistence`)
 
-- [ ] 3.1 Añadir `listarPorRango(String desde, String hasta)` en `SesionDao` (`SELECT * FROM sesion_estudio WHERE fecha BETWEEN :desde AND :hasta ORDER BY fecha ASC, hora_inicio ASC`, aprovechando `index_sesion_estudio_fecha` en Room v3 sin cambiar versión ni esquema) e implementarlo en `SesionRepositoryRoom`; verificar con `SesionRepositoryRoomTest` (rango inclusivo ordenado por fecha y hora inicio ascendentes, rango vacío y comprobación de que `StudyPlanDatabase` permanece en versión 3 y `AndroidManifest.xml` sin permisos).
-- [ ] 3.2 Ejecutar `./gradlew assembleDebug testDebugUnitTest lintDebug`, realizar `git commit` por ruta explícita (`feat(HU-16): agregar consulta por rango en Room v3 sin migracion`) y ejecutar `git push`.
+- [x] 3.1 Añadir `listarPorRango(String desde, String hasta)` en `SesionDao` (`SELECT * FROM sesion_estudio WHERE fecha BETWEEN :desde AND :hasta ORDER BY fecha ASC, hora_inicio ASC`, aprovechando `index_sesion_estudio_fecha` en Room v3 sin cambiar versión ni esquema) e implementarlo en `SesionRepositoryRoom`; verificar con `SesionRepositoryRoomTest` (rango inclusivo ordenado por fecha y hora inicio ascendentes, rango vacío y comprobación de que `StudyPlanDatabase` permanece en versión 3 y `AndroidManifest.xml` sin permisos).
+- [x] 3.2 Ejecutar `./gradlew assembleDebug testDebugUnitTest lintDebug`, realizar `git commit` por ruta explícita (`feat(HU-16): agregar consulta por rango en Room v3 sin migracion`) y ejecutar `git push`.
 
 ---
 

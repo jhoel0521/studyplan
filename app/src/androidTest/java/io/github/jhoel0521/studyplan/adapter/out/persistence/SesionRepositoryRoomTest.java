@@ -157,4 +157,38 @@ public class SesionRepositoryRoomTest {
         assertEquals(0, sesionesDeMateria.contar(algebraId));
         assertTrue(materias.activas().isEmpty());
     }
+
+    @Test
+    public void listarPorRangoOrdenaInclusivamenteYConservaVersion3SinPermisos() throws Exception {
+        SesionEstudio sDom = sesiones.guardar(SesionEstudio.planificar(
+                algebraId, DOMINGO, LUNES, Hora.de(10, 0).valor(), Hora.de(11, 0).valor(), "Dom", null)
+                .valor());
+        SesionEstudio sJueTarde = sesiones.guardar(SesionEstudio.planificar(
+                algebraId, JUEVES, LUNES, Hora.de(18, 0).valor(), Hora.de(19, 0).valor(), "Jue2", null)
+                .valor());
+        SesionEstudio sJueManiana = sesiones.guardar(SesionEstudio.planificar(
+                algebraId, JUEVES, LUNES, Hora.de(9, 0).valor(), Hora.de(10, 0).valor(), "Jue1", null)
+                .valor());
+        SesionEstudio sLun = sesiones.guardar(SesionEstudio.planificar(
+                algebraId, LUNES, LUNES, Hora.de(14, 0).valor(), Hora.de(15, 0).valor(), "Lun", null)
+                .valor());
+
+        List<SesionEstudio> rango = sesiones.listarPorRango(LUNES, DOMINGO);
+        assertEquals(4, rango.size());
+        assertEquals(sLun.id(), rango.get(0).id());
+        assertEquals(sJueManiana.id(), rango.get(1).id());
+        assertEquals(sJueTarde.id(), rango.get(2).id());
+        assertEquals(sDom.id(), rango.get(3).id());
+
+        List<SesionEstudio> vacio = sesiones.listarPorRango(
+                Fecha.de(2026, 12, 1).valor(), Fecha.de(2026, 12, 7).valor());
+        assertTrue(vacio.isEmpty());
+
+        assertEquals(3, base.getOpenHelper().getReadableDatabase().getVersion());
+        Context contexto = ApplicationProvider.getApplicationContext();
+        String[] permisos = contexto.getPackageManager()
+                .getPackageInfo(contexto.getPackageName(), android.content.pm.PackageManager.GET_PERMISSIONS)
+                .requestedPermissions;
+        assertTrue(permisos == null || permisos.length == 0);
+    }
 }
