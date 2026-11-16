@@ -35,6 +35,12 @@ public interface SesionRepository {
     List<SesionEstudio> listarPorFecha(Fecha fecha);
 
     /**
+     * Lista todas las sesiones entre {@code desde} y {@code hasta} inclusive, ordenadas por
+     * fecha y hora de inicio ascendentes (HU-16 a HU-21).
+     */
+    List<SesionEstudio> listarPorRango(Fecha desde, Fecha hasta);
+
+    /**
      * Lista sesiones en estado {@code PENDIENTE} desde {@code desde} en adelante, ordenadas por
      * fecha y hora de inicio ascendentes (HU-02).
      */

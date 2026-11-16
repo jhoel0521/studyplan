@@ -23,8 +23,8 @@
 
 ## 2. Puertos y servicio de aplicación (`application`)
 
-- [ ] 2.1 Ampliar `SesionRepository` (`application.port.out`) con `listarPorRango(Fecha desde, Fecha hasta)` e implementar `ConsultarCalendario` + `ConsultarCalendarioService` (`application.port.in`, `application.service`): vence pendientes primero (`RN-08`), carga materias activas y archivadas, consulta el rango en una sola llamada, filtra por materia/archivadas/estados (`HU-21`), arma celdas de `Mes` o bloques de `Semana`/`Día` y calcula resumen `Plan / Real` únicamente sobre el periodo visible; verificar con `ConsultarCalendarioServiceTest` (repositorio falso en memoria) y `ArquitecturaTest`.
-- [ ] 2.2 Ejecutar `./gradlew testDebugUnitTest lintDebug`, realizar `git commit` por ruta explícita (`feat(HU-16): implementar caso de uso ConsultarCalendario y consulta por rango`) y ejecutar `git push`.
+- [x] 2.1 Ampliar `SesionRepository` (`application.port.out`) con `listarPorRango(Fecha desde, Fecha hasta)` e implementar `ConsultarCalendario` + `ConsultarCalendarioService` (`application.port.in`, `application.service`): vence pendientes primero (`RN-08`), carga materias activas y archivadas, consulta el rango en una sola llamada, filtra por materia/archivadas/estados (`HU-21`), arma celdas de `Mes` o bloques de `Semana`/`Día` y calcula resumen `Plan / Real` únicamente sobre el periodo visible; verificar con `ConsultarCalendarioServiceTest` (repositorio falso en memoria) y `ArquitecturaTest`.
+- [x] 2.2 Ejecutar `./gradlew testDebugUnitTest lintDebug`, realizar `git commit` por ruta explícita (`feat(HU-16): implementar caso de uso ConsultarCalendario y consulta por rango`) y ejecutar `git push`.
 
 ---
 

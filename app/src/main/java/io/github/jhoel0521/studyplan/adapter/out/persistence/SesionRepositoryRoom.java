@@ -59,6 +59,11 @@ public final class SesionRepositoryRoom implements SesionRepository {
     }
 
     @Override
+    public List<SesionEstudio> listarPorRango(Fecha desde, Fecha hasta) {
+        return java.util.Collections.emptyList();
+    }
+
+    @Override
     public List<SesionEstudio> listarPendientesDesde(Fecha desde) {
         return mapearLista(dao.listarPendientesDesde(desde.iso()));
     }

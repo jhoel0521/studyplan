@@ -85,6 +85,19 @@ public final class FakeSesionRepository implements SesionRepository {
     }
 
     @Override
+    public List<SesionEstudio> listarPorRango(Fecha desde, Fecha hasta) {
+        List<SesionEstudio> resultado = new ArrayList<>();
+        for (SesionEstudio s : sesiones) {
+            if (!s.fecha().esAnteriorA(desde) && !s.fecha().esPosteriorA(hasta)) {
+                resultado.add(s);
+            }
+        }
+        resultado.sort(Comparator.comparing(SesionEstudio::fecha)
+                .thenComparing(SesionEstudio::horaInicio));
+        return resultado;
+    }
+
+    @Override
     public List<SesionEstudio> listarPendientesDesde(Fecha desde) {
         List<SesionEstudio> resultado = new ArrayList<>();
         for (SesionEstudio s : sesiones) {
