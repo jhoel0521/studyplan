@@ -12,9 +12,11 @@ import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
@@ -30,6 +32,7 @@ public final class DetenerSesionService implements DetenerSesion {
     private final ControladorNoMolestar noMolestar;
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
+    private final TramoDiarioRepository tramos;
     private final Reloj reloj;
 
     public DetenerSesionService(
@@ -39,11 +42,23 @@ public final class DetenerSesionService implements DetenerSesion {
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
+        this(sesiones, eventos, noMolestar, programador, marcadorSalida, null, reloj);
+    }
+
+    public DetenerSesionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.noMolestar = Objects.requireNonNull(noMolestar, "noMolestar");
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
+        this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
@@ -80,6 +95,11 @@ public final class DetenerSesionService implements DetenerSesion {
 
         eventos.guardar(finEv);
         sesiones.actualizar(detenidaRes.valor());
+        if (tramos != null) {
+            tramos.guardarTramos(
+                    sesionId,
+                    RepartidorPorDia.repartir(detenidaRes.valor(), lista, ahoraMs, minutos));
+        }
         programador.cancelarAvisos(sesionId);
         noMolestar.restaurarSiAplica();
         marcadorSalida.limpiar();

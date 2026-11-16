@@ -1,25 +1,29 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
 
 /**
  * Reloj determinista configurable en memoria para pruebas unitarias (HU-02, HU-10 a HU-14,
- * HU-22 a HU-24, HU-39 a HU-44, RN-06, RN-08, RN-10, RN-13, RN-22 a RN-29).
+ * HU-22 a HU-24, HU-39 a HU-44, RN-06, RN-08, RN-10, RN-13, RN-22 a RN-29, RN-31).
  */
 public final class FakeReloj implements Reloj {
 
     private Fecha hoy;
     private Hora ahora;
     private long extraMilis;
+    private int desfaseMinutos;
 
     public FakeReloj(Fecha hoy, Hora ahora) {
+        this(hoy, ahora, 0);
+    }
+
+    public FakeReloj(Fecha hoy, Hora ahora, int desfaseMinutos) {
         this.hoy = hoy;
         this.ahora = ahora;
+        this.desfaseMinutos = desfaseMinutos;
     }
 
     public void fijar(Fecha nuevaFecha, Hora nuevaHora) {
@@ -32,11 +36,19 @@ public final class FakeReloj implements Reloj {
         this.hoy = nuevaFecha;
     }
 
+    public void fijarDesfaseMinutos(int nuevoDesfaseMinutos) {
+        this.desfaseMinutos = nuevoDesfaseMinutos;
+    }
+
+    public int desfaseMinutos() {
+        return desfaseMinutos;
+    }
+
     public void avanzarMilis(long deltaMilis) {
         long nuevo = ahoraMilis() + deltaMilis;
         this.hoy = fechaDe(nuevo);
         this.ahora = horaDe(nuevo);
-        this.extraMilis = Math.floorMod(nuevo, 60_000L);
+        this.extraMilis = Math.floorMod(nuevo + desfaseMinutos * Instante.MILIS_POR_MINUTO, 60_000L);
     }
 
     @Override
@@ -55,32 +67,22 @@ public final class FakeReloj implements Reloj {
     }
 
     @Override
+    public Instante ahoraInstante() {
+        return Instante.de(ahoraMilis(), desfaseMinutos);
+    }
+
+    @Override
     public Fecha fechaDe(long instanteMilis) {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        c.setTimeInMillis(instanteMilis);
-        return Fecha.de(
-                c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH) + 1,
-                c.get(Calendar.DAY_OF_MONTH)).valor();
+        return Instante.de(instanteMilis, desfaseMinutos).fechaLocal();
     }
 
     @Override
     public Hora horaDe(long instanteMilis) {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        c.setTimeInMillis(instanteMilis);
-        return Hora.de(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)).valor();
+        return Instante.de(instanteMilis, desfaseMinutos).horaLocal();
     }
 
     @Override
     public long instanteDe(Fecha fecha, Hora hora) {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        c.set(Calendar.YEAR, fecha.anio());
-        c.set(Calendar.MONTH, fecha.mes() - 1);
-        c.set(Calendar.DAY_OF_MONTH, fecha.dia());
-        c.set(Calendar.HOUR_OF_DAY, hora.hora());
-        c.set(Calendar.MINUTE, hora.minuto());
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return c.getTimeInMillis();
+        return Instante.desdeFechaYHoraLocal(fecha, hora, desfaseMinutos).utcMilis();
     }
 }

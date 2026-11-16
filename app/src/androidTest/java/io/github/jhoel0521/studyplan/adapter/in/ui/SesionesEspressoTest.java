@@ -9,6 +9,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -113,7 +114,7 @@ public class SesionesEspressoTest {
                 intentoFormulario(SesionFormularioActivity.MODO_PLANIFICAR, manana.iso()))) {
             elegirMateria("Cálculo");
             onView(withId(R.id.campoHoraInicio)).perform(scrollTo(), replaceText("10:00"), closeSoftKeyboard());
-            onView(withId(R.id.campoHoraFin)).perform(scrollTo(), replaceText("09:30"), closeSoftKeyboard());
+            onView(withId(R.id.campoHoraFin)).perform(scrollTo(), replaceText("10:00"), closeSoftKeyboard());
             onView(withId(R.id.botonGuardarSesion)).perform(scrollTo(), click());
             Pruebas.esperarVisible(withText(R.string.error_sesion_horario_fin_no_posterior));
         }
@@ -313,6 +314,42 @@ public class SesionesEspressoTest {
             onView(withId(R.id.campoHoraFin)).check(matches(withText("11:00")));
             onView(withId(R.id.campoDuracionReal)).check(matches(withText("45")));
             onView(withId(R.id.campoNotas)).check(matches(withText("Repaso")));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unused")
+    public void planificarNocturna22a01YVerEnCalendarioSemanaEnDosDias() throws InterruptedException {
+        Fecha hoy = Pruebas.app().reloj().hoy();
+        boolean esDomingo = hoy.diaDeSemanaIso() == 7;
+        Fecha fechaPlan = esDomingo ? hoy.sumarDias(1) : hoy;
+
+        try (ActivityScenario<SesionFormularioActivity> form = ActivityScenario.launch(
+                intentoFormulario(SesionFormularioActivity.MODO_PLANIFICAR, fechaPlan.iso()))) {
+            elegirMateria("Cálculo");
+            onView(withId(R.id.campoHoraInicio)).perform(scrollTo(), replaceText("22:00"), closeSoftKeyboard());
+            onView(withId(R.id.campoHoraFin)).perform(scrollTo(), replaceText("01:00"), closeSoftKeyboard());
+            Pruebas.esperarVisible(allOf(
+                    withId(R.id.textoDuracionPlanificada),
+                    withText(containsString("Termina al día siguiente"))));
+            onView(withId(R.id.botonGuardarSesion)).perform(scrollTo(), click());
+            Thread.sleep(300);
+        }
+
+        try (ActivityScenario<CalendarioActivity> cal =
+                     ActivityScenario.launch(CalendarioActivity.class)) {
+            if (esDomingo) {
+                Pruebas.esperarVisible(withId(R.id.botonPeriodoSiguiente));
+                onView(withId(R.id.botonPeriodoSiguiente)).perform(click());
+            }
+            Pruebas.esperarVisible(allOf(
+                    withId(R.id.tarjetaBloqueCalendario),
+                    withContentDescription(containsString("00:00"))));
+            onView(allOf(
+                    withId(R.id.tarjetaBloqueCalendario),
+                    withContentDescription(containsString("22:00"))))
+                    .perform(scrollTo())
+                    .check(matches(isDisplayed()));
         }
     }
 }

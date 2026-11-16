@@ -49,9 +49,6 @@ public class SesionEstudioTest {
                         .error());
         assertEquals(
                 ErrorValidacion.HORARIO_FIN_NO_POSTERIOR,
-                SesionEstudio.planificar(1L, HOY, HOY, ONCE, DIEZ, null, null).error());
-        assertEquals(
-                ErrorValidacion.HORARIO_FIN_NO_POSTERIOR,
                 SesionEstudio.planificar(1L, HOY, HOY, DIEZ, DIEZ, null, null).error());
 
         StringBuilder notasLargas = new StringBuilder();
@@ -140,5 +137,29 @@ public class SesionEstudioTest {
         SesionEstudio tardia = vencida.registrarTardio(HOY.sumarDias(2), 45).valor();
         assertEquals(CodigoEstadoSesion.COMPLETADA_TARDIA, tardia.codigoEstado());
         assertEquals(45, tardia.minutosRealesContabilizables());
+    }
+
+    @Test
+    public void planificarNocturnaCruzaMedianocheYDetectaCruceEntreDiasRn04Rn05() {
+        Hora veintidos = Hora.de(22, 0).valor();
+        Hora una = Hora.de(1, 0).valor();
+        Hora ceroMedia = Hora.de(0, 30).valor();
+        Hora dos = Hora.de(2, 0).valor();
+
+        Resultado<SesionEstudio> res = SesionEstudio.planificar(
+                1L, HOY, HOY, veintidos, una, -240, "Turno noche", null);
+
+        assertTrue(res.esValido());
+        SesionEstudio nocturna = res.valor().conId(20L);
+        assertEquals(180, nocturna.duracionPlanificadaMinutos());
+        assertEquals(HOY, nocturna.fecha());
+        assertEquals(HOY.sumarDias(1), nocturna.fechaFinLocal());
+        assertTrue(nocturna.cruzaMedianoche());
+        assertEquals(-240, nocturna.desfaseMinutos());
+
+        // Sesión al día siguiente de 00:30 a 02:00 se cruza con 22:00-01:00
+        assertTrue(nocturna.seSolapaCon(HOY.sumarDias(1), ceroMedia, dos, -240));
+        // Sesión adyacente al día siguiente 01:00 a 02:00 NO se cruza
+        assertFalse(nocturna.seSolapaCon(HOY.sumarDias(1), una, dos, -240));
     }
 }

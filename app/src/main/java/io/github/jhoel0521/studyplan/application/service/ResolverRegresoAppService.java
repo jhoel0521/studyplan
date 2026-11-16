@@ -14,11 +14,13 @@ import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
 import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
@@ -36,6 +38,7 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
     private final ControladorNoMolestar noMolestar;
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
+    private final TramoDiarioRepository tramos;
     private final Reloj reloj;
 
     public ResolverRegresoAppService(
@@ -47,6 +50,28 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
+        this(
+                sesiones,
+                eventos,
+                materias,
+                ajustesRepo,
+                noMolestar,
+                programador,
+                marcadorSalida,
+                null,
+                reloj);
+    }
+
+    public ResolverRegresoAppService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            AjustesRepository ajustesRepo,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.materias = Objects.requireNonNull(materias, "materias");
@@ -54,6 +79,7 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
         this.noMolestar = Objects.requireNonNull(noMolestar, "noMolestar");
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
+        this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
@@ -160,6 +186,11 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
         }
         eventos.guardar(evFin);
         sesiones.actualizar(res.valor());
+        if (tramos != null) {
+            tramos.guardarTramos(
+                    sesion.id(),
+                    RepartidorPorDia.repartir(res.valor(), lista, finMs, minutos));
+        }
         programador.cancelarAvisos(sesion.id());
         noMolestar.restaurarSiAplica();
         marcadorSalida.limpiar();

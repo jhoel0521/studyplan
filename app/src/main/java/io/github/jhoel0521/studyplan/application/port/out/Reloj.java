@@ -2,6 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.out;
 
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
 
 /**
  * Puerto de salida para obtener la fecha y hora actuales sin acoplar el núcleo de negocio al
@@ -17,6 +18,9 @@ public interface Reloj {
 
     /** Instante actual en milisegundos desde época UTC. */
     long ahoraMilis();
+
+    /** Instante actual en milisegundos UTC junto con el desfase horario local vigente. */
+    Instante ahoraInstante();
 
     /** Fecha local correspondiente a {@code instanteMilis}. */
     Fecha fechaDe(long instanteMilis);

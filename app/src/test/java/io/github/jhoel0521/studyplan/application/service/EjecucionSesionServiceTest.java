@@ -42,6 +42,7 @@ public class EjecucionSesionServiceTest {
     private FakeControladorNoMolestar noMolestar;
     private FakeProgramadorAvisosSesion programador;
     private FakeMarcadorSalidaApp marcador;
+    private io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository tramos;
     private FakeReloj reloj;
 
     private ConfigurarAjustesEstudioService configurarAjustes;
@@ -61,6 +62,7 @@ public class EjecucionSesionServiceTest {
         noMolestar = new FakeControladorNoMolestar();
         programador = new FakeProgramadorAvisosSesion();
         marcador = new FakeMarcadorSalidaApp();
+        tramos = new io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository();
         reloj = new FakeReloj(Fecha.de(2026, 11, 16).valor(), Hora.de(9, 0).valor());
 
         configurarAjustes = new ConfigurarAjustesEstudioService(ajustes);
@@ -69,7 +71,7 @@ public class EjecucionSesionServiceTest {
         pausarReanudar = new PausarReanudarSesionService(
                 sesiones, eventos, materias, ajustes, noMolestar, programador, reloj);
         detener = new DetenerSesionService(
-                sesiones, eventos, noMolestar, programador, marcador, reloj);
+                sesiones, eventos, noMolestar, programador, marcador, tramos, reloj);
         consultar = new ConsultarEjecucionSesionService(
                 sesiones, eventos, materias, ajustes, noMolestar, reloj);
 
@@ -117,5 +119,23 @@ public class EjecucionSesionServiceTest {
         assertEquals(CodigoEstadoSesion.COMPLETADA, finalizada.codigoEstado());
         assertEquals(Integer.valueOf(25), finalizada.duracionRealMinutos());
         assertFalse(noMolestar.activo);
+    }
+
+    @Test
+    public void detenerSesionNocturnaMaterializaTramosPorDiaRn31() {
+        Fecha lunes = Fecha.de(2026, 11, 16).valor();
+        Fecha martes = lunes.sumarDias(1);
+        reloj.fijar(lunes, Hora.de(22, 0).valor());
+
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                calculo.id(), lunes, lunes,
+                Hora.de(22, 0).valor(), Hora.de(1, 0).valor(), 0, "", null).valor());
+
+        assertTrue(iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).esValido());
+        reloj.avanzarMilis(180 * MIN);
+        assertTrue(detener.ejecutar(s.id()).esValido());
+
+        assertEquals(120, tramos.sumarMinutosEnRango(lunes, lunes));
+        assertEquals(60, tramos.sumarMinutosEnRango(martes, martes));
     }
 }

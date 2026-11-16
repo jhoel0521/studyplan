@@ -44,24 +44,31 @@ public final class ReprogramarSesionService implements ReprogramarSesion {
             return ResultadoSesion.error(originalReprogramada.error());
         }
         String notasFinales = notas == null ? original.notas() : notas;
+        int desfaseMinutos = reloj.ahoraInstante().desfaseMinutos();
         Resultado<SesionEstudio> nuevaPendiente = SesionEstudio.planificar(
                 original.materiaId(),
                 nuevaFecha,
                 reloj.hoy(),
                 nuevaHoraInicio,
                 nuevaHoraFin,
+                desfaseMinutos,
                 notasFinales,
                 original.id());
         if (!nuevaPendiente.esValido()) {
             return ResultadoSesion.error(nuevaPendiente.error());
         }
+        SesionEstudio candidata = nuevaPendiente.valor();
         ConflictoHorario conflicto = ValidadorSesiones.buscarConflictoHorario(
-                sesiones, materias, nuevaFecha, nuevaHoraInicio, nuevaHoraFin, original.id());
+                sesiones,
+                materias,
+                candidata.inicioInstante(),
+                candidata.finInstante(),
+                original.id());
         if (conflicto != null) {
             return ResultadoSesion.conConflicto(conflicto);
         }
         SesionEstudio creada =
-                sesiones.reprogramar(originalReprogramada.valor(), nuevaPendiente.valor());
+                sesiones.reprogramar(originalReprogramada.valor(), candidata);
         return ResultadoSesion.ok(creada);
     }
 }

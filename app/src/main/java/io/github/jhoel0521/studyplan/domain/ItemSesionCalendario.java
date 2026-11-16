@@ -19,6 +19,8 @@ public final class ItemSesionCalendario {
     private final int duracionPlanificadaMinutos;
     private final Integer duracionRealMinutos;
     private final EstadoSesion estado;
+    private final Fecha fechaInicioOriginal;
+    private final boolean terminaEnMedianoche;
 
     public ItemSesionCalendario(
             long sesionId,
@@ -32,6 +34,36 @@ public final class ItemSesionCalendario {
             int duracionPlanificadaMinutos,
             Integer duracionRealMinutos,
             EstadoSesion estado) {
+        this(
+                sesionId,
+                materiaId,
+                nombreMateria,
+                colorMateria,
+                materiaArchivada,
+                fecha,
+                horaInicio,
+                horaFin,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                estado,
+                fecha,
+                false);
+    }
+
+    public ItemSesionCalendario(
+            long sesionId,
+            long materiaId,
+            String nombreMateria,
+            int colorMateria,
+            boolean materiaArchivada,
+            Fecha fecha,
+            Hora horaInicio,
+            Hora horaFin,
+            int duracionPlanificadaMinutos,
+            Integer duracionRealMinutos,
+            EstadoSesion estado,
+            Fecha fechaInicioOriginal,
+            boolean terminaEnMedianoche) {
         this.sesionId = sesionId;
         this.materiaId = materiaId;
         this.nombreMateria = Objects.requireNonNull(nombreMateria, "nombreMateria");
@@ -43,6 +75,8 @@ public final class ItemSesionCalendario {
         this.duracionPlanificadaMinutos = duracionPlanificadaMinutos;
         this.duracionRealMinutos = duracionRealMinutos;
         this.estado = Objects.requireNonNull(estado, "estado");
+        this.fechaInicioOriginal = fechaInicioOriginal == null ? fecha : fechaInicioOriginal;
+        this.terminaEnMedianoche = terminaEnMedianoche;
     }
 
     public long sesionId() {
@@ -87,6 +121,22 @@ public final class ItemSesionCalendario {
 
     public EstadoSesion estado() {
         return estado;
+    }
+
+    public Fecha fechaInicioOriginal() {
+        return fechaInicioOriginal;
+    }
+
+    public boolean terminaEnMedianoche() {
+        return terminaEnMedianoche;
+    }
+
+    public boolean esContinuacionDiaAnterior() {
+        return !fecha.equals(fechaInicioOriginal);
+    }
+
+    public int minutoFinEnDia() {
+        return terminaEnMedianoche ? 24 * 60 : horaFin.minutosDesdeMedianoche();
     }
 
     public CodigoEstadoSesion codigoEstado() {

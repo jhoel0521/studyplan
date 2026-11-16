@@ -14,16 +14,20 @@ import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendiente
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.BloqueHorarioCalendario;
 import io.github.jhoel0521.studyplan.domain.CalculadorRangoHorario;
 import io.github.jhoel0521.studyplan.domain.CeldaDiaMes;
+import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.DatosCalendario;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.FiltroCalendario;
 import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
 import io.github.jhoel0521.studyplan.domain.ItemSesionCalendario;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.PeriodoCalendario;
+import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.ResumenPeriodoCalendario;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.VistaCalendario;
@@ -41,6 +45,7 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
 
     private final SesionRepository sesiones;
     private final MateriaRepository materias;
+    private final TramoDiarioRepository tramos;
     private final Reloj reloj;
     private final VencerSesionesPendientes vencerPendientes;
 
@@ -49,8 +54,18 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
             MateriaRepository materias,
             Reloj reloj,
             VencerSesionesPendientes vencerPendientes) {
+        this(sesiones, materias, null, reloj, vencerPendientes);
+    }
+
+    public ConsultarCalendarioService(
+            SesionRepository sesiones,
+            MateriaRepository materias,
+            TramoDiarioRepository tramos,
+            Reloj reloj,
+            VencerSesionesPendientes vencerPendientes) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.materias = Objects.requireNonNull(materias, "materias");
+        this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
         this.vencerPendientes = Objects.requireNonNull(vencerPendientes, "vencerPendientes");
     }
@@ -88,10 +103,19 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
 
         Fecha consultaInicio = periodo.rangoConsultaInicio();
         Fecha consultaFin = periodo.rangoConsultaFin();
-        List<SesionEstudio> sesionesRango = sesiones.listarPorRango(consultaInicio, consultaFin);
+        long margenDesfase = Instante.DESFASE_MAXIMO_MINUTOS * Instante.MILIS_POR_MINUTO;
+        long desdeUtc = Instante.desdeFechaYHoraLocal(
+                consultaInicio, Hora.de(0, 0).valor(), 0).utcMilis() - margenDesfase;
+        long hastaUtc = Instante.desdeFechaYHoraLocal(
+                consultaFin.sumarDias(1), Hora.de(0, 0).valor(), 0).utcMilis() + margenDesfase;
+        List<SesionEstudio> sesionesRango = sesiones.listarPorRangoUtc(desdeUtc, hastaUtc);
 
+        List<SesionEstudio> sesionesFiltradas = new ArrayList<>();
         List<ItemSesionCalendario> itemsConsulta = new ArrayList<>();
         for (SesionEstudio s : sesionesRango) {
+            if (s.fecha().esPosteriorA(consultaFin) || s.fechaFinLocal().esAnteriorA(consultaInicio)) {
+                continue;
+            }
             Materia materia = mapaMaterias.get(s.materiaId());
             if (materia == null) {
                 continue;
@@ -99,18 +123,8 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
             if (!filtroEfectivo.acepta(s.materiaId(), materia.archivada(), s.codigoEstado())) {
                 continue;
             }
-            itemsConsulta.add(new ItemSesionCalendario(
-                    s.id(),
-                    s.materiaId(),
-                    materia.nombre(),
-                    materia.color(),
-                    materia.archivada(),
-                    s.fecha(),
-                    s.horaInicio(),
-                    s.horaFin(),
-                    s.duracionPlanificadaMinutos(),
-                    s.duracionRealMinutos(),
-                    s.estado()));
+            sesionesFiltradas.add(s);
+            agregarItemsDeSesion(itemsConsulta, s, materia);
         }
 
         Fecha visibleInicio = periodo.rangoVisibleInicio();
@@ -123,7 +137,15 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
             }
         }
 
-        ResumenPeriodoCalendario resumen = CalculadorRangoHorario.calcularResumen(itemsVisibles);
+        int planVisible = 0;
+        for (ItemSesionCalendario item : itemsVisibles) {
+            if (item.estado().ocupaHorario()) {
+                planVisible += Math.max(0, item.duracionPlanificadaMinutos());
+            }
+        }
+        int realVisible = calcularRealVisible(
+                filtroEfectivo, sesionesFiltradas, visibleInicio, visibleFin);
+        ResumenPeriodoCalendario resumen = new ResumenPeriodoCalendario(planVisible, realVisible);
 
         if (periodo.vista() == VistaCalendario.MES) {
             List<CeldaDiaMes> celdasMes = construirCeldasMes(
@@ -214,5 +236,86 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
             }
         }
         return resultado;
+    }
+
+    private void agregarItemsDeSesion(
+            List<ItemSesionCalendario> destino, SesionEstudio s, Materia materia) {
+        if (!s.cruzaMedianoche()) {
+            destino.add(new ItemSesionCalendario(
+                    s.id(),
+                    s.materiaId(),
+                    materia.nombre(),
+                    materia.color(),
+                    materia.archivada(),
+                    s.fecha(),
+                    s.horaInicio(),
+                    s.horaFin(),
+                    s.duracionPlanificadaMinutos(),
+                    s.duracionRealMinutos(),
+                    s.estado(),
+                    s.fecha(),
+                    false));
+            return;
+        }
+        int minPrimerDia = 24 * 60 - s.horaInicio().minutosDesdeMedianoche();
+        int minSegundoDia = s.horaFin().minutosDesdeMedianoche();
+        destino.add(new ItemSesionCalendario(
+                s.id(),
+                s.materiaId(),
+                materia.nombre(),
+                materia.color(),
+                materia.archivada(),
+                s.fecha(),
+                s.horaInicio(),
+                Hora.de(23, 59).valor(),
+                minPrimerDia,
+                s.duracionRealMinutos(),
+                s.estado(),
+                s.fecha(),
+                true));
+        if (minSegundoDia > 0) {
+            destino.add(new ItemSesionCalendario(
+                    s.id(),
+                    s.materiaId(),
+                    materia.nombre(),
+                    materia.color(),
+                    materia.archivada(),
+                    s.fechaFinLocal(),
+                    Hora.de(0, 0).valor(),
+                    s.horaFin(),
+                    minSegundoDia,
+                    s.duracionRealMinutos(),
+                    s.estado(),
+                    s.fecha(),
+                    false));
+        }
+    }
+
+    private int calcularRealVisible(
+            FiltroCalendario filtro,
+            List<SesionEstudio> sesionesFiltradas,
+            Fecha visibleInicio,
+            Fecha visibleFin) {
+        boolean sinFiltroRestringido = filtro.materiaId() == null
+                && filtro.incluirArchivadas()
+                && filtro.estadosVisibles().size() == CodigoEstadoSesion.values().length;
+        if (tramos != null && sinFiltroRestringido) {
+            return tramos.sumarMinutosEnRango(visibleInicio, visibleFin);
+        }
+        int total = 0;
+        for (SesionEstudio s : sesionesFiltradas) {
+            int minutos = s.minutosRealesContabilizables();
+            if (minutos <= 0) {
+                continue;
+            }
+            Map<Fecha, Integer> porDia = RepartidorPorDia.repartir(s, null, 0L, minutos);
+            for (Map.Entry<Fecha, Integer> e : porDia.entrySet()) {
+                if (!e.getKey().esAnteriorA(visibleInicio)
+                        && !e.getKey().esPosteriorA(visibleFin)) {
+                    total += e.getValue();
+                }
+            }
+        }
+        return total;
     }
 }

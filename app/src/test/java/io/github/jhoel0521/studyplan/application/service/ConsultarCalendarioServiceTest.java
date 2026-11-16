@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.github.jhoel0521.studyplan.domain.BloqueHorarioCalendario;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.DatosCalendario;
 import io.github.jhoel0521.studyplan.domain.Fecha;
@@ -19,6 +20,7 @@ import io.github.jhoel0521.studyplan.domain.VistaCalendario;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
+import io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository;
 
 /**
  * Pruebas unitarias de {@link ConsultarCalendarioService} (HU-08, HU-16 a HU-21, RN-08, RN-11).
@@ -141,5 +143,52 @@ public class ConsultarCalendarioServiceTest {
                 dia, FiltroCalendario.porDefecto().conMateria(fisicaArchivada.id()));
         assertEquals(1, soloArchivada.bloquesHorario().size());
         assertTrue(soloArchivada.bloquesHorario().get(0).item().materiaArchivada());
+    }
+
+    @Test
+    public void sesionNocturnaGeneraDosBloquesYSumaRealPorDiaConTramosRn31() {
+        Fecha domingo = Fecha.de(2026, 11, 15).valor();
+        Fecha lunes = Fecha.de(2026, 11, 16).valor();
+        Fecha martes = Fecha.de(2026, 11, 17).valor();
+        FakeTramoDiarioRepository tramos = new FakeTramoDiarioRepository();
+        VencerSesionesPendientesService vencer = new VencerSesionesPendientesService(sesiones, reloj);
+        ConsultarCalendarioService conTramos =
+                new ConsultarCalendarioService(sesiones, materias, tramos, reloj, vencer);
+
+        // Sesión domingo 23:30-00:30 (60m: 30m semana anterior, 30m esta semana)
+        SesionEstudio domLun = sesiones.guardar(SesionEstudio.planificar(
+                calculo.id(), domingo, domingo,
+                Hora.de(23, 30).valor(), Hora.de(0, 30).valor(), 0, "", null)
+                .valor().iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .valor().detener(60).valor());
+        java.util.Map<Fecha, Integer> mapa = new java.util.TreeMap<>();
+        mapa.put(domingo, 30);
+        mapa.put(lunes, 30);
+        tramos.guardarTramos(domLun.id(), mapa);
+
+        // Sesión nocturna lunes 22:00-01:00 martes
+        sesiones.guardar(SesionEstudio.planificar(
+                calculo.id(), lunes, lunes,
+                Hora.de(22, 0).valor(), Hora.de(1, 0).valor(), 0, "", null).valor());
+
+        DatosCalendario semana = conTramos.ejecutar(
+                PeriodoCalendario.inicial(lunes), FiltroCalendario.porDefecto());
+        assertEquals(30, semana.resumen().minutosRealizados());
+
+        int bloquesNocturna = 0;
+        boolean tieneContinuacionMartes = false;
+        for (BloqueHorarioCalendario b : semana.bloquesHorario()) {
+            if (b.item().fechaInicioOriginal().equals(lunes)
+                    && b.item().horaInicio().equals(Hora.de(22, 0).valor())
+                    && b.minutoFin() == 1440) {
+                bloquesNocturna++;
+            }
+            if (b.item().esContinuacionDiaAnterior() && b.item().fecha().equals(martes)) {
+                bloquesNocturna++;
+                tieneContinuacionMartes = true;
+            }
+        }
+        assertEquals(2, bloquesNocturna);
+        assertTrue(tieneContinuacionMartes);
     }
 }

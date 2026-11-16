@@ -82,4 +82,34 @@ public class VencerSesionesPendientesServiceTest {
                 sesiones.buscarPorId(pendienteHoy.id()).orElseThrow(AssertionError::new)
                         .codigoEstado());
     }
+
+    @Test
+    public void sesionNocturnaDeAyerSiguePendienteHoyYVenceAlTerminarSuDiaDeFinRn08() {
+        FakeSesionRepository sesiones = new FakeSesionRepository();
+        FakeReloj reloj = new FakeReloj(HOY, Hora.de(0, 10).valor());
+        VencerSesionesPendientesService servicio = new VencerSesionesPendientesService(sesiones, reloj);
+
+        // Planificada ayer (2026-11-11) de 22:00 a 01:00 de hoy (2026-11-12)
+        SesionEstudio nocturna = sesiones.guardar(SesionEstudio.planificar(
+                1L,
+                HOY.sumarDias(-1),
+                HOY.sumarDias(-1),
+                Hora.de(22, 0).valor(),
+                Hora.de(1, 0).valor(),
+                0,
+                "",
+                null).valor());
+
+        assertEquals(0, servicio.ejecutar());
+        assertEquals(
+                CodigoEstadoSesion.PENDIENTE,
+                sesiones.buscarPorId(nocturna.id()).orElseThrow(AssertionError::new).codigoEstado());
+
+        // Al llegar el día siguiente al fin planificado (2026-11-13), sí vence a NO_REALIZADA
+        reloj.fijarHoy(HOY.sumarDias(1));
+        assertEquals(1, servicio.ejecutar());
+        assertEquals(
+                CodigoEstadoSesion.NO_REALIZADA,
+                sesiones.buscarPorId(nocturna.id()).orElseThrow(AssertionError::new).codigoEstado());
+    }
 }

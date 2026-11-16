@@ -39,23 +39,17 @@ public abstract class SesionDao {
     @Query("SELECT * FROM sesion_estudio WHERE sesion_origen_id = :sesionOrigenId ORDER BY id DESC LIMIT 1")
     public abstract SesionEntity buscarReprogramadaHijaDe(long sesionOrigenId);
 
-    @Query("SELECT * FROM sesion_estudio WHERE fecha = :fecha ORDER BY hora_inicio ASC")
-    public abstract List<SesionEntity> listarPorFecha(String fecha);
+    @Query("SELECT * FROM sesion_estudio WHERE plan_fin_utc_milis >= :desdeUtc AND plan_inicio_utc_milis <= :hastaUtc ORDER BY plan_inicio_utc_milis ASC")
+    public abstract List<SesionEntity> listarPorRangoUtc(long desdeUtc, long hastaUtc);
 
-    @Query("SELECT * FROM sesion_estudio WHERE fecha BETWEEN :desde AND :hasta ORDER BY fecha ASC, hora_inicio ASC")
-    public abstract List<SesionEntity> listarPorRango(String desde, String hasta);
+    @Query("SELECT * FROM sesion_estudio WHERE estado = 'PENDIENTE' AND plan_fin_utc_milis >= :desdeUtc ORDER BY plan_inicio_utc_milis ASC")
+    public abstract List<SesionEntity> listarPendientesDesdeUtc(long desdeUtc);
 
-    @Query("SELECT * FROM sesion_estudio WHERE estado = 'PENDIENTE' AND fecha >= :desde ORDER BY fecha ASC, hora_inicio ASC")
-    public abstract List<SesionEntity> listarPendientesDesde(String desde);
-
-    @Query("SELECT * FROM sesion_estudio WHERE estado = 'PENDIENTE' AND fecha < :hoy ORDER BY fecha ASC, hora_inicio ASC")
-    public abstract List<SesionEntity> listarPendientesAnterioresA(String hoy);
+    @Query("SELECT * FROM sesion_estudio WHERE estado = 'PENDIENTE' AND plan_fin_utc_milis <= :hastaUtc ORDER BY plan_inicio_utc_milis ASC")
+    public abstract List<SesionEntity> listarPendientesHastaUtc(long hastaUtc);
 
     @Query("SELECT COALESCE(SUM(duracion_real_minutos), 0) FROM sesion_estudio WHERE materia_id = :materiaId AND estado IN ('COMPLETADA', 'COMPLETADA_TARDIA') AND duracion_real_minutos > 0")
     public abstract int sumarMinutosRealesPorMateria(long materiaId);
-
-    @Query("SELECT COALESCE(SUM(duracion_real_minutos), 0) FROM sesion_estudio WHERE fecha BETWEEN :desde AND :hasta AND estado IN ('COMPLETADA', 'COMPLETADA_TARDIA') AND duracion_real_minutos > 0")
-    public abstract int sumarMinutosRealesEnRango(String desde, String hasta);
 
     @Query("SELECT COUNT(*) FROM sesion_estudio WHERE materia_id = :materiaId")
     public abstract int contarPorMateria(long materiaId);

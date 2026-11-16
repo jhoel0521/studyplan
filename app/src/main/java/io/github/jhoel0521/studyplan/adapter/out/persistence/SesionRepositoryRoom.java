@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
+import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 
 /**
@@ -14,6 +17,9 @@ import io.github.jhoel0521.studyplan.domain.SesionEstudio;
  * (DIP, HU-02, HU-09 a HU-15, RNF-12).
  */
 public final class SesionRepositoryRoom implements SesionRepository {
+
+    private static final long MARGEN_DESFASE_MILIS =
+            Instante.DESFASE_MAXIMO_MINUTOS * Instante.MILIS_POR_MINUTO;
 
     private final SesionDao dao;
 
@@ -55,22 +61,56 @@ public final class SesionRepositoryRoom implements SesionRepository {
 
     @Override
     public List<SesionEstudio> listarPorFecha(Fecha fecha) {
-        return mapearLista(dao.listarPorFecha(fecha.iso()));
+        return listarPorRango(fecha, fecha);
     }
 
     @Override
     public List<SesionEstudio> listarPorRango(Fecha desde, Fecha hasta) {
-        return mapearLista(dao.listarPorRango(desde.iso(), hasta.iso()));
+        long desdeUtc = Instante.desdeFechaYHoraLocal(
+                desde, Hora.de(0, 0).valor(), 0).utcMilis() - MARGEN_DESFASE_MILIS;
+        long hastaUtc = Instante.desdeFechaYHoraLocal(
+                hasta.sumarDias(1), Hora.de(0, 0).valor(), 0).utcMilis() + MARGEN_DESFASE_MILIS;
+        List<SesionEstudio> candidatas = mapearLista(dao.listarPorRangoUtc(desdeUtc, hastaUtc));
+        List<SesionEstudio> filtradas = new ArrayList<>();
+        for (SesionEstudio s : candidatas) {
+            if (!s.fecha().esPosteriorA(hasta) && !s.fechaFinLocal().esAnteriorA(desde)) {
+                filtradas.add(s);
+            }
+        }
+        return filtradas;
+    }
+
+    @Override
+    public List<SesionEstudio> listarPorRangoUtc(long desdeUtcMilis, long hastaUtcMilis) {
+        return mapearLista(dao.listarPorRangoUtc(desdeUtcMilis, hastaUtcMilis));
     }
 
     @Override
     public List<SesionEstudio> listarPendientesDesde(Fecha desde) {
-        return mapearLista(dao.listarPendientesDesde(desde.iso()));
+        long desdeUtc = Instante.desdeFechaYHoraLocal(
+                desde, Hora.de(0, 0).valor(), 0).utcMilis() - MARGEN_DESFASE_MILIS;
+        List<SesionEstudio> candidatas = mapearLista(dao.listarPendientesDesdeUtc(desdeUtc));
+        List<SesionEstudio> filtradas = new ArrayList<>();
+        for (SesionEstudio s : candidatas) {
+            if (!s.fechaFinLocal().esAnteriorA(desde)) {
+                filtradas.add(s);
+            }
+        }
+        return filtradas;
     }
 
     @Override
     public List<SesionEstudio> listarPendientesAnterioresA(Fecha hoy) {
-        return mapearLista(dao.listarPendientesAnterioresA(hoy.iso()));
+        long hastaUtc = Instante.desdeFechaYHoraLocal(
+                hoy, Hora.de(0, 0).valor(), 0).utcMilis() + MARGEN_DESFASE_MILIS;
+        List<SesionEstudio> candidatas = mapearLista(dao.listarPendientesHastaUtc(hastaUtc));
+        List<SesionEstudio> filtradas = new ArrayList<>();
+        for (SesionEstudio s : candidatas) {
+            if (s.fechaFinLocal().esAnteriorA(hoy)) {
+                filtradas.add(s);
+            }
+        }
+        return filtradas;
     }
 
     @Override
@@ -80,7 +120,19 @@ public final class SesionRepositoryRoom implements SesionRepository {
 
     @Override
     public int sumarMinutosRealesEnRango(Fecha desde, Fecha hasta) {
-        return dao.sumarMinutosRealesEnRango(desde.iso(), hasta.iso());
+        int total = 0;
+        for (SesionEstudio s : listarPorRango(desde, hasta)) {
+            int min = s.minutosRealesContabilizables();
+            if (min > 0) {
+                for (java.util.Map.Entry<Fecha, Integer> e :
+                        RepartidorPorDia.repartir(s, null, 0L, min).entrySet()) {
+                    if (!e.getKey().esAnteriorA(desde) && !e.getKey().esPosteriorA(hasta)) {
+                        total += e.getValue();
+                    }
+                }
+            }
+        }
+        return total;
     }
 
     @Override

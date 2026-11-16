@@ -443,11 +443,22 @@ public class CalendarioActivity extends ActividadProtegida
             textoMateria.setText(item.nombreMateria());
             EstadoSesionVisual.aplicar(item.codigoEstado(), iconoEstado, textoEstado);
 
+            String horaFinTexto = item.terminaEnMedianoche()
+                    ? "24:00"
+                    : item.horaFin().texto();
             if (vistaDia) {
-                textoHorario.setText(getString(
+                String rango = getString(
                         R.string.sesion_rango_horario,
                         item.horaInicio().texto(),
-                        item.horaFin().texto()));
+                        horaFinTexto);
+                if (item.esContinuacionDiaAnterior()) {
+                    textoHorario.setText(getString(
+                            R.string.calendario_bloque_empezo_dia,
+                            rango,
+                            nombreDiaSemana(item.fechaInicioOriginal().diaDeSemanaIso())));
+                } else {
+                    textoHorario.setText(rango);
+                }
                 textoHorario.setVisibility(View.VISIBLE);
             } else {
                 textoHorario.setVisibility(View.GONE);
@@ -458,7 +469,7 @@ public class CalendarioActivity extends ActividadProtegida
                     R.string.calendario_bloque_desc,
                     item.nombreMateria(),
                     item.horaInicio().texto(),
-                    item.horaFin().texto(),
+                    horaFinTexto,
                     estadoEtiqueta));
 
             int duracionMin = Math.max(20, bloque.minutoFin() - bloque.minutoInicio());
@@ -545,6 +556,34 @@ public class CalendarioActivity extends ActividadProtegida
             intent.putExtra(SesionFormularioActivity.EXTRA_HORA_FIN, horaFin);
         }
         startActivity(intent);
+    }
+
+    private String nombreDiaSemana(int diaIso) {
+        int resId;
+        switch (diaIso) {
+            case 1:
+                resId = R.string.calendario_dia_nombre_1;
+                break;
+            case 2:
+                resId = R.string.calendario_dia_nombre_2;
+                break;
+            case 3:
+                resId = R.string.calendario_dia_nombre_3;
+                break;
+            case 4:
+                resId = R.string.calendario_dia_nombre_4;
+                break;
+            case 5:
+                resId = R.string.calendario_dia_nombre_5;
+                break;
+            case 6:
+                resId = R.string.calendario_dia_nombre_6;
+                break;
+            default:
+                resId = R.string.calendario_dia_nombre_7;
+                break;
+        }
+        return getString(resId);
     }
 
     private void mostrarDialogoLeyenda() {

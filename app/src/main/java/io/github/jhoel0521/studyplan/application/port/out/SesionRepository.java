@@ -36,9 +36,15 @@ public interface SesionRepository {
 
     /**
      * Lista todas las sesiones entre {@code desde} y {@code hasta} inclusive, ordenadas por
-     * fecha y hora de inicio ascendentes (HU-16 a HU-21).
+     * inicio ascendente (HU-16 a HU-21).
      */
     List<SesionEstudio> listarPorRango(Fecha desde, Fecha hasta);
+
+    /**
+     * Lista todas las sesiones cuyo intervalo planificado se superpone con el rango UTC
+     * {@code [desdeUtcMilis, hastaUtcMilis]} inclusive (RN-04, RN-05, RN-31).
+     */
+    List<SesionEstudio> listarPorRangoUtc(long desdeUtcMilis, long hastaUtcMilis);
 
     /**
      * Lista sesiones en estado {@code PENDIENTE} desde {@code desde} en adelante, ordenadas por

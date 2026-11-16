@@ -12,9 +12,12 @@ import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.CalculadorRepartoTramo;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.ResultadoReparto;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
@@ -31,6 +34,7 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
     private final ControladorNoMolestar noMolestar;
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
+    private final TramoDiarioRepository tramos;
     private final Reloj reloj;
 
     public RepartirTramoSesionService(
@@ -40,11 +44,23 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
+        this(sesiones, eventos, noMolestar, programador, marcadorSalida, null, reloj);
+    }
+
+    public RepartirTramoSesionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.noMolestar = Objects.requireNonNull(noMolestar, "noMolestar");
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
+        this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
@@ -87,14 +103,34 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
             return Resultado.error(segundaRes.error());
         }
 
-        eventos.guardar(EventoEstudio.crear(
+        EventoEstudio finEv = eventos.guardar(EventoEstudio.crear(
                 sesionActualId,
                 TipoEventoEstudio.FIN,
                 ahoraMs,
-                reloj.fechaDe(ahoraMs),
-                reloj.horaDe(ahoraMs),
+                reloj.ahoraInstante().desfaseMinutos(),
                 "").valor());
         sesiones.completarReparto(primeraRes.valor(), segundaRes.valor());
+        if (tramos != null) {
+            List<EventoEstudio> hastaCorte = new ArrayList<>();
+            for (EventoEstudio ev : lista) {
+                if (ev.instanteMilis() <= corteMilis) {
+                    hastaCorte.add(ev);
+                }
+            }
+            java.util.Map<Fecha, Integer> tramosPrimera = RepartidorPorDia.repartir(
+                    primeraRes.valor(), hastaCorte, corteMilis, reparto.minutosPrimeraSesion());
+            tramos.guardarTramos(sesionActualId, tramosPrimera);
+
+            int desfase = reloj.ahoraInstante().desfaseMinutos();
+            EventoEstudio inicioCorte = EventoEstudio.crear(
+                    sesionSiguienteId, TipoEventoEstudio.INICIO, corteMilis, desfase, "").valor();
+            java.util.Map<Fecha, Integer> tramosSegunda = RepartidorPorDia.repartir(
+                    segundaRes.valor(),
+                    java.util.Arrays.asList(inicioCorte, finEv),
+                    ahoraMs,
+                    reparto.minutosSegundaSesion());
+            tramos.guardarTramos(sesionSiguienteId, tramosSegunda);
+        }
         programador.cancelarAvisos(sesionActualId);
         noMolestar.restaurarSiAplica();
         marcadorSalida.limpiar();

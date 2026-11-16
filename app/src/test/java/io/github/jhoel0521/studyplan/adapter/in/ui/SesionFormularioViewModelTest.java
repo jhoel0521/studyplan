@@ -122,4 +122,19 @@ public class SesionFormularioViewModelTest {
         assertEquals(EventoSesion.Tipo.REPROGRAMADA, ok.tipo());
         assertNotNull(ok.sesionId());
     }
+
+    @Test
+    public void aceptaNocturnaYRechazaFinIgualAInicio() {
+        modelo.guardarPlanificada(materiaId, "2026-11-15", "22:00", "01:00", "Noche");
+        EventoSesion ok = Objects.requireNonNull(modelo.evento().getValue());
+        assertEquals(EventoSesion.Tipo.PLANIFICADA, ok.tipo());
+        SesionEstudio guardada =
+                sesiones.buscarPorId(Objects.requireNonNull(ok.sesionId())).orElseThrow();
+        assertEquals(180, guardada.duracionPlanificadaMinutos());
+
+        modelo.guardarPlanificada(materiaId, "2026-11-15", "10:00", "10:00", "");
+        EventoSesion err = Objects.requireNonNull(modelo.evento().getValue());
+        assertEquals(EventoSesion.Tipo.ERROR, err.tipo());
+        assertEquals(ErrorValidacion.HORARIO_FIN_NO_POSTERIOR, err.error());
+    }
 }

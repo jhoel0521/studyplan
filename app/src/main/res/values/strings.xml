@@ -125,7 +125,8 @@
     <string name="sesion_form_hora_fin">Hora fin (HH:mm)</string>
     <string name="sesion_form_elegir_hora_fin">Elegir hora de fin</string>
     <string name="sesion_form_duracion_planificada">Duración planificada: %1$d min</string>
-    <string name="sesion_form_duracion_planificada_invalida">Elige hora de fin posterior a la de inicio</string>
+    <string name="sesion_form_duracion_planificada_dia_siguiente">Duración planificada: %1$d min · Termina al día siguiente</string>
+    <string name="sesion_form_duracion_planificada_invalida">Elige una hora de fin distinta de la de inicio</string>
     <string name="sesion_form_duracion_real">Duración real estudiada (min)</string>
     <string name="sesion_form_notas">Notas (opcional)</string>
     <string name="sesion_form_guardar">Guardar sesión</string>
@@ -158,7 +159,7 @@
     <string name="error_sesion_hora_inicio_obligatoria">Ingresa la hora de inicio</string>
     <string name="error_sesion_hora_fin_obligatoria">Ingresa la hora de fin</string>
     <string name="error_sesion_hora_invalida">Usa una hora válida de 24 h en formato HH:mm</string>
-    <string name="error_sesion_horario_fin_no_posterior">La hora de fin debe ser posterior a la de inicio</string>
+    <string name="error_sesion_horario_fin_no_posterior">La hora de fin debe ser distinta de la de inicio</string>
     <string name="error_sesion_duracion_real_invalida">La duración real debe ser mayor que 0 minutos</string>
     <string name="error_sesion_notas_largas">Las notas pueden tener hasta 500 caracteres</string>
     <string name="error_sesion_solapada">Se cruza con otra sesión en ese horario</string>
@@ -190,6 +191,14 @@
     <string name="calendario_dia_viernes">V</string>
     <string name="calendario_dia_sabado">S</string>
     <string name="calendario_dia_domingo">D</string>
+    <string name="calendario_dia_nombre_1">lunes</string>
+    <string name="calendario_dia_nombre_2">martes</string>
+    <string name="calendario_dia_nombre_3">miércoles</string>
+    <string name="calendario_dia_nombre_4">jueves</string>
+    <string name="calendario_dia_nombre_5">viernes</string>
+    <string name="calendario_dia_nombre_6">sábado</string>
+    <string name="calendario_dia_nombre_7">domingo</string>
+    <string name="calendario_bloque_empezo_dia">%1$s · Empezó el %2$s</string>
     <string name="calendario_celda_desc">%1$s, %2$d sesiones, %3$s</string>
     <string name="calendario_celda_vacia_desc">%1$s, sin sesiones</string>
     <string name="calendario_bloque_desc">%1$s, %2$s a %3$s, %4$s</string>

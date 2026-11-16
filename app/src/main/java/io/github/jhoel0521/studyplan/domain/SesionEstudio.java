@@ -16,9 +16,9 @@ public final class SesionEstudio {
 
     private final Long id;
     private final long materiaId;
-    private final Fecha fecha;
-    private final Hora horaInicio;
-    private final Hora horaFin;
+    private final long planInicioUtcMilis;
+    private final long planFinUtcMilis;
+    private final int desfaseMinutos;
     private final int duracionPlanificadaMinutos;
     private final Integer duracionRealMinutos;
     private final EstadoSesion estado;
@@ -34,9 +34,9 @@ public final class SesionEstudio {
     private SesionEstudio(
             Long id,
             long materiaId,
-            Fecha fecha,
-            Hora horaInicio,
-            Hora horaFin,
+            long planInicioUtcMilis,
+            long planFinUtcMilis,
+            int desfaseMinutos,
             int duracionPlanificadaMinutos,
             Integer duracionRealMinutos,
             EstadoSesion estado,
@@ -50,9 +50,9 @@ public final class SesionEstudio {
             Integer pomodoroCiclosHastaLargo) {
         this.id = id;
         this.materiaId = materiaId;
-        this.fecha = Objects.requireNonNull(fecha, "fecha");
-        this.horaInicio = Objects.requireNonNull(horaInicio, "horaInicio");
-        this.horaFin = Objects.requireNonNull(horaFin, "horaFin");
+        this.planInicioUtcMilis = planInicioUtcMilis;
+        this.planFinUtcMilis = planFinUtcMilis;
+        this.desfaseMinutos = desfaseMinutos;
         this.duracionPlanificadaMinutos = duracionPlanificadaMinutos;
         this.duracionRealMinutos = duracionRealMinutos;
         this.estado = Objects.requireNonNull(estado, "estado");
@@ -80,6 +80,22 @@ public final class SesionEstudio {
             Hora fin,
             String notas,
             Long sesionOrigenId) {
+        return planificar(materiaId, fecha, hoy, inicio, fin, 0, notas, sesionOrigenId);
+    }
+
+    /**
+     * Crea una sesión planificada conservando el desfase horario local vigente al planificar
+     * (HU-10, HU-14, RN-04, RN-09). Si {@code fin} es anterior a {@code inicio}, termina al día siguiente.
+     */
+    public static Resultado<SesionEstudio> planificar(
+            long materiaId,
+            Fecha fecha,
+            Fecha hoy,
+            Hora inicio,
+            Hora fin,
+            int desfaseMinutos,
+            String notas,
+            Long sesionOrigenId) {
         ErrorValidacion errorBase = validarDatosComunes(materiaId, fecha, hoy, inicio, fin);
         if (errorBase != null) {
             return Resultado.error(errorBase);
@@ -91,13 +107,16 @@ public final class SesionEstudio {
         if (notasSaneadas.length() > LONGITUD_MAXIMA_NOTAS) {
             return Resultado.error(ErrorValidacion.NOTAS_SESION_DEMASIADO_LARGAS);
         }
+        Instante instInicio = Instante.desdeFechaYHoraLocal(fecha, inicio, desfaseMinutos);
+        Instante instFin = calcularFinInstante(fecha, inicio, fin, desfaseMinutos);
+        int duracionMinutos = calcularDuracionMinutos(inicio, fin);
         return Resultado.ok(new SesionEstudio(
                 null,
                 materiaId,
-                fecha,
-                inicio,
-                fin,
-                inicio.minutosHasta(fin),
+                instInicio.utcMilis(),
+                instFin.utcMilis(),
+                desfaseMinutos,
+                duracionMinutos,
                 null,
                 EstadoPendiente.INSTANCIA,
                 notasSaneadas,
@@ -122,6 +141,22 @@ public final class SesionEstudio {
             Hora fin,
             int duracionRealMinutos,
             String notas) {
+        return registrarPasada(materiaId, fecha, hoy, inicio, fin, 0, duracionRealMinutos, notas);
+    }
+
+    /**
+     * Registra directamente una sesión estudiada entre 1 y 3 días atrás conservando el desfase
+     * horario local (HU-11, RN-04, RN-06, RN-26).
+     */
+    public static Resultado<SesionEstudio> registrarPasada(
+            long materiaId,
+            Fecha fecha,
+            Fecha hoy,
+            Hora inicio,
+            Hora fin,
+            int desfaseMinutos,
+            int duracionRealMinutos,
+            String notas) {
         ErrorValidacion errorBase = validarDatosComunes(materiaId, fecha, hoy, inicio, fin);
         if (errorBase != null) {
             return Resultado.error(errorBase);
@@ -137,13 +172,16 @@ public final class SesionEstudio {
         if (notasSaneadas.length() > LONGITUD_MAXIMA_NOTAS) {
             return Resultado.error(ErrorValidacion.NOTAS_SESION_DEMASIADO_LARGAS);
         }
+        Instante instInicio = Instante.desdeFechaYHoraLocal(fecha, inicio, desfaseMinutos);
+        Instante instFin = calcularFinInstante(fecha, inicio, fin, desfaseMinutos);
+        int duracionMinutos = calcularDuracionMinutos(inicio, fin);
         return Resultado.ok(new SesionEstudio(
                 null,
                 materiaId,
-                fecha,
-                inicio,
-                fin,
-                inicio.minutosHasta(fin),
+                instInicio.utcMilis(),
+                instFin.utcMilis(),
+                desfaseMinutos,
+                duracionMinutos,
                 duracionRealMinutos,
                 EstadoCompletadaTardia.INSTANCIA,
                 notasSaneadas,
@@ -205,12 +243,51 @@ public final class SesionEstudio {
             Integer pomodoroDescansoCortoMinutos,
             Integer pomodoroDescansoLargoMinutos,
             Integer pomodoroCiclosHastaLargo) {
+        Instante instInicio = Instante.desdeFechaYHoraLocal(fecha, horaInicio, 0);
+        Instante instFin = calcularFinInstante(fecha, horaInicio, horaFin, 0);
+        return restaurar(
+                id,
+                materiaId,
+                instInicio.utcMilis(),
+                instFin.utcMilis(),
+                0,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                codigoEstado,
+                notas,
+                sesionOrigenId,
+                tecnica,
+                preferenciaNoMolestar,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo);
+    }
+
+    /** Reconstruye una sesión leída desde almacenamiento persistente v5 con instantes UTC y desfase. */
+    public static SesionEstudio restaurar(
+            Long id,
+            long materiaId,
+            long planInicioUtcMilis,
+            long planFinUtcMilis,
+            int desfaseMinutos,
+            int duracionPlanificadaMinutos,
+            Integer duracionRealMinutos,
+            CodigoEstadoSesion codigoEstado,
+            String notas,
+            Long sesionOrigenId,
+            TecnicaEstudio tecnica,
+            PreferenciaNoMolestar preferenciaNoMolestar,
+            Integer pomodoroTrabajoMinutos,
+            Integer pomodoroDescansoCortoMinutos,
+            Integer pomodoroDescansoLargoMinutos,
+            Integer pomodoroCiclosHastaLargo) {
         return new SesionEstudio(
                 id,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 duracionRealMinutos,
                 EstadoSesion.de(codigoEstado),
@@ -237,16 +314,49 @@ public final class SesionEstudio {
         return materiaId;
     }
 
+    public long planInicioUtcMilis() {
+        return planInicioUtcMilis;
+    }
+
+    public long planFinUtcMilis() {
+        return planFinUtcMilis;
+    }
+
+    public int desfaseMinutos() {
+        return desfaseMinutos;
+    }
+
+    public Instante inicioInstante() {
+        return Instante.de(planInicioUtcMilis, desfaseMinutos);
+    }
+
+    public Instante finInstante() {
+        return Instante.de(planFinUtcMilis, desfaseMinutos);
+    }
+
+    /** Fecha local de inicio derivada del instante de inicio y su desfase guardado. */
     public Fecha fecha() {
-        return fecha;
+        return inicioInstante().fechaLocal();
     }
 
+    /** Fecha local de fin derivada del instante de fin y su desfase guardado. */
+    public Fecha fechaFinLocal() {
+        return finInstante().fechaLocal();
+    }
+
+    /** Indica si la sesión planificada cruza la medianoche local. */
+    public boolean cruzaMedianoche() {
+        return !fecha().equals(fechaFinLocal());
+    }
+
+    /** Hora local de inicio derivada del instante de inicio y su desfase guardado. */
     public Hora horaInicio() {
-        return horaInicio;
+        return inicioInstante().horaLocal();
     }
 
+    /** Hora local de fin derivada del instante de fin y su desfase guardado. */
     public Hora horaFin() {
-        return horaFin;
+        return finInstante().horaLocal();
     }
 
     public int duracionPlanificadaMinutos() {
@@ -330,9 +440,9 @@ public final class SesionEstudio {
         return new SesionEstudio(
                 nuevoId,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 duracionRealMinutos,
                 estado,
@@ -350,9 +460,9 @@ public final class SesionEstudio {
         return new SesionEstudio(
                 id,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 duracionRealMinutos,
                 estado,
@@ -370,9 +480,9 @@ public final class SesionEstudio {
         return new SesionEstudio(
                 id,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 duracionRealMinutos,
                 estado,
@@ -391,14 +501,36 @@ public final class SesionEstudio {
      * Las sesiones reprogramadas no ocupan horario y los extremos contiguos no se consideran cruce.
      */
     public boolean seSolapaCon(Fecha otraFecha, Hora otraInicio, Hora otraFin) {
+        return seSolapaCon(otraFecha, otraInicio, otraFin, desfaseMinutos);
+    }
+
+    /**
+     * Comprueba si esta sesión se cruza con otra franja horaria local en {@code otroDesfaseMinutos}
+     * (RN-05), incluyendo sesiones nocturnas que cruzan la medianoche.
+     */
+    public boolean seSolapaCon(
+            Fecha otraFecha, Hora otraInicio, Hora otraFin, int otroDesfaseMinutos) {
         if (otraFecha == null || otraInicio == null || otraFin == null) {
             return false;
         }
-        if (!estado.ocupaHorario() || !fecha.equals(otraFecha)) {
+        Instante otroInicioInst = Instante.desdeFechaYHoraLocal(otraFecha, otraInicio, otroDesfaseMinutos);
+        Instante otroFinInst = calcularFinInstante(otraFecha, otraInicio, otraFin, otroDesfaseMinutos);
+        return seSolapaCon(otroInicioInst, otroFinInst);
+    }
+
+    /**
+     * Comprueba si esta sesión se cruza con el intervalo absoluto {@code [otroInicio, otroFin)} (RN-05).
+     */
+    public boolean seSolapaCon(Instante otroInicio, Instante otroFin) {
+        if (otroInicio == null || otroFin == null || !estado.ocupaHorario()) {
             return false;
         }
-        return otraInicio.minutosDesdeMedianoche() < horaFin.minutosDesdeMedianoche()
-                && otraFin.minutosDesdeMedianoche() > horaInicio.minutosDesdeMedianoche();
+        return otroInicio.utcMilis() < planFinUtcMilis && otroFin.utcMilis() > planInicioUtcMilis;
+    }
+
+    /** Comprueba si esta sesión se cruza en tiempo absoluto con {@code otra} (RN-05). */
+    public boolean seSolapaCon(SesionEstudio otra) {
+        return otra != null && seSolapaCon(otra.inicioInstante(), otra.finInstante());
     }
 
     /** Minutos reales contabilizables en progreso semanal y acumulado por materia (RN-11). */
@@ -411,7 +543,7 @@ public final class SesionEstudio {
 
     /** Marca completada una sesión pendiente el mismo día programado (HU-12, RN-07, RN-26). */
     public Resultado<SesionEstudio> completar(Fecha hoy, int duracionReal) {
-        return aplicarTransicion(estado.marcarCompletada(fecha, hoy, duracionReal), duracionReal);
+        return aplicarTransicion(estado.marcarCompletada(fecha(), hoy, duracionReal), duracionReal);
     }
 
     /** Vence una sesión pendiente cuya fecha ya pasó (RN-08). */
@@ -429,7 +561,7 @@ public final class SesionEstudio {
         if (hoy == null) {
             return Resultado.error(ErrorValidacion.FECHA_SESION_OBLIGATORIA);
         }
-        int diasAntiguedad = fecha.diasHasta(hoy);
+        int diasAntiguedad = fecha().diasHasta(hoy);
         return aplicarTransicion(estado.registrarTardio(diasAntiguedad, duracionReal), duracionReal);
     }
 
@@ -447,9 +579,9 @@ public final class SesionEstudio {
         return Resultado.ok(new SesionEstudio(
                 id,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 duracionRealMinutos,
                 transicion.valor(),
@@ -505,9 +637,9 @@ public final class SesionEstudio {
         return Resultado.ok(new SesionEstudio(
                 id,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 nuevaDuracionReal,
                 transicion.valor(),
@@ -535,10 +667,23 @@ public final class SesionEstudio {
         if (fin == null) {
             return ErrorValidacion.HORA_FIN_OBLIGATORIA;
         }
-        if (!fin.esPosteriorA(inicio)) {
+        if (fin.equals(inicio)) {
             return ErrorValidacion.HORARIO_FIN_NO_POSTERIOR;
         }
         return null;
+    }
+
+    private static Instante calcularFinInstante(
+            Fecha fechaInicio, Hora inicio, Hora fin, int desfaseMinutos) {
+        Fecha fechaFin = fin.esPosteriorA(inicio) ? fechaInicio : fechaInicio.sumarDias(1);
+        return Instante.desdeFechaYHoraLocal(fechaFin, fin, desfaseMinutos);
+    }
+
+    private static int calcularDuracionMinutos(Hora inicio, Hora fin) {
+        if (fin.esPosteriorA(inicio)) {
+            return inicio.minutosHasta(fin);
+        }
+        return (24 * 60 - inicio.minutosDesdeMedianoche()) + fin.minutosDesdeMedianoche();
     }
 
     @Override
@@ -551,11 +696,11 @@ public final class SesionEstudio {
         }
         SesionEstudio otra = (SesionEstudio) o;
         return materiaId == otra.materiaId
+                && planInicioUtcMilis == otra.planInicioUtcMilis
+                && planFinUtcMilis == otra.planFinUtcMilis
+                && desfaseMinutos == otra.desfaseMinutos
                 && duracionPlanificadaMinutos == otra.duracionPlanificadaMinutos
                 && Objects.equals(id, otra.id)
-                && fecha.equals(otra.fecha)
-                && horaInicio.equals(otra.horaInicio)
-                && horaFin.equals(otra.horaFin)
                 && Objects.equals(duracionRealMinutos, otra.duracionRealMinutos)
                 && estado.codigo() == otra.estado.codigo()
                 && notas.equals(otra.notas)
@@ -567,9 +712,9 @@ public final class SesionEstudio {
         return Objects.hash(
                 id,
                 materiaId,
-                fecha,
-                horaInicio,
-                horaFin,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
                 duracionPlanificadaMinutos,
                 duracionRealMinutos,
                 estado.codigo(),

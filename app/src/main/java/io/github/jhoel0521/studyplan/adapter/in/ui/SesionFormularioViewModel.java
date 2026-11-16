@@ -167,6 +167,9 @@ public class SesionFormularioViewModel extends ViewModel {
         if (!fin.esValido()) {
             return Resultado.error(fin.error());
         }
+        if (fin.valor().equals(inicio.valor())) {
+            return Resultado.error(ErrorValidacion.HORARIO_FIN_NO_POSTERIOR);
+        }
         return Resultado.ok(new HorarioFormulario(fecha.valor(), inicio.valor(), fin.valor()));
     }
 

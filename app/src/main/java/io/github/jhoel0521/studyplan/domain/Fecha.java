@@ -96,6 +96,11 @@ public final class Fecha implements Comparable<Fecha> {
         return dia;
     }
 
+    /** Días exactos respecto a la época Unix ({@code 1970-01-01 = 0}). */
+    public long diasDesdeEpoca() {
+        return diasEpoca;
+    }
+
     /** Representación canónica ISO {@code YYYY-MM-DD}. */
     public String iso() {
         return String.format(Locale.US, "%04d-%02d-%02d", anio, mes, dia);
@@ -187,7 +192,8 @@ public final class Fecha implements Comparable<Fecha> {
         return era * 146097L + doe - 719468L;
     }
 
-    private static Fecha desdeDiasEpoca(long diasEpoca) {
+    /** Construye una fecha a partir de los días respecto a {@code 1970-01-01 = 0}. */
+    public static Fecha desdeDiasEpoca(long diasEpoca) {
         long z = diasEpoca + 719468L;
         long era = (z >= 0 ? z : z - 146096L) / 146097L;
         long doe = z - era * 146097L;

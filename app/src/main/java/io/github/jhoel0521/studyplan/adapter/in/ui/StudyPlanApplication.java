@@ -17,6 +17,7 @@ import io.github.jhoel0521.studyplan.adapter.out.persistence.RelojSistema;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.SesionRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.SesionesDeMateriaRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.StudyPlanDatabase;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.TramoDiarioRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.security.DisponibilidadBloqueoBiometrico;
 import io.github.jhoel0521.studyplan.adapter.out.system.ControladorNoMolestarSistema;
 import io.github.jhoel0521.studyplan.adapter.out.system.MarcadorSalidaAppPrefs;
@@ -173,6 +174,7 @@ public class StudyPlanApplication extends Application {
         MateriaRepositoryRoom materias = new MateriaRepositoryRoom(base.materiaDao());
         SesionRepositoryRoom sesiones = new SesionRepositoryRoom(base.sesionDao());
         EventoEstudioRepositoryRoom eventos = new EventoEstudioRepositoryRoom(base.eventoEstudioDao());
+        TramoDiarioRepositoryRoom tramos = new TramoDiarioRepositoryRoom(base.tramoDiarioDao());
         SesionesDeMateriaRoom sesionesDeMateria = new SesionesDeMateriaRoom(base.sesionDao());
         RelojSistema relojSistema = new RelojSistema();
         DisponibilidadBloqueoBiometrico disponibilidad = new DisponibilidadBloqueoBiometrico(this);
@@ -188,7 +190,7 @@ public class StudyPlanApplication extends Application {
         eventoEstudioRepository = eventos;
         controladorNoMolestar = noMolestar;
         vencerSesionesPendientes = new VencerSesionesPendientesService(
-                sesiones, eventos, noMolestar, programador, relojSistema);
+                sesiones, eventos, noMolestar, programador, tramos, relojSistema);
         configurarPerfil = new ConfigurarPerfilService(perfiles);
         consultarPerfil = new ConsultarPerfilService(perfiles);
         consultarAjustes = new ConsultarAjustesService(ajustes);
@@ -196,7 +198,7 @@ public class StudyPlanApplication extends Application {
         configurarBloqueo = new ConfigurarBloqueoService(ajustes, disponibilidad, sesion);
         consultarEstadoArranque = new ConsultarEstadoArranqueService(perfiles, ajustes, sesion);
         obtenerResumenInicio = new ObtenerResumenInicioService(
-                perfiles, sesiones, materias, relojSistema, vencerSesionesPendientes);
+                perfiles, sesiones, materias, tramos, relojSistema, vencerSesionesPendientes);
         borrarDatos = new BorrarDatosService(almacen, sesion, marcadorSalida, noMolestar);
         registrarMateria = new RegistrarMateriaService(materias);
         editarMateria = new EditarMateriaService(materias);
@@ -206,15 +208,16 @@ public class StudyPlanApplication extends Application {
         desarchivarMateria = new DesarchivarMateriaService(materias);
         eliminarMateria = new EliminarMateriaService(materias, sesionesDeMateria);
         planificarSesion = new PlanificarSesionService(sesiones, materias, relojSistema);
-        registrarSesionPasada = new RegistrarSesionPasadaService(sesiones, materias, relojSistema);
-        completarSesion = new CompletarSesionService(sesiones, relojSistema);
-        registrarSesionTardia = new RegistrarSesionTardiaService(sesiones, relojSistema);
+        registrarSesionPasada = new RegistrarSesionPasadaService(
+                sesiones, materias, tramos, relojSistema);
+        completarSesion = new CompletarSesionService(sesiones, tramos, relojSistema);
+        registrarSesionTardia = new RegistrarSesionTardiaService(sesiones, tramos, relojSistema);
         reprogramarSesion = new ReprogramarSesionService(sesiones, materias, relojSistema);
         consultarSesion = new ConsultarSesionService(
                 sesiones, materias, eventos, relojSistema, vencerSesionesPendientes);
         eliminarSesion = new EliminarSesionService(sesiones);
         consultarCalendario = new ConsultarCalendarioService(
-                sesiones, materias, relojSistema, vencerSesionesPendientes);
+                sesiones, materias, tramos, relojSistema, vencerSesionesPendientes);
         preferenciaVistaCalendario = new PreferenciaVistaCalendario(this);
 
         configurarAjustesEstudio = new ConfigurarAjustesEstudioService(ajustes);
@@ -223,20 +226,20 @@ public class StudyPlanApplication extends Application {
         pausarReanudarSesion = new PausarReanudarSesionService(
                 sesiones, eventos, materias, ajustes, noMolestar, programador, relojSistema);
         detenerSesion = new DetenerSesionService(
-                sesiones, eventos, noMolestar, programador, marcadorSalida, relojSistema);
+                sesiones, eventos, noMolestar, programador, marcadorSalida, tramos, relojSistema);
         consultarEjecucionSesion = new ConsultarEjecucionSesionService(
                 sesiones, eventos, materias, ajustes, noMolestar, relojSistema);
         registrarSalidaApp = new RegistrarSalidaAppService(
                 sesiones, eventos, marcadorSalida, relojSistema);
         evaluarRecuperacionSesion = new EvaluarRecuperacionSesionService(
-                sesiones, eventos, materias, noMolestar, programador, marcadorSalida, relojSistema);
+                sesiones, eventos, materias, noMolestar, programador, marcadorSalida, tramos, relojSistema);
         resolverRegresoApp = new ResolverRegresoAppService(
-                sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, relojSistema);
+                sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, tramos, relojSistema);
         decidirFinPlanificadoOInvasion = new DecidirFinPlanificadoOInvasionService(
                 sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida,
-                detenerSesion, relojSistema);
+                detenerSesion, tramos, relojSistema);
         repartirTramoSesion = new RepartirTramoSesionService(
-                sesiones, eventos, noMolestar, programador, marcadorSalida, relojSistema);
+                sesiones, eventos, noMolestar, programador, marcadorSalida, tramos, relojSistema);
         fabrica = new FabricaViewModels(this);
     }
 

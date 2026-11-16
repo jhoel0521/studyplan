@@ -38,16 +38,22 @@ public final class PlanificarSesionService implements PlanificarSesion {
         if (!materia.esValido()) {
             return ResultadoSesion.error(materia.error());
         }
+        int desfaseMinutos = reloj.ahoraInstante().desfaseMinutos();
         Resultado<SesionEstudio> resultado = SesionEstudio.planificar(
-                materiaId, fecha, reloj.hoy(), horaInicio, horaFin, notas, null);
+                materiaId, fecha, reloj.hoy(), horaInicio, horaFin, desfaseMinutos, notas, null);
         if (!resultado.esValido()) {
             return ResultadoSesion.error(resultado.error());
         }
+        SesionEstudio candidata = resultado.valor();
         ConflictoHorario conflicto = ValidadorSesiones.buscarConflictoHorario(
-                sesiones, materias, fecha, horaInicio, horaFin, null);
+                sesiones,
+                materias,
+                candidata.inicioInstante(),
+                candidata.finInstante(),
+                null);
         if (conflicto != null) {
             return ResultadoSesion.conConflicto(conflicto);
         }
-        return ResultadoSesion.ok(sesiones.guardar(resultado.valor()));
+        return ResultadoSesion.ok(sesiones.guardar(candidata));
     }
 }

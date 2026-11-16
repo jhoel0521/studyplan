@@ -102,10 +102,31 @@ public class PlanificarSesionServiceTest {
                 servicio.ejecutar(
                                 algebraId,
                                 HOY,
-                                Hora.de(11, 0).valor(),
+                                Hora.de(10, 0).valor(),
                                 Hora.de(10, 0).valor(),
                                 null)
                         .error());
+    }
+
+    @Test
+    public void planificaNocturnaYDetectaCruceEntreDiasRn04Rn05() {
+        ResultadoSesion nocturna = servicio.ejecutar(
+                algebraId,
+                HOY,
+                Hora.de(22, 0).valor(),
+                Hora.de(1, 0).valor(),
+                "Noche");
+        assertTrue(nocturna.esValido());
+        assertEquals(180, nocturna.sesion().duracionPlanificadaMinutos());
+
+        ResultadoSesion cruceDiaSiguiente = servicio.ejecutar(
+                algebraId,
+                HOY.sumarDias(1),
+                Hora.de(0, 30).valor(),
+                Hora.de(2, 0).valor(),
+                null);
+        assertFalse(cruceDiaSiguiente.esValido());
+        assertEquals(nocturna.sesion().id(), Long.valueOf(cruceDiaSiguiente.conflicto().sesionId()));
     }
 
     @Test

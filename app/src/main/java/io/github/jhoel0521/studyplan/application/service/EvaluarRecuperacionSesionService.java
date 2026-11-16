@@ -12,10 +12,12 @@ import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
 import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
@@ -34,6 +36,7 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
     private final ControladorNoMolestar noMolestar;
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
+    private final TramoDiarioRepository tramos;
     private final Reloj reloj;
 
     public EvaluarRecuperacionSesionService(
@@ -44,12 +47,25 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
+        this(sesiones, eventos, materias, noMolestar, programador, marcadorSalida, null, reloj);
+    }
+
+    public EvaluarRecuperacionSesionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.materias = Objects.requireNonNull(materias, "materias");
         this.noMolestar = Objects.requireNonNull(noMolestar, "noMolestar");
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
+        this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
@@ -85,14 +101,21 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
                     cierreMs);
             Resultado<SesionEstudio> cerrada = sesion.cerrarPorPlazoVencido(minutos);
             if (cerrada.esValido()) {
-                eventos.guardar(EventoEstudio.crear(
+                EventoEstudio finEv = eventos.guardar(EventoEstudio.crear(
                         sesion.id(),
                         TipoEventoEstudio.FIN,
                         cierreMs,
-                        reloj.fechaDe(cierreMs),
-                        reloj.horaDe(cierreMs),
+                        reloj.ahoraInstante().desfaseMinutos(),
                         "").valor());
                 sesiones.actualizar(cerrada.valor());
+                if (tramos != null) {
+                    List<EventoEstudio> conFin = new java.util.ArrayList<>(lista);
+                    conFin.add(finEv);
+                    tramos.guardarTramos(
+                            sesion.id(),
+                            RepartidorPorDia.repartir(
+                                    cerrada.valor(), conFin, cierreMs, minutos));
+                }
                 programador.cancelarAvisos(sesion.id());
                 noMolestar.restaurarSiAplica();
                 marcadorSalida.limpiar();

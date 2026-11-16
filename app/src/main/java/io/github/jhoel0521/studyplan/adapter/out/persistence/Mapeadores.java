@@ -7,6 +7,7 @@ import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Idioma;
+import io.github.jhoel0521.studyplan.domain.Instante;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Perfil;
 import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
@@ -87,9 +88,9 @@ final class Mapeadores {
         SesionEntity e = new SesionEntity();
         e.id = s.id() == null ? 0 : s.id();
         e.materiaId = s.materiaId();
-        e.fecha = s.fecha().iso();
-        e.horaInicio = s.horaInicio().texto();
-        e.horaFin = s.horaFin().texto();
+        e.planInicioUtcMilis = s.planInicioUtcMilis();
+        e.planFinUtcMilis = s.planFinUtcMilis();
+        e.desfaseMinutos = s.desfaseMinutos();
         e.duracionPlanificadaMinutos = s.duracionPlanificadaMinutos();
         e.duracionRealMinutos = s.duracionRealMinutos();
         e.estado = s.codigoEstado().name();
@@ -105,10 +106,9 @@ final class Mapeadores {
     }
 
     static SesionEstudio aDominio(SesionEntity e) {
-        Resultado<Fecha> fecha = Fecha.parsear(e.fecha);
-        Resultado<Hora> inicio = Hora.parsear(e.horaInicio);
-        Resultado<Hora> fin = Hora.parsear(e.horaFin);
-        if (!fecha.esValido() || !inicio.esValido() || !fin.esValido()) {
+        if (e.desfaseMinutos < Instante.DESFASE_MINIMO_MINUTOS
+                || e.desfaseMinutos > Instante.DESFASE_MAXIMO_MINUTOS
+                || e.planFinUtcMilis <= e.planInicioUtcMilis) {
             return null;
         }
         CodigoEstadoSesion codigo = leer(
@@ -118,9 +118,9 @@ final class Mapeadores {
         return SesionEstudio.restaurar(
                 e.id,
                 e.materiaId,
-                fecha.valor(),
-                inicio.valor(),
-                fin.valor(),
+                e.planInicioUtcMilis,
+                e.planFinUtcMilis,
+                e.desfaseMinutos,
                 e.duracionPlanificadaMinutos,
                 e.duracionRealMinutos,
                 codigo,
@@ -140,21 +140,15 @@ final class Mapeadores {
         e.sesionId = ev.sesionId();
         e.tipo = ev.tipo().name();
         e.instanteMilis = ev.instanteMilis();
-        e.fecha = ev.fecha().iso();
-        e.hora = ev.hora().texto();
+        e.desfaseMinutos = ev.desfaseMinutos();
         e.nota = ev.nota().isEmpty() ? null : ev.nota();
         return e;
     }
 
     static EventoEstudio aDominio(EventoEstudioEntity e) {
-        Resultado<Fecha> fecha = Fecha.parsear(e.fecha);
-        Resultado<Hora> hora = Hora.parsear(e.hora);
-        if (!fecha.esValido() || !hora.esValido()) {
-            return null;
-        }
         TipoEventoEstudio tipo = leer(TipoEventoEstudio.class, e.tipo, TipoEventoEstudio.AJUSTE_MANUAL);
         return EventoEstudio.restaurar(
-                e.id, e.sesionId, tipo, e.instanteMilis, fecha.valor(), hora.valor(), e.nota);
+                e.id, e.sesionId, tipo, e.instanteMilis, e.desfaseMinutos, e.nota);
     }
 
     private static <E extends Enum<E>> E leer(Class<E> tipo, String texto, E porDefecto) {

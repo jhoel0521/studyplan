@@ -73,22 +73,22 @@ public class MapeadoresTest {
     }
 
     @Test
-    public void sesionConFechaInvalidaDevuelveNuloYEstadoDesconocidoCaeANoRealizada() {
+    public void sesionConRangoODesfaseInvalidoDevuelveNuloYEstadoDesconocidoCaeANoRealizada() {
         SesionEntity invalida = new SesionEntity();
         invalida.id = 1L;
         invalida.materiaId = 2L;
-        invalida.fecha = "fecha-corrupta";
-        invalida.horaInicio = "10:00";
-        invalida.horaFin = "11:00";
+        invalida.planInicioUtcMilis = 1_700_000_000_000L;
+        invalida.planFinUtcMilis = 1_700_000_000_000L; // fin <= inicio
+        invalida.desfaseMinutos = -240;
         invalida.estado = "PENDIENTE";
         assertNull(Mapeadores.aDominio(invalida));
 
         SesionEntity estadoFuturo = new SesionEntity();
         estadoFuturo.id = 4L;
         estadoFuturo.materiaId = 2L;
-        estadoFuturo.fecha = "2026-11-14";
-        estadoFuturo.horaInicio = "10:00";
-        estadoFuturo.horaFin = "11:00";
+        estadoFuturo.planInicioUtcMilis = 1_700_000_000_000L;
+        estadoFuturo.planFinUtcMilis = 1_700_003_600_000L;
+        estadoFuturo.desfaseMinutos = -240;
         estadoFuturo.duracionPlanificadaMinutos = 60;
         estadoFuturo.estado = "ESTADO_FUTURO";
         assertEquals(

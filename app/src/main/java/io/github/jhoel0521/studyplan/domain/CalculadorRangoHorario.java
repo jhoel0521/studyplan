@@ -58,7 +58,7 @@ public final class CalculadorRangoHorario {
         }
         int maxFin = 0;
         for (ItemSesionCalendario s : sesiones) {
-            int fin = s.horaFin().minutosDesdeMedianoche();
+            int fin = s.minutoFinEnDia();
             if (fin > maxFin) {
                 maxFin = fin;
             }
@@ -83,7 +83,7 @@ public final class CalculadorRangoHorario {
 
         Comparator<ItemSesionCalendario> orden = Comparator
                 .comparingInt((ItemSesionCalendario s) -> s.horaInicio().minutosDesdeMedianoche())
-                .thenComparingInt(s -> s.horaFin().minutosDesdeMedianoche())
+                .thenComparingInt(ItemSesionCalendario::minutoFinEnDia)
                 .thenComparingLong(ItemSesionCalendario::sesionId);
 
         List<BloqueHorarioCalendario> resultado = new ArrayList<>();
@@ -124,10 +124,10 @@ public final class CalculadorRangoHorario {
         int n = ordenadas.size();
         int i = 0;
         while (i < n) {
-            int maxFinCluster = ordenadas.get(i).horaFin().minutosDesdeMedianoche();
+            int maxFinCluster = ordenadas.get(i).minutoFinEnDia();
             int j = i + 1;
             while (j < n && ordenadas.get(j).horaInicio().minutosDesdeMedianoche() < maxFinCluster) {
-                int finJ = ordenadas.get(j).horaFin().minutosDesdeMedianoche();
+                int finJ = ordenadas.get(j).minutoFinEnDia();
                 if (finJ > maxFinCluster) {
                     maxFinCluster = finJ;
                 }
@@ -151,7 +151,7 @@ public final class CalculadorRangoHorario {
         for (int k = 0; k < cantidad; k++) {
             ItemSesionCalendario item = ordenadas.get(inicioCluster + k);
             int inicio = item.horaInicio().minutosDesdeMedianoche();
-            int fin = item.horaFin().minutosDesdeMedianoche();
+            int fin = item.minutoFinEnDia();
             int colAsignada = -1;
             for (int c = 0; c < finPorColumna.size(); c++) {
                 if (finPorColumna.get(c) <= inicio) {
@@ -175,7 +175,7 @@ public final class CalculadorRangoHorario {
                     item,
                     diaCol,
                     item.horaInicio().minutosDesdeMedianoche(),
-                    item.horaFin().minutosDesdeMedianoche(),
+                    item.minutoFinEnDia(),
                     columnaDeItem[k],
                     totalColumnas));
         }

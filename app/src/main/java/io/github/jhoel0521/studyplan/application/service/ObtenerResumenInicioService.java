@@ -13,9 +13,11 @@ import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Perfil;
 import io.github.jhoel0521.studyplan.domain.ResumenInicio;
@@ -31,6 +33,7 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
     private final PerfilRepository perfiles;
     private final SesionRepository sesiones;
     private final MateriaRepository materias;
+    private final TramoDiarioRepository tramos;
     private final Reloj reloj;
     private final VencerSesionesPendientes vencerPendientes;
 
@@ -40,9 +43,20 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             MateriaRepository materias,
             Reloj reloj,
             VencerSesionesPendientes vencerPendientes) {
+        this(perfiles, sesiones, materias, null, reloj, vencerPendientes);
+    }
+
+    public ObtenerResumenInicioService(
+            PerfilRepository perfiles,
+            SesionRepository sesiones,
+            MateriaRepository materias,
+            TramoDiarioRepository tramos,
+            Reloj reloj,
+            VencerSesionesPendientes vencerPendientes) {
         this.perfiles = Objects.requireNonNull(perfiles, "perfiles");
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.materias = Objects.requireNonNull(materias, "materias");
+        this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
         this.vencerPendientes = Objects.requireNonNull(vencerPendientes, "vencerPendientes");
     }
@@ -58,9 +72,12 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
         vencerPendientes.ejecutar();
 
         Fecha hoy = reloj.hoy();
-        Hora ahora = reloj.ahora();
-        int minutosSemana = sesiones.sumarMinutosRealesEnRango(
-                hoy.lunesDeSemana(), hoy.domingoDeSemana());
+        Instante ahoraInst = reloj.ahoraInstante();
+        Fecha lunes = hoy.lunesDeSemana();
+        Fecha domingo = hoy.domingoDeSemana();
+        int minutosSemana = tramos != null
+                ? tramos.sumarMinutosEnRango(lunes, domingo)
+                : sesiones.sumarMinutosRealesEnRango(lunes, domingo);
         double horasRealizadas = minutosSemana / 60.0;
 
         Map<Long, Materia> catalogo = cargarCatalogoMaterias();
@@ -69,7 +86,7 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             sesionesDeHoy.add(mapearDetalle(s, catalogo));
         }
 
-        DetalleSesionInicio proxima = seleccionarProxima(hoy, ahora, catalogo);
+        DetalleSesionInicio proxima = seleccionarProxima(hoy, ahoraInst, catalogo);
         return Optional.of(new ResumenInicio(
                 perfil.nombre(),
                 horasRealizadas,
@@ -80,14 +97,13 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
     }
 
     private DetalleSesionInicio seleccionarProxima(
-            Fecha hoy, Hora ahora, Map<Long, Materia> catalogo) {
+            Fecha hoy, Instante ahoraInst, Map<Long, Materia> catalogo) {
         List<SesionEstudio> pendientes = sesiones.listarPendientesDesde(hoy);
         if (pendientes.isEmpty()) {
             return null;
         }
         for (SesionEstudio candidata : pendientes) {
-            if (candidata.fecha().esPosteriorA(hoy)
-                    || !ahora.esPosteriorA(candidata.horaFin())) {
+            if (candidata.finInstante().esPosteriorA(ahoraInst)) {
                 return mapearDetalle(candidata, catalogo);
             }
         }

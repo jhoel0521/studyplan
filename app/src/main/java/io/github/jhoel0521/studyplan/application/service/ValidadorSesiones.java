@@ -7,8 +7,7 @@ import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
 import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
@@ -39,16 +38,16 @@ final class ValidadorSesiones {
     static ConflictoHorario buscarConflictoHorario(
             SesionRepository sesiones,
             MateriaRepository materias,
-            Fecha fecha,
-            Hora inicio,
-            Hora fin,
+            Instante inicio,
+            Instante fin,
             Long idExcluido) {
-        List<SesionEstudio> existentes = sesiones.listarPorFecha(fecha);
+        List<SesionEstudio> existentes =
+                sesiones.listarPorRangoUtc(inicio.utcMilis(), fin.utcMilis());
         for (SesionEstudio existente : existentes) {
             if (idExcluido != null && idExcluido.equals(existente.id())) {
                 continue;
             }
-            if (existente.seSolapaCon(fecha, inicio, fin)) {
+            if (existente.seSolapaCon(inicio, fin)) {
                 String nombreMateria = materias.obtener(existente.materiaId())
                         .map(Materia::nombre)
                         .orElse("");

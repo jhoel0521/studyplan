@@ -167,4 +167,28 @@ public class ObtenerResumenInicioServiceTest {
         assertEquals(100, new ResumenInicio("Ana", 30, 20).porcentajeProgreso());
         assertEquals(0, new ResumenInicio("Ana", 0, 20).porcentajeProgreso());
     }
+
+    @Test
+    public void sumaHorasSemanalesDesdeTramoDiarioConCorteEstrictoLunesRn31() {
+        FakePerfilRepository perfiles = new FakePerfilRepository();
+        FakeMateriaRepository materias = new FakeMateriaRepository();
+        FakeSesionRepository sesiones = new FakeSesionRepository();
+        io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository tramos =
+                new io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository();
+        Fecha domingo = Fecha.de(2026, 11, 15).valor();
+        Fecha lunes = Fecha.de(2026, 11, 16).valor();
+        FakeReloj reloj = new FakeReloj(lunes, Hora.de(9, 0).valor());
+        VencerSesionesPendientesService vencer = new VencerSesionesPendientesService(sesiones, reloj);
+        ObtenerResumenInicioService servicio = new ObtenerResumenInicioService(
+                perfiles, sesiones, materias, tramos, reloj, vencer);
+
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        java.util.Map<Fecha, Integer> reparto = new java.util.TreeMap<>();
+        reparto.put(domingo, 60); // semana pasada
+        reparto.put(lunes, 60);   // esta semana
+        tramos.guardarTramos(99L, reparto);
+
+        ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
+        assertEquals(1.0, resumen.horasRealizadas(), 0.001);
+    }
 }

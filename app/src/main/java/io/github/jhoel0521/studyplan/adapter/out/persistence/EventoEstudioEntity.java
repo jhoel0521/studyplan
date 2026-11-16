@@ -38,11 +38,8 @@ public class EventoEstudioEntity {
     @ColumnInfo(name = "instante_milis")
     public long instanteMilis;
 
-    @NonNull
-    public String fecha = "";
-
-    @NonNull
-    public String hora = "";
+    @ColumnInfo(name = "desfase_minutos")
+    public int desfaseMinutos;
 
     @Nullable
     public String nota;

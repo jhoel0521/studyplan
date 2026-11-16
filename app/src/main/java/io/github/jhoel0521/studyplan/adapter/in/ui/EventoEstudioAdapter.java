@@ -65,7 +65,8 @@ public class EventoEstudioAdapter extends ListAdapter<EventoEstudio, EventoEstud
         }
 
         void enlazar(EventoEstudio evento) {
-            textoHora.setText(evento.hora().texto());
+            textoHora.setText(FormatoSesion.horaEventoConZona(
+                    evento, FormatoSesion.desfaseActualSistema()));
             textoTipo.setText(etiquetaDe(evento.tipo()));
             if (evento.nota() == null || evento.nota().isEmpty()) {
                 textoNota.setVisibility(View.GONE);

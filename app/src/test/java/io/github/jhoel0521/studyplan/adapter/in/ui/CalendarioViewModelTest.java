@@ -98,4 +98,31 @@ public class CalendarioViewModelTest {
         modelo.restablecerFiltro();
         assertEquals(1, modelo.datos().getValue().bloquesHorario().size());
     }
+
+    @Test
+    public void sesionNocturnaSeDivideEnDosBloquesEnSemanaYMarcaContinuacionEnDia() {
+        Fecha lunes = Fecha.de(2026, 11, 16).valor();
+        Fecha martes = lunes.sumarDias(1);
+        sesiones.guardar(SesionEstudio.planificar(
+                algebra.id(), lunes, lunes,
+                Hora.de(22, 0).valor(), Hora.de(1, 0).valor(), 0, "", null).valor());
+
+        modelo.cargar();
+        DatosCalendario semana = modelo.datos().getValue();
+        assertNotNull(semana);
+        assertEquals(2, semana.bloquesHorario().size());
+        assertEquals(0, semana.bloquesHorario().get(0).diaColumna());
+        assertEquals(1440, semana.bloquesHorario().get(0).minutoFin());
+        assertEquals(1, semana.bloquesHorario().get(1).diaColumna());
+        assertEquals(0, semana.bloquesHorario().get(1).minutoInicio());
+        assertEquals(60, semana.bloquesHorario().get(1).minutoFin());
+
+        modelo.cambiarVista(VistaCalendario.DIA);
+        modelo.siguiente();
+        DatosCalendario diaMartes = modelo.datos().getValue();
+        assertNotNull(diaMartes);
+        assertEquals(1, diaMartes.bloquesHorario().size());
+        assertEquals(true, diaMartes.bloquesHorario().get(0).item().esContinuacionDiaAnterior());
+        assertEquals(lunes, diaMartes.bloquesHorario().get(0).item().fechaInicioOriginal());
+    }
 }

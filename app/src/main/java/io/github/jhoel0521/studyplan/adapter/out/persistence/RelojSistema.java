@@ -1,10 +1,12 @@
 package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
+import io.github.jhoel0521.studyplan.domain.Instante;
 
 /**
  * Implementación del puerto {@link Reloj} usando {@link Calendar} local del dispositivo,
@@ -32,6 +34,13 @@ public final class RelojSistema implements Reloj {
     @Override
     public long ahoraMilis() {
         return System.currentTimeMillis();
+    }
+
+    @Override
+    public Instante ahoraInstante() {
+        long ahora = System.currentTimeMillis();
+        int desfaseMinutos = TimeZone.getDefault().getOffset(ahora) / (int) Instante.MILIS_POR_MINUTO;
+        return Instante.de(ahora, desfaseMinutos);
     }
 
     @Override

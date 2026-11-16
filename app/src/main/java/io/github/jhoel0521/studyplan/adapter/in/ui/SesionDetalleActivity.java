@@ -162,11 +162,8 @@ public class SesionDetalleActivity extends ActividadProtegida {
         nombreMateriaDetalle.setText(detalle.nombreMateria());
         EstadoSesionVisual.aplicar(s.codigoEstado(), iconoEstadoDetalle, etiquetaEstadoDetalle);
 
-        textoHorarioDetalle.setText(getString(
-                R.string.sesion_fecha_y_rango,
-                s.fecha().iso(),
-                s.horaInicio().texto(),
-                s.horaFin().texto()));
+        textoHorarioDetalle.setText(FormatoSesion.horarioSesionConZona(
+                s, FormatoSesion.desfaseActualSistema()));
         textoDuracionPlanificadaDetalle.setText(
                 getString(R.string.sesion_detalle_planificada, s.duracionPlanificadaMinutos()));
 

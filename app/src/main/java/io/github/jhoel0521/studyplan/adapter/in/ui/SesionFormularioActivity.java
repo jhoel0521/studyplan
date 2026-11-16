@@ -382,13 +382,20 @@ public class SesionFormularioActivity extends ActividadProtegida {
                 textoDe(campoHoraInicio), ErrorValidacion.HORA_INICIO_OBLIGATORIA);
         Resultado<Hora> fin = Hora.parsear(
                 textoDe(campoHoraFin), ErrorValidacion.HORA_FIN_OBLIGATORIA);
-        if (!inicio.esValido() || !fin.esValido() || !fin.valor().esPosteriorA(inicio.valor())) {
+        if (!inicio.esValido() || !fin.esValido() || fin.valor().equals(inicio.valor())) {
             textoDuracionPlanificada.setText(R.string.sesion_form_duracion_planificada_invalida);
             return;
         }
-        int minutos = inicio.valor().minutosHasta(fin.valor());
-        textoDuracionPlanificada.setText(
-                getString(R.string.sesion_form_duracion_planificada, minutos));
+        boolean cruzaMedianoche = !fin.valor().esPosteriorA(inicio.valor());
+        int minutos = cruzaMedianoche
+                ? (24 * 60 - inicio.valor().minutosDesdeMedianoche())
+                        + fin.valor().minutosDesdeMedianoche()
+                : inicio.valor().minutosHasta(fin.valor());
+        textoDuracionPlanificada.setText(getString(
+                cruzaMedianoche
+                        ? R.string.sesion_form_duracion_planificada_dia_siguiente
+                        : R.string.sesion_form_duracion_planificada,
+                minutos));
         if (MODO_PASADA.equals(modoActual) && !duracionRealEditadaManualmente) {
             actualizandoDuracionAutomatica = true;
             campoDuracionReal.setText(String.valueOf(minutos));

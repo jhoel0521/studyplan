@@ -31,7 +31,7 @@ import androidx.room.PrimaryKey;
         },
         indices = {
                 @Index(value = {"materia_id"}),
-                @Index(value = {"fecha"}),
+                @Index(value = {"plan_inicio_utc_milis"}),
                 @Index(value = {"estado"}),
                 @Index(value = {"sesion_origen_id"})
         })
@@ -43,16 +43,14 @@ public class SesionEntity {
     @ColumnInfo(name = "materia_id")
     public long materiaId;
 
-    @NonNull
-    public String fecha = "";
+    @ColumnInfo(name = "plan_inicio_utc_milis")
+    public long planInicioUtcMilis;
 
-    @NonNull
-    @ColumnInfo(name = "hora_inicio")
-    public String horaInicio = "";
+    @ColumnInfo(name = "plan_fin_utc_milis")
+    public long planFinUtcMilis;
 
-    @NonNull
-    @ColumnInfo(name = "hora_fin")
-    public String horaFin = "";
+    @ColumnInfo(name = "desfase_minutos")
+    public int desfaseMinutos;
 
     @ColumnInfo(name = "duracion_planificada_minutos")
     public int duracionPlanificadaMinutos;

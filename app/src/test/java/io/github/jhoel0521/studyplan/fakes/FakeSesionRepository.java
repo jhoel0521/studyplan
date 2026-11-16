@@ -76,11 +76,11 @@ public final class FakeSesionRepository implements SesionRepository {
     public List<SesionEstudio> listarPorFecha(Fecha fecha) {
         List<SesionEstudio> resultado = new ArrayList<>();
         for (SesionEstudio s : sesiones) {
-            if (s.fecha().equals(fecha)) {
+            if (!s.fecha().esPosteriorA(fecha) && !s.fechaFinLocal().esAnteriorA(fecha)) {
                 resultado.add(s);
             }
         }
-        resultado.sort(Comparator.comparing(SesionEstudio::horaInicio));
+        resultado.sort(Comparator.comparingLong(SesionEstudio::planInicioUtcMilis));
         return resultado;
     }
 
@@ -88,12 +88,23 @@ public final class FakeSesionRepository implements SesionRepository {
     public List<SesionEstudio> listarPorRango(Fecha desde, Fecha hasta) {
         List<SesionEstudio> resultado = new ArrayList<>();
         for (SesionEstudio s : sesiones) {
-            if (!s.fecha().esAnteriorA(desde) && !s.fecha().esPosteriorA(hasta)) {
+            if (!s.fecha().esPosteriorA(hasta) && !s.fechaFinLocal().esAnteriorA(desde)) {
                 resultado.add(s);
             }
         }
-        resultado.sort(Comparator.comparing(SesionEstudio::fecha)
-                .thenComparing(SesionEstudio::horaInicio));
+        resultado.sort(Comparator.comparingLong(SesionEstudio::planInicioUtcMilis));
+        return resultado;
+    }
+
+    @Override
+    public List<SesionEstudio> listarPorRangoUtc(long desdeUtcMilis, long hastaUtcMilis) {
+        List<SesionEstudio> resultado = new ArrayList<>();
+        for (SesionEstudio s : sesiones) {
+            if (s.planFinUtcMilis() >= desdeUtcMilis && s.planInicioUtcMilis() <= hastaUtcMilis) {
+                resultado.add(s);
+            }
+        }
+        resultado.sort(Comparator.comparingLong(SesionEstudio::planInicioUtcMilis));
         return resultado;
     }
 
@@ -102,12 +113,11 @@ public final class FakeSesionRepository implements SesionRepository {
         List<SesionEstudio> resultado = new ArrayList<>();
         for (SesionEstudio s : sesiones) {
             if (s.codigoEstado() == CodigoEstadoSesion.PENDIENTE
-                    && !s.fecha().esAnteriorA(desde)) {
+                    && !s.fechaFinLocal().esAnteriorA(desde)) {
                 resultado.add(s);
             }
         }
-        resultado.sort(Comparator.comparing(SesionEstudio::fecha)
-                .thenComparing(SesionEstudio::horaInicio));
+        resultado.sort(Comparator.comparingLong(SesionEstudio::planInicioUtcMilis));
         return resultado;
     }
 
@@ -115,7 +125,8 @@ public final class FakeSesionRepository implements SesionRepository {
     public List<SesionEstudio> listarPendientesAnterioresA(Fecha hoy) {
         List<SesionEstudio> resultado = new ArrayList<>();
         for (SesionEstudio s : sesiones) {
-            if (s.codigoEstado() == CodigoEstadoSesion.PENDIENTE && s.fecha().esAnteriorA(hoy)) {
+            if (s.codigoEstado() == CodigoEstadoSesion.PENDIENTE
+                    && s.fechaFinLocal().esAnteriorA(hoy)) {
                 resultado.add(s);
             }
         }
