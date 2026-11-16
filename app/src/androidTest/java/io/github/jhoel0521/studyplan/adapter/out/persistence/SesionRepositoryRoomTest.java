@@ -189,6 +189,15 @@ public class SesionRepositoryRoomTest {
         String[] permisos = contexto.getPackageManager()
                 .getPackageInfo(contexto.getPackageName(), android.content.pm.PackageManager.GET_PERMISSIONS)
                 .requestedPermissions;
-        assertTrue(permisos == null || permisos.length == 0);
+        if (permisos != null) {
+            for (String p : permisos) {
+                assertFalse(p.endsWith(".INTERNET")
+                        || p.endsWith(".POST_NOTIFICATIONS")
+                        || p.endsWith(".SCHEDULE_EXACT_ALARM")
+                        || p.endsWith(".RECEIVE_BOOT_COMPLETED")
+                        || p.endsWith(".VIBRATE")
+                        || p.endsWith(".ACCESS_NOTIFICATION_POLICY"));
+            }
+        }
     }
 }

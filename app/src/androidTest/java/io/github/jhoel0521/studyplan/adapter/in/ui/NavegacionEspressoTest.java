@@ -56,7 +56,7 @@ public class NavegacionEspressoTest {
         try (ActivityScenario<MainActivity> escenario = ActivityScenario.launch(MainActivity.class)) {
             Pruebas.esperarVisible(allOf(withId(R.id.nav_inicio), isSelected()));
             onView(withId(R.id.nav_materias)).check(matches(isEnabled()));
-            onView(withId(R.id.nav_calendario)).check(matches(not(isEnabled())));
+            onView(withId(R.id.nav_calendario)).check(matches(isEnabled()));
             onView(withId(R.id.nav_estadisticas)).check(matches(not(isEnabled())));
         }
     }
