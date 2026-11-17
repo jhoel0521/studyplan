@@ -103,7 +103,7 @@ Tabla: Épicas del producto y su especificación en OpenSpec {#tabla6}
 | E3 | Sesiones de estudio | HU-10, HU-11, HU-12, HU-13, HU-14, HU-15 | specs/sesiones-estudio/spec.md |
 | E4 | Calendario de estudio | HU-16, HU-17, HU-18, HU-19, HU-20, HU-21 | specs/calendario-estudio/spec.md |
 | E5 | Técnicas y eventos de estudio | HU-22, HU-23, HU-24, HU-39, HU-40, HU-41, HU-42, HU-43, HU-44 | specs/tecnicas-estudio/spec.md |
-| E6 | Metas semanales | HU-25, HU-26, HU-27, HU-28 | specs/metas-semanales/spec.md |
+| E6 | Metas semanales | HU-25, HU-26, HU-27, HU-28, HU-47, HU-48 | specs/metas-semanales/spec.md |
 | E7 | Estadísticas | HU-29, HU-30, HU-31, HU-45 | specs/estadisticas/spec.md |
 | E8 | Reportes | HU-32, HU-33 | specs/reportes/spec.md |
 | E9 | Recordatorios | HU-34 | specs/recordatorios/spec.md |
@@ -154,6 +154,8 @@ Tabla: Product Backlog de StudyPlan v0.1.0 {#tabla7}
 | HU-26 | E6 | Definir meta semanal por materia | Must | 3 |
 | HU-27 | E6 | Ver progreso de metas | Must | 3 |
 | HU-28 | E6 | Recibir mensaje motivacional | Could | 2 |
+| HU-47 | E6 | Estudiar ahora (sesión sin plan) | Must | 5 |
+| HU-48 | E6 | Cambiar de materia en sesión en curso | Should | 3 |
 | HU-29 | E7 | Ver total de horas y comparación semanal | Must | 3 |
 | HU-30 | E7 | Ver distribución de horas por materia | Must | 5 |
 | HU-31 | E7 | Ver tasa de cumplimiento | Should | 3 |
@@ -341,6 +343,14 @@ Tabla: Historias de usuario de la épica E6: Metas semanales {#tabla13}
 | **Historia** | Como estudiante, quiero recibir una felicitación al alcanzar una meta para mantener la constancia. |
 | **Prioridad / Est.** | Could · 2 puntos |
 | **Criterios de aceptación** | 1. **Meta alcanzada.** *Dado* que el progreso es menor que la meta, *cuando* una sesión completada hace que la alcance, *entonces* el sistema muestra «¡Sigue así!» con el botón «Volver al inicio».<br>2. **Una vez.** *Dado* que ya se mostró la felicitación de esa meta esta semana, *cuando* se completa otra sesión, *entonces* no se vuelve a mostrar (RN-16). |
+| **HU-47** | **Estudiar ahora (sesión sin plan)** |
+| **Historia** | Como estudiante, quiero iniciar una sesión de estudio al instante sin planificar horario previo para aprovechar cualquier momento libre en una materia existente, una nueva o «Estudios varios». |
+| **Prioridad / Est.** | Must · 5 puntos |
+| **Criterios de aceptación** | 1. **Arranque directo.** *Dado* que no hay sesión En curso, *cuando* el estudiante pulsa «Estudiar ahora» y elige materia (o «Estudios varios» o crea una nueva al vuelo) y técnica, *entonces* la sesión arranca directamente en estado *En curso* (`Nueva → En curso`, RN-07) sin ocupar horas planificadas (`Plan`).<br>2. **Sesión pendiente del día.** *Dado* que la materia elegida tiene una sesión Pendiente hoy, *cuando* la selecciona, *entonces* se pregunta si corresponde a esa sesión planificada o a una nueva libre. |
+| **HU-48** | **Cambiar de materia en sesión en curso** |
+| **Historia** | Como estudiante, quiero cambiar de materia durante una sesión En curso sin perder el tiempo ya estudiado para registrar con precisión cada tramo cuando cambio de tema. |
+| **Prioridad / Est.** | Should · 3 puntos |
+| **Criterios de aceptación** | 1. **Cambio continuo.** *Dado* que una sesión está En curso, *cuando* el estudiante elige «Cambiar de materia», *entonces* la sesión previa se cierra guardando su duración real y sus tramos diarios (sin felicitar por metas, RN-16) e inmediatamente arranca la nueva sesión En curso sobre la materia elegida. |
 | **Criterios de calidad** | RNF-05, RNF-15, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
 | **Spec OpenSpec** | openspec/specs/metas-semanales/spec.md |
 
@@ -435,7 +445,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-13 | La semana de estudio va de lunes a domingo. | Mockup (calendario L–D) |
 | RN-14 | La meta semanal total y las metas por materia son independientes entre sí; cada una debe ser mayor que 0 y menor o igual a 168 horas. | Entrevista |
 | RN-15 | Si no se define una meta total para la semana, se aplica la meta predeterminada del perfil. | Propuesta IA, aceptada |
-| RN-16 | La felicitación por cumplir una meta se muestra una sola vez por meta y semana. | Propuesta IA, aceptada |
+| RN-16 | La felicitación por cumplir una o más metas se muestra una sola vez por meta y semana al producirse un cierre real de sesión (detener, declarar fin al volver, vencimiento de 3 días o registro tardío/pasado), acumulando en una única pantalla todas las metas cruzadas en ese tramo y omitiéndola al cambiar de materia. | Propuesta IA, refinada con el Product Owner |
 | RN-17 | Pomodoro por defecto: 25 min de trabajo, 5 min de descanso corto y 15 min de descanso largo cada 4 pomodoros; todos los valores son configurables. | Entrevista |
 | RN-18 | El modo No molestar se configura de forma global; al iniciar una sesión el estudiante puede forzar activarlo o desactivarlo solo para esa sesión, y el estado anterior del teléfono se restaura al terminar. | Entrevista |
 | RN-19 | La frecuencia del respaldo puede ser Nunca, Diaria, Semanal, Mensual o Solo manual. | Entrevista |
@@ -451,6 +461,8 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-29 | Una sesión En curso no pasa a No realizada al terminar el día; el estudiante puede declarar su fin hasta 3 días después y, vencido ese plazo, se cierra en la última marca registrada dentro de la app. | Derivada de RN-06 y RN-24, confirmada por el Product Owner |
 | RN-30 | Métricas de estudio: concentración = tiempo en la app ÷ (tiempo en la app + pausas); interrupciones por hora; puntualidad = inicio real − inicio planificado; respeto del tiempo = duración real ÷ planificada; tiempo fuera de la app (informativo, no descuenta horas). | Propuesta IA, aceptada |
 | RN-31 | Corte estricto por día y semana: cada minuto real estudiado se contabiliza en la fecha y semana locales en que ocurrió (dividiendo en la medianoche si el tramo la cruza). No se trasladan horas de un día o semana a otro. | Product Owner, 16-nov-2026 |
+| RN-32 | Materia general «Estudios varios»: existe una única materia protegida del sistema (`es_general = 1`), listada al final, que no admite edición, archivado, eliminación ni meta semanal propia. | Product Owner, 16-nov-2026 |
+| RN-33 | Instantáneas semanales de metas: los objetivos semanales (total y por materia) se congelan por semana (lunes a domingo) en `meta_semanal`; cambiar una meta solo afecta desde la semana actual en adelante y las semanas pasadas sin registro se muestran como estimadas con la meta vigente. | Product Owner, 16-nov-2026 |
 
 La regla RN-07 establece que el ciclo de vida de una sesión de estudio es una **máquina de estados** (@figura:figura2). Siguiendo el patrón State, cada estado conoce únicamente las acciones que admite y su estado siguiente. Reprogramar no borra la sesión original: la marca como *Reprogramada* y crea una sesión nueva enlazada, de modo que queda constancia del día en que no se estudió.
 

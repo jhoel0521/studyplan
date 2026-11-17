@@ -320,6 +320,9 @@ def maquina_estados():
     # inicio
     d.ellipse([80 - 20, 640 - 20, 80 + 20, 640 + 20], fill=BLACK)
     arrow([(100, 640), L("PENDIENTE")], "planificar", (155, 610))
+    # Nueva -> En curso (HU-47, RN-07)
+    d.ellipse([430 - 20, 130 - 20, 430 + 20, 130 + 20], fill=BLACK)
+    arrow([(450, 130), (1030, 130), T("EN_CURSO", -100)], "estudiar ahora", (740, 102))
     # Pendiente -> En curso
     arrow([T("PENDIENTE", 120), (S["PENDIENTE"][0] + 120, 300), L("EN_CURSO")], "iniciar", (760, 270))
     # En curso self loop

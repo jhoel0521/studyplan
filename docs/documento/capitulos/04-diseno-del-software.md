@@ -24,7 +24,7 @@ Nota: Elaboración propia. Los paquetes cuelgan de io.github.jhoel0521.studyplan
 
 ### Modelo Lógico
 
-El esquema de Room está en la versión 5 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
+El esquema de Room está en la versión 6 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
 
 ![Modelo lógico de la base de datos de StudyPlan](../recursos/diagramas/modelo_logico.png){#modelo_logico ancho=16.5}
 
@@ -66,6 +66,8 @@ Tabla: Diccionario de datos de la tabla materia (Materias del estudiante) {#dicc
 | color | INTEGER | NOT NULL | Color de la materia como entero ARGB (paleta provisional). |
 | docente | TEXT | Admite nulo | Docente de la materia; vacío si no se indicó (texto libre opcional). |
 | archivada | INTEGER | NOT NULL | 1 si la materia está archivada (HU-08); 0 si está activa. |
+| meta_semanal_horas | REAL | Admite nulo | Meta semanal opcional propia de la materia en horas (> 0 y ≤ 168, RN-14, HU-26). |
+| es_general | INTEGER | NOT NULL | 1 para la materia general protegida «Estudios varios» (RN-32); 0 para materias del estudiante. |
 
 Tabla: Diccionario de datos de la tabla sesion_estudio (Sesiones de estudio) {#diccionario_sesion_estudio anchos=3.4,2.2,3.6,6.8 tam=9}
 
@@ -73,8 +75,8 @@ Tabla: Diccionario de datos de la tabla sesion_estudio (Sesiones de estudio) {#d
 |---|---|---|---|
 | id | INTEGER | PK autoincremental, NOT NULL | Identificador autogenerado de la sesión de estudio. |
 | materia_id | INTEGER | NOT NULL | Identificador de la materia asociada; clave foránea a materia(id) con borrado restringido (RN-03). |
-| plan_inicio_utc_milis | INTEGER | NOT NULL | Instante absoluto de inicio planificado en milisegundos UTC (RN-04, RN-05). |
-| plan_fin_utc_milis | INTEGER | NOT NULL | Instante absoluto de fin planificado en milisegundos UTC; si cruza medianoche cae al día siguiente (RN-04). |
+| plan_inicio_utc_milis | INTEGER | NOT NULL | Instante absoluto de inicio planificado o real de arranque en milisegundos UTC (RN-04, RN-05, HU-47). |
+| plan_fin_utc_milis | INTEGER | Admite nulo | Instante absoluto de fin planificado en milisegundos UTC; nulo en sesiones sin plan iniciadas con «Estudiar ahora» (HU-47). |
 | desfase_minutos | INTEGER | NOT NULL | Desfase horario local en minutos respecto a UTC vigente al planificar (para preservar el historial ante viajes). |
 | duracion_planificada_minutos | INTEGER | NOT NULL | Duración planificada calculada en minutos entre hora_inicio y hora_fin. |
 | duracion_real_minutos | INTEGER | Admite nulo | Duración real estudiada en minutos (entre 1 y 1440); nula mientras no se complete (HU-12, HU-13). |
@@ -107,6 +109,16 @@ Tabla: Diccionario de datos de la tabla tramo_diario (Minutos reales por día lo
 | fecha_local | TEXT | PK, NOT NULL | Fecha calendario local ISO AAAA-MM-DD en la que ocurrió el estudio (RN-31). |
 | minutos | INTEGER | NOT NULL | Minutos reales contabilizables ocurridos en esa fecha local (RN-31). |
 
+Tabla: Diccionario de datos de la tabla meta_semanal (Instantáneas de metas semanales (RN-33)) {#diccionario_meta_semanal anchos=3.4,2.2,3.6,6.8 tam=9}
+
+| Campo | Tipo | Restricciones | Descripción |
+|---|---|---|---|
+| id | INTEGER | PK autoincremental, NOT NULL | Identificador autogenerado del snapshot semanal. |
+| semana_inicio | TEXT | NOT NULL | Fecha ISO del lunes de la semana (RN-13, RN-33). |
+| materia_id | INTEGER | Admite nulo | Nulo para la meta semanal total; FK a materia(id) con ON DELETE CASCADE para metas por materia (HU-25, HU-26). |
+| horas_objetivo | REAL | NOT NULL | Objetivo semanal congelado en horas para esa semana (RN-14, RN-33). |
+| felicitada | INTEGER | NOT NULL | 1 si la felicitación por esta meta ya se mostró en esa semana (RN-16); 0 en caso contrario. |
+
 ## Diseño de la Interfaz de Usuario (UI/UX)
 
 El flujo de la aplicación se modela como un diagrama de estados en el que cada estado es una pantalla y cada transición es una acción del usuario. Parte de la primera apertura, en la que se crea el perfil, y cierra el ciclo en «Borrar mis datos», que devuelve a la pantalla de primer uso. Las pantallas se derivan de los objetivos del proyecto y de las historias de usuario; los wireframes sirven de referencia. La @figura:flujo_pantallas presenta el flujo y la @tabla:pantallas describe lo que se hace en cada pantalla. Las transiciones en línea discontinua se dedujeron de los wireframes y están por confirmar con el Product Owner.
@@ -121,13 +133,14 @@ Tabla: Pantallas de StudyPlan, lo que se hace en cada una y su trazabilidad {#pa
 |---|---|---|---|
 | Perfil inicial | Pide nombre y meta semanal en el primer uso; el nombre es obligatorio. Permite restaurar una copia. | HU-01, HU-37 | OG |
 | Autenticación | Pide huella o PIN al volver a primer plano, solo si el bloqueo está activo. | HU-04 | OE6 |
-| Inicio | Muestra el saludo, las horas realizadas sobre la meta semanal, la próxima sesión y las sesiones de hoy. | HU-02, HU-25, HU-27 | OG |
+| Inicio | Muestra el saludo, las horas realizadas sobre la meta semanal (editable), el acceso al historial de metas, el botón «Estudiar ahora», la próxima sesión y las sesiones de hoy. | HU-02, HU-25, HU-27, HU-47 | OG |
+| Historial de metas | Lista cronológica inversa de semanas con cumplimiento real, objetivo y marca de estimadas. | HU-27 | OE5 |
 | Calendario | Ofrece las vistas Día, Semana y Mes con el estado de cada sesión; permite crear sesiones. | HU-16 a HU-21 | OE3 |
 | Estadísticas | Muestra horas, comparación semanal, cumplimiento, distribución y concentración. | HU-29 a HU-31, HU-45 | OE5 |
 | Materias | Lista las materias activas en orden alfabético con color, docente y horas reales acumuladas (`SesionesDeMateriaRoom`), la sección plegable de archivadas y el botón «+». | HU-06, HU-08, HU-09, HU-46 | OE2 |
 | Formulario de materia | Registra o edita nombre, color y docente (la meta por materia llega con las metas, HU-26); archiva, desarchiva o elimina con confirmación. | HU-06 a HU-08, HU-26, HU-46 | OE2 |
 | Registrar sesión | Planifica una sesión validando horario y cruces o registra sesiones pasadas (hasta 3 días) y reprograma desde `SesionFormularioActivity`. | HU-10, HU-11, HU-14, HU-34 | OE2 |
-| Sesión en curso | Cronómetro libre o Pomodoro, pausar o reanudar y detener; modo No molestar. | HU-22 a HU-24 | OE4 |
+| Sesión en curso | Cronómetro libre o Pomodoro, pausar o reanudar, cambiar de materia y detener; modo No molestar. | HU-22 a HU-24, HU-48 | OE4 |
 | Al volver a la app | Pregunta si el estudiante siguió estudiando tras salir de la app. | HU-40, HU-41 | OE4 |
 | Decidir al fin del tiempo | Resuelve el tiempo extra, el cambio a otra sesión y el reparto de un tramo continuo. | HU-42 a HU-44 | OE4 |
 | Meta alcanzada | Felicita una sola vez por semana y ofrece volver al inicio. | HU-28 | OE5 |
@@ -207,4 +220,12 @@ Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_
 
 Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
-[[pendiente: diagramas de clases de las épicas siguientes (metas, estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
+### Épica Metas semanales y estudio inmediato
+
+La sexta épica implementada (`add-metas-semanales`, Room v6 con `MIGRATION_5_6`) incorpora las instantáneas semanales inmutables en `meta_semanal` (`RN-33`, `HU-25` a `HU-27`), la materia general protegida «Estudios varios» (`RN-32`), el inicio inmediato sin plan mediante `EstudiarAhora` (`Nueva → En curso`, `HU-47`, `RN-07`), el cambio continuo de materia en `CambiarDeMateria` (`HU-48`) y la felicitación única acumulada al cierre real de la sesión (`FelicitacionMetasActivity`, `HU-28`, `RN-16`). La @figura:clases_metas presenta sus clases agrupadas por capa.
+
+![Diagrama de clases de la épica Metas semanales y estudio inmediato](../recursos/diagramas/diagrama_clases_metas.png){#clases_metas ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
+
+[[pendiente: diagramas de clases de las épicas siguientes (estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]

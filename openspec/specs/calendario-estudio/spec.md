@@ -107,3 +107,8 @@ Como estudiante, quiero filtrar el calendario por materia (incluyendo opcionalme
 - **GIVEN** que una sesión se estudió el domingo de 23:30 a 00:30 del lunes siguiente y quedó Completada con 60 minutos reales
 - **WHEN** el estudiante consulta el resumen de cada semana
 - **THEN** la semana del domingo suma 30 minutos reales y la semana siguiente otros 30 minutos (RN-31, RN-13)
+
+#### Scenario: Sesión sin plan en el resumen
+- **GIVEN** que en la semana hay una sesión sin plan Completada con 50 minutos reales
+- **WHEN** el estudiante consulta la cabecera de la vista Semana
+- **THEN** los 50 minutos suman en las horas realizadas y no en las planificadas (HU-47)

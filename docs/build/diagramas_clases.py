@@ -101,14 +101,23 @@ DOMINIO_TECNICAS = ["CalculadorPomodoro", "CalculadorRepartoTramo", "CalculadorT
 PERSISTENCIA_TECNICAS = ["EventoEstudioDao", "EventoEstudioEntity", "EventoEstudioRepositoryRoom"]
 SISTEMA_TECNICAS = ["ControladorNoMolestarSistema", "MarcadorSalidaAppPrefs", "ProgramadorAvisosAlarmManager"]
 
+PRESENTACION_METAS = ["FelicitacionMetasActivity", "HistorialMetasActivity", "HistorialMetasAdapter",
+                      "HistorialMetasViewModel", "SelectorEstudioBottomSheet"]
+ENTRADA_METAS = ["CambiarDeMateria", "ConsultarProgresoMetas", "DefinirMetaSemanal", "EstudiarAhora"]
+SERVICIOS_METAS = ["CambiarDeMateriaService", "ConsultarProgresoMetasService", "DefinirMetaSemanalService",
+                   "DetectorFelicitacionMetas", "EstudiarAhoraService"]
+SALIDA_METAS = ["MetaSemanalRepository"]
+DOMINIO_METAS = ["CalculadorProgresoMetas", "CierreSesion", "MetaAlcanzada", "MetaSemanal", "ProgresoMeta"]
+PERSISTENCIA_METAS = ["MetaSemanalDao", "MetaSemanalEntity", "MetaSemanalRepositoryRoom"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS,
-    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS,
-    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS,
+    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS,
+    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS + PERSISTENCIA_METAS,
     "adapter/out/security": SEGURIDAD_CONFIG,
     "adapter/out/system": SISTEMA_TECNICAS,
 }
@@ -434,6 +443,52 @@ def clases_tecnicas():
     img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_tecnicas.png", dpi=(200, 200))
 
 
+def clases_metas():
+    """Clases de la épica E6: metas semanales, estudio inmediato, cambio de materia y felicitación."""
+    W, H = 3760, 4200
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, w1 = [40, 980, 1920, 2860], 860
+    fila1 = [caja_con_metodos("HistorialMetasActivity", xs1[0], 80, w1),
+             caja_con_metodos("HistorialMetasViewModel", xs1[1], 80, w1),
+             caja_con_metodos("HistorialMetasAdapter", xs1[2], 80, w1),
+             caja_con_metodos("FelicitacionMetasActivity", xs1[3], 80, w1)]
+    y1b = 80 + alto(fila1) + 50
+    fila1b = [caja_con_metodos("SelectorEstudioBottomSheet", xs1[0], y1b, w1)]
+    for c in fila1 + fila1b:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.3), fila1[1].left(0.3), "observa", None, None)
+
+    y2 = y1b + alto(fila1b) + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    nucleo = [
+        caja_de_paquete("domain (modelos y calculadores)", DOMINIO_METAS, xs1[0], y2, w1, "domain"),
+        caja_de_paquete("application.port.in (casos de uso)", ENTRADA_METAS, xs1[1], y2, w1, "port.in"),
+        caja_de_paquete("application.service", SERVICIOS_METAS, xs1[2], y2, w1, "implementan"),
+        caja_de_paquete("application.port.out", SALIDA_METAS, xs1[3], y2, w1, "port.out"),
+    ]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, nucleo[2].left(0.3), nucleo[1].right(0.3), "implementan", None, None)
+    dg.assoc(d, nucleo[2].right(0.3), nucleo[3].left(0.3), "usan", None, None)
+
+    y3 = y2 + alto(nucleo) + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Infraestructura · adapter.out.persistence", font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("MetaSemanalEntity", xs1[0], y3, w1, "Entity", con_campos=True),
+             caja_con_metodos("MetaSemanalDao", xs1[1], y3, w1, "Dao"),
+             caja_con_metodos("MetaSemanalRepositoryRoom", xs1[2], y3, w1)]
+    for c in infra:
+        c.draw(d)
+    dg.assoc(d, infra[2].right(0.3), nucleo[3].bottom(0.5), "implementa", None, None)
+    img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_metas.png", dpi=(200, 200))
+
+
 # ---------------------------------------------------------------- modelo lógico y diccionario de datos
 DESCRIPCIONES = {
     ("perfil", "id"): "Identificador de la única fila del perfil (siempre 1, RN-01).",
@@ -454,10 +509,12 @@ DESCRIPCIONES = {
     ("materia", "color"): "Color de la materia como entero ARGB (paleta provisional).",
     ("materia", "docente"): "Docente de la materia; vacío si no se indicó (texto libre opcional).",
     ("materia", "archivada"): "1 si la materia está archivada (HU-08); 0 si está activa.",
+    ("materia", "meta_semanal_horas"): "Meta semanal opcional propia de la materia en horas (> 0 y ≤ 168, RN-14, HU-26).",
+    ("materia", "es_general"): "1 para la materia general protegida «Estudios varios» (RN-32); 0 para materias del estudiante.",
     ("sesion_estudio", "id"): "Identificador autogenerado de la sesión de estudio.",
     ("sesion_estudio", "materia_id"): "Identificador de la materia asociada; clave foránea a materia(id) con borrado restringido (RN-03).",
-    ("sesion_estudio", "plan_inicio_utc_milis"): "Instante absoluto de inicio planificado en milisegundos UTC (RN-04, RN-05).",
-    ("sesion_estudio", "plan_fin_utc_milis"): "Instante absoluto de fin planificado en milisegundos UTC; si cruza medianoche cae al día siguiente (RN-04).",
+    ("sesion_estudio", "plan_inicio_utc_milis"): "Instante absoluto de inicio planificado o real de arranque en milisegundos UTC (RN-04, RN-05, HU-47).",
+    ("sesion_estudio", "plan_fin_utc_milis"): "Instante absoluto de fin planificado en milisegundos UTC; nulo en sesiones sin plan iniciadas con «Estudiar ahora» (HU-47).",
     ("sesion_estudio", "desfase_minutos"): "Desfase horario local en minutos respecto a UTC vigente al planificar (para preservar el historial ante viajes).",
     ("sesion_estudio", "fecha"): "Fecha planificada o ejecutada en formato ISO AAAA-MM-DD (HU-10, HU-11).",
     ("sesion_estudio", "hora_inicio"): "Hora de inicio en formato HH:mm de 24 horas (RN-04).",
@@ -484,11 +541,17 @@ DESCRIPCIONES = {
     ("tramo_diario", "sesion_id"): "Identificador de la sesión asociada; parte de la clave primaria y FK a sesion_estudio(id) con ON DELETE CASCADE (RN-31).",
     ("tramo_diario", "fecha_local"): "Fecha calendario local ISO AAAA-MM-DD en la que ocurrió el estudio (RN-31).",
     ("tramo_diario", "minutos"): "Minutos reales contabilizables ocurridos en esa fecha local (RN-31).",
+    ("meta_semanal", "id"): "Identificador autogenerado del snapshot semanal.",
+    ("meta_semanal", "semana_inicio"): "Fecha ISO del lunes de la semana (RN-13, RN-33).",
+    ("meta_semanal", "materia_id"): "Nulo para la meta semanal total; FK a materia(id) con ON DELETE CASCADE para metas por materia (HU-25, HU-26).",
+    ("meta_semanal", "horas_objetivo"): "Objetivo semanal congelado en horas para esa semana (RN-14, RN-33).",
+    ("meta_semanal", "felicitada"): "1 si la felicitación por esta meta ya se mostró en esa semana (RN-16); 0 en caso contrario.",
 }
 TABLAS_DE_NEGOCIO = {"perfil": "Perfil del estudiante", "ajustes": "Ajustes de la aplicación",
                      "materia": "Materias del estudiante", "sesion_estudio": "Sesiones de estudio",
                      "evento_estudio": "Eventos de ejecución de sesiones",
-                     "tramo_diario": "Minutos reales por día local (RN-31)"}
+                     "tramo_diario": "Minutos reales por día local (RN-31)",
+                     "meta_semanal": "Instantáneas de metas semanales (RN-33)"}
 
 
 def _ultimo_esquema():
@@ -800,6 +863,7 @@ def generar():
     clases_sesiones()
     clases_calendario()
     clases_tecnicas()
+    clases_metas()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()

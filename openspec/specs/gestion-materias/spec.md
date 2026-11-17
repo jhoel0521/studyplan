@@ -26,6 +26,11 @@ Como estudiante, quiero modificar el nombre, el color o el docente de una materi
 - **WHEN** el estudiante cambia su nombre y color
 - **THEN** las sesiones siguen asociadas a la materia y el calendario muestra el nuevo color
 
+#### Scenario: Estudios varios protegida
+- **GIVEN** que existe la materia «Estudios varios», registrada por defecto
+- **WHEN** el estudiante abre sus opciones
+- **THEN** el sistema no ofrece cambiar su nombre ni asignarle meta semanal (RN-32)
+
 ### Requirement: HU-08 Archivar o eliminar materia
 Como estudiante, quiero archivar una materia terminada o eliminar una registrada por error para mantener limpia mi lista sin perder mi historial. El sistema SHALL cumplir los escenarios siguientes (prioridad Should, 3 pts).
 
@@ -44,18 +49,28 @@ Como estudiante, quiero archivar una materia terminada o eliminar una registrada
 - **WHEN** el estudiante la elimina y confirma
 - **THEN** el sistema la elimina definitivamente
 
+#### Scenario: Estudios varios siempre disponible
+- **GIVEN** que existe la materia «Estudios varios»
+- **WHEN** el estudiante busca archivarla o eliminarla
+- **THEN** el sistema no ofrece esas acciones, para que siempre se pueda estudiar sin registrar una materia (RN-32)
+
 ### Requirement: HU-09 Listar materias con horas acumuladas
 Como estudiante, quiero ver mis materias activas con las horas estudiadas en cada una para detectar a qué asignaturas les dedico poco tiempo. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 2 pts).
 
 #### Scenario: Lista
 - **GIVEN** que existen materias activas
 - **WHEN** el estudiante abre Materias
-- **THEN** el sistema muestra cada materia con su color, nombre y horas realizadas, en orden alfabético
+- **THEN** el sistema muestra cada materia con su color, nombre y horas realizadas, en orden alfabético, con «Estudios varios» al final
+
+#### Scenario: Progreso de la meta de la materia
+- **GIVEN** que Historia tiene una meta de 4 h y esta semana se estudiaron 3 h
+- **WHEN** el estudiante abre Materias
+- **THEN** la fila de Historia muestra «3 / 4 h» con una barra al 75 % (HU-27)
 
 #### Scenario: Lista vacía
-- **GIVEN** que no existen materias
+- **GIVEN** que no existen materias registradas por el estudiante
 - **WHEN** el estudiante abre Materias
-- **THEN** el sistema invita a registrar la primera materia
+- **THEN** el sistema muestra «Estudios varios» e invita a registrar la primera materia
 
 ### Requirement: HU-46 Desarchivar materia
 Como estudiante, quiero reactivar una materia archivada para volver a usarla cuando retome la asignatura. El sistema SHALL cumplir los escenarios siguientes (prioridad Could, 2 pts; la prioridad y los puntos son una propuesta de la IA que el Product Owner debe confirmar).

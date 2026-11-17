@@ -57,6 +57,10 @@ El estado de una sesión SHALL cambiar únicamente por las transiciones listadas
 - **GIVEN** una sesión en estado En curso
 - **WHEN** ocurre el evento «cambiar a la siguiente sesión»
 - **THEN** la sesión pasa a Completada — La siguiente sesión pasa a En curso sin detener el tiempo (RN-27)
+#### Scenario: Nueva → En curso (estudiar ahora)
+- **GIVEN** una sesión nueva sin horario planificado
+- **WHEN** ocurre el evento «estudiar ahora» o «cambiar de materia» hacia una materia sin sesión Pendiente elegida
+- **THEN** la sesión pasa a En curso en ese instante — No ocupa horario planificado (HU-47, HU-48)
 
 #### Scenario: En curso → Completada (declarar fin al volver)
 - **GIVEN** una sesión en estado En curso
