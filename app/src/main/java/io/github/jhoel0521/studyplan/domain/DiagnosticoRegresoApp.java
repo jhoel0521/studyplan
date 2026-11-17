@@ -1,5 +1,8 @@
 package io.github.jhoel0521.studyplan.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,6 +18,7 @@ public final class DiagnosticoRegresoApp {
     private final long instanteLimiteMaxMilis;
     private final boolean esRecuperacionCierreAbrupto;
     private final boolean vencidaPorTresDias;
+    private final List<MetaAlcanzada> metasAlcanzadas;
 
     public DiagnosticoRegresoApp(
             SesionEstudio sesionEnCurso,
@@ -24,6 +28,26 @@ public final class DiagnosticoRegresoApp {
             long instanteLimiteMaxMilis,
             boolean esRecuperacionCierreAbrupto,
             boolean vencidaPorTresDias) {
+        this(
+                sesionEnCurso,
+                nombreMateria,
+                colorMateria,
+                instanteSalidaMilis,
+                instanteLimiteMaxMilis,
+                esRecuperacionCierreAbrupto,
+                vencidaPorTresDias,
+                Collections.emptyList());
+    }
+
+    public DiagnosticoRegresoApp(
+            SesionEstudio sesionEnCurso,
+            String nombreMateria,
+            int colorMateria,
+            long instanteSalidaMilis,
+            long instanteLimiteMaxMilis,
+            boolean esRecuperacionCierreAbrupto,
+            boolean vencidaPorTresDias,
+            List<MetaAlcanzada> metasAlcanzadas) {
         this.sesionEnCurso = Objects.requireNonNull(sesionEnCurso, "sesionEnCurso");
         this.nombreMateria = Objects.requireNonNull(nombreMateria, "nombreMateria");
         this.colorMateria = colorMateria;
@@ -31,6 +55,9 @@ public final class DiagnosticoRegresoApp {
         this.instanteLimiteMaxMilis = instanteLimiteMaxMilis;
         this.esRecuperacionCierreAbrupto = esRecuperacionCierreAbrupto;
         this.vencidaPorTresDias = vencidaPorTresDias;
+        this.metasAlcanzadas = metasAlcanzadas == null
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(new ArrayList<>(metasAlcanzadas));
     }
 
     public SesionEstudio sesionEnCurso() {
@@ -59,5 +86,9 @@ public final class DiagnosticoRegresoApp {
 
     public boolean vencidaPorTresDias() {
         return vencidaPorTresDias;
+    }
+
+    public List<MetaAlcanzada> metasAlcanzadas() {
+        return metasAlcanzadas;
     }
 }

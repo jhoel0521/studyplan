@@ -17,7 +17,7 @@ public final class SesionEstudio {
     private final Long id;
     private final long materiaId;
     private final long planInicioUtcMilis;
-    private final long planFinUtcMilis;
+    private final Long planFinUtcMilis;
     private final int desfaseMinutos;
     private final int duracionPlanificadaMinutos;
     private final Integer duracionRealMinutos;
@@ -35,7 +35,7 @@ public final class SesionEstudio {
             Long id,
             long materiaId,
             long planInicioUtcMilis,
-            long planFinUtcMilis,
+            Long planFinUtcMilis,
             int desfaseMinutos,
             int duracionPlanificadaMinutos,
             Integer duracionRealMinutos,
@@ -264,12 +264,51 @@ public final class SesionEstudio {
                 pomodoroCiclosHastaLargo);
     }
 
-    /** Reconstruye una sesión leída desde almacenamiento persistente v5 con instantes UTC y desfase. */
+    /**
+     * Crea e inicia directamente una sesión sin horario planificado en estado {@code EN_CURSO}
+     * (transición Nueva → En curso de {@code RN-07}, {@code HU-47}, {@code HU-48}).
+     */
+    public static Resultado<SesionEstudio> estudiarAhora(
+            long materiaId,
+            Instante inicio,
+            TecnicaEstudio tecnicaElegida,
+            ConfiguracionPomodoro snapshotPomodoro,
+            PreferenciaNoMolestar preferenciaNoMolestar) {
+        if (materiaId <= 0) {
+            return Resultado.error(ErrorValidacion.MATERIA_SESION_OBLIGATORIA);
+        }
+        if (inicio == null) {
+            return Resultado.error(ErrorValidacion.FECHA_SESION_OBLIGATORIA);
+        }
+        TecnicaEstudio efectiva = tecnicaElegida == null ? TecnicaEstudio.LIBRE : tecnicaElegida;
+        ConfiguracionPomodoro snap = efectiva == TecnicaEstudio.POMODORO
+                ? (snapshotPomodoro == null ? ConfiguracionPomodoro.porDefecto() : snapshotPomodoro)
+                : null;
+        return Resultado.ok(new SesionEstudio(
+                null,
+                materiaId,
+                inicio.utcMilis(),
+                null,
+                inicio.desfaseMinutos(),
+                0,
+                null,
+                EstadoEnCurso.INSTANCIA,
+                "",
+                null,
+                efectiva,
+                preferenciaNoMolestar,
+                snap == null ? null : snap.trabajoMinutos(),
+                snap == null ? null : snap.descansoCortoMinutos(),
+                snap == null ? null : snap.descansoLargoMinutos(),
+                snap == null ? null : snap.ciclosHastaLargo()));
+    }
+
+    /** Reconstruye una sesión leída desde almacenamiento persistente v5/v6 con instantes UTC y desfase. */
     public static SesionEstudio restaurar(
             Long id,
             long materiaId,
             long planInicioUtcMilis,
-            long planFinUtcMilis,
+            Long planFinUtcMilis,
             int desfaseMinutos,
             int duracionPlanificadaMinutos,
             Integer duracionRealMinutos,
@@ -318,8 +357,13 @@ public final class SesionEstudio {
         return planInicioUtcMilis;
     }
 
-    public long planFinUtcMilis() {
+    public Long planFinUtcMilis() {
         return planFinUtcMilis;
+    }
+
+    /** Indica si la sesión tiene horario planificado ({@code false} para sesiones «Estudiar ahora»). */
+    public boolean tienePlan() {
+        return planFinUtcMilis != null;
     }
 
     public int desfaseMinutos() {
@@ -331,7 +375,7 @@ public final class SesionEstudio {
     }
 
     public Instante finInstante() {
-        return Instante.de(planFinUtcMilis, desfaseMinutos);
+        return planFinUtcMilis == null ? null : Instante.de(planFinUtcMilis, desfaseMinutos);
     }
 
     /** Fecha local de inicio derivada del instante de inicio y su desfase guardado. */
@@ -341,12 +385,12 @@ public final class SesionEstudio {
 
     /** Fecha local de fin derivada del instante de fin y su desfase guardado. */
     public Fecha fechaFinLocal() {
-        return finInstante().fechaLocal();
+        return planFinUtcMilis == null ? fecha() : finInstante().fechaLocal();
     }
 
     /** Indica si la sesión planificada cruza la medianoche local. */
     public boolean cruzaMedianoche() {
-        return !fecha().equals(fechaFinLocal());
+        return planFinUtcMilis != null && !fecha().equals(fechaFinLocal());
     }
 
     /** Hora local de inicio derivada del instante de inicio y su desfase guardado. */
@@ -356,7 +400,7 @@ public final class SesionEstudio {
 
     /** Hora local de fin derivada del instante de fin y su desfase guardado. */
     public Hora horaFin() {
-        return finInstante().horaLocal();
+        return planFinUtcMilis == null ? horaInicio() : finInstante().horaLocal();
     }
 
     public int duracionPlanificadaMinutos() {
@@ -520,9 +564,10 @@ public final class SesionEstudio {
 
     /**
      * Comprueba si esta sesión se cruza con el intervalo absoluto {@code [otroInicio, otroFin)} (RN-05).
+     * Las sesiones sin horario planificado nunca generan cruce.
      */
     public boolean seSolapaCon(Instante otroInicio, Instante otroFin) {
-        if (otroInicio == null || otroFin == null || !estado.ocupaHorario()) {
+        if (otroInicio == null || otroFin == null || planFinUtcMilis == null || !estado.ocupaHorario()) {
             return false;
         }
         return otroInicio.utcMilis() < planFinUtcMilis && otroFin.utcMilis() > planInicioUtcMilis;
@@ -530,7 +575,8 @@ public final class SesionEstudio {
 
     /** Comprueba si esta sesión se cruza en tiempo absoluto con {@code otra} (RN-05). */
     public boolean seSolapaCon(SesionEstudio otra) {
-        return otra != null && seSolapaCon(otra.inicioInstante(), otra.finInstante());
+        return otra != null && otra.planFinUtcMilis != null
+                && seSolapaCon(otra.inicioInstante(), otra.finInstante());
     }
 
     /** Minutos reales contabilizables en progreso semanal y acumulado por materia (RN-11). */
@@ -697,7 +743,7 @@ public final class SesionEstudio {
         SesionEstudio otra = (SesionEstudio) o;
         return materiaId == otra.materiaId
                 && planInicioUtcMilis == otra.planInicioUtcMilis
-                && planFinUtcMilis == otra.planFinUtcMilis
+                && Objects.equals(planFinUtcMilis, otra.planFinUtcMilis)
                 && desfaseMinutos == otra.desfaseMinutos
                 && duracionPlanificadaMinutos == otra.duracionPlanificadaMinutos
                 && Objects.equals(id, otra.id)

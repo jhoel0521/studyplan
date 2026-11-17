@@ -66,7 +66,7 @@ public class MateriasEspressoTest {
     @SuppressWarnings("unused") // el escenario solo se usa para cerrarse con try-with-resources
     public void sinMateriasSeInvitaARegistrarLaPrimera() throws InterruptedException {
         try (ActivityScenario<MateriasActivity> escenario = ActivityScenario.launch(MateriasActivity.class)) {
-            Pruebas.esperarVisible(withId(R.id.textoMateriasVacio));
+            Pruebas.esperarVisible(withText(R.string.materia_general_nombre));
         }
     }
 
@@ -112,7 +112,7 @@ public class MateriasEspressoTest {
             onView(withId(android.R.id.button1)).perform(click());
             Pruebas.esperarVisible(withText(R.string.error_color_hex));
         }
-        assertTrue(Pruebas.app().listarMaterias().ejecutar().estaVacio());
+        assertEquals(1, Pruebas.app().listarMaterias().ejecutar().activas().size());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class MateriasEspressoTest {
             escribirNombreYGuardar("  MATEMATICAS ");
             Pruebas.esperarVisible(withText(R.string.error_materia_duplicada));
         }
-        assertEquals(1, Pruebas.app().listarMaterias().ejecutar().activas().size());
+        assertEquals(2, Pruebas.app().listarMaterias().ejecutar().activas().size());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class MateriasEspressoTest {
             escribirNombreYGuardar("Física II");
             Pruebas.esperarVisible(withText("Física II"));
         }
-        assertEquals(1, Pruebas.app().listarMaterias().ejecutar().activas().size());
+        assertEquals(2, Pruebas.app().listarMaterias().ejecutar().activas().size());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class MateriasEspressoTest {
             Pruebas.esperarAusente(withId(R.id.tituloArchivadas));
         }
         ListadoMaterias listado = Pruebas.app().listarMaterias().ejecutar();
-        assertEquals(1, listado.activas().size());
+        assertEquals(2, listado.activas().size());
         assertTrue(listado.archivadas().isEmpty());
     }
 
@@ -178,9 +178,9 @@ public class MateriasEspressoTest {
             onView(withId(R.id.botonEliminarMateria)).perform(scrollTo(), click());
             Pruebas.esperarVisible(withId(android.R.id.button1));
             onView(withId(android.R.id.button1)).perform(click());
-            Pruebas.esperarVisible(withId(R.id.textoMateriasVacio));
+            Pruebas.esperarAusente(withText("Historia"));
         }
-        assertTrue(Pruebas.app().listarMaterias().ejecutar().estaVacio());
+        assertEquals(1, Pruebas.app().listarMaterias().ejecutar().activas().size());
     }
 
     @Test
@@ -237,6 +237,6 @@ public class MateriasEspressoTest {
             onView(withId(android.R.id.button1)).perform(click());
             Pruebas.esperarVisible(withText(R.string.error_materia_con_sesiones));
         }
-        assertEquals(1, Pruebas.app().listarMaterias().ejecutar().activas().size());
+        assertEquals(2, Pruebas.app().listarMaterias().ejecutar().activas().size());
     }
 }

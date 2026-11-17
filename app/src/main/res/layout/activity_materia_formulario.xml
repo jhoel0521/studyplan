@@ -64,6 +64,25 @@
                     tools:text="Dra. Ruiz" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contenedorMetaMateria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="16dp"
+                android:hint="@string/campo_meta_semanal_opcional"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoMetaMateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

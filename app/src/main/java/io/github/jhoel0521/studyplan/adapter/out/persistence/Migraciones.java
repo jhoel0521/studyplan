@@ -224,6 +224,71 @@ public final class Migraciones {
         }
     };
 
+    /**
+     * Versión 5 -> 6: añade {@code meta_semanal_horas} y {@code es_general} a {@code materia},
+     * inserta la materia general {@code Estudios varios}, permite {@code plan_fin_utc_milis}
+     * nulo en {@code sesion_estudio} y crea la tabla {@code meta_semanal} ({@code HU-25} a
+     * {@code HU-28}, {@code HU-47}, {@code RN-32}, {@code RN-33}).
+     */
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase base) {
+            base.execSQL("ALTER TABLE `materia` ADD COLUMN `meta_semanal_horas` REAL");
+            base.execSQL("ALTER TABLE `materia` ADD COLUMN `es_general` INTEGER NOT NULL DEFAULT 0");
+            StudyPlanDatabase.asegurarMateriaGeneral(base);
+
+            base.execSQL("CREATE TABLE IF NOT EXISTS `sesion_estudio_nueva` ("
+                    + "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + "`materia_id` INTEGER NOT NULL, "
+                    + "`plan_inicio_utc_milis` INTEGER NOT NULL, "
+                    + "`plan_fin_utc_milis` INTEGER, "
+                    + "`desfase_minutos` INTEGER NOT NULL, "
+                    + "`duracion_planificada_minutos` INTEGER NOT NULL, "
+                    + "`duracion_real_minutos` INTEGER, "
+                    + "`estado` TEXT NOT NULL, "
+                    + "`notas` TEXT, "
+                    + "`sesion_origen_id` INTEGER, "
+                    + "`tecnica` TEXT NOT NULL, "
+                    + "`forzar_no_molestar` INTEGER, "
+                    + "`pomodoro_trabajo_min` INTEGER, "
+                    + "`pomodoro_descanso_corto_min` INTEGER, "
+                    + "`pomodoro_descanso_largo_min` INTEGER, "
+                    + "`pomodoro_ciclos_hasta_largo` INTEGER, "
+                    + "FOREIGN KEY(`materia_id`) REFERENCES `materia`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT , "
+                    + "FOREIGN KEY(`sesion_origen_id`) REFERENCES `sesion_estudio`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+            base.execSQL("INSERT INTO `sesion_estudio_nueva` ("
+                    + "`id`, `materia_id`, `plan_inicio_utc_milis`, `plan_fin_utc_milis`, "
+                    + "`desfase_minutos`, `duracion_planificada_minutos`, `duracion_real_minutos`, "
+                    + "`estado`, `notas`, `sesion_origen_id`, `tecnica`, `forzar_no_molestar`, "
+                    + "`pomodoro_trabajo_min`, `pomodoro_descanso_corto_min`, "
+                    + "`pomodoro_descanso_largo_min`, `pomodoro_ciclos_hasta_largo`) "
+                    + "SELECT `id`, `materia_id`, `plan_inicio_utc_milis`, `plan_fin_utc_milis`, "
+                    + "`desfase_minutos`, `duracion_planificada_minutos`, `duracion_real_minutos`, "
+                    + "`estado`, `notas`, `sesion_origen_id`, `tecnica`, `forzar_no_molestar`, "
+                    + "`pomodoro_trabajo_min`, `pomodoro_descanso_corto_min`, "
+                    + "`pomodoro_descanso_largo_min`, `pomodoro_ciclos_hasta_largo` "
+                    + "FROM `sesion_estudio`");
+            base.execSQL("DROP TABLE `sesion_estudio`");
+            base.execSQL("ALTER TABLE `sesion_estudio_nueva` RENAME TO `sesion_estudio`");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_materia_id` ON `sesion_estudio` (`materia_id`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_plan_inicio_utc_milis` ON `sesion_estudio` (`plan_inicio_utc_milis`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_estado` ON `sesion_estudio` (`estado`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_sesion_estudio_sesion_origen_id` ON `sesion_estudio` (`sesion_origen_id`)");
+
+            base.execSQL("CREATE TABLE IF NOT EXISTS `meta_semanal` ("
+                    + "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                    + "`semana_inicio` TEXT NOT NULL, "
+                    + "`materia_id` INTEGER, "
+                    + "`horas_objetivo` REAL NOT NULL, "
+                    + "`felicitada` INTEGER NOT NULL, "
+                    + "FOREIGN KEY(`materia_id`) REFERENCES `materia`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+            base.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_meta_semanal_semana_inicio_materia_id` "
+                    + "ON `meta_semanal` (`semana_inicio`, `materia_id`)");
+            base.execSQL("CREATE INDEX IF NOT EXISTS `index_meta_semanal_materia_id` "
+                    + "ON `meta_semanal` (`materia_id`)");
+        }
+    };
+
     private static long[] convertirHorarioLocalAUctYDesfase(
             String fechaStr, String horaInicioStr, String horaFinStr) {
         Resultado<Fecha> f = Fecha.parsear(fechaStr);

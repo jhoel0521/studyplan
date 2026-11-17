@@ -11,15 +11,19 @@ import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
+import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
 import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
 import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
@@ -27,7 +31,7 @@ import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
 
 /**
  * Resuelve la declaración del estudiante al volver con una sesión {@code EN_CURSO}
- * ({@code NO_SEGUI}, {@code HASTA_HORA}, {@code SIGO_ESTUDIANDO}) según HU-41 y RN-24.
+ * ({@code NO_SEGUI}, {@code HASTA_HORA}, {@code SIGO_ESTUDIANDO}) según HU-41, RN-24 y RN-16.
  */
 public final class ResolverRegresoAppService implements ResolverRegresoApp {
 
@@ -39,6 +43,8 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
     private final TramoDiarioRepository tramos;
+    private final MetaSemanalRepository metas;
+    private final PerfilRepository perfiles;
     private final Reloj reloj;
 
     public ResolverRegresoAppService(
@@ -59,6 +65,8 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                 programador,
                 marcadorSalida,
                 null,
+                null,
+                null,
                 reloj);
     }
 
@@ -72,6 +80,32 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
             MarcadorSalidaApp marcadorSalida,
             TramoDiarioRepository tramos,
             Reloj reloj) {
+        this(
+                sesiones,
+                eventos,
+                materias,
+                ajustesRepo,
+                noMolestar,
+                programador,
+                marcadorSalida,
+                tramos,
+                null,
+                null,
+                reloj);
+    }
+
+    public ResolverRegresoAppService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            AjustesRepository ajustesRepo,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            MetaSemanalRepository metas,
+            PerfilRepository perfiles,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.materias = Objects.requireNonNull(materias, "materias");
@@ -80,11 +114,21 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
         this.tramos = tramos;
+        this.metas = metas;
+        this.perfiles = perfiles;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
     @Override
     public Resultado<SesionEstudio> ejecutar(
+            long sesionId, OpcionRegreso opcion, Long hastaInstanteMilis, String nota) {
+        Resultado<CierreSesion> res =
+                ejecutarConMetas(sesionId, opcion, hastaInstanteMilis, nota);
+        return res.esValido() ? Resultado.ok(res.valor().sesion()) : Resultado.error(res.error());
+    }
+
+    @Override
+    public Resultado<CierreSesion> ejecutarConMetas(
             long sesionId, OpcionRegreso opcion, Long hastaInstanteMilis, String nota) {
         Objects.requireNonNull(opcion, "opcion");
         Optional<SesionEstudio> encontrada = sesiones.buscarPorId(sesionId);
@@ -157,13 +201,13 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                         .orElse("");
                 EjecucionHitos.programarProximoHito(
                         sesion, nombreMateria, lista, ahoraMs, sesiones, programador, reloj);
-                return Resultado.ok(sesion);
+                return Resultado.ok(new CierreSesion(sesion, java.util.Collections.emptyList()));
             }
         }
         throw new AssertionError("Opción no soportada: " + opcion);
     }
 
-    private Resultado<SesionEstudio> cerrarAlVolver(
+    private Resultado<CierreSesion> cerrarAlVolver(
             SesionEstudio sesion, List<EventoEstudio> lista, long finMs) {
         EventoEstudio evFin = EventoEstudio.crear(
                 sesion.id(),
@@ -182,8 +226,10 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                 finMs);
         Resultado<SesionEstudio> res = sesion.declararFinAlVolver(minutos);
         if (!res.esValido()) {
-            return res;
+            return Resultado.error(res.error());
         }
+        DetectorFelicitacionMetas.InstantaneaAntes antes =
+                DetectorFelicitacionMetas.capturarAntes(tramos, metas, reloj);
         eventos.guardar(evFin);
         sesiones.actualizar(res.valor());
         if (tramos != null) {
@@ -191,9 +237,11 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                     sesion.id(),
                     RepartidorPorDia.repartir(res.valor(), lista, finMs, minutos));
         }
+        List<MetaAlcanzada> alcanzadas = DetectorFelicitacionMetas.detectarYMarcar(
+                antes, metas, perfiles, materias, tramos);
         programador.cancelarAvisos(sesion.id());
         noMolestar.restaurarSiAplica();
         marcadorSalida.limpiar();
-        return res;
+        return Resultado.ok(new CierreSesion(res.valor(), alcanzadas));
     }
 }

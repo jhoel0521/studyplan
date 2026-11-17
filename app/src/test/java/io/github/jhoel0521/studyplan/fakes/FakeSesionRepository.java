@@ -100,7 +100,8 @@ public final class FakeSesionRepository implements SesionRepository {
     public List<SesionEstudio> listarPorRangoUtc(long desdeUtcMilis, long hastaUtcMilis) {
         List<SesionEstudio> resultado = new ArrayList<>();
         for (SesionEstudio s : sesiones) {
-            if (s.planFinUtcMilis() >= desdeUtcMilis && s.planInicioUtcMilis() <= hastaUtcMilis) {
+            long fin = s.planFinUtcMilis() == null ? s.planInicioUtcMilis() : s.planFinUtcMilis();
+            if (fin >= desdeUtcMilis && s.planInicioUtcMilis() <= hastaUtcMilis) {
                 resultado.add(s);
             }
         }

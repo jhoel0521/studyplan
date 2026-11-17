@@ -26,7 +26,15 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
         }
         if (clase.isAssignableFrom(InicioViewModel.class)) {
             return (T) new InicioViewModel(
-                    app.obtenerResumenInicio(), app.listarMaterias(), app.ejecutor());
+                    app.obtenerResumenInicio(),
+                    app.listarMaterias(),
+                    app.definirMetaSemanal(),
+                    app.estudiarAhora(),
+                    app.iniciarSesion(),
+                    app.ejecutor());
+        }
+        if (clase.isAssignableFrom(HistorialMetasViewModel.class)) {
+            return (T) new HistorialMetasViewModel(app.consultarProgresoMetas(), app.ejecutor());
         }
         if (clase.isAssignableFrom(CalendarioViewModel.class)) {
             return (T) new CalendarioViewModel(
@@ -60,6 +68,8 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
                     app.pausarReanudarSesion(),
                     app.detenerSesion(),
                     app.decidirFinPlanificadoOInvasion(),
+                    app.cambiarDeMateria(),
+                    app.listarMaterias(),
                     app.ejecutor());
         }
         if (clase.isAssignableFrom(RepartoSesionViewModel.class)) {

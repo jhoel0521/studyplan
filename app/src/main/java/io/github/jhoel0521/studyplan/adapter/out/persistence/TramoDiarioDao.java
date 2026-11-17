@@ -33,4 +33,16 @@ public abstract class TramoDiarioDao {
 
     @Query("SELECT * FROM tramo_diario WHERE fecha_local BETWEEN :desde AND :hasta")
     public abstract List<TramoDiarioEntity> listarEnRango(String desde, String hasta);
+
+    @Query("SELECT s.materia_id AS materiaId, COALESCE(SUM(t.minutos), 0) AS totalMinutos "
+            + "FROM tramo_diario t "
+            + "INNER JOIN sesion_estudio s ON s.id = t.sesion_id "
+            + "WHERE t.fecha_local BETWEEN :desde AND :hasta "
+            + "GROUP BY s.materia_id")
+    public abstract List<MinutosPorMateria> sumarPorMateriaEnRango(String desde, String hasta);
+
+    public static final class MinutosPorMateria {
+        public long materiaId;
+        public int totalMinutos;
+    }
 }

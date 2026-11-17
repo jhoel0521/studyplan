@@ -10,6 +10,7 @@ import java.util.Optional;
 import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
 import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
@@ -19,14 +20,16 @@ import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Instante;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.MetaSemanal;
 import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.ResumenInicio;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 
 /**
  * Implementa {@link ObtenerResumenInicio}: vence pendientes de días anteriores (RN-08), suma horas
  * reales de lunes a domingo de la semana actual (RN-11, RN-13), determina la próxima sesión
- * {@code PENDIENTE} y lista las sesiones del día (HU-02, RN-15).
+ * {@code PENDIENTE} y lista las sesiones del día (HU-02, RN-15, RN-33).
  */
 public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
 
@@ -34,6 +37,7 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
     private final SesionRepository sesiones;
     private final MateriaRepository materias;
     private final TramoDiarioRepository tramos;
+    private final MetaSemanalRepository metas;
     private final Reloj reloj;
     private final VencerSesionesPendientes vencerPendientes;
 
@@ -43,7 +47,7 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             MateriaRepository materias,
             Reloj reloj,
             VencerSesionesPendientes vencerPendientes) {
-        this(perfiles, sesiones, materias, null, reloj, vencerPendientes);
+        this(perfiles, sesiones, materias, null, null, reloj, vencerPendientes);
     }
 
     public ObtenerResumenInicioService(
@@ -53,10 +57,22 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             TramoDiarioRepository tramos,
             Reloj reloj,
             VencerSesionesPendientes vencerPendientes) {
+        this(perfiles, sesiones, materias, tramos, null, reloj, vencerPendientes);
+    }
+
+    public ObtenerResumenInicioService(
+            PerfilRepository perfiles,
+            SesionRepository sesiones,
+            MateriaRepository materias,
+            TramoDiarioRepository tramos,
+            MetaSemanalRepository metas,
+            Reloj reloj,
+            VencerSesionesPendientes vencerPendientes) {
         this.perfiles = Objects.requireNonNull(perfiles, "perfiles");
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.materias = Objects.requireNonNull(materias, "materias");
         this.tramos = tramos;
+        this.metas = metas;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
         this.vencerPendientes = Objects.requireNonNull(vencerPendientes, "vencerPendientes");
     }
@@ -87,13 +103,29 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
         }
 
         DetalleSesionInicio proxima = seleccionarProxima(hoy, ahoraInst, catalogo);
+        double metaSemanaHoras = resolverMetaSemanaActual(lunes, perfil);
         return Optional.of(new ResumenInicio(
                 perfil.nombre(),
                 horasRealizadas,
-                perfil.metaSemanalHoras(),
+                metaSemanaHoras,
                 hoy,
                 proxima,
                 sesionesDeHoy));
+    }
+
+    private double resolverMetaSemanaActual(Fecha lunes, Perfil perfil) {
+        if (metas == null) {
+            return perfil.metaSemanalHoras();
+        }
+        Optional<MetaSemanal> existente = metas.buscar(lunes, null);
+        if (existente.isPresent()) {
+            return existente.get().horasObjetivo();
+        }
+        Resultado<MetaSemanal> creada = MetaSemanal.crear(lunes, null, perfil.metaSemanalHoras());
+        if (creada.esValido()) {
+            metas.guardar(creada.valor());
+        }
+        return perfil.metaSemanalHoras();
     }
 
     private DetalleSesionInicio seleccionarProxima(

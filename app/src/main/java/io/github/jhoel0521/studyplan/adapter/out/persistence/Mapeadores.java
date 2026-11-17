@@ -9,6 +9,7 @@ import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Instante;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.MetaSemanal;
 import io.github.jhoel0521.studyplan.domain.Perfil;
 import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.Resultado;
@@ -77,11 +78,33 @@ final class Mapeadores {
         e.color = materia.color();
         e.docente = materia.docente();
         e.archivada = materia.archivada();
+        e.metaSemanalHoras = materia.metaSemanalHoras();
+        e.esGeneral = materia.esGeneral();
         return e;
     }
 
     static Materia aDominio(MateriaEntity e) {
-        return Materia.restaurar(e.id, e.nombre, e.color, e.docente, e.archivada);
+        return Materia.restaurar(
+                e.id, e.nombre, e.color, e.docente, e.archivada, e.metaSemanalHoras, e.esGeneral);
+    }
+
+    static MetaSemanalEntity aEntidad(MetaSemanal meta) {
+        MetaSemanalEntity e = new MetaSemanalEntity();
+        e.id = meta.id() == null ? 0 : meta.id();
+        e.semanaInicio = meta.semanaInicio().iso();
+        e.materiaId = meta.materiaId();
+        e.horasObjetivo = meta.horasObjetivo();
+        e.felicitada = meta.felicitada();
+        return e;
+    }
+
+    static MetaSemanal aDominio(MetaSemanalEntity e) {
+        Resultado<Fecha> fecha = Fecha.parsear(e.semanaInicio);
+        if (!fecha.esValido()) {
+            return null;
+        }
+        return MetaSemanal.restaurar(
+                e.id, fecha.valor(), e.materiaId, e.horasObjetivo, e.felicitada);
     }
 
     static SesionEntity aEntidad(SesionEstudio s) {
@@ -108,7 +131,7 @@ final class Mapeadores {
     static SesionEstudio aDominio(SesionEntity e) {
         if (e.desfaseMinutos < Instante.DESFASE_MINIMO_MINUTOS
                 || e.desfaseMinutos > Instante.DESFASE_MAXIMO_MINUTOS
-                || e.planFinUtcMilis <= e.planInicioUtcMilis) {
+                || (e.planFinUtcMilis != null && e.planFinUtcMilis <= e.planInicioUtcMilis)) {
             return null;
         }
         CodigoEstadoSesion codigo = leer(

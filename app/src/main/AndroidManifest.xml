@@ -67,6 +67,12 @@
         <activity
             android:name=".adapter.in.ui.RepartoSesionActivity"
             android:exported="false" />
+        <activity
+            android:name=".adapter.in.ui.HistorialMetasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.in.ui.FelicitacionMetasActivity"
+            android:exported="false" />
 
         <receiver
             android:name=".adapter.in.ui.ReceptorAvisosSesion"

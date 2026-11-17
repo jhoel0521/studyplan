@@ -38,13 +38,13 @@ public final class RepartidorPorDia {
                 ? Collections.emptyList()
                 : CalculadorTiempoReal.reconstruirIntervalos(eventos, ahoraMilis);
 
-        if (intervalos.isEmpty()) {
+        if (intervalos.isEmpty() && sesion.planFinUtcMilis() != null) {
             acumularIntervalo(
                     milisPorDia,
                     sesion.planInicioUtcMilis(),
                     sesion.planFinUtcMilis(),
                     sesion.desfaseMinutos());
-        } else {
+        } else if (!intervalos.isEmpty()) {
             List<EventoEstudio> ordenados = new ArrayList<>(eventos);
             ordenados.sort(Comparator.comparingLong(EventoEstudio::instanteMilis));
             for (IntervaloEfectivo intervalo : intervalos) {

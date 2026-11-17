@@ -310,4 +310,45 @@
     <string name="error_pomodoro_invalido">Revisa los rangos: trabajo 1–180, corto 1–60, largo 1–90, ciclos 1–12</string>
     <string name="error_hora_declarada_rango">La hora debe estar entre la salida y el momento actual</string>
     <string name="error_corte_reparto">La hora de corte debe estar dentro del tramo estudiado</string>
+
+    <string name="materia_general_nombre">Estudios varios</string>
+    <string name="campo_meta_semanal_opcional">Meta semanal (h, opcional)</string>
+    <string name="materia_meta_progreso">%1$s / %2$s h</string>
+    <string name="materia_meta_progreso_cd">Progreso semanal de %1$s: %2$s de %3$s horas</string>
+    <string name="error_materia_general_protegida">Estudios varios no se puede editar, archivar ni eliminar</string>
+
+    <string name="inicio_definir_meta">Definir meta semanal</string>
+    <string name="inicio_editar_meta">Editar meta</string>
+    <string name="inicio_ver_historial_metas">Historial de metas</string>
+    <string name="dialogo_meta_semanal_titulo">Meta semanal (horas)</string>
+    <string name="dialogo_meta_semanal_hint">Horas objetivo esta semana (1 a 168)</string>
+    <string name="dialogo_meta_semanal_guardar">Guardar meta</string>
+    <string name="meta_semanal_guardada">Meta de esta semana actualizada</string>
+
+    <string name="titulo_historial_metas">Historial de metas</string>
+    <string name="historial_metas_vacio">Aún no hay semanas registradas en el historial</string>
+    <string name="historial_semana_rango">Semana del %1$s al %2$s</string>
+    <string name="historial_meta_total_titulo">Meta total</string>
+    <string name="historial_meta_estimada">Estimada</string>
+    <string name="historial_meta_cumplida">Cumplida</string>
+    <string name="historial_meta_en_progreso">En progreso</string>
+
+    <string name="accion_estudiar_ahora">Estudiar ahora</string>
+    <string name="selector_estudio_titulo">¿Qué vas a estudiar?</string>
+    <string name="selector_estudio_titulo_cambio">Cambiar a otra materia</string>
+    <string name="selector_nueva_materia">Nueva materia</string>
+    <string name="selector_nueva_materia_nombre">Nombre de la materia</string>
+    <string name="selector_iniciar_estudio">Comenzar</string>
+    <string name="dialogo_sesion_pendiente_titulo">¿Es tu sesión de %1$s?</string>
+    <string name="dialogo_sesion_pendiente_msg">Tienes una sesión planificada hoy (%1$s – %2$s). ¿Quieres iniciar esa sesión o empezar una libre?</string>
+    <string name="dialogo_sesion_pendiente_usar">Iniciar la planificada</string>
+    <string name="dialogo_sesion_pendiente_nueva">Empezar sesión nueva</string>
+
+    <string name="sesion_cambiar_materia">Cambiar de materia</string>
+    <string name="felicitacion_titulo">¡Sigue así!</string>
+    <string name="felicitacion_subtitulo">Alcanzaste tu meta semanal</string>
+    <string name="felicitacion_meta_total_item">Meta semanal total: %1$s / %2$s h</string>
+    <string name="felicitacion_meta_materia_item">%1$s: %2$s / %3$s h</string>
+    <string name="felicitacion_volver_inicio">Volver al inicio</string>
+    <string name="error_sesion_ya_en_curso">Ya tienes otra sesión en curso</string>
 </resources>

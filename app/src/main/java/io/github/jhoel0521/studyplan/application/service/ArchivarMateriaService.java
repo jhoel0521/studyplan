@@ -25,6 +25,10 @@ public final class ArchivarMateriaService implements ArchivarMateria {
         if (actual == null) {
             return Resultado.error(ErrorValidacion.MATERIA_NO_ENCONTRADA);
         }
-        return Resultado.ok(actual.archivada() ? actual : repositorio.guardar(actual.conArchivada(true)));
+        Resultado<Materia> archivada = actual.intentarArchivar(true);
+        if (!archivada.esValido()) {
+            return archivada;
+        }
+        return Resultado.ok(actual.archivada() ? actual : repositorio.guardar(archivada.valor()));
     }
 }

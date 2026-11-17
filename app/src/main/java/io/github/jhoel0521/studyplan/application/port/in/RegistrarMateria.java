@@ -17,4 +17,12 @@ public interface RegistrarMateria {
      * @return la materia guardada, o el código de error (no se guarda nada)
      */
     Resultado<Materia> ejecutar(String nombre, int color, String docente);
+
+    /**
+     * Registra una materia con meta semanal opcional ({@code HU-26}, {@code RN-14}).
+     */
+    default Resultado<Materia> ejecutar(
+            String nombre, int color, String docente, Double metaSemanalHoras) {
+        return ejecutar(nombre, color, docente);
+    }
 }

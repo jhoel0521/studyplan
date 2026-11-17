@@ -9,6 +9,8 @@ import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
+import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
@@ -17,6 +19,7 @@ import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
 import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
 import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
@@ -24,7 +27,7 @@ import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
 
 /**
  * Evalúa al volver a la app si existe una sesión {@code EN_CURSO} con salida sin resolver, cierre
- * abrupto ({@code SIGKILL}) o vencida por más de 3 días (HU-22, HU-41, RN-24, RN-29).
+ * abrupto ({@code SIGKILL}) o vencida por más de 3 días (HU-22, HU-41, RN-16, RN-24, RN-29).
  */
 public final class EvaluarRecuperacionSesionService implements EvaluarRecuperacionSesion {
 
@@ -37,6 +40,8 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
     private final TramoDiarioRepository tramos;
+    private final MetaSemanalRepository metas;
+    private final PerfilRepository perfiles;
     private final Reloj reloj;
 
     public EvaluarRecuperacionSesionService(
@@ -47,7 +52,7 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
-        this(sesiones, eventos, materias, noMolestar, programador, marcadorSalida, null, reloj);
+        this(sesiones, eventos, materias, noMolestar, programador, marcadorSalida, null, null, null, reloj);
     }
 
     public EvaluarRecuperacionSesionService(
@@ -59,6 +64,20 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
             MarcadorSalidaApp marcadorSalida,
             TramoDiarioRepository tramos,
             Reloj reloj) {
+        this(sesiones, eventos, materias, noMolestar, programador, marcadorSalida, tramos, null, null, reloj);
+    }
+
+    public EvaluarRecuperacionSesionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            MetaSemanalRepository metas,
+            PerfilRepository perfiles,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.materias = Objects.requireNonNull(materias, "materias");
@@ -66,6 +85,8 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
         this.tramos = tramos;
+        this.metas = metas;
+        this.perfiles = perfiles;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
@@ -101,6 +122,8 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
                     cierreMs);
             Resultado<SesionEstudio> cerrada = sesion.cerrarPorPlazoVencido(minutos);
             if (cerrada.esValido()) {
+                DetectorFelicitacionMetas.InstantaneaAntes antes =
+                        DetectorFelicitacionMetas.capturarAntes(tramos, metas, reloj);
                 EventoEstudio finEv = eventos.guardar(EventoEstudio.crear(
                         sesion.id(),
                         TipoEventoEstudio.FIN,
@@ -116,11 +139,20 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
                             RepartidorPorDia.repartir(
                                     cerrada.valor(), conFin, cierreMs, minutos));
                 }
+                List<MetaAlcanzada> alcanzadas = DetectorFelicitacionMetas.detectarYMarcar(
+                        antes, metas, perfiles, materias, tramos);
                 programador.cancelarAvisos(sesion.id());
                 noMolestar.restaurarSiAplica();
                 marcadorSalida.limpiar();
                 return Optional.of(new DiagnosticoRegresoApp(
-                        cerrada.valor(), nombreMateria, colorMateria, cierreMs, ahoraMs, false, true));
+                        cerrada.valor(),
+                        nombreMateria,
+                        colorMateria,
+                        cierreMs,
+                        ahoraMs,
+                        false,
+                        true,
+                        alcanzadas));
             }
         }
 

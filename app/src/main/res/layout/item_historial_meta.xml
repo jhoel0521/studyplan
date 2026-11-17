@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/materialCardViewOutlinedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    tools:context=".adapter.in.ui.HistorialMetasActivity"
+    tools:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tituloSemanaHistorial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                tools:text="Semana del 2026-11-16 al 2026-11-22" />
+
+            <TextView
+                android:id="@+id/etiquetaEstadoHistorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
+                tools:text="Cumplida" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/subtituloMetaHistorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:maxWidth="600dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="Meta total" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/barraHistorialMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/titulo_historial_metas"
+            android:max="100"
+            android:maxWidth="600dp"
+            tools:progress="80" />
+
+        <TextView
+            android:id="@+id/textoProgresoHistorial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:maxWidth="600dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            tools:text="8 / 10 h" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

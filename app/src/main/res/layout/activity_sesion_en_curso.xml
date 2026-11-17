@@ -118,6 +118,15 @@
                     android:text="@string/sesion_en_curso_detener" />
             </LinearLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonCambiarMateria"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="48dp"
+                android:text="@string/sesion_cambiar_materia" />
+
             <!-- Tarjeta extensión Pomodoro (HU-23) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tarjetaExtensionPomodoro"

@@ -152,10 +152,11 @@ public class SesionRepositoryRoomTest {
             assertTrue(materias.obtener(algebraId).isPresent());
         }
 
-        // AlmacenDatos.borrarTodo() vacía ambas tablas sin violar FKs
+        // AlmacenDatos.borrarTodo() vacía ambas tablas sin violar FKs (conserva Estudios varios)
         almacen.borrarTodo();
         assertEquals(0, sesionesDeMateria.contar(algebraId));
-        assertTrue(materias.activas().isEmpty());
+        assertEquals(1, materias.activas().size());
+        assertTrue(materias.activas().get(0).esGeneral());
     }
 
     @Test
@@ -184,7 +185,7 @@ public class SesionRepositoryRoomTest {
                 Fecha.de(2026, 12, 1).valor(), Fecha.de(2026, 12, 7).valor());
         assertTrue(vacio.isEmpty());
 
-        assertEquals(5, base.getOpenHelper().getReadableDatabase().getVersion());
+        assertEquals(6, base.getOpenHelper().getReadableDatabase().getVersion());
         Context contexto = ApplicationProvider.getApplicationContext();
         String[] permisos = contexto.getPackageManager()
                 .getPackageInfo(contexto.getPackageName(), android.content.pm.PackageManager.GET_PERMISSIONS)

@@ -41,6 +41,8 @@ public class MateriaFormularioActivity extends ActividadProtegida {
     private TextInputLayout contenedorNombre;
     private TextInputEditText campoNombre;
     private TextInputEditText campoDocente;
+    private TextInputLayout contenedorMeta;
+    private TextInputEditText campoMeta;
     private MaterialButton botonArchivar;
     private MaterialButton botonEliminar;
     private ImageView vistaPreviaColor;
@@ -77,6 +79,8 @@ public class MateriaFormularioActivity extends ActividadProtegida {
         contenedorNombre = findViewById(R.id.contenedorNombreMateria);
         campoNombre = findViewById(R.id.campoNombreMateria);
         campoDocente = findViewById(R.id.campoDocenteMateria);
+        contenedorMeta = findViewById(R.id.contenedorMetaMateria);
+        campoMeta = findViewById(R.id.campoMetaMateria);
         vistaPreviaColor = findViewById(R.id.vistaPreviaColor);
         codigoColor = findViewById(R.id.codigoColor);
         View filaColor = findViewById(R.id.filaColor);
@@ -139,13 +143,21 @@ public class MateriaFormularioActivity extends ActividadProtegida {
         if (!datosCargados) {
             campoNombre.setText(materia.nombre());
             campoDocente.setText(materia.docente());
+            if (materia.metaSemanalHoras() != null) {
+                campoMeta.setText(FormatoHoras.texto(materia.metaSemanalHoras()));
+            }
             colorElegido = 0xFF000000 | materia.color();
             mostrarColor();
             datosCargados = true;
         }
-        botonArchivar.setText(materia.archivada() ? R.string.materia_desarchivar : R.string.materia_archivar);
-        botonArchivar.setEnabled(true);
-        botonEliminar.setEnabled(true);
+        if (materia.esGeneral()) {
+            botonArchivar.setVisibility(View.GONE);
+            botonEliminar.setVisibility(View.GONE);
+        } else {
+            botonArchivar.setText(materia.archivada() ? R.string.materia_desarchivar : R.string.materia_archivar);
+            botonArchivar.setEnabled(true);
+            botonEliminar.setEnabled(true);
+        }
     }
 
     private void onEvento(@Nullable EventoMateria evento) {
@@ -162,6 +174,8 @@ public class MateriaFormularioActivity extends ActividadProtegida {
         if (error == ErrorValidacion.NOMBRE_VACIO || error == ErrorValidacion.NOMBRE_MUY_LARGO
                 || error == ErrorValidacion.NOMBRE_DUPLICADO) {
             contenedorNombre.setError(getString(mensaje));
+        } else if (error == ErrorValidacion.META_FUERA_DE_RANGO) {
+            contenedorMeta.setError(getString(mensaje));
         } else {
             Snackbar.make(findViewById(R.id.main), mensaje, Snackbar.LENGTH_LONG).show();
         }
@@ -196,8 +210,9 @@ public class MateriaFormularioActivity extends ActividadProtegida {
 
     private void onGuardarClick(View vista) {
         contenedorNombre.setError(null);
+        contenedorMeta.setError(null);
         Long id = idEdicion == SIN_ID ? null : idEdicion;
-        modelo.guardar(id, textoDe(campoNombre), colorElegido, textoDe(campoDocente));
+        modelo.guardar(id, textoDe(campoNombre), colorElegido, textoDe(campoDocente), textoDe(campoMeta));
     }
 
     private void onArchivarClick(View vista) {

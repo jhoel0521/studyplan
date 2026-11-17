@@ -28,6 +28,10 @@ public final class EliminarMateriaService implements EliminarMateria {
         if (actual == null) {
             return Resultado.error(ErrorValidacion.MATERIA_NO_ENCONTRADA);
         }
+        Resultado<Materia> eliminable = actual.validarEliminacion();
+        if (!eliminable.esValido()) {
+            return eliminable;
+        }
         if (sesiones.contar(id) > 0) {
             return Resultado.error(ErrorValidacion.MATERIA_CON_SESIONES);
         }

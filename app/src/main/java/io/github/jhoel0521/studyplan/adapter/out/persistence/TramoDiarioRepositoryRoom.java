@@ -58,6 +58,17 @@ public final class TramoDiarioRepositoryRoom implements TramoDiarioRepository {
     }
 
     @Override
+    public Map<Long, Integer> sumarPorMateriaEnRango(Fecha desde, Fecha hasta) {
+        Map<Long, Integer> resultado = new TreeMap<>();
+        for (TramoDiarioDao.MinutosPorMateria fila : dao.sumarPorMateriaEnRango(desde.iso(), hasta.iso())) {
+            if (fila.totalMinutos > 0) {
+                resultado.put(fila.materiaId, fila.totalMinutos);
+            }
+        }
+        return resultado;
+    }
+
+    @Override
     public void eliminarPorSesion(long sesionId) {
         dao.eliminarPorSesion(sesionId);
     }

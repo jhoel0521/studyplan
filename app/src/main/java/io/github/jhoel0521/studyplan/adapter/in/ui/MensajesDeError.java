@@ -81,6 +81,9 @@ final class MensajesDeError {
         MENSAJES_SESION.put(
                 ErrorValidacion.SESION_NO_ELIMINABLE,
                 R.string.error_sesion_no_eliminable);
+        MENSAJES_SESION.put(
+                ErrorValidacion.SESION_YA_EN_CURSO,
+                R.string.error_sesion_ya_en_curso);
     }
 
     private MensajesDeError() {
@@ -99,6 +102,10 @@ final class MensajesDeError {
                 return R.string.error_materia_con_sesiones;
             case MATERIA_YA_ACTIVA:
                 return R.string.error_materia_ya_activa;
+            case META_FUERA_DE_RANGO:
+                return R.string.error_meta_fuera_de_rango;
+            case MATERIA_GENERAL_PROTEGIDA:
+                return R.string.error_materia_general_protegida;
             default:
                 return R.string.error_materia_no_encontrada;
         }

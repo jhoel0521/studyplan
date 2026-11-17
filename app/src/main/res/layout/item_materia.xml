@@ -46,6 +46,29 @@
             android:maxWidth="600dp"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="Dra. Ruiz" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/barraMetaMateria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:contentDescription="@string/materia_meta_progreso_cd"
+            android:max="100"
+            android:maxWidth="600dp"
+            android:visibility="gone"
+            tools:progress="75"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textoMetaMateria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxWidth="600dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:visibility="gone"
+            tools:text="3 / 4 h"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <TextView

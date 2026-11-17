@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24dp"
+    tools:context=".adapter.in.ui.FelicitacionMetasActivity"
+    tools:fitsSystemWindows="true">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_check"
+        app:tint="?attr/colorPrimary"
+        tools:tint="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/tituloFelicitacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:maxWidth="600dp"
+        android:text="@string/felicitacion_titulo"
+        android:textAppearance="?attr/textAppearanceHeadlineMedium"
+        tools:text="¡Sigue así!" />
+
+    <TextView
+        android:id="@+id/subtituloFelicitacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxWidth="600dp"
+        android:text="@string/felicitacion_subtitulo"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        tools:text="Alcanzaste tu meta semanal" />
+
+    <LinearLayout
+        android:id="@+id/contenedorListaMetasAlcanzadas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/botonVolverInicioFelicitacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/felicitacion_volver_inicio" />
+</LinearLayout>

@@ -16,6 +16,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.List;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
@@ -24,6 +25,8 @@ import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
 import io.github.jhoel0521.studyplan.domain.CandidataInvasion;
 import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
 import io.github.jhoel0521.studyplan.domain.FasePomodoro;
+import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
 import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
 import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
@@ -84,6 +87,8 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         modelo.resumen().observe(this, this::onResumen);
         modelo.finalizada().observe(this, this::onFinalizada);
         modelo.nuevaSesionActiva().observe(this, this::onCambioASiguiente);
+        modelo.metasAlcanzadas().observe(this, this::onMetasAlcanzadas);
+        modelo.materiasSelector().observe(this, this::onMateriasParaCambio);
     }
 
     @Override
@@ -124,11 +129,13 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         MaterialButton botonSigo = findViewById(R.id.botonSigoEstudiando);
         MaterialButton botonTermineFin = findViewById(R.id.botonTermineFinPlan);
         MaterialButton botonCambiar = findViewById(R.id.botonCambiarSiguiente);
+        MaterialButton botonCambiarMateria = findViewById(R.id.botonCambiarMateria);
         MaterialButton botonRepartir = findViewById(R.id.botonRepartirTramo);
 
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         botonPausarReanudar.setOnClickListener(this::onPausarReanudarClick);
         botonDetener.setOnClickListener(this::onDetenerClick);
+        botonCambiarMateria.setOnClickListener(this::onCambiarMateriaClick);
         botonMasPomodoro.setOnClickListener(v -> modelo.decidir(
                 sesionId, DecidirFinPlanificadoOInvasion.DecisionFinOInvasion.MAS_UN_POMODORO, null));
         botonExtraLibre.setOnClickListener(v -> modelo.decidir(
@@ -244,6 +251,46 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         }
         sesionId = nuevoId;
         modelo.cargar(sesionId);
+    }
+
+    private void onMetasAlcanzadas(@Nullable List<MetaAlcanzada> metas) {
+        if (metas == null || metas.isEmpty()) {
+            return;
+        }
+        NotificadorSesion.cancelarAvisoRetorno(this);
+        startActivity(FelicitacionMetasActivity.crearIntent(this, metas));
+        finish();
+    }
+
+    private void onCambiarMateriaClick(View vista) {
+        modelo.cargarMateriasParaCambio();
+    }
+
+    private void onMateriasParaCambio(@Nullable List<Materia> materias) {
+        if (materias == null) {
+            return;
+        }
+        TecnicaEstudio tecnicaActual = ultimoResumen != null
+                ? ultimoResumen.sesion().tecnica()
+                : TecnicaEstudio.LIBRE;
+        SelectorEstudioBottomSheet.mostrar(
+                this,
+                R.string.selector_estudio_titulo_cambio,
+                materias,
+                tecnicaActual,
+                new SelectorEstudioBottomSheet.Listener() {
+                    @Override
+                    public void alElegirMateria(
+                            @Nullable Long materiaId, @Nullable Materia materia, TecnicaEstudio tecnica) {
+                        modelo.cambiarDeMateria(sesionId, materiaId, tecnica);
+                    }
+
+                    @Override
+                    public void alCrearNuevaMateria(
+                            String nombre, int color, TecnicaEstudio tecnica) {
+                        modelo.cambiarACreada(sesionId, nombre, color, tecnica);
+                    }
+                });
     }
 
     private void onVolverClick(View v) {

@@ -86,10 +86,12 @@ final class EjecucionHitos {
         long mejorInstante = Long.MAX_VALUE;
         ProgramadorAvisosSesion.TipoHito mejorTipo = null;
 
-        long finPlanMilis = reloj.instanteDe(sesion.fecha(), sesion.horaFin());
-        if (finPlanMilis > ahoraMilis && !contieneTipo(eventos, TipoEventoEstudio.FIN_PLANIFICADO)) {
-            mejorInstante = finPlanMilis;
-            mejorTipo = ProgramadorAvisosSesion.TipoHito.FIN_PLANIFICADO;
+        if (sesion.tienePlan()) {
+            long finPlanMilis = sesion.planFinUtcMilis();
+            if (finPlanMilis > ahoraMilis && !contieneTipo(eventos, TipoEventoEstudio.FIN_PLANIFICADO)) {
+                mejorInstante = finPlanMilis;
+                mejorTipo = ProgramadorAvisosSesion.TipoHito.FIN_PLANIFICADO;
+            }
         }
 
         if (sesion.tecnica() == TecnicaEstudio.POMODORO) {

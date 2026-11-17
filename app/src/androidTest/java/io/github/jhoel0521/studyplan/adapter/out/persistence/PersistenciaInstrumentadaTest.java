@@ -60,7 +60,7 @@ public class PersistenciaInstrumentadaTest {
 
     @Test
     public void laBaseAbreConLaVersionCinco() {
-        assertEquals(5, base.getOpenHelper().getWritableDatabase().getVersion());
+        assertEquals(6, base.getOpenHelper().getWritableDatabase().getVersion());
     }
 
     @Test
@@ -104,7 +104,8 @@ public class PersistenciaInstrumentadaTest {
                 .valor());
         almacen.borrarTodo();
         assertFalse(perfiles.obtener().isPresent());
-        assertTrue(materias.activas().isEmpty());
+        assertEquals(1, materias.activas().size());
+        assertTrue(materias.activas().get(0).esGeneral());
         assertTrue(sesiones.listarPorFecha(hoy).isEmpty());
         assertNull(base.ajustesDao().obtener());
         assertEquals(Ajustes.porDefecto(), ajustes.obtener());

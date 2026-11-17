@@ -2,6 +2,7 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,12 +15,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Collections;
+import java.util.List;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
+import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.ResumenInicio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
  * Pantalla de Inicio y punto de entrada de la app: saludo, progreso real de la semana, acción
@@ -48,6 +60,7 @@ public class MainActivity extends ActividadProtegida {
     @Nullable
     private ResumenInicio ultimoResumen;
     private boolean hayMateriasActivas;
+    private List<Materia> materiasSelector = Collections.emptyList();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +72,10 @@ public class MainActivity extends ActividadProtegida {
         modelo = viewModel(InicioViewModel.class);
         modelo.resumen().observe(this, this::onResumen);
         modelo.hayMateriasActivas().observe(this, this::onHayMateriasActivas);
+        modelo.materiasSelector().observe(this, this::onMateriasSelector);
+        modelo.metaActualizada().observe(this, this::onMetaActualizada);
+        modelo.errorAccion().observe(this, this::onErrorAccion);
+        modelo.sesionIniciadaId().observe(this, this::onSesionIniciada);
     }
 
     private void enlazarVistas() {
@@ -67,6 +84,9 @@ public class MainActivity extends ActividadProtegida {
         textoProgreso = findViewById(R.id.textoProgreso);
         barraProgreso = findViewById(R.id.barraProgreso);
         botonNuevaSesion = findViewById(R.id.botonNuevaSesion);
+        MaterialButton botonEditarMeta = findViewById(R.id.botonEditarMetaSemana);
+        MaterialButton botonHistorial = findViewById(R.id.botonHistorialMetas);
+        ExtendedFloatingActionButton botonEstudiarAhora = findViewById(R.id.botonEstudiarAhora);
         tarjetaProximaSesion = findViewById(R.id.tarjetaProximaSesion);
         colorMateriaProxima = findViewById(R.id.colorMateriaProxima);
         nombreMateriaProxima = findViewById(R.id.nombreMateriaProxima);
@@ -82,6 +102,9 @@ public class MainActivity extends ActividadProtegida {
 
         barraSuperior.setOnMenuItemClickListener(this::onAjustesClick);
         botonNuevaSesion.setOnClickListener(this::onNuevaSesionClick);
+        botonEditarMeta.setOnClickListener(this::onEditarMetaClick);
+        botonHistorial.setOnClickListener(this::onHistorialMetasClick);
+        botonEstudiarAhora.setOnClickListener(this::onEstudiarAhoraClick);
         tarjetaProximaSesion.setOnClickListener(this::onProximaSesionClick);
     }
 
@@ -92,6 +115,124 @@ public class MainActivity extends ActividadProtegida {
 
     private void onHayMateriasActivas(@Nullable Boolean activas) {
         hayMateriasActivas = Boolean.TRUE.equals(activas);
+    }
+
+    private void onMateriasSelector(@Nullable List<Materia> lista) {
+        materiasSelector = lista == null ? Collections.emptyList() : lista;
+    }
+
+    private void onMetaActualizada(@Nullable Boolean actualizada) {
+        if (Boolean.TRUE.equals(actualizada)) {
+            modelo.consumirEventos();
+            Snackbar.make(findViewById(R.id.main), R.string.meta_semanal_guardada, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onErrorAccion(@Nullable ErrorValidacion error) {
+        if (error == null) {
+            return;
+        }
+        modelo.consumirEventos();
+        int msg = error == ErrorValidacion.META_FUERA_DE_RANGO
+                ? R.string.error_meta_fuera_de_rango
+                : MensajesDeError.paraMateria(error);
+        if (error == ErrorValidacion.SESION_YA_EN_CURSO) {
+            msg = R.string.error_sesion_ya_en_curso;
+        }
+        Snackbar.make(findViewById(R.id.main), msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void onSesionIniciada(@Nullable Long sesionId) {
+        if (sesionId == null) {
+            return;
+        }
+        modelo.consumirEventos();
+        Intent intento = new Intent(this, SesionEnCursoActivity.class);
+        intento.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, sesionId);
+        startActivity(intento);
+    }
+
+    private void onEditarMetaClick(View vista) {
+        TextInputLayout contenedor = new TextInputLayout(this);
+        contenedor.setHint(getString(R.string.dialogo_meta_semanal_hint));
+        int pad = Math.round(20 * getResources().getDisplayMetrics().density);
+        contenedor.setPadding(pad, pad / 2, pad, 0);
+        TextInputEditText campo = new TextInputEditText(this);
+        campo.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        campo.setMinHeight(Math.round(48 * getResources().getDisplayMetrics().density));
+        if (ultimoResumen != null) {
+            campo.setText(FormatoHoras.texto(ultimoResumen.metaSemanalHoras()));
+        }
+        contenedor.addView(campo);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.dialogo_meta_semanal_titulo)
+                .setView(contenedor)
+                .setPositiveButton(R.string.dialogo_meta_semanal_guardar, (d, w) -> {
+                    String txt = campo.getText() == null ? "" : campo.getText().toString();
+                    modelo.definirMetaSemana(txt);
+                })
+                .setNegativeButton(R.string.cancelar, null)
+                .show();
+    }
+
+    private void onHistorialMetasClick(View vista) {
+        startActivity(new Intent(this, HistorialMetasActivity.class));
+    }
+
+    private void onEstudiarAhoraClick(View vista) {
+        SelectorEstudioBottomSheet.mostrar(
+                this,
+                R.string.selector_estudio_titulo,
+                materiasSelector,
+                TecnicaEstudio.LIBRE,
+                new SelectorEstudioBottomSheet.Listener() {
+                    @Override
+                    public void alElegirMateria(
+                            @Nullable Long materiaId, @Nullable Materia materia, TecnicaEstudio tecnica) {
+                        DetalleSesionInicio pendiente = buscarPendienteHoy(materiaId, materia);
+                        if (pendiente != null) {
+                            mostrarDialogoSesionPendiente(pendiente, materiaId, tecnica);
+                        } else {
+                            modelo.iniciarEstudiarAhora(materiaId, tecnica);
+                        }
+                    }
+
+                    @Override
+                    public void alCrearNuevaMateria(String nombre, int color, TecnicaEstudio tecnica) {
+                        modelo.iniciarEstudiarAhoraConNuevaMateria(nombre, color, tecnica);
+                    }
+                });
+    }
+
+    @Nullable
+    private DetalleSesionInicio buscarPendienteHoy(
+            @Nullable Long materiaId, @Nullable Materia materia) {
+        if (ultimoResumen == null || materiaId == null || materia == null) {
+            return null;
+        }
+        for (DetalleSesionInicio s : ultimoResumen.sesionesDeHoy()) {
+            if (s.estado() == CodigoEstadoSesion.PENDIENTE
+                    && s.nombreMateria().equals(materia.nombre())) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    private void mostrarDialogoSesionPendiente(
+            DetalleSesionInicio pendiente, @Nullable Long materiaId, TecnicaEstudio tecnica) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.dialogo_sesion_pendiente_titulo, pendiente.nombreMateria()))
+                .setMessage(getString(
+                        R.string.dialogo_sesion_pendiente_msg,
+                        pendiente.horaInicio().texto(),
+                        pendiente.horaFin().texto()))
+                .setPositiveButton(R.string.dialogo_sesion_pendiente_usar, (d, w) ->
+                        modelo.iniciarSesionPlanificada(pendiente.sesionId(), tecnica))
+                .setNegativeButton(R.string.dialogo_sesion_pendiente_nueva, (d, w) ->
+                        modelo.iniciarEstudiarAhora(materiaId, tecnica))
+                .show();
     }
 
     private void onResumen(ResumenInicio resumen) {

@@ -96,4 +96,53 @@ public class SesionEnCursoViewModelTest {
                 s1.id(), DecidirFinPlanificadoOInvasion.DecisionFinOInvasion.TERMINE, null);
         assertEquals(Boolean.TRUE, modelo.finalizada().getValue());
     }
+
+    @Test
+    public void cambiaDeMateriaYPublicaMetasAlcanzadasAlDetener() {
+        FakeMateriaRepository mats = new FakeMateriaRepository();
+        FakeEventoEstudioRepository evs = new FakeEventoEstudioRepository();
+        FakeAjustesRepository aj = new FakeAjustesRepository();
+        FakeControladorNoMolestar dnd = new FakeControladorNoMolestar();
+        FakeProgramadorAvisosSesion prog = new FakeProgramadorAvisosSesion();
+        FakeMarcadorSalidaApp marc = new FakeMarcadorSalidaApp();
+        io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository tramos =
+                new io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository(sesiones);
+        io.github.jhoel0521.studyplan.fakes.FakeMetaSemanalRepository metas =
+                new io.github.jhoel0521.studyplan.fakes.FakeMetaSemanalRepository();
+        io.github.jhoel0521.studyplan.fakes.FakePerfilRepository perfiles =
+                new io.github.jhoel0521.studyplan.fakes.FakePerfilRepository();
+        perfiles.guardar(io.github.jhoel0521.studyplan.domain.Perfil.crear("Ana", 1.0).valor());
+
+        Materia m1 = mats.guardar(Materia.crear("Matemáticas", 0xFF1E88E5, null).valor());
+        Materia m2 = mats.guardar(Materia.crear("Informática", 0xFF43A047, null, 1.0).valor());
+
+        io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService estudiarAhora =
+                new io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService(
+                        sesiones, evs, mats, aj, dnd, prog, marc, reloj);
+        SesionEstudio s1 = estudiarAhora.ejecutar(
+                m1.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
+
+        SesionEnCursoViewModel vm = new SesionEnCursoViewModel(
+                new ConsultarEjecucionSesionService(sesiones, evs, mats, aj, dnd, reloj),
+                new PausarReanudarSesionService(sesiones, evs, mats, aj, dnd, prog, reloj),
+                new DetenerSesionService(sesiones, evs, dnd, prog, marc, tramos, metas, perfiles, mats, reloj),
+                new DecidirFinPlanificadoOInvasionService(
+                        sesiones, evs, mats, aj, dnd, prog, marc,
+                        new DetenerSesionService(sesiones, evs, dnd, prog, marc, tramos, metas, perfiles, mats, reloj),
+                        tramos, reloj),
+                new io.github.jhoel0521.studyplan.application.service.CambiarDeMateriaService(
+                        sesiones, evs, mats, aj, dnd, prog, marc, tramos, reloj),
+                new io.github.jhoel0521.studyplan.application.service.ListarMateriasService(mats, sesiones),
+                Runnable::run);
+
+        reloj.avanzarMilis(15 * 60_000L);
+        vm.cambiarDeMateria(s1.id(), m2.id(), TecnicaEstudio.LIBRE);
+        Long nuevaId = vm.nuevaSesionActiva().getValue();
+        assertNotNull(nuevaId);
+
+        reloj.avanzarMilis(60 * 60_000L);
+        vm.detener(nuevaId);
+        assertNotNull(vm.metasAlcanzadas().getValue());
+        assertEquals(2, vm.metasAlcanzadas().getValue().size());
+    }
 }

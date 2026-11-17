@@ -207,4 +207,15 @@ public class MateriaFormularioViewModelTest {
         modelo.consumirEvento();
         assertNull(modelo.evento().getValue());
     }
+
+    @Test
+    public void guardaMetaSemanalOpcionalYRechazaTextoInvalido() {
+        modelo.guardar(null, "Física", COLOR, null, "abc");
+        assertEquals(ErrorValidacion.META_FUERA_DE_RANGO, evento().error());
+        modelo.consumirEvento();
+
+        modelo.guardar(null, "Física", COLOR, null, "4.5");
+        assertEquals(EventoMateria.Tipo.GUARDADA, evento().tipo());
+        assertEquals(4.5, repositorio.activas().get(0).metaSemanalHoras(), 1e-6);
+    }
 }

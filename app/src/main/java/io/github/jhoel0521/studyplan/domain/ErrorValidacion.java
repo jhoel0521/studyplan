@@ -65,5 +65,7 @@ public enum ErrorValidacion {
     /** La hora declarada al volver no es posterior a la salida ni anterior o igual a ahora (RN-24). */
     HORA_DECLARADA_FUERA_DE_RANGO,
     /** La hora de corte elegida para repartir un tramo no cae dentro del intervalo efectivo (RN-28). */
-    CORTE_REPARTO_INVALIDO
+    CORTE_REPARTO_INVALIDO,
+    /** La materia general «Estudios varios» no admite edición, archivado, eliminación ni meta propia (RN-32). */
+    MATERIA_GENERAL_PROTEGIDA
 }

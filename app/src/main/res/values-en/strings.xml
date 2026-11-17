@@ -310,4 +310,45 @@
     <string name="error_pomodoro_invalido">Check ranges: work 1–180, short 1–60, long 1–90, cycles 1–12</string>
     <string name="error_hora_declarada_rango">Time must be between leaving and now</string>
     <string name="error_corte_reparto">Cut time must fall within the studied interval</string>
+
+    <string name="materia_general_nombre">Miscellaneous study</string>
+    <string name="campo_meta_semanal_opcional">Weekly goal (h, optional)</string>
+    <string name="materia_meta_progreso">%1$s / %2$s h</string>
+    <string name="materia_meta_progreso_cd">Weekly progress for %1$s: %2$s of %3$s hours</string>
+    <string name="error_materia_general_protegida">Miscellaneous study cannot be edited, archived, or deleted</string>
+
+    <string name="inicio_definir_meta">Set weekly goal</string>
+    <string name="inicio_editar_meta">Edit goal</string>
+    <string name="inicio_ver_historial_metas">Goal history</string>
+    <string name="dialogo_meta_semanal_titulo">Weekly goal (hours)</string>
+    <string name="dialogo_meta_semanal_hint">Target hours this week (1 to 168)</string>
+    <string name="dialogo_meta_semanal_guardar">Save goal</string>
+    <string name="meta_semanal_guardada">This week\'s goal updated</string>
+
+    <string name="titulo_historial_metas">Goal history</string>
+    <string name="historial_metas_vacio">No weeks recorded in your history yet</string>
+    <string name="historial_semana_rango">Week of %1$s – %2$s</string>
+    <string name="historial_meta_total_titulo">Total goal</string>
+    <string name="historial_meta_estimada">Estimated</string>
+    <string name="historial_meta_cumplida">Achieved</string>
+    <string name="historial_meta_en_progreso">In progress</string>
+
+    <string name="accion_estudiar_ahora">Study now</string>
+    <string name="selector_estudio_titulo">What are you studying?</string>
+    <string name="selector_estudio_titulo_cambio">Switch to another subject</string>
+    <string name="selector_nueva_materia">New subject</string>
+    <string name="selector_nueva_materia_nombre">Subject name</string>
+    <string name="selector_iniciar_estudio">Start</string>
+    <string name="dialogo_sesion_pendiente_titulo">Is this your %1$s session?</string>
+    <string name="dialogo_sesion_pendiente_msg">You have a planned session today (%1$s – %2$s). Do you want to start that session or begin an unscheduled one?</string>
+    <string name="dialogo_sesion_pendiente_usar">Start planned session</string>
+    <string name="dialogo_sesion_pendiente_nueva">Start new session</string>
+
+    <string name="sesion_cambiar_materia">Switch subject</string>
+    <string name="felicitacion_titulo">Keep it up!</string>
+    <string name="felicitacion_subtitulo">You reached your weekly goal</string>
+    <string name="felicitacion_meta_total_item">Total weekly goal: %1$s / %2$s h</string>
+    <string name="felicitacion_meta_materia_item">%1$s: %2$s / %3$s h</string>
+    <string name="felicitacion_volver_inicio">Back to home</string>
+    <string name="error_sesion_ya_en_curso">You already have another session in progress</string>
 </resources>

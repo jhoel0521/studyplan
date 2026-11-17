@@ -136,4 +136,20 @@ public class MateriaTest {
         assertNull(m.docente());
         assertEquals(Long.valueOf(3), m.id());
     }
+
+    @Test
+    public void metaSemanalOpcionalValidaRangoRn14YGeneralEsProtegidaRn32() {
+        assertEquals(ErrorValidacion.META_FUERA_DE_RANGO, Materia.crear("Historia", COLOR, null, 0.0).error());
+        assertEquals(ErrorValidacion.META_FUERA_DE_RANGO, Materia.crear("Historia", COLOR, null, 168.5).error());
+        Materia conMeta = Materia.crear("Historia", COLOR, null, 4.5).valor();
+        assertEquals(Double.valueOf(4.5), conMeta.metaSemanalHoras());
+        assertTrue(!conMeta.esGeneral());
+
+        Materia general = Materia.crearGeneral(COLOR).conId(1L);
+        assertTrue(general.esGeneral());
+        assertNull(general.metaSemanalHoras());
+        assertEquals(ErrorValidacion.MATERIA_GENERAL_PROTEGIDA, general.editar("Otra", COLOR, null, 2.0).error());
+        assertEquals(ErrorValidacion.MATERIA_GENERAL_PROTEGIDA, general.intentarArchivar(true).error());
+        assertEquals(ErrorValidacion.MATERIA_GENERAL_PROTEGIDA, general.validarEliminacion().error());
+    }
 }

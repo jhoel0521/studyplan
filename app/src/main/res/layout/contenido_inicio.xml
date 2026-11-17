@@ -16,16 +16,23 @@
         app:menu="@menu/menu_inicio"
         app:title="@string/app_name" />
 
-    <androidx.core.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_weight="1">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="24dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="88dp">
 
             <TextView
                 android:id="@+id/saludo"
@@ -80,16 +87,43 @@
                 app:layout_constraintWidth_max="600dp"
                 tools:text="1,5 / 20 h" />
 
+            <LinearLayout
+                android:id="@+id/filaAccionesMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textoProgreso">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonEditarMetaSemana"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/inicio_editar_meta" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonHistorialMetas"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="48dp"
+                    android:text="@string/inicio_ver_historial_metas" />
+            </LinearLayout>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonNuevaSesion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="12dp"
                 android:minHeight="48dp"
                 android:text="@string/inicio_nueva_sesion"
                 app:icon="@drawable/ic_agregar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textoProgreso" />
+                app:layout_constraintTop_toBottomOf="@id/filaAccionesMeta" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tarjetaProximaSesion"
@@ -232,6 +266,17 @@
                 app:layout_constraintTop_toBottomOf="@id/estadoVacio"
                 app:layout_constraintWidth_max="600dp"
                 app:layout_goneMarginTop="8dp" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/botonEstudiarAhora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/accion_estudiar_ahora"
+            android:text="@string/accion_estudiar_ahora"
+            app:icon="@android:drawable/ic_media_play" />
+    </FrameLayout>
 </LinearLayout>

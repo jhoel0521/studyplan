@@ -19,6 +19,9 @@ public interface TramoDiarioRepository {
     /** Devuelve los minutos totales estudiados por cada fecha dentro de {@code [desde, hasta]}. */
     Map<Fecha, Integer> sumarPorDiaEnRango(Fecha desde, Fecha hasta);
 
+    /** Devuelve los minutos totales estudiados por {@code materiaId} dentro de {@code [desde, hasta]}. */
+    Map<Long, Integer> sumarPorMateriaEnRango(Fecha desde, Fecha hasta);
+
     /** Elimina los tramos diarios asociados a {@code sesionId}. */
     void eliminarPorSesion(long sesionId);
 }

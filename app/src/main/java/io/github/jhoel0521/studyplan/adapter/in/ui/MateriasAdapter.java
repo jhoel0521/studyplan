@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
 
 /**
  * Adaptador de la lista de materias: filas de materias activas, encabezado plegable de archivadas y filas de
@@ -78,6 +81,8 @@ public class MateriasAdapter extends ListAdapter<FilaMateria, RecyclerView.ViewH
         private final ImageView color;
         private final TextView nombre;
         private final TextView docente;
+        private final LinearProgressIndicator barraMeta;
+        private final TextView textoMeta;
         private final TextView horas;
 
         MateriaHolder(View vista) {
@@ -85,21 +90,51 @@ public class MateriasAdapter extends ListAdapter<FilaMateria, RecyclerView.ViewH
             color = vista.findViewById(R.id.colorMateria);
             nombre = vista.findViewById(R.id.nombreMateria);
             docente = vista.findViewById(R.id.docenteMateria);
+            barraMeta = vista.findViewById(R.id.barraMetaMateria);
+            textoMeta = vista.findViewById(R.id.textoMetaMateria);
             horas = vista.findViewById(R.id.horasMateria);
         }
 
         void enlazar(FilaMateria fila) {
             Materia materia = fila.materia();
             boolean activa = fila.tipo() == FilaMateria.Tipo.ACTIVA;
+            boolean esGeneral = materia.esGeneral();
             color.setColorFilter(materia.color());
-            nombre.setText(materia.nombre());
+            nombre.setText(esGeneral
+                    ? itemView.getContext().getString(R.string.materia_general_nombre)
+                    : materia.nombre());
             docente.setText(materia.docente());
-            docente.setVisibility(materia.docente() == null ? View.GONE : View.VISIBLE);
+            docente.setVisibility(!esGeneral && materia.docente() != null ? View.VISIBLE : View.GONE);
             horas.setVisibility(activa ? View.VISIBLE : View.GONE);
             horas.setText(itemView.getContext().getString(R.string.materias_horas,
                     FormatoHoras.texto(fila.horasRealizadas())));
+
+            ProgresoMeta meta = fila.metaSemanaActual();
+            if (activa && !esGeneral && meta != null) {
+                barraMeta.setVisibility(View.VISIBLE);
+                barraMeta.setProgressCompat(meta.porcentaje(), false);
+                String realTxt = FormatoHoras.texto(meta.horasRealizadas());
+                String objTxt = FormatoHoras.texto(meta.horasObjetivo());
+                barraMeta.setContentDescription(itemView.getContext().getString(
+                        R.string.materia_meta_progreso_cd, materia.nombre(), realTxt, objTxt));
+                textoMeta.setVisibility(View.VISIBLE);
+                textoMeta.setText(itemView.getContext().getString(
+                        R.string.materia_meta_progreso, realTxt, objTxt));
+            } else {
+                barraMeta.setVisibility(View.GONE);
+                textoMeta.setVisibility(View.GONE);
+            }
+
             itemView.setAlpha(activa ? 1f : 0.6f);
-            itemView.setOnClickListener(this::onMateriaClick);
+            if (esGeneral) {
+                itemView.setClickable(false);
+                itemView.setFocusable(false);
+                itemView.setOnClickListener(null);
+            } else {
+                itemView.setClickable(true);
+                itemView.setFocusable(true);
+                itemView.setOnClickListener(this::onMateriaClick);
+            }
         }
 
         private void onMateriaClick(View vista) {

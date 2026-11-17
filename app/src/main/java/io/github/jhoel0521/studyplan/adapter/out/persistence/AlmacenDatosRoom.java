@@ -19,5 +19,6 @@ public class AlmacenDatosRoom implements AlmacenDatos {
     @Override
     public void borrarTodo() {
         base.clearAllTables();
+        StudyPlanDatabase.asegurarMateriaGeneral(base.getOpenHelper().getWritableDatabase());
     }
 }

@@ -69,10 +69,27 @@ public class MateriaFormularioViewModel extends ViewModel {
 
     /** Registra una materia nueva (si {@code id} es nulo) o edita la existente. */
     public void guardar(Long id, String nombre, int color, String docente) {
+        guardar(id, nombre, color, docente, "");
+    }
+
+    /** Registra o edita una materia con meta semanal opcional ({@code HU-26}, {@code RN-14}). */
+    public void guardar(Long id, String nombre, int color, String docente, String metaTexto) {
+        Double metaHoras = null;
+        String limpio = metaTexto == null ? "" : metaTexto.trim();
+        if (!limpio.isEmpty()) {
+            try {
+                metaHoras = Double.parseDouble(limpio.replace(',', '.'));
+            } catch (NumberFormatException e) {
+                evento.setValue(EventoMateria.error(
+                        io.github.jhoel0521.studyplan.domain.ErrorValidacion.META_FUERA_DE_RANGO));
+                return;
+            }
+        }
+        final Double metaFinal = metaHoras;
         ejecutar(() -> {
             Resultado<Materia> r = id == null
-                    ? registrar.ejecutar(nombre, color, docente)
-                    : editar.ejecutar(id, nombre, color, docente);
+                    ? registrar.ejecutar(nombre, color, docente, metaFinal)
+                    : editar.ejecutar(id, nombre, color, docente, metaFinal);
             publicar(r, EventoMateria.Tipo.GUARDADA);
         });
     }

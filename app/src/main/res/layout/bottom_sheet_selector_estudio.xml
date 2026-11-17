@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".adapter.in.ui.MainActivity"
+    tools:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tituloSelectorEstudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="600dp"
+            android:text="@string/selector_estudio_titulo"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            tools:text="¿Qué vas a estudiar?" />
+
+        <RadioGroup
+            android:id="@+id/grupoTecnicaSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/opcionTecnicaLibre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:minHeight="48dp"
+                android:text="@string/sesion_tecnica_libre" />
+
+            <RadioButton
+                android:id="@+id/opcionTecnicaPomodoro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:minHeight="48dp"
+                android:text="@string/sesion_tecnica_pomodoro" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/contenedorListaMateriasSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonMostrarNuevaMateria"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:minHeight="48dp"
+            android:text="@string/selector_nueva_materia"
+            app:icon="@drawable/ic_agregar" />
+
+        <LinearLayout
+            android:id="@+id/panelNuevaMateriaSelector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contenedorNombreNuevaMateria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:hint="@string/selector_nueva_materia_nombre"
+                android:maxWidth="400dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/campoNombreNuevaMateria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="Biología" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonComenzarNuevaMateria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="48dp"
+                android:text="@string/selector_iniciar_estudio" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

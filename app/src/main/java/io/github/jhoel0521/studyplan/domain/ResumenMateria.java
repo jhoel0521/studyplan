@@ -9,10 +9,16 @@ public final class ResumenMateria {
 
     private final Materia materia;
     private final double horasRealizadas;
+    private final ProgresoMeta metaSemanaActual;
 
     public ResumenMateria(Materia materia, double horasRealizadas) {
+        this(materia, horasRealizadas, null);
+    }
+
+    public ResumenMateria(Materia materia, double horasRealizadas, ProgresoMeta metaSemanaActual) {
         this.materia = materia;
         this.horasRealizadas = horasRealizadas;
+        this.metaSemanaActual = metaSemanaActual;
     }
 
     public Materia materia() {
@@ -21,5 +27,10 @@ public final class ResumenMateria {
 
     public double horasRealizadas() {
         return horasRealizadas;
+    }
+
+    /** Progreso de la meta semanal de la materia en la semana actual, o {@code null} si no tiene meta. */
+    public ProgresoMeta metaSemanaActual() {
+        return metaSemanaActual;
     }
 }

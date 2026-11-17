@@ -46,8 +46,9 @@ public class SesionEntity {
     @ColumnInfo(name = "plan_inicio_utc_milis")
     public long planInicioUtcMilis;
 
+    @Nullable
     @ColumnInfo(name = "plan_fin_utc_milis")
-    public long planFinUtcMilis;
+    public Long planFinUtcMilis;
 
     @ColumnInfo(name = "desfase_minutos")
     public int desfaseMinutos;

@@ -98,6 +98,49 @@ public class InicioViewModelTest {
         assertNull(modelo.resumen().getValue());
     }
 
+    @Test
+    public void defineMetaSemanalYArrancaEstudiarAhora() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        io.github.jhoel0521.studyplan.fakes.FakeMetaSemanalRepository metas =
+                new io.github.jhoel0521.studyplan.fakes.FakeMetaSemanalRepository();
+        io.github.jhoel0521.studyplan.fakes.FakeReloj reloj =
+                new io.github.jhoel0521.studyplan.fakes.FakeReloj(
+                        Fecha.de(2026, 11, 14).valor(), Hora.de(10, 0).valor());
+        io.github.jhoel0521.studyplan.application.service.DefinirMetaSemanalService defMeta =
+                new io.github.jhoel0521.studyplan.application.service.DefinirMetaSemanalService(metas, reloj);
+        io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService estAhora =
+                new io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService(
+                        sesiones,
+                        new io.github.jhoel0521.studyplan.fakes.FakeEventoEstudioRepository(),
+                        materias,
+                        new io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository(),
+                        new io.github.jhoel0521.studyplan.fakes.FakeControladorNoMolestar(),
+                        new io.github.jhoel0521.studyplan.fakes.FakeProgramadorAvisosSesion(),
+                        new io.github.jhoel0521.studyplan.fakes.FakeMarcadorSalidaApp(),
+                        reloj);
+        InicioViewModel vm = new InicioViewModel(
+                new io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService(
+                        perfiles,
+                        sesiones,
+                        materias,
+                        new io.github.jhoel0521.studyplan.fakes.FakeTramoDiarioRepository(sesiones),
+                        metas,
+                        reloj,
+                        () -> 0),
+                new io.github.jhoel0521.studyplan.application.service.ListarMateriasService(materias, sesiones),
+                defMeta,
+                estAhora,
+                null,
+                Runnable::run);
+
+        vm.definirMetaSemana("16");
+        assertEquals(Boolean.TRUE, vm.metaActualizada().getValue());
+        assertEquals(16.0, vm.resumen().getValue().metaSemanalHoras(), 1e-6);
+
+        vm.iniciarEstudiarAhora(null, io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE);
+        assertTrue(vm.sesionIniciadaId().getValue() != null);
+    }
+
     private ResumenInicio resumen() {
         return Objects.requireNonNull(modelo.resumen().getValue());
     }

@@ -39,7 +39,7 @@ public abstract class SesionDao {
     @Query("SELECT * FROM sesion_estudio WHERE sesion_origen_id = :sesionOrigenId ORDER BY id DESC LIMIT 1")
     public abstract SesionEntity buscarReprogramadaHijaDe(long sesionOrigenId);
 
-    @Query("SELECT * FROM sesion_estudio WHERE plan_fin_utc_milis >= :desdeUtc AND plan_inicio_utc_milis <= :hastaUtc ORDER BY plan_inicio_utc_milis ASC")
+    @Query("SELECT * FROM sesion_estudio WHERE COALESCE(plan_fin_utc_milis, plan_inicio_utc_milis) >= :desdeUtc AND plan_inicio_utc_milis <= :hastaUtc ORDER BY plan_inicio_utc_milis ASC")
     public abstract List<SesionEntity> listarPorRangoUtc(long desdeUtc, long hastaUtc);
 
     @Query("SELECT * FROM sesion_estudio WHERE estado = 'PENDIENTE' AND plan_fin_utc_milis >= :desdeUtc ORDER BY plan_inicio_utc_milis ASC")

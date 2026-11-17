@@ -4,21 +4,31 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
+import io.github.jhoel0521.studyplan.application.port.in.CambiarDeMateria;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEjecucionSesion;
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.application.port.in.DetenerSesion;
+import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.in.PausarReanudarSesion;
+import io.github.jhoel0521.studyplan.domain.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.ResumenMateria;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
- * ViewModel de la pantalla {@link SesionEnCursoActivity} (HU-22 a HU-24, HU-42, HU-43, RNF-02).
+ * ViewModel de la pantalla {@link SesionEnCursoActivity} (HU-22 a HU-24, HU-28, HU-42, HU-43,
+ * HU-48, RN-16, RNF-02).
  */
 public class SesionEnCursoViewModel extends ViewModel {
 
@@ -26,11 +36,15 @@ public class SesionEnCursoViewModel extends ViewModel {
     private final PausarReanudarSesion pausarReanudar;
     private final DetenerSesion detener;
     private final DecidirFinPlanificadoOInvasion decidir;
+    private final CambiarDeMateria cambiarDeMateria;
+    private final ListarMaterias listarMaterias;
     private final Executor ejecutor;
 
     private final MutableLiveData<ResumenEjecucionSesion> resumen = new MutableLiveData<>();
     private final MutableLiveData<Boolean> finalizada = new MutableLiveData<>(false);
     private final MutableLiveData<Long> nuevaSesionActiva = new MutableLiveData<>();
+    private final MutableLiveData<List<MetaAlcanzada>> metasAlcanzadas = new MutableLiveData<>();
+    private final MutableLiveData<List<Materia>> materiasSelector = new MutableLiveData<>();
 
     public SesionEnCursoViewModel(
             ConsultarEjecucionSesion consultar,
@@ -38,10 +52,23 @@ public class SesionEnCursoViewModel extends ViewModel {
             DetenerSesion detener,
             DecidirFinPlanificadoOInvasion decidir,
             Executor ejecutor) {
+        this(consultar, pausarReanudar, detener, decidir, null, null, ejecutor);
+    }
+
+    public SesionEnCursoViewModel(
+            ConsultarEjecucionSesion consultar,
+            PausarReanudarSesion pausarReanudar,
+            DetenerSesion detener,
+            DecidirFinPlanificadoOInvasion decidir,
+            CambiarDeMateria cambiarDeMateria,
+            ListarMaterias listarMaterias,
+            Executor ejecutor) {
         this.consultar = Objects.requireNonNull(consultar, "consultar");
         this.pausarReanudar = Objects.requireNonNull(pausarReanudar, "pausarReanudar");
         this.detener = Objects.requireNonNull(detener, "detener");
         this.decidir = Objects.requireNonNull(decidir, "decidir");
+        this.cambiarDeMateria = cambiarDeMateria;
+        this.listarMaterias = listarMaterias;
         this.ejecutor = Objects.requireNonNull(ejecutor, "ejecutor");
     }
 
@@ -57,12 +84,60 @@ public class SesionEnCursoViewModel extends ViewModel {
         return nuevaSesionActiva;
     }
 
+    public LiveData<List<MetaAlcanzada>> metasAlcanzadas() {
+        return metasAlcanzadas;
+    }
+
+    public LiveData<List<Materia>> materiasSelector() {
+        return materiasSelector;
+    }
+
     public void cargar(long sesionId) {
         if (sesionId <= 0) {
             finalizada.postValue(true);
             return;
         }
         ejecutor.execute(() -> recargar(sesionId));
+    }
+
+    public void cargarMateriasParaCambio() {
+        if (listarMaterias == null) {
+            return;
+        }
+        ejecutor.execute(() -> {
+            List<ResumenMateria> activas = listarMaterias.ejecutar().activas();
+            List<Materia> lista = new ArrayList<>(activas.size());
+            for (ResumenMateria rm : activas) {
+                lista.add(rm.materia());
+            }
+            materiasSelector.postValue(lista);
+        });
+    }
+
+    public void cambiarDeMateria(long sesionId, Long nuevaMateriaId, TecnicaEstudio tecnica) {
+        if (cambiarDeMateria == null) {
+            return;
+        }
+        ejecutor.execute(() -> {
+            Resultado<SesionEstudio> r = cambiarDeMateria.ejecutar(sesionId, nuevaMateriaId, tecnica);
+            if (r.esValido() && r.valor().id() != null) {
+                nuevaSesionActiva.postValue(r.valor().id());
+            }
+        });
+    }
+
+    public void cambiarACreada(
+            long sesionId, String nombreMateria, int colorMateria, TecnicaEstudio tecnica) {
+        if (cambiarDeMateria == null) {
+            return;
+        }
+        ejecutor.execute(() -> {
+            Resultado<SesionEstudio> r = cambiarDeMateria.ejecutarConNuevaMateria(
+                    sesionId, nombreMateria, colorMateria, tecnica);
+            if (r.esValido() && r.valor().id() != null) {
+                nuevaSesionActiva.postValue(r.valor().id());
+            }
+        });
     }
 
     public void pausarOReanudar(long sesionId) {
@@ -74,9 +149,14 @@ public class SesionEnCursoViewModel extends ViewModel {
 
     public void detener(long sesionId) {
         ejecutor.execute(() -> {
-            Resultado<SesionEstudio> r = detener.ejecutar(sesionId);
+            Resultado<CierreSesion> r = detener.ejecutarConMetas(sesionId);
             if (r.esValido()) {
-                finalizada.postValue(true);
+                List<MetaAlcanzada> alcanzadas = r.valor().metasAlcanzadas();
+                if (!alcanzadas.isEmpty()) {
+                    metasAlcanzadas.postValue(alcanzadas);
+                } else {
+                    finalizada.postValue(true);
+                }
             }
         });
     }

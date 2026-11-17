@@ -14,4 +14,12 @@ public interface EditarMateria {
      * @return la materia editada, o el código de error (no se guarda nada)
      */
     Resultado<Materia> ejecutar(long id, String nombre, int color, String docente);
+
+    /**
+     * Edita una materia incluyendo su meta semanal opcional ({@code HU-26}, {@code RN-14}, {@code RN-32}).
+     */
+    default Resultado<Materia> ejecutar(
+            long id, String nombre, int color, String docente, Double metaSemanalHoras) {
+        return ejecutar(id, nombre, color, docente);
+    }
 }

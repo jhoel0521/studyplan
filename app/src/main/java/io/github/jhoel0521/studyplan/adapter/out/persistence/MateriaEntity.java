@@ -32,4 +32,11 @@ public class MateriaEntity {
     public String docente;
 
     public boolean archivada;
+
+    @Nullable
+    @ColumnInfo(name = "meta_semanal_horas")
+    public Double metaSemanalHoras;
+
+    @ColumnInfo(name = "es_general")
+    public boolean esGeneral;
 }
