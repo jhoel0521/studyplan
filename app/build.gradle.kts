@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.lifecycle.livedata)
     implementation(libs.biometric)
     implementation(libs.colorpickerview)
+    implementation(libs.mpandroidchart)
     testImplementation(libs.junit)
     testImplementation(libs.arch.core.testing)
     androidTestImplementation(libs.espresso.core)
