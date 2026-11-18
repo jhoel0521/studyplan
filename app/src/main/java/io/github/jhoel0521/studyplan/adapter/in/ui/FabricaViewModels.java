@@ -93,6 +93,10 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
         if (clase.isAssignableFrom(ListaMateriasViewModel.class)) {
             return (T) new ListaMateriasViewModel(app.listarMaterias(), app.ejecutor());
         }
+        if (clase.isAssignableFrom(EstadisticasViewModel.class)) {
+            return (T) new EstadisticasViewModel(
+                    app.consultarEstadisticas(), app.reloj(), app.ejecutor());
+        }
         if (clase.isAssignableFrom(MateriaFormularioViewModel.class)) {
             return (T) new MateriaFormularioViewModel(app.registrarMateria(), app.editarMateria(),
                     app.consultarMateria(), app.archivarMateria(), app.desarchivarMateria(), app.eliminarMateria(),

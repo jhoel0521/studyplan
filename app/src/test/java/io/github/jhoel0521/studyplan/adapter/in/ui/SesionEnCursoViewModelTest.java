@@ -145,4 +145,52 @@ public class SesionEnCursoViewModelTest {
         assertNotNull(vm.metasAlcanzadas().getValue());
         assertEquals(2, vm.metasAlcanzadas().getValue().size());
     }
+
+    @Test
+    public void exponeSalidaPendienteYReanudaConTopico() {
+        FakeEventoEstudioRepository evs = new FakeEventoEstudioRepository();
+        FakeMateriaRepository mats = new FakeMateriaRepository();
+        FakeAjustesRepository aj = new FakeAjustesRepository();
+        FakeControladorNoMolestar dnd = new FakeControladorNoMolestar();
+        FakeProgramadorAvisosSesion prog = new FakeProgramadorAvisosSesion();
+        FakeMarcadorSalidaApp marc = new FakeMarcadorSalidaApp();
+        Materia m1 = mats.guardar(Materia.crear("Física", 0xFF1E88E5, null).valor());
+        SesionEstudio s1 = new io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService(
+                sesiones, evs, mats, aj, dnd, prog, marc, reloj)
+                .ejecutar(m1.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL)
+                .valor();
+
+        SesionEnCursoViewModel vm = new SesionEnCursoViewModel(
+                new ConsultarEjecucionSesionService(sesiones, evs, mats, aj, dnd, reloj),
+                new PausarReanudarSesionService(sesiones, evs, mats, aj, dnd, prog, reloj),
+                new DetenerSesionService(sesiones, evs, dnd, prog, marc, null, null, null, mats, reloj),
+                new DecidirFinPlanificadoOInvasionService(
+                        sesiones, evs, mats, aj, dnd, prog, marc,
+                        new DetenerSesionService(sesiones, evs, dnd, prog, marc, null, null, null, mats, reloj),
+                        null, reloj),
+                null,
+                null,
+                Runnable::run);
+
+        vm.pausarOReanudar(s1.id());
+        assertTrue(vm.resumen().getValue().pausada());
+
+        reloj.avanzarMilis(5 * 60_000L);
+        vm.reanudarConTopico(
+                s1.id(),
+                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA,
+                "Almuerzo");
+        assertFalse(vm.resumen().getValue().pausada());
+        assertEquals(
+                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA,
+                evs.listarPorSesion(s1.id()).get(evs.listarPorSesion(s1.id()).size() - 1)
+                        .topico()
+                        .orElse(null));
+
+        reloj.avanzarMilis(3 * 60_000L);
+        new io.github.jhoel0521.studyplan.application.service.RegistrarSalidaAppService(
+                sesiones, evs, mats, marc, reloj).ejecutar();
+        vm.cargar(s1.id());
+        assertTrue(vm.resumen().getValue().salidaPendienteResolver());
+    }
 }

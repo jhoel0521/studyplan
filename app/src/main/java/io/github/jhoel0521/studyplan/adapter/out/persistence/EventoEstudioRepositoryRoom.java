@@ -26,7 +26,15 @@ public final class EventoEstudioRepositoryRoom implements EventoEstudioRepositor
 
     @Override
     public List<EventoEstudio> listarPorSesion(long sesionId) {
-        List<EventoEstudioEntity> entidades = dao.listarPorSesion(sesionId);
+        return mapear(dao.listarPorSesion(sesionId));
+    }
+
+    @Override
+    public List<EventoEstudio> listarPorRangoSesionesUtc(long desdeUtcMilis, long hastaUtcMilis) {
+        return mapear(dao.listarPorRangoSesionesUtc(desdeUtcMilis, hastaUtcMilis));
+    }
+
+    private static List<EventoEstudio> mapear(List<EventoEstudioEntity> entidades) {
         List<EventoEstudio> res = new ArrayList<>(entidades.size());
         for (EventoEstudioEntity e : entidades) {
             EventoEstudio dominio = Mapeadores.aDominio(e);

@@ -34,6 +34,7 @@ import io.github.jhoel0521.studyplan.application.port.in.ConfigurarPerfil;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarCalendario;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEjecucionSesion;
+import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadisticas;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadoArranque;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarPerfil;
@@ -77,6 +78,7 @@ import io.github.jhoel0521.studyplan.application.service.ConfigurarPerfilService
 import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarCalendarioService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarEjecucionSesionService;
+import io.github.jhoel0521.studyplan.application.service.ConsultarEstadisticasService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarEstadoArranqueService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarPerfilService;
@@ -160,6 +162,7 @@ public class StudyPlanApplication extends Application {
     private ConsultarProgresoMetas consultarProgresoMetas;
     private EstudiarAhora estudiarAhora;
     private CambiarDeMateria cambiarDeMateria;
+    private ConsultarEstadisticas consultarEstadisticas;
     private ContadorActividades contadorActividades;
     private FabricaViewModels fabrica;
 
@@ -245,7 +248,7 @@ public class StudyPlanApplication extends Application {
         consultarEjecucionSesion = new ConsultarEjecucionSesionService(
                 sesiones, eventos, materias, ajustes, noMolestar, relojSistema);
         registrarSalidaApp = new RegistrarSalidaAppService(
-                sesiones, eventos, marcadorSalida, relojSistema);
+                sesiones, eventos, materias, marcadorSalida, relojSistema);
         evaluarRecuperacionSesion = new EvaluarRecuperacionSesionService(
                 sesiones, eventos, materias, noMolestar, programador, marcadorSalida, tramos, metas, perfiles, relojSistema);
         resolverRegresoApp = new ResolverRegresoAppService(
@@ -262,6 +265,8 @@ public class StudyPlanApplication extends Application {
                 sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, relojSistema);
         cambiarDeMateria = new CambiarDeMateriaService(
                 sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, tramos, relojSistema);
+        consultarEstadisticas = new ConsultarEstadisticasService(
+                vencerSesionesPendientes, tramos, sesiones, materias, eventos, relojSistema);
         fabrica = new FabricaViewModels(this);
     }
 
@@ -451,6 +456,10 @@ public class StudyPlanApplication extends Application {
 
     public CambiarDeMateria cambiarDeMateria() {
         return cambiarDeMateria;
+    }
+
+    public ConsultarEstadisticas consultarEstadisticas() {
+        return consultarEstadisticas;
     }
 
     public ContadorActividades contadorActividades() {

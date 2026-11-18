@@ -60,7 +60,7 @@ public class PersistenciaInstrumentadaTest {
 
     @Test
     public void laBaseAbreConLaVersionCinco() {
-        assertEquals(6, base.getOpenHelper().getWritableDatabase().getVersion());
+        assertEquals(7, base.getOpenHelper().getWritableDatabase().getVersion());
     }
 
     @Test

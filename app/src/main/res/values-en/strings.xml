@@ -351,4 +351,56 @@
     <string name="felicitacion_meta_materia_item">%1$s: %2$s / %3$s h</string>
     <string name="felicitacion_volver_inicio">Back to home</string>
     <string name="error_sesion_ya_en_curso">You already have another session in progress</string>
+
+    <string name="topico_pdf_moodle">PDF / Moodle</string>
+    <string name="topico_libro_apuntes">Book / notes</string>
+    <string name="topico_grupo_clase">Study group / class</string>
+    <string name="topico_descanso_comida">Break / meal</string>
+    <string name="topico_llamada_mensaje">Call / message</string>
+    <string name="topico_otra_app">Other app</string>
+    <string name="topico_otro">Other</string>
+    <string name="topico_sin_clasificar">Unclassified</string>
+    <string name="topico_detalle_opcional">Brief note (optional)</string>
+    <string name="topico_pausa_titulo">Why did you pause?</string>
+    <string name="topico_reanudar_confirmar">Resume session</string>
+
+    <string name="recuperacion_retomar_sin_sumar">Didn\'t study then, resume now</string>
+    <string name="recuperacion_topico_titulo">Reason or activity (optional)</string>
+
+    <string name="estadisticas_titulo">Statistics</string>
+    <string name="estadisticas_semana">Week</string>
+    <string name="estadisticas_mes">Month</string>
+    <string name="estadisticas_anterior">Previous period</string>
+    <string name="estadisticas_siguiente">Next period</string>
+    <string name="estadisticas_resumen">Summary</string>
+    <string name="estadisticas_concentracion">Focus</string>
+    <string name="estadisticas_total_horas">%1$s h</string>
+    <string name="estadisticas_variacion_sube_semana">↑ %1$d %% vs. previous week</string>
+    <string name="estadisticas_variacion_baja_semana">↓ %1$d %% vs. previous week</string>
+    <string name="estadisticas_variacion_igual_semana">0 %% vs. previous week</string>
+    <string name="estadisticas_variacion_sube_mes">↑ %1$d %% vs. previous month</string>
+    <string name="estadisticas_variacion_baja_mes">↓ %1$d %% vs. previous month</string>
+    <string name="estadisticas_variacion_igual_mes">0 %% vs. previous month</string>
+    <string name="estadisticas_distribucion_titulo">Time by subject</string>
+    <string name="estadisticas_materia_fila">%1$s · %2$s h (%3$d %%)</string>
+    <string name="estadisticas_sin_horas">No study hours recorded in this period</string>
+    <string name="estadisticas_cumplimiento_titulo">Completion rate</string>
+    <string name="estadisticas_cumplimiento_valor">%1$d %% (%2$d of %3$d)</string>
+    <string name="estadisticas_cumplimiento_vacio">No closed sessions in this period yet</string>
+    <string name="estadisticas_cumplimiento_desglose">Completed: %1$d · Late: %2$d · Missed: %3$d · Rescheduled: %4$d</string>
+    <string name="estadisticas_pendientes_aviso">Pending or in-progress sessions: %1$d</string>
+    <string name="estadisticas_indice_concentracion">Focus score</string>
+    <string name="estadisticas_interrupciones">Interruptions</string>
+    <string name="estadisticas_interrupciones_valor">%1$s / h (%2$d total)</string>
+    <string name="estadisticas_puntualidad">Average punctuality</string>
+    <string name="estadisticas_puntualidad_valor">%1$s min</string>
+    <string name="estadisticas_respeto_tiempo">Schedule adherence</string>
+    <string name="estadisticas_tiempo_fuera">Time away (non-study)</string>
+    <string name="estadisticas_estudio_externo_titulo">External study</string>
+    <string name="estadisticas_estudio_externo_resumen">Total: %1$d min · Unclassified: %2$d min</string>
+    <string name="estadisticas_topicos_titulo">Pause &amp; interruption topics</string>
+    <string name="estadisticas_topico_fila">%1$s · %2$d times · %3$d min</string>
+    <string name="estadisticas_sin_datos_metrica">—</string>
+    <string name="estadisticas_sin_topicos">No pauses or interruptions recorded</string>
+    <string name="estadisticas_materia_archivada">Archived</string>
 </resources>

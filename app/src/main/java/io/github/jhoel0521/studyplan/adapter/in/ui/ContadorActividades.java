@@ -13,6 +13,7 @@ import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.ControlarSesionBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSalidaApp;
+import io.github.jhoel0521.studyplan.domain.SalidaRegistrada;
 
 /**
  * Cuenta las Activities iniciadas para saber cuándo la app pasa a segundo plano y vuelve a primer plano. Un cambio
@@ -56,6 +57,12 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
         pendienteEvaluarRecuperacion = true;
     }
 
+    /** Restablece el estado de primer plano entre pruebas instrumentadas. */
+    public void reiniciarParaPruebas() {
+        salioDeLaApp = false;
+        pendienteEvaluarRecuperacion = false;
+    }
+
     @Override
     public void onActivityStarted(@NonNull Activity actividad) {
         if (iniciadas == 0 && salioDeLaApp) {
@@ -73,9 +80,10 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
             salioDeLaApp = true;
             if (registrarSalida != null && ejecutor != null && appContext != null) {
                 ejecutor.execute(() -> {
-                    Optional<Long> activa = registrarSalida.ejecutar();
-                    if (activa.isPresent()) {
-                        NotificadorSesion.mostrarAvisoRetorno(appContext, activa.get(), "");
+                    Optional<SalidaRegistrada> salida = registrarSalida.ejecutar();
+                    if (salida.isPresent()) {
+                        NotificadorSesion.mostrarAvisoRetorno(
+                                appContext, salida.get().sesionId(), salida.get().nombreMateria());
                     }
                 });
             }

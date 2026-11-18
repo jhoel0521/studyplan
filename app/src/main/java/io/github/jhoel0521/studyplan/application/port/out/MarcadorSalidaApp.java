@@ -12,5 +12,13 @@ public interface MarcadorSalidaApp {
 
     Long obtenerInstanteSalida();
 
+    void marcarFinDescansoPomodoro(long sesionId, long finDescansoMilis);
+
+    Long obtenerSesionDescansoPomodoro();
+
+    Long obtenerFinDescansoPomodoro();
+
+    void limpiarFinDescansoPomodoro();
+
     void limpiar();
 }

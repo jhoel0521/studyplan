@@ -8,17 +8,19 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
+import io.github.jhoel0521.studyplan.domain.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
 
 /**
  * Diálogo {@code W13} presentado después de superar {@link ActividadProtegida} cuando existe una
@@ -40,6 +42,8 @@ public final class DialogoRecuperacionSesion {
         RadioGroup grupoOpciones = vista.findViewById(R.id.grupoOpcionesRecuperacion);
         TextInputLayout grupoHora = vista.findViewById(R.id.grupoHoraFinRecuperacion);
         TextInputEditText campoHora = vista.findViewById(R.id.campoHoraFinRecuperacion);
+        TextView tituloTopicos = vista.findViewById(R.id.textoTituloTopicoRecuperacion);
+        ChipGroup grupoTopicos = vista.findViewById(R.id.grupoTopicosRecuperacion);
         TextInputEditText campoNota = vista.findViewById(R.id.campoNotaRecuperacion);
         TextView textoError = vista.findViewById(R.id.textoErrorRecuperacion);
 
@@ -49,6 +53,26 @@ public final class DialogoRecuperacionSesion {
 
         grupoOpciones.setOnCheckedChangeListener((group, checkedId) -> {
             grupoHora.setVisibility(checkedId == R.id.radioHastaHora ? View.VISIBLE : View.GONE);
+            if (checkedId == R.id.radioSigoEstudiando) {
+                TopicosUi.poblarChips(
+                        actividad,
+                        grupoTopicos,
+                        TopicosUi.topicosParaEstudioExterno(),
+                        TopicoEventoEstudio.SIN_CLASIFICAR);
+                tituloTopicos.setVisibility(View.VISIBLE);
+                grupoTopicos.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.radioRetomarSinSumar) {
+                TopicosUi.poblarChips(
+                        actividad,
+                        grupoTopicos,
+                        TopicosUi.topicosParaInterrupcion(),
+                        TopicoEventoEstudio.SIN_CLASIFICAR);
+                tituloTopicos.setVisibility(View.VISIBLE);
+                grupoTopicos.setVisibility(View.VISIBLE);
+            } else {
+                tituloTopicos.setVisibility(View.GONE);
+                grupoTopicos.setVisibility(View.GONE);
+            }
             textoError.setVisibility(View.GONE);
         });
 
@@ -82,16 +106,22 @@ public final class DialogoRecuperacionSesion {
                         hastaMilis = app.reloj().instanteDe(fechaBase, hRes.valor());
                     } else if (elegido == R.id.radioSigoEstudiando) {
                         opcion = ResolverRegresoApp.OpcionRegreso.SIGO_ESTUDIANDO;
+                    } else if (elegido == R.id.radioRetomarSinSumar) {
+                        opcion = ResolverRegresoApp.OpcionRegreso.RETOMAR_SIN_SUMAR;
                     } else {
                         opcion = ResolverRegresoApp.OpcionRegreso.NO_SEGUI;
                     }
 
+                    TopicoEventoEstudio topico = (opcion == ResolverRegresoApp.OpcionRegreso.SIGO_ESTUDIANDO
+                            || opcion == ResolverRegresoApp.OpcionRegreso.RETOMAR_SIN_SUMAR)
+                            ? TopicosUi.obtenerSeleccionado(grupoTopicos)
+                            : TopicoEventoEstudio.SIN_CLASIFICAR;
                     String nota = campoNota.getText() == null
                             ? "" : campoNota.getText().toString().trim();
                     Long finalHasta = hastaMilis;
                     app.ejecutor().execute(() -> {
-                        Resultado<SesionEstudio> res = app.resolverRegresoApp().ejecutar(
-                                diagnostico.sesionEnCurso().id(), opcion, finalHasta, nota);
+                        Resultado<CierreSesion> res = app.resolverRegresoApp().ejecutarConMetas(
+                                diagnostico.sesionEnCurso().id(), opcion, finalHasta, nota, topico);
                         actividad.runOnUiThread(() -> {
                             if (!res.esValido()) {
                                 textoError.setText(R.string.error_hora_declarada_rango);
@@ -100,12 +130,16 @@ public final class DialogoRecuperacionSesion {
                             }
                             NotificadorSesion.cancelarAvisoRetorno(actividad);
                             dialogo.dismiss();
-                            if (opcion == ResolverRegresoApp.OpcionRegreso.SIGO_ESTUDIANDO
+                            if ((opcion == ResolverRegresoApp.OpcionRegreso.SIGO_ESTUDIANDO
+                                    || opcion == ResolverRegresoApp.OpcionRegreso.RETOMAR_SIN_SUMAR)
                                     && !(actividad instanceof SesionEnCursoActivity)) {
                                 Intent i = new Intent(actividad, SesionEnCursoActivity.class);
                                 i.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID,
                                         diagnostico.sesionEnCurso().id());
                                 actividad.startActivity(i);
+                            } else if (!res.valor().metasAlcanzadas().isEmpty()) {
+                                actividad.startActivity(FelicitacionMetasActivity.crearIntent(
+                                        actividad, res.valor().metasAlcanzadas()));
                             } else if (alResolver != null) {
                                 alResolver.run();
                             }

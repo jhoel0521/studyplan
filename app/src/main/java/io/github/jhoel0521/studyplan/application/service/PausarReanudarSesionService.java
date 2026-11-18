@@ -21,6 +21,7 @@ import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
 
 /**
  * Alterna pausa y reanudación en una sesión {@code EN_CURSO} gestionando eventos, avisos y No
@@ -55,6 +56,12 @@ public final class PausarReanudarSesionService implements PausarReanudarSesion {
 
     @Override
     public Resultado<SesionEstudio> ejecutar(long sesionId) {
+        return ejecutar(sesionId, null, "");
+    }
+
+    @Override
+    public Resultado<SesionEstudio> ejecutar(
+            long sesionId, TopicoEventoEstudio topico, String nota) {
         Optional<SesionEstudio> encontrada = sesiones.buscarPorId(sesionId);
         if (!encontrada.isPresent()) {
             return Resultado.error(ErrorValidacion.SESION_NO_ENCONTRADA);
@@ -70,8 +77,22 @@ public final class PausarReanudarSesionService implements PausarReanudarSesion {
         long ahoraMs = reloj.ahoraMilis();
 
         TipoEventoEstudio tipo = estabaPausada ? TipoEventoEstudio.REANUDACION : TipoEventoEstudio.PAUSA;
-        EventoEstudio nuevo = eventos.guardar(EventoEstudio.crear(
-                sesionId, tipo, ahoraMs, reloj.fechaDe(ahoraMs), reloj.horaDe(ahoraMs), "").valor());
+        TopicoEventoEstudio topicoEfectivo = estabaPausada
+                ? (topico != null ? topico : TopicoEventoEstudio.SIN_CLASIFICAR)
+                : null;
+        String notaEfectiva = estabaPausada && nota != null ? nota : "";
+        Resultado<EventoEstudio> eventoRes = EventoEstudio.crear(
+                sesionId,
+                tipo,
+                ahoraMs,
+                reloj.fechaDe(ahoraMs),
+                reloj.horaDe(ahoraMs),
+                notaEfectiva,
+                topicoEfectivo);
+        if (!eventoRes.esValido()) {
+            return Resultado.error(eventoRes.error());
+        }
+        EventoEstudio nuevo = eventos.guardar(eventoRes.valor());
         lista.add(nuevo);
         sesiones.actualizar(sesion);
 

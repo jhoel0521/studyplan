@@ -17,6 +17,7 @@ import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 import io.github.jhoel0521.studyplan.domain.Tema;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
 
 /**
  * Convierte entre las filas de Room y los objetos del dominio, para que las {@code Entity} no salgan de este paquete.
@@ -165,13 +166,14 @@ final class Mapeadores {
         e.instanteMilis = ev.instanteMilis();
         e.desfaseMinutos = ev.desfaseMinutos();
         e.nota = ev.nota().isEmpty() ? null : ev.nota();
+        e.topico = ev.topico().map(TopicoEventoEstudio::clave).orElse(null);
         return e;
     }
 
     static EventoEstudio aDominio(EventoEstudioEntity e) {
         TipoEventoEstudio tipo = leer(TipoEventoEstudio.class, e.tipo, TipoEventoEstudio.AJUSTE_MANUAL);
         return EventoEstudio.restaurar(
-                e.id, e.sesionId, tipo, e.instanteMilis, e.desfaseMinutos, e.nota);
+                e.id, e.sesionId, tipo, e.instanteMilis, e.desfaseMinutos, e.nota, e.topico);
     }
 
     private static <E extends Enum<E>> E leer(Class<E> tipo, String texto, E porDefecto) {

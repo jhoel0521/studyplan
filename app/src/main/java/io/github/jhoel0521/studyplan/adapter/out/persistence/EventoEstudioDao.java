@@ -18,6 +18,14 @@ public abstract class EventoEstudioDao {
     @Query("SELECT * FROM evento_estudio WHERE sesion_id = :sesionId ORDER BY instante_milis ASC, id ASC")
     public abstract List<EventoEstudioEntity> listarPorSesion(long sesionId);
 
+    @Query("SELECT e.* FROM evento_estudio e "
+            + "INNER JOIN sesion_estudio s ON s.id = e.sesion_id "
+            + "WHERE COALESCE(s.plan_fin_utc_milis, s.plan_inicio_utc_milis) >= :desdeUtcMilis "
+            + "AND s.plan_inicio_utc_milis <= :hastaUtcMilis "
+            + "ORDER BY e.instante_milis ASC, e.id ASC")
+    public abstract List<EventoEstudioEntity> listarPorRangoSesionesUtc(
+            long desdeUtcMilis, long hastaUtcMilis);
+
     @Query("DELETE FROM evento_estudio WHERE sesion_id = :sesionId")
     public abstract void eliminarPorSesion(long sesionId);
 

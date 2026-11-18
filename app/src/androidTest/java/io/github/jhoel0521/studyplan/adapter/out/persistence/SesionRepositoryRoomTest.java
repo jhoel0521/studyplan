@@ -185,7 +185,7 @@ public class SesionRepositoryRoomTest {
                 Fecha.de(2026, 12, 1).valor(), Fecha.de(2026, 12, 7).valor());
         assertTrue(vacio.isEmpty());
 
-        assertEquals(6, base.getOpenHelper().getReadableDatabase().getVersion());
+        assertEquals(7, base.getOpenHelper().getReadableDatabase().getVersion());
         Context contexto = ApplicationProvider.getApplicationContext();
         String[] permisos = contexto.getPackageManager()
                 .getPackageInfo(contexto.getPackageName(), android.content.pm.PackageManager.GET_PERMISSIONS)

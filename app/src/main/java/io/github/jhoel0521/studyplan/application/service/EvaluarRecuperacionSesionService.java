@@ -108,6 +108,29 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
         Long ultimaMarca = CalculadorTiempoReal.obtenerUltimoInstanteDentroDeApp(lista);
         Long salidaPendiente = CalculadorTiempoReal.obtenerInstanteSalidaSinResolver(lista);
 
+        Long sesionDescanso = marcadorSalida.obtenerSesionDescansoPomodoro();
+        Long finDescansoMs = marcadorSalida.obtenerFinDescansoPomodoro();
+        if (sesionDescanso != null
+                && finDescansoMs != null
+                && sesionDescanso.equals(sesion.id())) {
+            marcadorSalida.limpiarFinDescansoPomodoro();
+            if (ahoraMs <= finDescansoMs && salidaPendiente == null) {
+                return Optional.empty();
+            }
+            if (ahoraMs > finDescansoMs && salidaPendiente == null) {
+                EventoEstudio salidaExceso = eventos.guardar(EventoEstudio.crear(
+                        sesion.id(),
+                        TipoEventoEstudio.SALIDA_APP,
+                        finDescansoMs,
+                        reloj.fechaDe(finDescansoMs),
+                        reloj.horaDe(finDescansoMs),
+                        "").valor());
+                lista = new java.util.ArrayList<>(lista);
+                lista.add(salidaExceso);
+                salidaPendiente = finDescansoMs;
+            }
+        }
+
         long referenciaVencimiento = salidaPendiente != null
                 ? salidaPendiente
                 : (ultimaMarca != null ? ultimaMarca : ahoraMs);

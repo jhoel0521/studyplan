@@ -18,6 +18,7 @@ public final class ResumenEjecucionSesion {
     private final boolean mostrarExtensionPomodoro;
     private final boolean mostrarFinPlanificado;
     private final CandidataInvasion candidataInvasion;
+    private final boolean salidaPendienteResolver;
 
     public ResumenEjecucionSesion(
             SesionEstudio sesion,
@@ -30,6 +31,32 @@ public final class ResumenEjecucionSesion {
             boolean mostrarExtensionPomodoro,
             boolean mostrarFinPlanificado,
             CandidataInvasion candidataInvasion) {
+        this(
+                sesion,
+                nombreMateria,
+                colorMateria,
+                milisEfectivos,
+                pausada,
+                noMolestarActivo,
+                estadoPomodoro,
+                mostrarExtensionPomodoro,
+                mostrarFinPlanificado,
+                candidataInvasion,
+                false);
+    }
+
+    public ResumenEjecucionSesion(
+            SesionEstudio sesion,
+            String nombreMateria,
+            int colorMateria,
+            long milisEfectivos,
+            boolean pausada,
+            boolean noMolestarActivo,
+            EstadoPomodoroCalculado estadoPomodoro,
+            boolean mostrarExtensionPomodoro,
+            boolean mostrarFinPlanificado,
+            CandidataInvasion candidataInvasion,
+            boolean salidaPendienteResolver) {
         this.sesion = Objects.requireNonNull(sesion, "sesion");
         this.nombreMateria = Objects.requireNonNull(nombreMateria, "nombreMateria");
         this.colorMateria = colorMateria;
@@ -40,6 +67,7 @@ public final class ResumenEjecucionSesion {
         this.mostrarExtensionPomodoro = mostrarExtensionPomodoro;
         this.mostrarFinPlanificado = mostrarFinPlanificado;
         this.candidataInvasion = candidataInvasion;
+        this.salidaPendienteResolver = salidaPendienteResolver;
     }
 
     public SesionEstudio sesion() {
@@ -80,5 +108,9 @@ public final class ResumenEjecucionSesion {
 
     public CandidataInvasion candidataInvasion() {
         return candidataInvasion;
+    }
+
+    public boolean salidaPendienteResolver() {
+        return salidaPendienteResolver;
     }
 }

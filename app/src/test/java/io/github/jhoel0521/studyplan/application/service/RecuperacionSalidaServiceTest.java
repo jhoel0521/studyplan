@@ -128,4 +128,54 @@ public class RecuperacionSalidaServiceTest {
         Optional<DiagnosticoRegresoApp> vacio = evaluar.ejecutar();
         assertFalse(vacio.isPresent());
     }
+
+    @Test
+    public void salidaDuranteDescansoPomodoroNoAbreDialogoYExcesoAbreDesdeFinDeDescanso() {
+        Materia mate = materias.guardar(Materia.crear("Mate", 0xFF1565C0, null).valor());
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                mate.id(), reloj.hoy(), reloj.hoy(),
+                Hora.de(9, 0).valor(), Hora.de(11, 0).valor(), "", null).valor());
+        assertTrue(iniciar.ejecutar(s.id(), TecnicaEstudio.POMODORO, PreferenciaNoMolestar.HEREDAR_GLOBAL).esValido());
+
+        // Avanzamos 27 min (descanso corto de 5 min: faltan 3 min)
+        reloj.avanzarMilis(27 * MIN);
+        assertFalse(registrarSalida.ejecutar().isPresent());
+
+        // Volvemos 2 min después (aún en descanso) -> no abre W13
+        reloj.avanzarMilis(2 * MIN);
+        assertFalse(evaluar.ejecutar().isPresent());
+
+        // Salimos de nuevo en el último minuto del descanso y volvemos 6 min después (5 min de exceso)
+        assertFalse(registrarSalida.ejecutar().isPresent());
+        long finDescansoEsperado = reloj.ahoraMilis() + 1 * MIN;
+        reloj.avanzarMilis(6 * MIN);
+        Optional<DiagnosticoRegresoApp> diag = evaluar.ejecutar();
+        assertTrue(diag.isPresent());
+        assertEquals(finDescansoEsperado, diag.get().instanteSalidaMilis());
+    }
+
+    @Test
+    public void retomarSinSumarNoSumaTiempoFueraYGrabaTopicoEnRegreso() {
+        Materia mate = materias.guardar(Materia.crear("Mate", 0xFF1565C0, null).valor());
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                mate.id(), reloj.hoy(), reloj.hoy(),
+                Hora.de(9, 0).valor(), Hora.de(10, 0).valor(), "", null).valor());
+        assertTrue(iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).esValido());
+
+        reloj.avanzarMilis(10 * MIN);
+        assertTrue(registrarSalida.ejecutar().isPresent());
+        reloj.avanzarMilis(4 * MIN);
+
+        assertTrue(resolver.ejecutarConMetas(
+                s.id(),
+                ResolverRegresoApp.OpcionRegreso.RETOMAR_SIN_SUMAR,
+                null,
+                "",
+                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.LLAMADA_MENSAJE).esValido());
+
+        // Solo los 10 min previos deben contar como tiempo efectivo
+        long milis = io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal.calcularMilisEfectivos(
+                TecnicaEstudio.LIBRE, null, 60, eventos.listarPorSesion(s.id()), reloj.ahoraMilis());
+        assertEquals(10 * MIN, milis);
+    }
 }

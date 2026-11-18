@@ -147,6 +147,16 @@ public class SesionEnCursoViewModel extends ViewModel {
         });
     }
 
+    public void reanudarConTopico(
+            long sesionId,
+            io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio topico,
+            String nota) {
+        ejecutor.execute(() -> {
+            pausarReanudar.ejecutar(sesionId, topico, nota);
+            recargar(sesionId);
+        });
+    }
+
     public void detener(long sesionId) {
         ejecutor.execute(() -> {
             Resultado<CierreSesion> r = detener.ejecutarConMetas(sesionId);

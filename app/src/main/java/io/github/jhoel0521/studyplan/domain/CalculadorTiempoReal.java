@@ -1,8 +1,11 @@
 package io.github.jhoel0521.studyplan.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Reconstruye intervalos efectivos de estudio y calcula el tiempo real estudiado a partir de los
@@ -214,5 +217,220 @@ public final class CalculadorTiempoReal {
         copia.sort(Comparator.comparingLong(EventoEstudio::instanteMilis)
                 .thenComparing(e -> e.id() == null ? Long.MAX_VALUE : e.id()));
         return copia;
+    }
+
+    /**
+     * Analiza en una pasada los eventos de una sesión para extraer pausas manuales, salidas no
+     * académicas, estudio externo por tópico e interrupciones agrupables ({@code HU-45}, {@code RN-30}).
+     */
+    public static AnalisisEventos analizarEventos(List<EventoEstudio> eventos, long ahoraMilis) {
+        if (eventos == null || eventos.isEmpty()) {
+            return AnalisisEventos.VACIO;
+        }
+        long pausasManualesMs = 0L;
+        int cantidadPausas = 0;
+        long salidasNoAcademicasMs = 0L;
+        int cantidadSalidasNoAcademicas = 0;
+        Map<TopicoEventoEstudio, Long> estudioExternoPorTopicoMs =
+                new EnumMap<>(TopicoEventoEstudio.class);
+        Map<TopicoEventoEstudio, Long> interrupcionesPorTopicoMs =
+                new EnumMap<>(TopicoEventoEstudio.class);
+        Map<TopicoEventoEstudio, Integer> interrupcionesPorTopicoConteo =
+                new EnumMap<>(TopicoEventoEstudio.class);
+
+        Long primerInicioMs = null;
+        Long pausaAbiertaMs = null;
+        Long salidaAbiertaMs = null;
+        boolean huboEstudioAppCerradaEnSalida = false;
+
+        for (EventoEstudio e : ordenar(eventos)) {
+            long t = e.instanteMilis();
+            switch (e.tipo()) {
+                case INICIO:
+                    if (primerInicioMs == null) {
+                        primerInicioMs = t;
+                    }
+                    break;
+                case PAUSA:
+                    if (pausaAbiertaMs == null) {
+                        pausaAbiertaMs = t;
+                        cantidadPausas++;
+                    }
+                    break;
+                case REANUDACION:
+                    if (pausaAbiertaMs != null) {
+                        long dur = Math.max(0L, t - pausaAbiertaMs);
+                        pausasManualesMs += dur;
+                        TopicoEventoEstudio top = e.topico().orElse(TopicoEventoEstudio.SIN_CLASIFICAR);
+                        acumularInterrupcion(
+                                interrupcionesPorTopicoMs, interrupcionesPorTopicoConteo, top, dur);
+                        pausaAbiertaMs = null;
+                    }
+                    break;
+                case SALIDA_APP:
+                    salidaAbiertaMs = t;
+                    huboEstudioAppCerradaEnSalida = false;
+                    break;
+                case ESTUDIO_APP_CERRADA:
+                    if (salidaAbiertaMs != null && t >= salidaAbiertaMs) {
+                        long dur = t - salidaAbiertaMs;
+                        TopicoEventoEstudio top = e.topico().orElse(TopicoEventoEstudio.SIN_CLASIFICAR);
+                        estudioExternoPorTopicoMs.put(
+                                top, estudioExternoPorTopicoMs.getOrDefault(top, 0L) + dur);
+                        huboEstudioAppCerradaEnSalida = true;
+                    }
+                    break;
+                case REGRESO_APP:
+                    if (salidaAbiertaMs != null) {
+                        if (!huboEstudioAppCerradaEnSalida) {
+                            long dur = Math.max(0L, t - salidaAbiertaMs);
+                            salidasNoAcademicasMs += dur;
+                            cantidadSalidasNoAcademicas++;
+                            TopicoEventoEstudio top =
+                                    e.topico().orElse(TopicoEventoEstudio.SIN_CLASIFICAR);
+                            acumularInterrupcion(
+                                    interrupcionesPorTopicoMs,
+                                    interrupcionesPorTopicoConteo,
+                                    top,
+                                    dur);
+                        }
+                        salidaAbiertaMs = null;
+                        huboEstudioAppCerradaEnSalida = false;
+                    }
+                    break;
+                case FIN:
+                case CAMBIO_SESION:
+                    if (pausaAbiertaMs != null) {
+                        long dur = Math.max(0L, t - pausaAbiertaMs);
+                        pausasManualesMs += dur;
+                        acumularInterrupcion(
+                                interrupcionesPorTopicoMs,
+                                interrupcionesPorTopicoConteo,
+                                TopicoEventoEstudio.SIN_CLASIFICAR,
+                                dur);
+                        pausaAbiertaMs = null;
+                    }
+                    if (salidaAbiertaMs != null) {
+                        if (!huboEstudioAppCerradaEnSalida) {
+                            long dur = Math.max(0L, t - salidaAbiertaMs);
+                            salidasNoAcademicasMs += dur;
+                            cantidadSalidasNoAcademicas++;
+                            acumularInterrupcion(
+                                    interrupcionesPorTopicoMs,
+                                    interrupcionesPorTopicoConteo,
+                                    TopicoEventoEstudio.SIN_CLASIFICAR,
+                                    dur);
+                        }
+                        salidaAbiertaMs = null;
+                        huboEstudioAppCerradaEnSalida = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (pausaAbiertaMs != null && ahoraMilis >= pausaAbiertaMs) {
+            long dur = ahoraMilis - pausaAbiertaMs;
+            pausasManualesMs += dur;
+            acumularInterrupcion(
+                    interrupcionesPorTopicoMs,
+                    interrupcionesPorTopicoConteo,
+                    TopicoEventoEstudio.SIN_CLASIFICAR,
+                    dur);
+        }
+
+        return new AnalisisEventos(
+                primerInicioMs,
+                pausasManualesMs,
+                cantidadPausas,
+                salidasNoAcademicasMs,
+                cantidadSalidasNoAcademicas,
+                estudioExternoPorTopicoMs,
+                interrupcionesPorTopicoMs,
+                interrupcionesPorTopicoConteo);
+    }
+
+    private static void acumularInterrupcion(
+            Map<TopicoEventoEstudio, Long> duraciones,
+            Map<TopicoEventoEstudio, Integer> conteos,
+            TopicoEventoEstudio topico,
+            long duracionMs) {
+        duraciones.put(topico, duraciones.getOrDefault(topico, 0L) + duracionMs);
+        conteos.put(topico, conteos.getOrDefault(topico, 0) + 1);
+    }
+
+    /** Resultado agregado del análisis cronológico de eventos de una sesión ({@code HU-45}). */
+    public static final class AnalisisEventos {
+
+        static final AnalisisEventos VACIO = new AnalisisEventos(
+                null,
+                0L,
+                0,
+                0L,
+                0,
+                Collections.emptyMap(),
+                Collections.emptyMap(),
+                Collections.emptyMap());
+
+        private final Long primerInicioMilis;
+        private final long pausasManualesMs;
+        private final int cantidadPausasManuales;
+        private final long salidasNoAcademicasMs;
+        private final int cantidadSalidasNoAcademicas;
+        private final Map<TopicoEventoEstudio, Long> estudioExternoPorTopicoMs;
+        private final Map<TopicoEventoEstudio, Long> interrupcionesPorTopicoMs;
+        private final Map<TopicoEventoEstudio, Integer> interrupcionesPorTopicoConteo;
+
+        private AnalisisEventos(
+                Long primerInicioMilis,
+                long pausasManualesMs,
+                int cantidadPausasManuales,
+                long salidasNoAcademicasMs,
+                int cantidadSalidasNoAcademicas,
+                Map<TopicoEventoEstudio, Long> estudioExternoPorTopicoMs,
+                Map<TopicoEventoEstudio, Long> interrupcionesPorTopicoMs,
+                Map<TopicoEventoEstudio, Integer> interrupcionesPorTopicoConteo) {
+            this.primerInicioMilis = primerInicioMilis;
+            this.pausasManualesMs = pausasManualesMs;
+            this.cantidadPausasManuales = cantidadPausasManuales;
+            this.salidasNoAcademicasMs = salidasNoAcademicasMs;
+            this.cantidadSalidasNoAcademicas = cantidadSalidasNoAcademicas;
+            this.estudioExternoPorTopicoMs = Collections.unmodifiableMap(estudioExternoPorTopicoMs);
+            this.interrupcionesPorTopicoMs = Collections.unmodifiableMap(interrupcionesPorTopicoMs);
+            this.interrupcionesPorTopicoConteo = Collections.unmodifiableMap(interrupcionesPorTopicoConteo);
+        }
+
+        public Long primerInicioMilis() {
+            return primerInicioMilis;
+        }
+
+        public long pausasManualesMs() {
+            return pausasManualesMs;
+        }
+
+        public int cantidadPausasManuales() {
+            return cantidadPausasManuales;
+        }
+
+        public long salidasNoAcademicasMs() {
+            return salidasNoAcademicasMs;
+        }
+
+        public int cantidadSalidasNoAcademicas() {
+            return cantidadSalidasNoAcademicas;
+        }
+
+        public Map<TopicoEventoEstudio, Long> estudioExternoPorTopicoMs() {
+            return estudioExternoPorTopicoMs;
+        }
+
+        public Map<TopicoEventoEstudio, Long> interrupcionesPorTopicoMs() {
+            return interrupcionesPorTopicoMs;
+        }
+
+        public Map<TopicoEventoEstudio, Integer> interrupcionesPorTopicoConteo() {
+            return interrupcionesPorTopicoConteo;
+        }
     }
 }

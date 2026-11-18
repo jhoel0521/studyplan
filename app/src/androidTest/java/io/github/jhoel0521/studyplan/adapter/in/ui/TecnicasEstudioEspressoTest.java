@@ -73,6 +73,9 @@ public class TecnicasEstudioEspressoTest {
             onView(withId(R.id.botonPausarReanudar)).perform(click());
             Pruebas.esperarVisible(withText(R.string.sesion_en_curso_pausada));
             onView(withId(R.id.botonPausarReanudar)).perform(click());
+            Pruebas.esperarVisible(withText(R.string.topico_pausa_titulo));
+            onView(withText(R.string.topico_descanso_comida)).perform(click());
+            onView(withText(R.string.topico_reanudar_confirmar)).perform(click());
             Pruebas.esperarVisible(withText(R.string.sesion_en_curso_activa));
 
             onView(withId(R.id.botonDetenerEnCurso)).perform(click());
@@ -113,6 +116,7 @@ public class TecnicasEstudioEspressoTest {
                 calculo.id(), hoy, Hora.de(9, 0).valor(), Hora.de(11, 0).valor(), "").sesion();
         app.iniciarSesion().ejecutar(
                 s.id(), TecnicaEstudio.POMODORO, PreferenciaNoMolestar.HEREDAR_GLOBAL);
+        app.contadorActividades().consumirEvaluacionRecuperacion();
 
         Intent enCurso = new Intent(
                 ApplicationProvider.getApplicationContext(), SesionEnCursoActivity.class);
@@ -175,6 +179,65 @@ public class TecnicasEstudioEspressoTest {
             Pruebas.esperarVisible(withId(R.id.botonMas5Min));
             onView(withId(R.id.botonMas5Min)).perform(click());
             onView(withId(R.id.botonConfirmarReparto)).perform(scrollTo(), click());
+        }
+    }
+
+    @Test
+    public void regresoDirectoASesionEnCursoAbreW13YRetomarSinSumar() throws Exception {
+        StudyPlanApplication app = Pruebas.app();
+        SesionEstudio s = app.estudiarAhora().ejecutar(
+                calculo.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
+
+        long salidaMs = app.reloj().ahoraMilis() - 5 * 60_000L;
+        app.eventoEstudioRepository().guardar(EventoEstudio.crear(
+                s.id(),
+                TipoEventoEstudio.SALIDA_APP,
+                salidaMs,
+                app.reloj().fechaDe(salidaMs),
+                app.reloj().horaDe(salidaMs),
+                "").valor());
+        app.contadorActividades().solicitarEvaluacionRecuperacion();
+
+        Intent enCurso = new Intent(
+                ApplicationProvider.getApplicationContext(), SesionEnCursoActivity.class);
+        enCurso.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, s.id());
+        try (ActivityScenario<SesionEnCursoActivity> escenario = ActivityScenario.launch(enCurso)) {
+            Pruebas.esperarVisible(withId(R.id.radioRetomarSinSumar));
+            onView(withId(R.id.radioRetomarSinSumar)).perform(click());
+            onView(withText(R.string.recuperacion_confirmar)).perform(click());
+            Pruebas.esperarVisible(withText(R.string.sesion_en_curso_activa));
+            // En Estudiar ahora nunca se muestra tarjetaFinPlanificado
+            onView(withId(R.id.tarjetaFinPlanificado)).check(matches(
+                    org.hamcrest.Matchers.not(isDisplayed())));
+        }
+    }
+
+    @Test
+    public void descansoPomodoroDentroNoAbreW13YFueraSiAbreW13() throws Exception {
+        StudyPlanApplication app = Pruebas.app();
+        SesionEstudio s = app.estudiarAhora().ejecutar(
+                calculo.id(), TecnicaEstudio.POMODORO, PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
+
+        io.github.jhoel0521.studyplan.adapter.out.system.MarcadorSalidaAppPrefs marcador =
+                new io.github.jhoel0521.studyplan.adapter.out.system.MarcadorSalidaAppPrefs(app);
+
+        // Caso 1: dentro de descanso Pomodoro -> evaluarRecuperacionSesion() vacío
+        long finFuturo = app.reloj().ahoraMilis() + 3 * 60_000L;
+        marcador.marcarFinDescansoPomodoro(s.id(), finFuturo);
+        org.junit.Assert.assertFalse(app.evaluarRecuperacionSesion().ejecutar().isPresent());
+
+        // Caso 2: fin de descanso ya vencido -> abre W13 al lanzar SesionEnCursoActivity
+        long finPasado = app.reloj().ahoraMilis() - 2 * 60_000L;
+        marcador.marcarFinDescansoPomodoro(s.id(), finPasado);
+        app.contadorActividades().solicitarEvaluacionRecuperacion();
+
+        Intent enCurso = new Intent(
+                ApplicationProvider.getApplicationContext(), SesionEnCursoActivity.class);
+        enCurso.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, s.id());
+        try (ActivityScenario<SesionEnCursoActivity> escenario = ActivityScenario.launch(enCurso)) {
+            Pruebas.esperarVisible(withId(R.id.radioNoSegui));
+            onView(withId(R.id.radioNoSegui)).perform(click());
+            onView(withText(R.string.recuperacion_confirmar)).perform(click());
         }
     }
 }

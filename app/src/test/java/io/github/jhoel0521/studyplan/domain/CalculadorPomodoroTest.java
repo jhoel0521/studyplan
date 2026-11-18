@@ -46,4 +46,17 @@ public class CalculadorPomodoroTest {
         assertEquals(35 * MIN, extra.milisTrabajoAcumulados());
         assertTrue(extra.ciclosPlanificadosCompletados());
     }
+
+    @Test
+    public void detectaDescansoYCalculaFinProyectado() {
+        ConfiguracionPomodoro cfg = ConfiguracionPomodoro.porDefecto();
+        EstadoPomodoroCalculado descanso = CalculadorPomodoro.calcularEstado(27 * MIN, cfg, 2, false);
+        assertTrue(CalculadorPomodoro.estaEnDescanso(descanso.faseActual()));
+        long t = 1_000_000L;
+        assertEquals(t + 3 * MIN, CalculadorPomodoro.calcularFinDescansoProyectado(t, descanso));
+
+        EstadoPomodoroCalculado trabajo = CalculadorPomodoro.calcularEstado(10 * MIN, cfg, 2, false);
+        assertFalse(CalculadorPomodoro.estaEnDescanso(trabajo.faseActual()));
+        assertEquals(0L, CalculadorPomodoro.calcularFinDescansoProyectado(t, trabajo));
+    }
 }

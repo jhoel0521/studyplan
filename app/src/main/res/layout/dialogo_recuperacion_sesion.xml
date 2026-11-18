@@ -37,7 +37,33 @@
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
                 android:text="@string/recuperacion_opcion_sigo" />
+
+            <RadioButton
+                android:id="@+id/radioRetomarSinSumar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/recuperacion_retomar_sin_sumar" />
         </RadioGroup>
+
+        <TextView
+            android:id="@+id/textoTituloTopicoRecuperacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:maxWidth="600dp"
+            android:text="@string/recuperacion_topico_titulo"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/grupoTopicosRecuperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/grupoHoraFinRecuperacion"

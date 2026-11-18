@@ -138,4 +138,26 @@ public class EjecucionSesionServiceTest {
         assertEquals(120, tramos.sumarMinutosEnRango(lunes, lunes));
         assertEquals(60, tramos.sumarMinutosEnRango(martes, martes));
     }
+
+    @Test
+    public void sesionSinPlanOcultaFinPlanificadoYSalidaPendienteSeReflejaEnResumen() {
+        io.github.jhoel0521.studyplan.fakes.FakeMarcadorSalidaApp marcador =
+                new io.github.jhoel0521.studyplan.fakes.FakeMarcadorSalidaApp();
+        EstudiarAhoraService estudiarAhora = new EstudiarAhoraService(
+                sesiones, eventos, materias, ajustes, noMolestar, programador, marcador, reloj);
+        SesionEstudio s = estudiarAhora.ejecutar(
+                calculo.id(),
+                TecnicaEstudio.LIBRE,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
+
+        reloj.avanzarMilis(20 * MIN);
+        ResumenEjecucionSesion res = consultar.ejecutar(s.id()).get();
+        assertFalse(res.mostrarFinPlanificado());
+        assertFalse(res.salidaPendienteResolver());
+
+        RegistrarSalidaAppService salida = new RegistrarSalidaAppService(
+                sesiones, eventos, materias, marcador, reloj);
+        assertEquals("Cálculo", salida.ejecutar().get().nombreMateria());
+        assertTrue(consultar.ejecutar(s.id()).get().salidaPendienteResolver());
+    }
 }

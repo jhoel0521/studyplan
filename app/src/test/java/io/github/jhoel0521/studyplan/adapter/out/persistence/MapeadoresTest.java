@@ -95,4 +95,25 @@ public class MapeadoresTest {
                 CodigoEstadoSesion.NO_REALIZADA,
                 Mapeadores.aDominio(estadoFuturo).codigoEstado());
     }
+
+    @Test
+    public void eventoEstudioMapeaTopicoCanonicoYNuloHistorico() {
+        io.github.jhoel0521.studyplan.domain.EventoEstudio ev =
+                io.github.jhoel0521.studyplan.domain.EventoEstudio.crear(
+                        5L,
+                        io.github.jhoel0521.studyplan.domain.TipoEventoEstudio.REANUDACION,
+                        1_700_000_000_000L,
+                        -240,
+                        "",
+                        io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA)
+                        .valor();
+        EventoEstudioEntity entidad = Mapeadores.aEntidad(ev);
+        assertEquals("DESCANSO_COMIDA", entidad.topico);
+        assertEquals(
+                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA,
+                Mapeadores.aDominio(entidad).topico().orElse(null));
+
+        entidad.topico = null;
+        assertEquals(java.util.Optional.empty(), Mapeadores.aDominio(entidad).topico());
+    }
 }

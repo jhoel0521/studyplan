@@ -43,4 +43,7 @@ public class EventoEstudioEntity {
 
     @Nullable
     public String nota;
+
+    @Nullable
+    public String topico;
 }

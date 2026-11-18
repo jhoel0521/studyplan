@@ -201,7 +201,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         if (ultimoResumen == null) {
             return;
         }
-        long delta = ultimoResumen.pausada()
+        long delta = (ultimoResumen.pausada() || ultimoResumen.salidaPendienteResolver())
                 ? 0L
                 : Math.max(0L, System.currentTimeMillis() - instanteCargaMs);
         long milis = ultimoResumen.milisEfectivos() + delta;
@@ -298,7 +298,48 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     }
 
     private void onPausarReanudarClick(View v) {
-        modelo.pausarOReanudar(sesionId);
+        if (ultimoResumen != null && ultimoResumen.pausada()) {
+            mostrarDialogoTopicoReanudar();
+        } else {
+            modelo.pausarOReanudar(sesionId);
+        }
+    }
+
+    private void mostrarDialogoTopicoReanudar() {
+        android.widget.LinearLayout contenedor = new android.widget.LinearLayout(this);
+        contenedor.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        contenedor.setPadding(pad, pad, pad, 0);
+
+        com.google.android.material.chip.ChipGroup grupo =
+                new com.google.android.material.chip.ChipGroup(this);
+        TopicosUi.poblarChips(
+                this,
+                grupo,
+                TopicosUi.topicosParaInterrupcion(),
+                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.SIN_CLASIFICAR);
+        contenedor.addView(grupo);
+
+        com.google.android.material.textfield.TextInputLayout campoLayout =
+                new com.google.android.material.textfield.TextInputLayout(this);
+        campoLayout.setHint(getString(R.string.topico_detalle_opcional));
+        com.google.android.material.textfield.TextInputEditText campoNota =
+                new com.google.android.material.textfield.TextInputEditText(this);
+        campoNota.setMinHeight((int) (48 * getResources().getDisplayMetrics().density));
+        campoLayout.addView(campoNota);
+        contenedor.addView(campoLayout);
+
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.topico_pausa_titulo)
+                .setView(contenedor)
+                .setNegativeButton(R.string.cancelar, null)
+                .setPositiveButton(R.string.topico_reanudar_confirmar, (d, w) -> {
+                    io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio topico =
+                            TopicosUi.obtenerSeleccionado(grupo);
+                    String nota = campoNota.getText() == null ? "" : campoNota.getText().toString();
+                    modelo.reanudarConTopico(sesionId, topico, nota);
+                })
+                .show();
     }
 
     private void onDetenerClick(View v) {

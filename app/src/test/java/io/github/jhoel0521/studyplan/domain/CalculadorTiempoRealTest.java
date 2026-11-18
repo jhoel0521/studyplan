@@ -77,4 +77,33 @@ public class CalculadorTiempoRealTest {
 
         assertNull(CalculadorTiempoReal.obtenerUltimoInstanteDentroDeApp(Collections.emptyList()));
     }
+
+    @Test
+    public void analizaPausasSinReanudarSalidasNoAcademicasYEstudioExternoPorTopico() {
+        long t0 = 1_794_834_000_000L;
+        EventoEstudio inicio = EventoEstudio.restaurar(1L, 1L, TipoEventoEstudio.INICIO, t0, -240, "");
+        EventoEstudio pausa = EventoEstudio.restaurar(2L, 1L, TipoEventoEstudio.PAUSA, t0 + 10 * MIN, -240, "");
+        EventoEstudio reanudar = EventoEstudio.restaurar(3L, 1L, TipoEventoEstudio.REANUDACION, t0 + 15 * MIN, -240, "", "DESCANSO_COMIDA");
+        EventoEstudio salidaExt = EventoEstudio.restaurar(4L, 1L, TipoEventoEstudio.SALIDA_APP, t0 + 20 * MIN, -240, "");
+        EventoEstudio appCerrada = EventoEstudio.restaurar(5L, 1L, TipoEventoEstudio.ESTUDIO_APP_CERRADA, t0 + 30 * MIN, -240, "", "PDF_MOODLE");
+        EventoEstudio regresoExt = EventoEstudio.restaurar(6L, 1L, TipoEventoEstudio.REGRESO_APP, t0 + 30 * MIN, -240, "", "PDF_MOODLE");
+        EventoEstudio salidaNoAcad = EventoEstudio.restaurar(7L, 1L, TipoEventoEstudio.SALIDA_APP, t0 + 35 * MIN, -240, "");
+        EventoEstudio regresoNoAcad = EventoEstudio.restaurar(8L, 1L, TipoEventoEstudio.REGRESO_APP, t0 + 39 * MIN, -240, "", "LLAMADA_MENSAJE");
+        EventoEstudio pausaSinReanudar = EventoEstudio.restaurar(9L, 1L, TipoEventoEstudio.PAUSA, t0 + 40 * MIN, -240, "");
+        EventoEstudio fin = EventoEstudio.restaurar(10L, 1L, TipoEventoEstudio.FIN, t0 + 45 * MIN, -240, "");
+
+        CalculadorTiempoReal.AnalisisEventos analisis = CalculadorTiempoReal.analizarEventos(
+                Arrays.asList(inicio, pausa, reanudar, salidaExt, appCerrada, regresoExt, salidaNoAcad, regresoNoAcad, pausaSinReanudar, fin),
+                t0 + 45 * MIN);
+
+        assertEquals(Long.valueOf(t0), analisis.primerInicioMilis());
+        assertEquals(10 * MIN, analisis.pausasManualesMs());
+        assertEquals(2, analisis.cantidadPausasManuales());
+        assertEquals(4 * MIN, analisis.salidasNoAcademicasMs());
+        assertEquals(1, analisis.cantidadSalidasNoAcademicas());
+        assertEquals(Long.valueOf(10 * MIN), analisis.estudioExternoPorTopicoMs().get(TopicoEventoEstudio.PDF_MOODLE));
+        assertEquals(Long.valueOf(5 * MIN), analisis.interrupcionesPorTopicoMs().get(TopicoEventoEstudio.DESCANSO_COMIDA));
+        assertEquals(Long.valueOf(5 * MIN), analisis.interrupcionesPorTopicoMs().get(TopicoEventoEstudio.SIN_CLASIFICAR));
+        assertEquals(Long.valueOf(4 * MIN), analisis.interrupcionesPorTopicoMs().get(TopicoEventoEstudio.LLAMADA_MENSAJE));
+    }
 }

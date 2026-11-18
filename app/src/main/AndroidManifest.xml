@@ -62,6 +62,9 @@
             android:name=".adapter.in.ui.CalendarioActivity"
             android:exported="false" />
         <activity
+            android:name=".adapter.in.ui.EstadisticasActivity"
+            android:exported="false" />
+        <activity
             android:name=".adapter.in.ui.SesionEnCursoActivity"
             android:exported="false" />
         <activity

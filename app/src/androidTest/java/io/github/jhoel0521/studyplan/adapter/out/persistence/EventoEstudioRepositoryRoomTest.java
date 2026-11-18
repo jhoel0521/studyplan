@@ -83,5 +83,10 @@ public class EventoEstudioRepositoryRoomTest {
                 s1.detener(35).valor(),
                 s2.iniciar(TecnicaEstudio.LIBRE, null).valor().detener(25).valor());
         assertTrue(sesiones.listarEnCurso().isEmpty());
+
+        long desde = s1.planInicioUtcMilis();
+        long hasta = s1.planFinUtcMilis();
+        List<EventoEstudio> porRango = eventos.listarPorRangoSesionesUtc(desde, hasta);
+        assertEquals(2, porRango.size());
     }
 }

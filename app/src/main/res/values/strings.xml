@@ -351,4 +351,56 @@
     <string name="felicitacion_meta_materia_item">%1$s: %2$s / %3$s h</string>
     <string name="felicitacion_volver_inicio">Volver al inicio</string>
     <string name="error_sesion_ya_en_curso">Ya tienes otra sesión en curso</string>
+
+    <string name="topico_pdf_moodle">PDF / Moodle</string>
+    <string name="topico_libro_apuntes">Libro / apuntes</string>
+    <string name="topico_grupo_clase">Grupo / clase</string>
+    <string name="topico_descanso_comida">Descanso / comida</string>
+    <string name="topico_llamada_mensaje">Llamada / mensaje</string>
+    <string name="topico_otra_app">Otra app</string>
+    <string name="topico_otro">Otro</string>
+    <string name="topico_sin_clasificar">Sin clasificar</string>
+    <string name="topico_detalle_opcional">Detalle breve (opcional)</string>
+    <string name="topico_pausa_titulo">¿Por qué pausaste?</string>
+    <string name="topico_reanudar_confirmar">Reanudar sesión</string>
+
+    <string name="recuperacion_retomar_sin_sumar">No estudié ese rato, retomo ahora</string>
+    <string name="recuperacion_topico_titulo">Motivo o actividad (opcional)</string>
+
+    <string name="estadisticas_titulo">Estadísticas</string>
+    <string name="estadisticas_semana">Semana</string>
+    <string name="estadisticas_mes">Mes</string>
+    <string name="estadisticas_anterior">Periodo anterior</string>
+    <string name="estadisticas_siguiente">Periodo siguiente</string>
+    <string name="estadisticas_resumen">Resumen</string>
+    <string name="estadisticas_concentracion">Concentración</string>
+    <string name="estadisticas_total_horas">%1$s h</string>
+    <string name="estadisticas_variacion_sube_semana">↑ %1$d %% vs. semana anterior</string>
+    <string name="estadisticas_variacion_baja_semana">↓ %1$d %% vs. semana anterior</string>
+    <string name="estadisticas_variacion_igual_semana">0 %% vs. semana anterior</string>
+    <string name="estadisticas_variacion_sube_mes">↑ %1$d %% vs. mes anterior</string>
+    <string name="estadisticas_variacion_baja_mes">↓ %1$d %% vs. mes anterior</string>
+    <string name="estadisticas_variacion_igual_mes">0 %% vs. mes anterior</string>
+    <string name="estadisticas_distribucion_titulo">Distribución por materia</string>
+    <string name="estadisticas_materia_fila">%1$s · %2$s h (%3$d %%)</string>
+    <string name="estadisticas_sin_horas">No hay horas registradas en este periodo</string>
+    <string name="estadisticas_cumplimiento_titulo">Tasa de cumplimiento</string>
+    <string name="estadisticas_cumplimiento_valor">%1$d %% (%2$d de %3$d)</string>
+    <string name="estadisticas_cumplimiento_vacio">Aún no hay sesiones cerradas en este periodo</string>
+    <string name="estadisticas_cumplimiento_desglose">Completadas: %1$d · Tardías: %2$d · No realizadas: %3$d · Reprogramadas: %4$d</string>
+    <string name="estadisticas_pendientes_aviso">Sesiones pendientes o en curso: %1$d</string>
+    <string name="estadisticas_indice_concentracion">Concentración</string>
+    <string name="estadisticas_interrupciones">Interrupciones</string>
+    <string name="estadisticas_interrupciones_valor">%1$s / h (%2$d en total)</string>
+    <string name="estadisticas_puntualidad">Puntualidad promedio</string>
+    <string name="estadisticas_puntualidad_valor">%1$s min</string>
+    <string name="estadisticas_respeto_tiempo">Respeto del tiempo</string>
+    <string name="estadisticas_tiempo_fuera">Tiempo fuera (sin estudiar)</string>
+    <string name="estadisticas_estudio_externo_titulo">Estudio fuera de la app</string>
+    <string name="estadisticas_estudio_externo_resumen">Total: %1$d min · Sin clasificar: %2$d min</string>
+    <string name="estadisticas_topicos_titulo">Tópicos de pausas e interrupciones</string>
+    <string name="estadisticas_topico_fila">%1$s · %2$d veces · %3$d min</string>
+    <string name="estadisticas_sin_datos_metrica">—</string>
+    <string name="estadisticas_sin_topicos">Sin pausas ni interrupciones registradas</string>
+    <string name="estadisticas_materia_archivada">Archivada</string>
 </resources>

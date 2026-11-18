@@ -92,10 +92,14 @@ public final class ConsultarEjecucionSesionService implements ConsultarEjecucion
             }
         }
 
-        long finPlanMs = reloj.instanteDe(sesion.fecha(), sesion.horaFin());
-        boolean mostrarFinPlan = ahoraMs >= finPlanMs
+        long finPlanMs = sesion.tienePlan()
+                ? reloj.instanteDe(sesion.fecha(), sesion.horaFin())
+                : Long.MAX_VALUE;
+        boolean mostrarFinPlan = sesion.tienePlan()
+                && ahoraMs >= finPlanMs
                 && !EjecucionHitos.contieneTipo(lista, TipoEventoEstudio.FIN_PLANIFICADO)
                 && !enTiempoExtra;
+        boolean salidaPendiente = CalculadorTiempoReal.tieneSalidaSinResolver(lista);
 
         CandidataInvasion invasion = EjecucionHitos.detectarInvasion(
                 sesion, ahoraMs, sesiones, materias, reloj);
@@ -110,6 +114,7 @@ public final class ConsultarEjecucionSesionService implements ConsultarEjecucion
                 estadoPom,
                 mostrarExtPom,
                 mostrarFinPlan,
-                invasion));
+                invasion,
+                salidaPendiente));
     }
 }

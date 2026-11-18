@@ -28,6 +28,7 @@ import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
 
 /**
  * Resuelve la declaración del estudiante al volver con una sesión {@code EN_CURSO}
@@ -130,6 +131,16 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
     @Override
     public Resultado<CierreSesion> ejecutarConMetas(
             long sesionId, OpcionRegreso opcion, Long hastaInstanteMilis, String nota) {
+        return ejecutarConMetas(sesionId, opcion, hastaInstanteMilis, nota, null);
+    }
+
+    @Override
+    public Resultado<CierreSesion> ejecutarConMetas(
+            long sesionId,
+            OpcionRegreso opcion,
+            Long hastaInstanteMilis,
+            String nota,
+            TopicoEventoEstudio topico) {
         Objects.requireNonNull(opcion, "opcion");
         Optional<SesionEstudio> encontrada = sesiones.buscarPorId(sesionId);
         if (!encontrada.isPresent()) {
@@ -143,6 +154,8 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                 ? salidaPendiente
                 : Optional.ofNullable(CalculadorTiempoReal.obtenerUltimoInstanteDentroDeApp(lista))
                         .orElse(ahoraMs);
+        TopicoEventoEstudio topicoEfectivo =
+                topico != null ? topico : TopicoEventoEstudio.SIN_CLASIFICAR;
 
         switch (opcion) {
             case NO_SEGUI:
@@ -159,7 +172,8 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                         hastaInstanteMilis,
                         reloj.fechaDe(hastaInstanteMilis),
                         reloj.horaDe(hastaInstanteMilis),
-                        nota);
+                        nota,
+                        topicoEfectivo);
                 if (!evCerrada.esValido()) {
                     return Resultado.error(evCerrada.error());
                 }
@@ -174,7 +188,8 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                         ahoraMs,
                         reloj.fechaDe(ahoraMs),
                         reloj.horaDe(ahoraMs),
-                        nota);
+                        nota,
+                        topicoEfectivo);
                 if (!evCerrada.esValido()) {
                     return Resultado.error(evCerrada.error());
                 }
@@ -184,27 +199,48 @@ public final class ResolverRegresoAppService implements ResolverRegresoApp {
                         ahoraMs,
                         reloj.fechaDe(ahoraMs),
                         reloj.horaDe(ahoraMs),
-                        "").valor();
+                        "",
+                        topicoEfectivo).valor();
                 eventos.guardar(evCerrada.valor());
                 eventos.guardar(evRegreso);
                 lista.add(evCerrada.valor());
                 lista.add(evRegreso);
-                marcadorSalida.limpiar();
-
-                Ajustes ajustes = ajustesRepo.obtener();
-                if (sesion.debeActivarNoMolestar(ajustes.noMolestarGlobal())
-                        && noMolestar.tienePermiso()) {
-                    noMolestar.aplicar(true);
+                return reanudarAlVolver(sesion, lista, ahoraMs);
+            }
+            case RETOMAR_SIN_SUMAR: {
+                Resultado<EventoEstudio> evRegresoRes = EventoEstudio.crear(
+                        sesionId,
+                        TipoEventoEstudio.REGRESO_APP,
+                        ahoraMs,
+                        reloj.fechaDe(ahoraMs),
+                        reloj.horaDe(ahoraMs),
+                        nota,
+                        topicoEfectivo);
+                if (!evRegresoRes.esValido()) {
+                    return Resultado.error(evRegresoRes.error());
                 }
-                String nombreMateria = materias.obtener(sesion.materiaId())
-                        .map(Materia::nombre)
-                        .orElse("");
-                EjecucionHitos.programarProximoHito(
-                        sesion, nombreMateria, lista, ahoraMs, sesiones, programador, reloj);
-                return Resultado.ok(new CierreSesion(sesion, java.util.Collections.emptyList()));
+                eventos.guardar(evRegresoRes.valor());
+                lista.add(evRegresoRes.valor());
+                return reanudarAlVolver(sesion, lista, ahoraMs);
             }
         }
         throw new AssertionError("Opción no soportada: " + opcion);
+    }
+
+    private Resultado<CierreSesion> reanudarAlVolver(
+            SesionEstudio sesion, List<EventoEstudio> lista, long ahoraMs) {
+        marcadorSalida.limpiar();
+        Ajustes ajustes = ajustesRepo.obtener();
+        if (sesion.debeActivarNoMolestar(ajustes.noMolestarGlobal())
+                && noMolestar.tienePermiso()) {
+            noMolestar.aplicar(true);
+        }
+        String nombreMateria = materias.obtener(sesion.materiaId())
+                .map(Materia::nombre)
+                .orElse("");
+        EjecucionHitos.programarProximoHito(
+                sesion, nombreMateria, lista, ahoraMs, sesiones, programador, reloj);
+        return Resultado.ok(new CierreSesion(sesion, java.util.Collections.emptyList()));
     }
 
     private Resultado<CierreSesion> cerrarAlVolver(

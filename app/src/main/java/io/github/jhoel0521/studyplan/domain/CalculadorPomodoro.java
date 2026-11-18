@@ -10,6 +10,23 @@ public final class CalculadorPomodoro {
     private CalculadorPomodoro() {
     }
 
+    /** Indica si la fase corresponde a un descanso programado Pomodoro ({@code HU-40}). */
+    public static boolean estaEnDescanso(FasePomodoro fase) {
+        return fase == FasePomodoro.DESCANSO_CORTO || fase == FasePomodoro.DESCANSO_LARGO;
+    }
+
+    /**
+     * Devuelve el instante UTC proyectado de fin del descanso Pomodoro actual, o {@code 0L} si la
+     * sesión no se encuentra en descanso ({@code HU-40}).
+     */
+    public static long calcularFinDescansoProyectado(
+            long ahoraMilis, EstadoPomodoroCalculado estado) {
+        if (estado == null || !estaEnDescanso(estado.faseActual())) {
+            return 0L;
+        }
+        return ahoraMilis + Math.max(0L, estado.milisRestantesEnFase());
+    }
+
     /** Cantidad de bloques de trabajo que caben en la duración planificada (mínimo 1). */
     public static int pomodorosQueCabenEnPlan(
             int duracionPlanificadaMinutos, ConfiguracionPomodoro config) {

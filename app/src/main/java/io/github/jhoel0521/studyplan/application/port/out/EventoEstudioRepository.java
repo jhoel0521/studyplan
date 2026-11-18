@@ -13,6 +13,9 @@ public interface EventoEstudioRepository {
 
     List<EventoEstudio> listarPorSesion(long sesionId);
 
+    /** Lista los eventos pertenecientes a sesiones cuyo rango UTC intersecta {@code [desdeUtcMilis, hastaUtcMilis]}. */
+    List<EventoEstudio> listarPorRangoSesionesUtc(long desdeUtcMilis, long hastaUtcMilis);
+
     void eliminarPorSesion(long sesionId);
 
     void eliminarTodos();

@@ -95,8 +95,7 @@ public abstract class ActividadProtegida extends ActividadBase {
     }
 
     private void comprobarRecuperacionSesionActiva() {
-        if (this instanceof SesionEnCursoActivity
-                || this instanceof RepartoSesionActivity
+        if (this instanceof RepartoSesionActivity
                 || app().evaluarRecuperacionSesion() == null) {
             return;
         }

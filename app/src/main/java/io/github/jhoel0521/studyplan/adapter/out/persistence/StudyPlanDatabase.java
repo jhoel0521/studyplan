@@ -28,7 +28,7 @@ import io.github.jhoel0521.studyplan.domain.Materia;
                 TramoDiarioEntity.class,
                 MetaSemanalEntity.class
         },
-        version = 6)
+        version = 7)
 public abstract class StudyPlanDatabase extends RoomDatabase {
 
     public static final String NOMBRE = "studyplan.db";
@@ -56,7 +56,8 @@ public abstract class StudyPlanDatabase extends RoomDatabase {
                         Migraciones.MIGRATION_2_3,
                         Migraciones.MIGRATION_3_4,
                         Migraciones.MIGRATION_4_5,
-                        Migraciones.MIGRATION_5_6)
+                        Migraciones.MIGRATION_5_6,
+                        Migraciones.MIGRATION_6_7)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {

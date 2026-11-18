@@ -289,6 +289,17 @@ public final class Migraciones {
         }
     };
 
+    /**
+     * Versión 6 -> 7: añade la columna nullable {@code topico} a {@code evento_estudio} para
+     * clasificar pausas, salidas y estudio externo ({@code HU-39}, {@code HU-45}, {@code RN-30}).
+     */
+    public static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase base) {
+            base.execSQL("ALTER TABLE `evento_estudio` ADD COLUMN `topico` TEXT");
+        }
+    };
+
     private static long[] convertirHorarioLocalAUctYDesfase(
             String fechaStr, String horaInicioStr, String horaFinStr) {
         Resultado<Fecha> f = Fecha.parsear(fechaStr);

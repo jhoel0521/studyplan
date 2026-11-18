@@ -7,21 +7,29 @@ import java.util.Optional;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
+import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
 import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
+import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.SalidaRegistrada;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
 
 /**
  * Registra el evento {@code SALIDA_APP} y la marca ligera cuando el estudiante sale de la app
- * teniendo una sesión {@code EN_CURSO} no pausada (HU-40, RN-23).
+ * teniendo una sesión {@code EN_CURSO} no pausada ni en descanso Pomodoro (HU-40, RN-23).
  */
 public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
 
     private final SesionRepository sesiones;
     private final EventoEstudioRepository eventos;
+    private final MateriaRepository materias;
     private final MarcadorSalidaApp marcadorSalida;
     private final Reloj reloj;
 
@@ -30,14 +38,24 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
             EventoEstudioRepository eventos,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
+        this(sesiones, eventos, null, marcadorSalida, reloj);
+    }
+
+    public RegistrarSalidaAppService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            MarcadorSalidaApp marcadorSalida,
+            Reloj reloj) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
+        this.materias = materias;
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
     @Override
-    public Optional<Long> ejecutar() {
+    public Optional<SalidaRegistrada> ejecutar() {
         Optional<SesionEstudio> activaOpt = sesiones.buscarEnCurso();
         if (!activaOpt.isPresent()) {
             return Optional.empty();
@@ -48,7 +66,26 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
                 || CalculadorTiempoReal.tieneSalidaSinResolver(lista)) {
             return Optional.empty();
         }
+
         long ahoraMs = reloj.ahoraMilis();
+        if (activa.tecnica() == TecnicaEstudio.POMODORO) {
+            ConfiguracionPomodoro cfg = activa.configuracionPomodoroSnapshot();
+            if (cfg != null) {
+                long dentroApp = CalculadorTiempoReal.calcularMilisDentroDeApp(lista, ahoraMs);
+                int objetivo = CalculadorPomodoro.pomodorosQueCabenEnPlan(
+                        activa.duracionPlanificadaMinutos(), cfg);
+                boolean extra = EjecucionHitos.contieneTipo(lista, TipoEventoEstudio.TIEMPO_EXTRA);
+                EstadoPomodoroCalculado estadoPom =
+                        CalculadorPomodoro.calcularEstado(dentroApp, cfg, objetivo, extra);
+                if (CalculadorPomodoro.estaEnDescanso(estadoPom.faseActual())) {
+                    long finDescansoMs = CalculadorPomodoro.calcularFinDescansoProyectado(
+                            ahoraMs, estadoPom);
+                    marcadorSalida.marcarFinDescansoPomodoro(activa.id(), finDescansoMs);
+                    return Optional.empty();
+                }
+            }
+        }
+
         eventos.guardar(EventoEstudio.crear(
                 activa.id(),
                 TipoEventoEstudio.SALIDA_APP,
@@ -57,6 +94,9 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
                 reloj.horaDe(ahoraMs),
                 "").valor());
         marcadorSalida.marcarSalida(activa.id(), ahoraMs);
-        return Optional.of(activa.id());
+        String nombreMateria = materias == null
+                ? ""
+                : materias.obtener(activa.materiaId()).map(Materia::nombre).orElse("");
+        return Optional.of(new SalidaRegistrada(activa.id(), nombreMateria));
     }
 }
