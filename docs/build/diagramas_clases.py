@@ -110,13 +110,18 @@ SALIDA_METAS = ["MetaSemanalRepository"]
 DOMINIO_METAS = ["CalculadorProgresoMetas", "CierreSesion", "MetaAlcanzada", "MetaSemanal", "ProgresoMeta"]
 PERSISTENCIA_METAS = ["MetaSemanalDao", "MetaSemanalEntity", "MetaSemanalRepositoryRoom"]
 
+PRESENTACION_ESTADISTICAS = ["EstadisticasActivity", "EstadisticasAdapter", "EstadisticasViewModel", "TopicosUi"]
+ENTRADA_ESTADISTICAS = ["ConsultarEstadisticas"]
+SERVICIOS_ESTADISTICAS = ["ConsultarEstadisticasService"]
+DOMINIO_ESTADISTICAS = ["CalculadorEstadisticas", "ConcentracionPeriodo", "DesgloseMateriaPeriodo", "EstadisticasPeriodo", "PeriodoEstadisticas", "ResumenTopico", "SalidaRegistrada", "TopicoEventoEstudio"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS + PRESENTACION_ESTADISTICAS,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS,
     "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS,
     "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS + PERSISTENCIA_METAS,
     "adapter/out/security": SEGURIDAD_CONFIG,
     "adapter/out/system": SISTEMA_TECNICAS,
@@ -538,6 +543,7 @@ DESCRIPCIONES = {
     ("evento_estudio", "fecha"): "Fecha local del evento en formato ISO AAAA-MM-DD.",
     ("evento_estudio", "hora"): "Hora local del evento en formato HH:mm.",
     ("evento_estudio", "nota"): "Nota breve o detalle opcional del evento (por ejemplo, fase Pomodoro o resolución de regreso).",
+    ("evento_estudio", "topico"): "Clave canónica del tópico asociado a pausa, salida o estudio fuera de la app (HU-22, HU-39, HU-41, HU-45, RN-30); nula en registros previos a v7.",
     ("tramo_diario", "sesion_id"): "Identificador de la sesión asociada; parte de la clave primaria y FK a sesion_estudio(id) con ON DELETE CASCADE (RN-31).",
     ("tramo_diario", "fecha_local"): "Fecha calendario local ISO AAAA-MM-DD en la que ocurrió el estudio (RN-31).",
     ("tramo_diario", "minutos"): "Minutos reales contabilizables ocurridos en esa fecha local (RN-31).",

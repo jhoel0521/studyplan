@@ -33,6 +33,11 @@ Como estudiante, quiero iniciar, pausar y detener la sesión y ver el tiempo tra
 - **WHEN** el estudiante la detiene a los 39 minutos (o a las 3 h 28 min)
 - **THEN** se registra la duración real y la diferencia se muestra en el reporte (RN-26)
 
+#### Scenario: Tópico al reanudar pausa manual
+- **GIVEN** que el estudiante pausó manualmente una sesión En curso
+- **WHEN** pulsa Reanudar
+- **THEN** el sistema solicita en un paso el tópico de la pausa (con chips rápidos, detalle opcional en «Otro» y «Sin clasificar» por omisión) antes de reanudar el cronómetro; si la sesión termina desde pausa sin reanudación, ese tramo queda respaldado como «Sin clasificar» en estadísticas
+
 ### Requirement: HU-23 Estudiar con técnica Pomodoro configurable
 Como estudiante, quiero ejecutar mi sesión en bloques Pomodoro con tiempos configurables para mantener la concentración con descansos programados. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 5 pts).
 
@@ -85,12 +90,12 @@ Como estudiante, quiero que el teléfono silencie notificaciones mientras estudi
 - **THEN** el sistema comprueba el permiso vigente y omite la restauración sin lanzar excepción ni abortar el cierre (RNF-18)
 
 ### Requirement: HU-39 Registrar eventos de estudio
-Como estudiante, quiero que la app registre los eventos de mi sesión (inicio, pausas, salidas y regresos, tiempo extra, cambios, fin) para saber qué tan concentrado estuve y cuánto respeté mi tiempo de estudio. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 5 pts).
+Como estudiante, quiero que la app registre los eventos de mi sesión (inicio, pausas, salidas y regresos, tiempo extra, cambios, fin) con su tópico cuando corresponda para medir mi concentración y uso del tiempo. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 5 pts).
 
 #### Scenario: Línea de tiempo
 - **GIVEN** que una sesión terminó
 - **WHEN** el estudiante abre su detalle
-- **THEN** el sistema muestra la línea de tiempo de eventos con su hora y tipo
+- **THEN** el sistema muestra la línea de tiempo de eventos con su hora, tipo y tópico si lo tiene
 
 #### Scenario: Persistencia
 - **GIVEN** que se registra un evento
@@ -107,25 +112,40 @@ Como estudiante, quiero que la app registre los eventos de mi sesión (inicio, p
 - **WHEN** el estudiante la detiene
 - **THEN** la duración real se calcula con el tiempo transcurrido, sin perder ni duplicar esa hora (RN-22)
 
+#### Scenario: Tópico guardado en pausa o salida
+- **GIVEN** que el estudiante selecciona un tópico (como «PDF / Moodle», «Llamada / mensaje» o «Sin clasificar») al reanudar o resolver un regreso
+- **WHEN** el evento queda persistido
+- **THEN** el sistema guarda el tópico en el evento para agrupar tiempos en estadísticas
+
 ### Requirement: HU-40 Recibir aviso al salir de la app durante una sesión
-Como estudiante, quiero recibir una notificación para volver cuando salgo de la app con una sesión en curso para no perder el hilo ni olvidar la sesión abierta. El sistema SHALL cumplir los escenarios siguientes (prioridad Should, 3 pts).
+Como estudiante, quiero recibir una notificación al salir de la app durante trabajo activo y que el regreso se detecte en cualquier pantalla para no perder el hilo ni distorsionar el reloj. El sistema SHALL cumplir los escenarios siguientes (prioridad Should, 3 pts).
 
 #### Scenario: Salida
-- **GIVEN** que hay una sesión En curso
-- **WHEN** el estudiante sale de la app para atender una llamada
-- **THEN** se registra el evento «salida», la sesión NO se pausa y aparece la notificación «Tu sesión sigue en curso — volver» (RN-23)
+- **GIVEN** que hay una sesión En curso fuera de descanso Pomodoro
+- **WHEN** el estudiante sale de la app para atender una llamada, abrir un PDF o apagar la pantalla
+- **THEN** se registra el evento «salida», la sesión NO se pausa en BD, el cronómetro visual deja de avanzar mientras la salida siga sin resolver y aparece la notificación «Tu sesión sigue en curso — volver» con el nombre de la materia (RN-23)
 
 #### Scenario: Regreso
-- **GIVEN** que el estudiante salió de la app
-- **WHEN** toca la notificación o abre la app
-- **THEN** se registra el evento «regreso»
+- **GIVEN** que el estudiante salió de la app durante trabajo activo
+- **WHEN** toca la notificación o vuelve a cualquier pantalla protegida, incluida la pantalla de sesión en curso
+- **THEN** se presenta el diálogo de recuperación sobre esa última salida sin resolver y, al continuar, se registra el evento «regreso»
+
+#### Scenario: Salida dentro de descanso Pomodoro
+- **GIVEN** que la sesión está en curso en fase de descanso corto o largo Pomodoro
+- **WHEN** el estudiante sale de la app y vuelve antes de que finalice ese descanso
+- **THEN** el sistema no registra salida ni interrupción y el descanso sigue corriendo normalmente
+
+#### Scenario: Exceso sobre descanso Pomodoro
+- **GIVEN** que la sesión estaba en un descanso Pomodoro de 5 minutos cuando el estudiante salió de la app
+- **WHEN** regresa 12 minutos después (7 minutos tras finalizar el descanso)
+- **THEN** el sistema considera el descanso completado y abre la recuperación desde el instante en que terminó el descanso hasta el momento actual
 
 ### Requirement: HU-41 Declarar estudio con la app cerrada
-Como estudiante, quiero indicar al volver si seguí estudiando después de salir de la app y hasta qué hora para registrar mi estudio real aunque haya olvidado el celular o estudiado en grupo. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 5 pts).
+Como estudiante, quiero indicar al volver qué hice mientras estuve fuera de la app (si seguí estudiando con otro material o si fue una interrupción sin estudiar) para registrar mis horas reales y clasificar mis pausas. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 5 pts).
 
 #### Scenario: Volver más tarde
 - **GIVEN** que salió de la app a las 8:45 con la sesión En curso y vuelve a las 17:00
-- **WHEN** el estudiante supera el bloqueo biométrico/PIN si está activo y responde «Sí, hasta las 11:00» con la nota «en grupo» en el diálogo «Saliste a las 8:45, ¿seguiste estudiando?»
+- **WHEN** el estudiante supera el bloqueo biométrico/PIN si está activo y responde «Sí, hasta las 11:00» con tópico o nota «en grupo» en el diálogo «Saliste a las 8:45, ¿seguiste estudiando?»
 - **THEN** se registra el tramo 8:45–11:00 como «estudio con la app cerrada» sumándolo íntegro incluso si la sesión inició en Pomodoro, y la sesión pasa a Completada (RN-24)
 
 #### Scenario: No siguió
@@ -135,8 +155,23 @@ Como estudiante, quiero indicar al volver si seguí estudiando después de salir
 
 #### Scenario: Sigue estudiando
 - **GIVEN** que aparece la pregunta al volver
-- **WHEN** el estudiante responde «Sigo estudiando»
-- **THEN** el tramo fuera de la app se registra como estudio con la app cerrada y la sesión continúa En curso
+- **WHEN** el estudiante responde «Sigo estudiando» seleccionando un tópico como «PDF / Moodle» o «Sin clasificar»
+- **THEN** el tramo fuera de la app se registra como «estudio con la app cerrada» con ese tópico, se graba el regreso y la sesión continúa En curso
+
+#### Scenario: Estudio externo rápido sin clasificar
+- **GIVEN** que aparece el diálogo de regreso tras una salida
+- **WHEN** el estudiante confirma «Sigo estudiando» sin elegir una categoría específica
+- **THEN** el tramo queda clasificado por defecto con el tópico «Sin clasificar», suma como estudio real y permanece visible aparte en estadísticas
+
+#### Scenario: Retomar sin sumar el tiempo fuera
+- **GIVEN** que el estudiante salió 4 minutos para atender una llamada o descanso y vuelve para continuar estudiando
+- **WHEN** elige «No estudié ese rato, retomo ahora» y un tópico (o «Sin clasificar»)
+- **THEN** el sistema registra el regreso con ese tópico sin crear «estudio con la app cerrada», no suma esos 4 minutos al tiempo real estudiado y reanuda la sesión En curso
+
+#### Scenario: Solo pregunta por la última salida
+- **GIVEN** que el estudiante salió y resolvió una salida anterior al volver a la app
+- **WHEN** vuelve a salir y regresa por segunda vez
+- **THEN** el diálogo solo pregunta por el último tramo abierto y nunca vuelve a mostrar eventos ya resueltos
 
 #### Scenario: Al día siguiente
 - **GIVEN** que la sesión quedó En curso desde ayer (dentro de 3 días)
@@ -149,7 +184,7 @@ Como estudiante, quiero indicar al volver si seguí estudiando después de salir
 - **THEN** el sistema cierra automáticamente la sesión como Completada en la última marca registrada dentro de la app y restaura No molestar (RN-29)
 
 ### Requirement: HU-42 Continuar con tiempo extra al llegar al fin planificado
-Como estudiante, quiero que al llegar la hora de fin la app me pregunte si sigo estudiando para aprovechar mi inspiración sin perder el registro. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 3 pts).
+Como estudiante, quiero que al llegar la hora de fin de una sesión planificada la app me pregunte si sigo estudiando para aprovechar mi inspiración sin perder el registro. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 3 pts).
 
 #### Scenario: Pregunta
 - **GIVEN** que la sesión planificada termina a las 11:00 y sigue En curso
@@ -160,6 +195,11 @@ Como estudiante, quiero que al llegar la hora de fin la app me pregunte si sigo 
 - **GIVEN** que el estudiante no responde (o denegó notificaciones y regresa luego a la app)
 - **WHEN** pasa el tiempo
 - **THEN** la sesión sigue En curso y el tiempo posterior se marca como tiempo extra
+
+#### Scenario: Sesión sin horario planificado
+- **GIVEN** que una sesión inició mediante «Estudiar ahora» sin horario de fin planificado
+- **WHEN** el estudiante permanece en la pantalla de sesión en curso
+- **THEN** el sistema no muestra la tarjeta ni el aviso de «¿Sigues estudiando?» por fin planificado
 
 ### Requirement: HU-43 Decidir al llegar la hora de otra sesión
 Como estudiante, quiero que, si sigo estudiando cuando empieza mi siguiente sesión, la app me avise y me deje seguir o cambiar para pasar de una materia a otra sin cortar mi concentración. El sistema SHALL cumplir los escenarios siguientes (prioridad Should, 3 pts).
