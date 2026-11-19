@@ -1,0 +1,62 @@
+# ux-kit project configuration — https://github.com/jhoel0521/ux-kit
+# Facts detected from code (apps, stacks, themes) are synced automatically by ux-kit skills.
+# Decisions (users per app, levels, severities, exceptions) are asked and confirmed by the team.
+version: 1
+
+project:
+  name: "studyplan"
+  type: "existing"
+  language: "es"   # reports and generated docs; default: conversation language
+
+platforms: [android]     # default for all apps: web | android | ios | macos | windows | linux | desktop | tv | watch
+                         # ("desktop" = cross-platform desktop when the OS is not fixed, e.g. Tauri/Electron/Swing)
+input: touch              # how people operate the UI: touch | pointer | both | auto (touch for android/ios, pointer for
+                         # desktop apps, both for web). A web used only on computers is `pointer`: touch sizes don't apply.
+density: comfortable     # compact | comfortable | spacious — sizes in knowledge/visual-system.md §4b. Minimums are floors, not targets.
+
+apps:
+  - name: studyplan
+    path: .
+    stack: android-views
+    platforms: [android]
+    theme: app/src/main/res/values/themes.xml
+    users: [estudiante]
+# Example of another app:
+#  - name: backoffice
+#    path: apps/backoffice
+#    stack: astro + tailwind            # several stacks in one app: join with " + " (e.g. jetpack-compose + android-views)
+#    platforms: [web]
+#    theme: apps/backoffice/src/styles/theme.css
+#    users: [warehouse-operator]          # profiles from standard/users.md (decision)
+#    input: pointer                       # overrides the top-level value for this app (e.g. an internal back office)
+#    density: compact
+#    overrides:                           # app-specific decisions
+#      accessibility: { level: AAA }
+
+accessibility:
+  standard: wcag-2.2
+  level: AA              # A | AA | AAA — the fixed base (knowledge/severity.md) always applies
+
+severity: {}             # configurable rule ids from knowledge/severity.md, e.g.:
+#  touch-target-platform: major   # ux-laws rules default: Fitts and Hick blocker, the rest suggestion
+#  hick-options: major
+#  peak-end: minor
+#  literal-design-values: minor
+#  missing-empty-state: major
+
+check:
+  after_change: true     # ux-guide asks the agent to run ux-check when it finishes a UI change
+  base_ref: HEAD         # git reference to compare against (HEAD = uncommitted work; before a PR use git merge-base <default-branch> HEAD)
+  include: []            # globs; empty = whole repo
+  exclude: ["**/*.test.*", "**/*.spec.*", "**/generated/**"]
+
+exceptions: []           # approved by the team. Example:
+#  - rule: form-length
+#    where: "Warehouse receipt form"
+#    reason: "Daily use by experts; single page"
+#    date: 2026-11-09
+
+integrations: {}         # optional skills, e.g.:
+#  openspec: { enabled: true }
+#  scrum: { enabled: true, backlog: docs/backlog.md }
+#  log: { enabled: true, path: docs/ai-audit/log.md }

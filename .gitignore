@@ -32,3 +32,6 @@ docs/referencias/
 
 # Capturas de pantalla de trabajo: no se presentan hasta tener la especificación de diseño visual
 docs/documento/recursos/capturas/
+
+# ux-kit: capturas de render
+.ux/reports/render/
