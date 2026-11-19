@@ -300,6 +300,21 @@ public final class Migraciones {
         }
     };
 
+    /**
+     * Versión 7 -> 8: añade {@code recordatorio_minutos} a {@code ajustes} (valor por defecto
+     * {@code 15}) y {@code recordatorio_minutos} nullable a {@code sesion_estudio} ({@code HU-34},
+     * {@code RNF-12}).
+     */
+    public static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase base) {
+            base.execSQL(
+                    "ALTER TABLE `ajustes` ADD COLUMN `recordatorio_minutos` INTEGER NOT NULL DEFAULT 15");
+            base.execSQL(
+                    "ALTER TABLE `sesion_estudio` ADD COLUMN `recordatorio_minutos` INTEGER");
+        }
+    };
+
     private static long[] convertirHorarioLocalAUctYDesfase(
             String fechaStr, String horaInicioStr, String horaFinStr) {
         Resultado<Fecha> f = Fecha.parsear(fechaStr);

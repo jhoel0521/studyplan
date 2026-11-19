@@ -9,11 +9,11 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 /**
- * Fila de la tabla {@code sesion_estudio} en Room v3.
+ * Fila de la tabla {@code sesion_estudio} en Room v8.
  *
  * <p>Mantiene integridad referencial con {@link MateriaEntity} ({@code ON DELETE RESTRICT} como
  * respaldo de RN-03) y autorreferencia en {@code sesion_origen_id} ({@code ON DELETE SET NULL}
- * para el historial de reprogramaciones RN-09). Implementa HU-10 a HU-15.
+ * para el historial de reprogramaciones RN-09). Implementa HU-10 a HU-15 y HU-34.
  */
 @Entity(
         tableName = "sesion_estudio",
@@ -93,4 +93,8 @@ public class SesionEntity {
     @Nullable
     @ColumnInfo(name = "pomodoro_ciclos_hasta_largo")
     public Integer pomodoroCiclosHastaLargo;
+
+    @Nullable
+    @ColumnInfo(name = "recordatorio_minutos")
+    public Integer recordatorioMinutos;
 }

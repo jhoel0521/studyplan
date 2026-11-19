@@ -1,6 +1,7 @@
 package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
@@ -53,6 +54,7 @@ final class Mapeadores {
         e.pomodoroDescansoCortoMin = ajustes.pomodoro().descansoCortoMinutos();
         e.pomodoroDescansoLargoMin = ajustes.pomodoro().descansoLargoMinutos();
         e.pomodoroCiclosHastaLargo = ajustes.pomodoro().ciclosHastaLargo();
+        e.recordatorioMinutos = ajustes.recordatorioPorDefecto().minutos();
         return e;
     }
 
@@ -68,7 +70,9 @@ final class Mapeadores {
                 leer(Idioma.class, e.idioma, porDefecto.idioma()),
                 e.bloqueoActivo,
                 e.noMolestarGlobal,
-                pomodoro);
+                pomodoro,
+                AntelacionRecordatorio.deMinutos(
+                        e.recordatorioMinutos, porDefecto.recordatorioPorDefecto()));
     }
 
     static MateriaEntity aEntidad(Materia materia) {
@@ -126,6 +130,7 @@ final class Mapeadores {
         e.pomodoroDescansoCortoMin = s.pomodoroDescansoCortoMinutos();
         e.pomodoroDescansoLargoMin = s.pomodoroDescansoLargoMinutos();
         e.pomodoroCiclosHastaLargo = s.pomodoroCiclosHastaLargo();
+        e.recordatorioMinutos = s.antelacionRecordatorio().aMinutosNullable();
         return e;
     }
 
@@ -139,6 +144,8 @@ final class Mapeadores {
                 CodigoEstadoSesion.class, e.estado, CodigoEstadoSesion.NO_REALIZADA);
         TecnicaEstudio tecnica = leer(TecnicaEstudio.class, e.tecnica, TecnicaEstudio.LIBRE);
         PreferenciaNoMolestar pref = PreferenciaNoMolestar.desdeBoolean(e.forzarNoMolestar);
+        AntelacionRecordatorio antelacion = AntelacionRecordatorio.deMinutos(
+                e.recordatorioMinutos, AntelacionRecordatorio.SIN_RECORDATORIO);
         return SesionEstudio.restaurar(
                 e.id,
                 e.materiaId,
@@ -155,7 +162,8 @@ final class Mapeadores {
                 e.pomodoroTrabajoMin,
                 e.pomodoroDescansoCortoMin,
                 e.pomodoroDescansoLargoMin,
-                e.pomodoroCiclosHastaLargo);
+                e.pomodoroCiclosHastaLargo,
+                antelacion);
     }
 
     static EventoEstudioEntity aEntidad(EventoEstudio ev) {

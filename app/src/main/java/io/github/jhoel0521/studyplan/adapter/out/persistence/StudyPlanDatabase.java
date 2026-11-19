@@ -11,12 +11,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import io.github.jhoel0521.studyplan.domain.Materia;
 
 /**
- * Base de datos Room de la aplicación (versión 6: perfil, ajustes, materias con meta y materia
- * general, sesiones con plan opcional, eventos, tramos diarios y snapshots de metas semanales).
+ * Base de datos Room de la aplicación (versión 8: perfil, ajustes con recordatorio por defecto,
+ * materias con meta y materia general, sesiones con plan opcional y antelación de recordatorio,
+ * eventos, tramos diarios y snapshots de metas semanales).
  * Nunca se permite consultar desde el hilo principal ni se usa migración destructiva (el esquema
  * JSON se exporta a {@code app/schemas/}): una versión nueva exigirá una migración escrita (RNF-12).
  *
- * <p>Implementa: HU-01 a HU-15, HU-25 a HU-28, HU-38, HU-47, HU-48.
+ * <p>Implementa: HU-01 a HU-15, HU-25 a HU-28, HU-34, HU-38, HU-47, HU-48.
  */
 @Database(
         entities = {
@@ -28,7 +29,7 @@ import io.github.jhoel0521.studyplan.domain.Materia;
                 TramoDiarioEntity.class,
                 MetaSemanalEntity.class
         },
-        version = 7)
+        version = 8)
 public abstract class StudyPlanDatabase extends RoomDatabase {
 
     public static final String NOMBRE = "studyplan.db";
@@ -57,7 +58,8 @@ public abstract class StudyPlanDatabase extends RoomDatabase {
                         Migraciones.MIGRATION_3_4,
                         Migraciones.MIGRATION_4_5,
                         Migraciones.MIGRATION_5_6,
-                        Migraciones.MIGRATION_6_7)
+                        Migraciones.MIGRATION_6_7,
+                        Migraciones.MIGRATION_7_8)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 /**
  * Fila de la tabla de ajustes (una sola fila). Tema e idioma se guardan como texto con el nombre de la enumeración.
  *
- * <p>Implementa: HU-03, HU-04, HU-23 y HU-24.
+ * <p>Implementa: HU-03, HU-04, HU-23, HU-24 y HU-34.
  */
 @Entity(tableName = "ajustes")
 public class AjustesEntity {
@@ -41,4 +41,7 @@ public class AjustesEntity {
 
     @ColumnInfo(name = "pomodoro_ciclos_hasta_largo")
     public int pomodoroCiclosHastaLargo = 4;
+
+    @ColumnInfo(name = "recordatorio_minutos")
+    public int recordatorioMinutos = 15;
 }
