@@ -11,6 +11,7 @@ import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepositor
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
@@ -38,6 +39,7 @@ public final class IniciarSesionService implements IniciarSesion {
     private final ProgramadorAvisosSesion programador;
     private final MarcadorSalidaApp marcadorSalida;
     private final Reloj reloj;
+    private final ProgramadorRecordatorios programadorRecordatorios;
 
     public IniciarSesionService(
             SesionRepository sesiones,
@@ -48,6 +50,28 @@ public final class IniciarSesionService implements IniciarSesion {
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
+        this(
+                sesiones,
+                eventos,
+                materias,
+                ajustesRepo,
+                noMolestar,
+                programador,
+                marcadorSalida,
+                reloj,
+                null);
+    }
+
+    public IniciarSesionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            AjustesRepository ajustesRepo,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            Reloj reloj,
+            ProgramadorRecordatorios programadorRecordatorios) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.materias = Objects.requireNonNull(materias, "materias");
@@ -56,6 +80,7 @@ public final class IniciarSesionService implements IniciarSesion {
         this.programador = Objects.requireNonNull(programador, "programador");
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
         this.reloj = Objects.requireNonNull(reloj, "reloj");
+        this.programadorRecordatorios = programadorRecordatorios;
     }
 
     @Override
@@ -80,6 +105,9 @@ public final class IniciarSesionService implements IniciarSesion {
 
         SesionEstudio iniciada = iniciadaRes.valor();
         sesiones.actualizar(iniciada);
+        if (programadorRecordatorios != null) {
+            programadorRecordatorios.cancelar(sesionId);
+        }
         marcadorSalida.limpiar();
 
         long ahoraMs = reloj.ahoraMilis();

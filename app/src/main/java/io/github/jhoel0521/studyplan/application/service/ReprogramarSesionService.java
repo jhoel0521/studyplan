@@ -4,8 +4,10 @@ import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.ReprogramarSesion;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
@@ -15,21 +17,31 @@ import io.github.jhoel0521.studyplan.domain.ResultadoSesion;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 
 /**
- * Implementa {@link ReprogramarSesion}: pasa la sesión original a {@code REPROGRAMADA} y crea una
- * nueva sesión {@code PENDIENTE} vinculada mediante {@code sesionOrigenId} en una operación
- * atómica (HU-14, RN-04, RN-05, RN-07, RN-09).
+ * Implementa {@link ReprogramarSesion}: pasa la sesión original a {@code REPROGRAMADA}, cancela su
+ * recordatorio previo y crea una nueva sesión {@code PENDIENTE} vinculada mediante
+ * {@code sesionOrigenId} en una operación atómica (HU-14, HU-34, RN-04, RN-05, RN-07, RN-09).
  */
 public final class ReprogramarSesionService implements ReprogramarSesion {
 
     private final SesionRepository sesiones;
     private final MateriaRepository materias;
     private final Reloj reloj;
+    private final ProgramadorRecordatorios programadorRecordatorios;
 
     public ReprogramarSesionService(
             SesionRepository sesiones, MateriaRepository materias, Reloj reloj) {
+        this(sesiones, materias, reloj, null);
+    }
+
+    public ReprogramarSesionService(
+            SesionRepository sesiones,
+            MateriaRepository materias,
+            Reloj reloj,
+            ProgramadorRecordatorios programadorRecordatorios) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.materias = Objects.requireNonNull(materias, "materias");
         this.reloj = Objects.requireNonNull(reloj, "reloj");
+        this.programadorRecordatorios = programadorRecordatorios;
     }
 
     @Override
@@ -39,6 +51,45 @@ public final class ReprogramarSesionService implements ReprogramarSesion {
         if (original == null) {
             return ResultadoSesion.error(ErrorValidacion.SESION_NO_ENCONTRADA);
         }
+        return reprogramarCon(
+                original,
+                nuevaFecha,
+                nuevaHoraInicio,
+                nuevaHoraFin,
+                notas,
+                original.antelacionRecordatorio());
+    }
+
+    @Override
+    public ResultadoSesion ejecutar(
+            long sesionId,
+            Fecha nuevaFecha,
+            Hora nuevaHoraInicio,
+            Hora nuevaHoraFin,
+            String notas,
+            AntelacionRecordatorio nuevaAntelacion) {
+        SesionEstudio original = sesiones.buscarPorId(sesionId).orElse(null);
+        if (original == null) {
+            return ResultadoSesion.error(ErrorValidacion.SESION_NO_ENCONTRADA);
+        }
+        return reprogramarCon(
+                original,
+                nuevaFecha,
+                nuevaHoraInicio,
+                nuevaHoraFin,
+                notas,
+                nuevaAntelacion == null
+                        ? AntelacionRecordatorio.SIN_RECORDATORIO
+                        : nuevaAntelacion);
+    }
+
+    private ResultadoSesion reprogramarCon(
+            SesionEstudio original,
+            Fecha nuevaFecha,
+            Hora nuevaHoraInicio,
+            Hora nuevaHoraFin,
+            String notas,
+            AntelacionRecordatorio antelacion) {
         Resultado<SesionEstudio> originalReprogramada = original.marcarReprogramada();
         if (!originalReprogramada.esValido()) {
             return ResultadoSesion.error(originalReprogramada.error());
@@ -53,7 +104,8 @@ public final class ReprogramarSesionService implements ReprogramarSesion {
                 nuevaHoraFin,
                 desfaseMinutos,
                 notasFinales,
-                original.id());
+                original.id(),
+                antelacion);
         if (!nuevaPendiente.esValido()) {
             return ResultadoSesion.error(nuevaPendiente.error());
         }
@@ -69,6 +121,15 @@ public final class ReprogramarSesionService implements ReprogramarSesion {
         }
         SesionEstudio creada =
                 sesiones.reprogramar(originalReprogramada.valor(), candidata);
+        if (programadorRecordatorios != null) {
+            if (original.id() != null) {
+                programadorRecordatorios.cancelar(original.id());
+            }
+            Long disparo = creada.instanteRecordatorioUtcMilis();
+            if (creada.id() != null && disparo != null && disparo > reloj.ahoraMilis()) {
+                programadorRecordatorios.programar(creada.id(), disparo);
+            }
+        }
         return ResultadoSesion.ok(creada);
     }
 }

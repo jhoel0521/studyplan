@@ -30,6 +30,7 @@ public final class SesionEstudio {
     private final Integer pomodoroDescansoCortoMinutos;
     private final Integer pomodoroDescansoLargoMinutos;
     private final Integer pomodoroCiclosHastaLargo;
+    private final AntelacionRecordatorio antelacionRecordatorio;
 
     private SesionEstudio(
             Long id,
@@ -47,7 +48,8 @@ public final class SesionEstudio {
             Integer pomodoroTrabajoMinutos,
             Integer pomodoroDescansoCortoMinutos,
             Integer pomodoroDescansoLargoMinutos,
-            Integer pomodoroCiclosHastaLargo) {
+            Integer pomodoroCiclosHastaLargo,
+            AntelacionRecordatorio antelacionRecordatorio) {
         this.id = id;
         this.materiaId = materiaId;
         this.planInicioUtcMilis = planInicioUtcMilis;
@@ -66,6 +68,9 @@ public final class SesionEstudio {
         this.pomodoroDescansoCortoMinutos = pomodoroDescansoCortoMinutos;
         this.pomodoroDescansoLargoMinutos = pomodoroDescansoLargoMinutos;
         this.pomodoroCiclosHastaLargo = pomodoroCiclosHastaLargo;
+        this.antelacionRecordatorio = antelacionRecordatorio == null
+                ? AntelacionRecordatorio.SIN_RECORDATORIO
+                : antelacionRecordatorio;
     }
 
     /**
@@ -80,7 +85,16 @@ public final class SesionEstudio {
             Hora fin,
             String notas,
             Long sesionOrigenId) {
-        return planificar(materiaId, fecha, hoy, inicio, fin, 0, notas, sesionOrigenId);
+        return planificar(
+                materiaId,
+                fecha,
+                hoy,
+                inicio,
+                fin,
+                0,
+                notas,
+                sesionOrigenId,
+                AntelacionRecordatorio.SIN_RECORDATORIO);
     }
 
     /**
@@ -96,6 +110,32 @@ public final class SesionEstudio {
             int desfaseMinutos,
             String notas,
             Long sesionOrigenId) {
+        return planificar(
+                materiaId,
+                fecha,
+                hoy,
+                inicio,
+                fin,
+                desfaseMinutos,
+                notas,
+                sesionOrigenId,
+                AntelacionRecordatorio.SIN_RECORDATORIO);
+    }
+
+    /**
+     * Crea una sesión planificada conservando el desfase horario local y la antelación de
+     * recordatorio elegida (HU-10, HU-14, HU-34, RN-04, RN-09).
+     */
+    public static Resultado<SesionEstudio> planificar(
+            long materiaId,
+            Fecha fecha,
+            Fecha hoy,
+            Hora inicio,
+            Hora fin,
+            int desfaseMinutos,
+            String notas,
+            Long sesionOrigenId,
+            AntelacionRecordatorio antelacionRecordatorio) {
         ErrorValidacion errorBase = validarDatosComunes(materiaId, fecha, hoy, inicio, fin);
         if (errorBase != null) {
             return Resultado.error(errorBase);
@@ -126,7 +166,8 @@ public final class SesionEstudio {
                 null,
                 null,
                 null,
-                null));
+                null,
+                antelacionRecordatorio));
     }
 
     /**
@@ -191,10 +232,9 @@ public final class SesionEstudio {
                 null,
                 null,
                 null,
-                null));
+                null,
+                AntelacionRecordatorio.SIN_RECORDATORIO));
     }
-
-    /** Reconstruye una sesión leída desde almacenamiento persistente v3. */
     public static SesionEstudio restaurar(
             Long id,
             long materiaId,
@@ -300,7 +340,8 @@ public final class SesionEstudio {
                 snap == null ? null : snap.trabajoMinutos(),
                 snap == null ? null : snap.descansoCortoMinutos(),
                 snap == null ? null : snap.descansoLargoMinutos(),
-                snap == null ? null : snap.ciclosHastaLargo()));
+                snap == null ? null : snap.ciclosHastaLargo(),
+                AntelacionRecordatorio.SIN_RECORDATORIO));
     }
 
     /** Reconstruye una sesión leída desde almacenamiento persistente v5/v6 con instantes UTC y desfase. */
@@ -321,6 +362,45 @@ public final class SesionEstudio {
             Integer pomodoroDescansoCortoMinutos,
             Integer pomodoroDescansoLargoMinutos,
             Integer pomodoroCiclosHastaLargo) {
+        return restaurar(
+                id,
+                materiaId,
+                planInicioUtcMilis,
+                planFinUtcMilis,
+                desfaseMinutos,
+                duracionPlanificadaMinutos,
+                duracionRealMinutos,
+                codigoEstado,
+                notas,
+                sesionOrigenId,
+                tecnica,
+                preferenciaNoMolestar,
+                pomodoroTrabajoMinutos,
+                pomodoroDescansoCortoMinutos,
+                pomodoroDescansoLargoMinutos,
+                pomodoroCiclosHastaLargo,
+                AntelacionRecordatorio.SIN_RECORDATORIO);
+    }
+
+    /** Reconstruye una sesión leída desde almacenamiento persistente v8 con antelación de recordatorio. */
+    public static SesionEstudio restaurar(
+            Long id,
+            long materiaId,
+            long planInicioUtcMilis,
+            Long planFinUtcMilis,
+            int desfaseMinutos,
+            int duracionPlanificadaMinutos,
+            Integer duracionRealMinutos,
+            CodigoEstadoSesion codigoEstado,
+            String notas,
+            Long sesionOrigenId,
+            TecnicaEstudio tecnica,
+            PreferenciaNoMolestar preferenciaNoMolestar,
+            Integer pomodoroTrabajoMinutos,
+            Integer pomodoroDescansoCortoMinutos,
+            Integer pomodoroDescansoLargoMinutos,
+            Integer pomodoroCiclosHastaLargo,
+            AntelacionRecordatorio antelacionRecordatorio) {
         return new SesionEstudio(
                 id,
                 materiaId,
@@ -337,7 +417,8 @@ public final class SesionEstudio {
                 pomodoroTrabajoMinutos,
                 pomodoroDescansoCortoMinutos,
                 pomodoroDescansoLargoMinutos,
-                pomodoroCiclosHastaLargo);
+                pomodoroCiclosHastaLargo,
+                antelacionRecordatorio);
     }
 
     /** Sanea el texto de notas opcionales recortando espacios extremos. */
@@ -481,6 +562,39 @@ public final class SesionEstudio {
         return pomodoroCiclosHastaLargo;
     }
 
+    public AntelacionRecordatorio antelacionRecordatorio() {
+        return antelacionRecordatorio;
+    }
+
+    /**
+     * Instante UTC en el que debe dispararse el recordatorio previo al inicio planificado, o
+     * {@code null} si la sesión no tiene plan o el recordatorio está desactivado ({@code HU-34}).
+     */
+    public Long instanteRecordatorioUtcMilis() {
+        if (!tienePlan() || !antelacionRecordatorio.activo()) {
+            return null;
+        }
+        return inicioInstante().sumarMinutos(-antelacionRecordatorio.minutos()).utcMilis();
+    }
+
+    /**
+     * Indica si al momento de guardar o reprogramar en {@code ahoraUtcMilis} la hora del aviso ya
+     * quedó atrás pero la sesión aún no inicia ({@code inicio − antelación <= ahora < inicio}).
+     */
+    public boolean recordatorioVencidoAlPlanificar(long ahoraUtcMilis) {
+        Long disparo = instanteRecordatorioUtcMilis();
+        return disparo != null && disparo <= ahoraUtcMilis && ahoraUtcMilis < planInicioUtcMilis;
+    }
+
+    /**
+     * Indica si {@code ahoraUtcMilis} cae dentro de la ventana del aviso previo o en el instante de
+     * inicio ({@code inicio − antelación <= ahora <= inicio}).
+     */
+    public boolean estaEnVentanaRecordatorio(long ahoraUtcMilis) {
+        Long disparo = instanteRecordatorioUtcMilis();
+        return disparo != null && ahoraUtcMilis >= disparo && ahoraUtcMilis <= planInicioUtcMilis;
+    }
+
     /** Devuelve el snapshot Pomodoro almacenado o {@code null} si la sesión es Libre. */
     public ConfiguracionPomodoro configuracionPomodoroSnapshot() {
         if (pomodoroTrabajoMinutos == null
@@ -527,7 +641,8 @@ public final class SesionEstudio {
                 pomodoroTrabajoMinutos,
                 pomodoroDescansoCortoMinutos,
                 pomodoroDescansoLargoMinutos,
-                pomodoroCiclosHastaLargo);
+                pomodoroCiclosHastaLargo,
+                antelacionRecordatorio);
     }
 
     public SesionEstudio conPreferenciaNoMolestar(PreferenciaNoMolestar nuevaPreferencia) {
@@ -547,7 +662,8 @@ public final class SesionEstudio {
                 pomodoroTrabajoMinutos,
                 pomodoroDescansoCortoMinutos,
                 pomodoroDescansoLargoMinutos,
-                pomodoroCiclosHastaLargo);
+                pomodoroCiclosHastaLargo,
+                antelacionRecordatorio);
     }
 
     public SesionEstudio conTecnica(TecnicaEstudio nuevaTecnica) {
@@ -567,7 +683,8 @@ public final class SesionEstudio {
                 pomodoroTrabajoMinutos,
                 pomodoroDescansoCortoMinutos,
                 pomodoroDescansoLargoMinutos,
-                pomodoroCiclosHastaLargo);
+                pomodoroCiclosHastaLargo,
+                antelacionRecordatorio);
     }
 
     /**
@@ -668,7 +785,8 @@ public final class SesionEstudio {
                 snap == null ? null : snap.trabajoMinutos(),
                 snap == null ? null : snap.descansoCortoMinutos(),
                 snap == null ? null : snap.descansoLargoMinutos(),
-                snap == null ? null : snap.ciclosHastaLargo()));
+                snap == null ? null : snap.ciclosHastaLargo(),
+                antelacionRecordatorio));
     }
 
     /** Registra pausa o reanudación manteniendo el estado {@code EN_CURSO} (RN-07). */
@@ -726,7 +844,8 @@ public final class SesionEstudio {
                 pomodoroTrabajoMinutos,
                 pomodoroDescansoCortoMinutos,
                 pomodoroDescansoLargoMinutos,
-                pomodoroCiclosHastaLargo));
+                pomodoroCiclosHastaLargo,
+                antelacionRecordatorio));
     }
 
     private static ErrorValidacion validarDatosComunes(

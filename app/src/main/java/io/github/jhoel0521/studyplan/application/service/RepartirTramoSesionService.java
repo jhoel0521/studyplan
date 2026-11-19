@@ -10,6 +10,7 @@ import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
@@ -36,6 +37,7 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
     private final MarcadorSalidaApp marcadorSalida;
     private final TramoDiarioRepository tramos;
     private final Reloj reloj;
+    private final ProgramadorRecordatorios programadorRecordatorios;
 
     public RepartirTramoSesionService(
             SesionRepository sesiones,
@@ -44,7 +46,7 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
             ProgramadorAvisosSesion programador,
             MarcadorSalidaApp marcadorSalida,
             Reloj reloj) {
-        this(sesiones, eventos, noMolestar, programador, marcadorSalida, null, reloj);
+        this(sesiones, eventos, noMolestar, programador, marcadorSalida, null, reloj, null);
     }
 
     public RepartirTramoSesionService(
@@ -55,6 +57,18 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
             MarcadorSalidaApp marcadorSalida,
             TramoDiarioRepository tramos,
             Reloj reloj) {
+        this(sesiones, eventos, noMolestar, programador, marcadorSalida, tramos, reloj, null);
+    }
+
+    public RepartirTramoSesionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            TramoDiarioRepository tramos,
+            Reloj reloj,
+            ProgramadorRecordatorios programadorRecordatorios) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.noMolestar = Objects.requireNonNull(noMolestar, "noMolestar");
@@ -62,6 +76,7 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
         this.marcadorSalida = Objects.requireNonNull(marcadorSalida, "marcadorSalida");
         this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
+        this.programadorRecordatorios = programadorRecordatorios;
     }
 
     @Override
@@ -132,6 +147,9 @@ public final class RepartirTramoSesionService implements RepartirTramoSesion {
             tramos.guardarTramos(sesionSiguienteId, tramosSegunda);
         }
         programador.cancelarAvisos(sesionActualId);
+        if (programadorRecordatorios != null) {
+            programadorRecordatorios.cancelar(sesionSiguienteId);
+        }
         noMolestar.restaurarSiAplica();
         marcadorSalida.limpiar();
 

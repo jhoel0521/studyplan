@@ -74,7 +74,9 @@ public final class ConsultarSesionService implements ConsultarSesion {
         boolean fueraDePlazoTardio =
                 estado.codigo() == CodigoEstadoSesion.NO_REALIZADA && !puedeRegistrarTardio;
         boolean puedeIniciar =
-                estado.codigo() == CodigoEstadoSesion.PENDIENTE && sesion.fecha().equals(hoy);
+                estado.codigo() == CodigoEstadoSesion.PENDIENTE
+                        && (sesion.fecha().equals(hoy)
+                                || sesion.estaEnVentanaRecordatorio(reloj.ahoraMilis()));
 
         SesionEstudio sesionDestino = null;
         if (estado.codigo() == CodigoEstadoSesion.REPROGRAMADA && sesion.id() != null) {

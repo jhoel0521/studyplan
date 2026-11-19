@@ -14,6 +14,7 @@ import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepositor
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
@@ -44,6 +45,7 @@ public final class DecidirFinPlanificadoOInvasionService implements DecidirFinPl
     private final DetenerSesion detenerSesion;
     private final TramoDiarioRepository tramos;
     private final Reloj reloj;
+    private final ProgramadorRecordatorios programadorRecordatorios;
 
     public DecidirFinPlanificadoOInvasionService(
             SesionRepository sesiones,
@@ -65,7 +67,8 @@ public final class DecidirFinPlanificadoOInvasionService implements DecidirFinPl
                 marcadorSalida,
                 detenerSesion,
                 null,
-                reloj);
+                reloj,
+                null);
     }
 
     public DecidirFinPlanificadoOInvasionService(
@@ -79,6 +82,32 @@ public final class DecidirFinPlanificadoOInvasionService implements DecidirFinPl
             DetenerSesion detenerSesion,
             TramoDiarioRepository tramos,
             Reloj reloj) {
+        this(
+                sesiones,
+                eventos,
+                materias,
+                ajustesRepo,
+                noMolestar,
+                programador,
+                marcadorSalida,
+                detenerSesion,
+                tramos,
+                reloj,
+                null);
+    }
+
+    public DecidirFinPlanificadoOInvasionService(
+            SesionRepository sesiones,
+            EventoEstudioRepository eventos,
+            MateriaRepository materias,
+            AjustesRepository ajustesRepo,
+            ControladorNoMolestar noMolestar,
+            ProgramadorAvisosSesion programador,
+            MarcadorSalidaApp marcadorSalida,
+            DetenerSesion detenerSesion,
+            TramoDiarioRepository tramos,
+            Reloj reloj,
+            ProgramadorRecordatorios programadorRecordatorios) {
         this.sesiones = Objects.requireNonNull(sesiones, "sesiones");
         this.eventos = Objects.requireNonNull(eventos, "eventos");
         this.materias = Objects.requireNonNull(materias, "materias");
@@ -89,6 +118,7 @@ public final class DecidirFinPlanificadoOInvasionService implements DecidirFinPl
         this.detenerSesion = Objects.requireNonNull(detenerSesion, "detenerSesion");
         this.tramos = tramos;
         this.reloj = Objects.requireNonNull(reloj, "reloj");
+        this.programadorRecordatorios = programadorRecordatorios;
     }
 
     @Override
@@ -196,6 +226,9 @@ public final class DecidirFinPlanificadoOInvasionService implements DecidirFinPl
         marcadorSalida.limpiar();
 
         sesiones.actualizar(sigIniciada);
+        if (programadorRecordatorios != null && sigIniciada.id() != null) {
+            programadorRecordatorios.cancelar(sigIniciada.id());
+        }
         EventoEstudio inicioSig = eventos.guardar(EventoEstudio.crear(
                 sigIniciada.id(),
                 TipoEventoEstudio.INICIO,
