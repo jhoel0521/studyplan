@@ -160,7 +160,7 @@ def modelo_dominio():
 
     aj = UMLBox("Ajustes", ["- tema: Tema {CLARO, OSCURO, SISTEMA}", "- idioma: String {es, en}",
                             "- bloqueoBiometrico: boolean", "- noMolestarGlobal: boolean",
-                            "- recordatorioMin: int {5, 15, 30}", "- pomodoroTrabajoMin: int = 25",
+                            "- recordatorioMin: int {0, 5, 15, 30}", "- pomodoroTrabajoMin: int = 25",
                             "- pomodoroDescansoCortoMin: int = 5", "- pomodoroDescansoLargoMin: int = 15",
                             "- pomodoroCiclosHastaLargo: int = 4"], None, c0, r1, w=600)
     est = UMLBox("Estudiante", ["- id: long", "- nombre: String", "- metaPredeterminadaHoras: int"],
@@ -192,8 +192,8 @@ def modelo_dominio():
     estado = UMLBox("EstadoSesion", ["PENDIENTE", "EN_CURSO", "COMPLETADA", "COMPLETADA_TARDIA",
                                      "NO_REALIZADA", "REPROGRAMADA"], None, c3 + 60, rep.y + rep.h + 90,
                     w=480, stereotype="enumeration")
-    rec = UMLBox("Recordatorio", ["- id: long", "- minutosAntes: int {5, 15, 30}", "- activo: boolean"],
-                 ["+ horaDisparo(): LocalDateTime"], c2 + 200, ses.y + ses.h + 110, w=520)
+    rec = UMLBox("Recordatorio", ["- antelacionMin: int {0, 5, 15, 30}"],
+                 ["+ horaDisparo(): Instant"], c2 + 200, ses.y + ses.h + 110, w=520)
     ev = UMLBox("EventoEstudio", ["- id: long", "- tipo: TipoEvento", "  {INICIO, PAUSA, REANUDACION,",
                                   "   SALIDA_APP, REGRESO_APP,", "   FIN_PLANIFICADO, TIEMPO_EXTRA,",
                                   "   ESTUDIO_APP_CERRADA, CAMBIO_SESION,", "   AJUSTE_MANUAL, FIN}",
@@ -1307,7 +1307,7 @@ WIREFRAMES = [
     ("wireframes_3.png", [(wf_sesion, "W7 · Sesión en curso", "HU-22, HU-23, HU-24"),
                           (wf_estadisticas2, "W8 · Estadísticas", "HU-29, HU-30, HU-31"),
                           (wf_reporte, "W9 · Reporte", "HU-32, HU-33")]),
-    ("wireframes_4.png", [(wf_ajustes, "W10 · Ajustes", "HU-03, HU-04, HU-23, HU-24"),
+    ("wireframes_4.png", [(wf_ajustes, "W10 · Ajustes", "HU-03, HU-04, HU-23, HU-24, HU-34"),
                           (wf_respaldo, "W11 · Copia de seguridad", "HU-35, HU-36, HU-37"),
                           (wf_borrar, "W12 · Borrar mis datos", "HU-38")]),
     ("wireframes_5.png", [(wf_volviste, "W13 · Al volver a la app", "HU-40, HU-41"),

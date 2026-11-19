@@ -24,7 +24,7 @@ Nota: Elaboración propia. Los paquetes cuelgan de io.github.jhoel0521.studyplan
 
 ### Modelo Lógico
 
-El esquema de Room está en la versión 7 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
+El esquema de Room está en la versión 8 y se exporta como JSON a `app/schemas/`; el diagrama y el diccionario de datos se generan desde ese archivo con `python docs/build/diagramas_clases.py`, de modo que no pueden desfasarse del esquema real. La @figura:modelo_logico muestra las tablas, sus claves y sus índices.
 
 ![Modelo lógico de la base de datos de StudyPlan](../recursos/diagramas/modelo_logico.png){#modelo_logico ancho=16.5}
 
@@ -55,6 +55,7 @@ Tabla: Diccionario de datos de la tabla ajustes (Ajustes de la aplicación) {#di
 | pomodoro_descanso_corto_min | INTEGER | NOT NULL | Duración en minutos del descanso corto Pomodoro (HU-23, RN-22). |
 | pomodoro_descanso_largo_min | INTEGER | NOT NULL | Duración en minutos del descanso largo Pomodoro (HU-23, RN-22). |
 | pomodoro_ciclos_hasta_largo | INTEGER | NOT NULL | Cantidad de ciclos de trabajo hasta un descanso largo Pomodoro (HU-23, RN-22). |
+| recordatorio_minutos | INTEGER | NOT NULL | Antelación predeterminada en minutos para avisos previos al planificar (0 = sin recordatorio, 5, 15 o 30; valor inicial 15, HU-34). |
 
 Tabla: Diccionario de datos de la tabla materia (Materias del estudiante) {#diccionario_materia anchos=3.4,2.2,3.6,6.8 tam=9}
 
@@ -89,6 +90,7 @@ Tabla: Diccionario de datos de la tabla sesion_estudio (Sesiones de estudio) {#d
 | pomodoro_descanso_corto_min | INTEGER | Admite nulo | Minutos de descanso corto de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
 | pomodoro_descanso_largo_min | INTEGER | Admite nulo | Minutos de descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
 | pomodoro_ciclos_hasta_largo | INTEGER | Admite nulo | Ciclos hasta descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica. |
+| recordatorio_minutos | INTEGER | Admite nulo | Antelación del recordatorio previo en minutos (5, 15 o 30) o nula cuando está desactivado (HU-34). |
 
 Tabla: Diccionario de datos de la tabla evento_estudio (Eventos de ejecución de sesiones) {#diccionario_evento_estudio anchos=3.4,2.2,3.6,6.8 tam=9}
 
@@ -245,4 +247,12 @@ La octava épica implementada (`add-reportes`, sin cambios de esquema sobre Room
 
 Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
 
-[[pendiente: diagramas de clases de las épicas siguientes (recordatorios), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
+### Épica Recordatorios de sesiones
+
+La novena épica implementada (`add-recordatorios`, Room v8 con `MIGRATION_7_8`) incorpora los recordatorios locales previos al inicio planificado sin tablas adicionales, conservando la antelación como `AntelacionRecordatorio` (`0`, `5`, `15` o `30` min) en `ajustes.recordatorio_minutos` (predeterminado en 15 min) y `sesion_estudio.recordatorio_minutos` (nulo cuando está desactivado, `HU-34`). Desde el núcleo puro, `PlanificarSesionService`, `ReprogramarSesionService` y los casos de uso que mutan sesiones `PENDIENTE` (`EliminarSesionService`, `IniciarSesionService`, `DecidirFinPlanificadoOInvasionService`, `RepartirTramoSesionService` y `BorrarDatosService`) sincronizan alarmas y notificaciones mediante `ProgramadorRecordatorios`, mientras `ReprogramarRecordatoriosPendientesService` restablece avisos futuros tras reinicio (`BOOT_COMPLETED`), actualización (`MY_PACKAGE_REPLACED`) o concesión de `SCHEDULE_EXACT_ALARM` y notifica de inmediato los avisos cuya ventana venció antes del inicio. En las capas de sistema e interfaz (`ProgramadorAvisosAlarmManager` mediante `setExactAndAllowWhileIdle` o respaldo `setAndAllowWhileIdle`, `NotificadorSesion` con `VISIBILITY_PRIVATE` bajo bloqueo activo, acción directa «Iniciar» sin `CLEAR_TASK` y flujos no bloqueantes de permisos `RNF-18`), la @figura:clases_recordatorios presenta las clases introducidas.
+
+![Diagrama de clases de la épica Recordatorios de sesiones](../recursos/diagramas/diagrama_clases_recordatorios.png){#clases_recordatorios ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
+
+[[pendiente: diagramas de clases de las épicas siguientes (respaldo en Google Drive y widget), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]

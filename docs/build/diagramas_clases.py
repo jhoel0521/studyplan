@@ -122,13 +122,19 @@ SALIDA_REPORTES = ["ExportadorReporte", "ResultadoExportacion"]
 DOMINIO_REPORTES = ["FormatoExportacionReporte", "GeneradorCsvReporte", "ReporteEstudio"]
 SISTEMA_REPORTES = ["ExportadorReporteSistema"]
 
+# add-recordatorios
+ENTRADA_RECORDATORIOS = ["ConfigurarRecordatorioPorDefecto", "ReprogramarRecordatoriosPendientes"]
+SERVICIOS_RECORDATORIOS = ["ConfigurarRecordatorioPorDefectoService", "ReprogramarRecordatoriosPendientesService"]
+SALIDA_RECORDATORIOS = ["ProgramadorRecordatorios"]
+DOMINIO_RECORDATORIOS = ["AntelacionRecordatorio", "AvisoRecordatorioPendiente"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
     "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS + PRESENTACION_ESTADISTICAS + PRESENTACION_REPORTES,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS + ENTRADA_REPORTES,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS + SERVICIOS_REPORTES,
-    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS + SALIDA_REPORTES,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS + DOMINIO_REPORTES,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS + ENTRADA_REPORTES + ENTRADA_RECORDATORIOS,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS + SERVICIOS_REPORTES + SERVICIOS_RECORDATORIOS,
+    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS + SALIDA_REPORTES + SALIDA_RECORDATORIOS,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS + DOMINIO_REPORTES + DOMINIO_RECORDATORIOS,
     "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS + PERSISTENCIA_METAS,
     "adapter/out/security": SEGURIDAD_CONFIG,
     "adapter/out/system": SISTEMA_TECNICAS + SISTEMA_REPORTES,
@@ -618,6 +624,53 @@ def clases_reportes():
         dg.OUT / "diagrama_clases_reportes.png", dpi=(200, 200))
 
 
+def clases_recordatorios():
+    """Clases de la épica E9: recordatorios locales de sesiones y permisos RNF-18."""
+    W, H = 3760, 4200
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui (W5, W6, W7, W10 y notificaciones)",
+           font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, ws1 = [40, 820, 1660, 2900], [740, 800, 1180, 820]
+    fila1 = [caja_con_metodos("AjustesActivity", xs1[0], 80, ws1[0]),
+             caja_con_metodos("SesionFormularioActivity", xs1[1], 80, ws1[1]),
+             caja_con_metodos("NotificadorSesion", xs1[2], 80, ws1[2]),
+             caja_con_metodos("ReceptorAvisosSesion", xs1[3], 80, ws1[3])]
+    for c in fila1:
+        c.draw(d)
+    dg.assoc(d, fila1[3].left(0.3), fila1[2].right(0.3), "emite", None, None)
+
+    y2 = 80 + alto(fila1) + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    xs2, ws2 = [40, 980, 1920, 2860], [880, 880, 880, 860]
+    nucleo = [
+        caja_de_paquete("domain (recordatorios)", DOMINIO_RECORDATORIOS + ["Ajustes (ampliado)", "SesionEstudio (ampliada)"], xs2[0], y2, ws2[0], "domain"),
+        caja_de_paquete("application.port.in", ENTRADA_RECORDATORIOS, xs2[1], y2, ws2[1], "port.in"),
+        caja_de_paquete("application.service", SERVICIOS_RECORDATORIOS + ["Planificar / Reprogramar / Mutadores"], xs2[2], y2, ws2[2], "service"),
+        caja_con_metodos("ProgramadorRecordatorios", xs2[3], y2, ws2[3], "port.out"),
+    ]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, nucleo[2].left(0.3), nucleo[1].right(0.3), "implementa", None, None)
+    dg.assoc(d, nucleo[2].right(0.3), nucleo[3].left(0.3), "programa/cancela", None, None)
+
+    y3 = y2 + alto(nucleo) + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Infraestructura · Room v8 (MIGRATION_7_8) y AlarmManager",
+           font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("AjustesEntity", 40, y3, 880, "Entity", con_campos=True),
+             caja_con_metodos("SesionEntity", 980, y3, 880, "Entity", con_campos=True),
+             caja_con_metodos("ProgramadorAvisosAlarmManager", 1920, y3, 1800)]
+    for c in infra:
+        c.draw(d)
+    img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(
+        dg.OUT / "diagrama_clases_recordatorios.png", dpi=(200, 200))
+
+
 # ---------------------------------------------------------------- modelo lógico y diccionario de datos
 DESCRIPCIONES = {
     ("perfil", "id"): "Identificador de la única fila del perfil (siempre 1, RN-01).",
@@ -632,6 +685,7 @@ DESCRIPCIONES = {
     ("ajustes", "pomodoro_descanso_corto_min"): "Duración en minutos del descanso corto Pomodoro (HU-23, RN-22).",
     ("ajustes", "pomodoro_descanso_largo_min"): "Duración en minutos del descanso largo Pomodoro (HU-23, RN-22).",
     ("ajustes", "pomodoro_ciclos_hasta_largo"): "Cantidad de ciclos de trabajo hasta un descanso largo Pomodoro (HU-23, RN-22).",
+    ("ajustes", "recordatorio_minutos"): "Antelación predeterminada en minutos para avisos previos al planificar (0 = sin recordatorio, 5, 15 o 30; valor inicial 15, HU-34).",
     ("materia", "id"): "Identificador autogenerado de la materia.",
     ("materia", "nombre"): "Nombre saneado de la materia, de 1 a 50 caracteres (RN-02).",
     ("materia", "nombre_clave"): "Nombre sin acentos y en mayúsculas: decide la unicidad entre las materias activas (RN-02).",
@@ -659,6 +713,7 @@ DESCRIPCIONES = {
     ("sesion_estudio", "pomodoro_descanso_corto_min"): "Minutos de descanso corto de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
     ("sesion_estudio", "pomodoro_descanso_largo_min"): "Minutos de descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
     ("sesion_estudio", "pomodoro_ciclos_hasta_largo"): "Ciclos hasta descanso largo de la instantánea Pomodoro congelada al iniciar (RN-22); nula si no aplica.",
+    ("sesion_estudio", "recordatorio_minutos"): "Antelación del recordatorio previo en minutos (5, 15 o 30) o nula cuando está desactivado (HU-34).",
     ("evento_estudio", "id"): "Identificador autogenerado del evento de ejecución.",
     ("evento_estudio", "sesion_id"): "Identificador de la sesión asociada; clave foránea a sesion_estudio(id) con ON DELETE CASCADE (HU-39).",
     ("evento_estudio", "tipo"): "Tipo de evento cronológico: INICIO, PAUSA, REANUDACION, FIN, CAMBIO_FASE, SALIDA_APP o REGRESO_APP (HU-39, RN-23).",
@@ -996,6 +1051,7 @@ def generar():
     clases_metas()
     clases_estadisticas()
     clases_reportes()
+    clases_recordatorios()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()
@@ -1008,7 +1064,7 @@ if __name__ == "__main__":
     generar()
     for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
               "diagrama_clases_calendario", "diagrama_clases_tecnicas", "diagrama_clases_metas",
-              "diagrama_clases_estadisticas", "diagrama_clases_reportes", "modelo_logico",
-              "secuencia_registrar_materia", "secuencia_planificar_sesion",
+              "diagrama_clases_estadisticas", "diagrama_clases_reportes", "diagrama_clases_recordatorios",
+              "modelo_logico", "secuencia_registrar_materia", "secuencia_planificar_sesion",
               "secuencia_consultar_calendario", "secuencia_ejecucion_sesion"):
         print((dg.OUT / f"{f}.png").relative_to(RAIZ))
