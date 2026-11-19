@@ -214,6 +214,95 @@
                 android:minHeight="48dp"
                 android:text="@string/ajustes_pomodoro_guardar" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:maxWidth="600dp"
+                android:text="@string/ajustes_seccion_recordatorios"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="Recordatorios de sesiones" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/grupoRecordatorioDefecto"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="12dp"
+                android:hint="@string/ajustes_recordatorio_por_defecto"
+                android:maxWidth="400dp"
+                app:helperText="@string/ajustes_recordatorio_nota"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/selectorRecordatorioDefecto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:maxWidth="400dp"
+                    android:minHeight="48dp"
+                    tools:text="15 minutos antes" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/contenedorPermisoNotificaciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textoPermisoNotificacionesFalta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="600dp"
+                    android:text="@string/ajustes_permiso_notificaciones_falta"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorError"
+                    tools:text="Las notificaciones están desactivadas." />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonAbrirAjustesNotificaciones"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:minHeight="48dp"
+                    android:text="@string/ajustes_permiso_notificaciones_ir" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/contenedorPermisoAlarmas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textoPermisoAlarmasFalta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="600dp"
+                    android:text="@string/ajustes_permiso_alarmas_falta"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorError"
+                    tools:text="Los avisos puntuales están limitados." />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonAbrirAjustesAlarmas"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:minHeight="48dp"
+                    android:text="@string/ajustes_permiso_alarmas_ir" />
+            </LinearLayout>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonPrivacidad"
                 style="@style/Widget.Material3.Button.OutlinedButton"

@@ -2,9 +2,12 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Instante;
@@ -67,5 +70,32 @@ final class FormatoSesion {
     static String horaEventoConZona(EventoEstudio evento, int desfaseActual) {
         return evento.hora().texto()
                 + sufijoZonaSiDifiere(evento.desfaseMinutos(), desfaseActual);
+    }
+
+    /** Devuelve la etiqueta localizada de una antelación de recordatorio ({@code HU-34}). */
+    static String etiquetaAntelacion(Context contexto, AntelacionRecordatorio antelacion) {
+        AntelacionRecordatorio segura =
+                antelacion == null ? AntelacionRecordatorio.SIN_RECORDATORIO : antelacion;
+        switch (segura) {
+            case MINUTOS_5:
+                return contexto.getString(R.string.recordatorio_5_min);
+            case MINUTOS_15:
+                return contexto.getString(R.string.recordatorio_15_min);
+            case MINUTOS_30:
+                return contexto.getString(R.string.recordatorio_30_min);
+            case SIN_RECORDATORIO:
+            default:
+                return contexto.getString(R.string.recordatorio_ninguno);
+        }
+    }
+
+    /** Devuelve las etiquetas en el mismo orden de {@link AntelacionRecordatorio#values()}. */
+    static List<String> etiquetasAntelacion(Context contexto) {
+        AntelacionRecordatorio[] valores = AntelacionRecordatorio.values();
+        List<String> etiquetas = new ArrayList<>(valores.length);
+        for (AntelacionRecordatorio valor : valores) {
+            etiquetas.add(etiquetaAntelacion(contexto, valor));
+        }
+        return etiquetas;
     }
 }

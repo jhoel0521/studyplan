@@ -431,4 +431,35 @@
     <string name="reportes_pdf_col_no_real">Missed</string>
     <string name="reportes_pdf_total">Total</string>
     <string name="reportes_pdf_pagina">Page %1$d of %2$d</string>
+
+    <string name="notif_recordatorio_titulo">Upcoming session</string>
+    <string name="notif_recordatorio_cuerpo">%1$s (%2$s)</string>
+    <string name="notif_recordatorio_privado">You have an upcoming study session</string>
+    <string name="notif_recordatorio_accion_iniciar">Start</string>
+
+    <string name="recordatorio_ninguno">No reminder</string>
+    <string name="recordatorio_5_min">5 minutes before</string>
+    <string name="recordatorio_15_min">15 minutes before</string>
+    <string name="recordatorio_30_min">30 minutes before</string>
+
+    <string name="ajustes_seccion_recordatorios">Session reminders</string>
+    <string name="ajustes_recordatorio_por_defecto">Default reminder when planning</string>
+    <string name="ajustes_recordatorio_nota">Applies only when planning new sessions</string>
+    <string name="ajustes_permiso_notificaciones_falta">Notifications are turned off. Enable them to receive reminders before your sessions.</string>
+    <string name="ajustes_permiso_alarmas_falta">Timely alerts are limited. Allow alarms &amp; reminders so they arrive on time.</string>
+    <string name="ajustes_permiso_notificaciones_ir">Enable notifications</string>
+    <string name="ajustes_permiso_alarmas_ir">Allow exact alarms</string>
+    <string name="permiso_notificaciones_dialogo_titulo">Receive study reminders</string>
+    <string name="permiso_notificaciones_dialogo_msg">StudyPlan uses local notifications to remind you before a planned session. You can continue without them, though you won\'t receive alerts.</string>
+    <string name="permiso_alarmas_dialogo_titulo">Reminders on exact time</string>
+    <string name="permiso_alarmas_dialogo_msg">Android restricts when background reminders fire unless you allow "Alarms &amp; reminders" for StudyPlan in system settings.</string>
+    <string name="accion_continuar">Continue</string>
+    <string name="accion_ahora_no">Not now</string>
+
+    <string name="sesion_recordatorio_etiqueta">Reminder</string>
+    <string name="sesion_recordatorio_ventana_vencida">The reminder time has already passed; the session will be saved without an immediate alert.</string>
+    <string name="sesion_recordatorio_permiso_aviso">Enable system notifications to receive this alert before starting.</string>
+    <string name="detalle_recordatorio">Reminder: %1$s</string>
+    <string name="sesion_en_curso_otra_activa_msg">Cannot start this session because your %1$s session is already in progress.</string>
+    <string name="sesion_en_curso_ir_a_activa">Go to running session</string>
 </resources>

@@ -10,9 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.ImageViewCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,6 +59,7 @@ public class SesionDetalleActivity extends ActividadProtegida {
     private TextView textoHorarioDetalle;
     private TextView textoDuracionPlanificadaDetalle;
     private TextView textoDuracionRealDetalle;
+    private TextView textoRecordatorioDetalle;
     private TextView textoNotasDetalle;
     private MaterialButton botonVerReprogramada;
     private TextView textoPlazoVencido;
@@ -80,6 +84,12 @@ public class SesionDetalleActivity extends ActividadProtegida {
         aplicarInsets();
         sesionId = getIntent().getLongExtra(EXTRA_SESION_ID, -1L);
         enlazarVistas();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                cerrarOVolverAInicio();
+            }
+        });
 
         modelo = viewModel(SesionDetalleViewModel.class);
         modelo.detalle().observe(this, this::onDetalle);
@@ -89,7 +99,21 @@ public class SesionDetalleActivity extends ActividadProtegida {
     }
 
     @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        sesionId = intent.getLongExtra(EXTRA_SESION_ID, -1L);
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)
+                && !app().sesionBloqueo().estaBloqueada()) {
+            alEstarListo();
+        }
+    }
+
+    @Override
     protected void alEstarListo() {
+        if (sesionId > 0) {
+            NotificadorSesion.cancelarRecordatorio(this, sesionId);
+        }
         modelo.cargar(sesionId);
     }
 
@@ -110,6 +134,7 @@ public class SesionDetalleActivity extends ActividadProtegida {
         textoHorarioDetalle = findViewById(R.id.textoHorarioDetalle);
         textoDuracionPlanificadaDetalle = findViewById(R.id.textoDuracionPlanificadaDetalle);
         textoDuracionRealDetalle = findViewById(R.id.textoDuracionRealDetalle);
+        textoRecordatorioDetalle = findViewById(R.id.textoRecordatorioDetalle);
         textoNotasDetalle = findViewById(R.id.textoNotasDetalle);
         botonVerReprogramada = findViewById(R.id.botonVerReprogramada);
         textoPlazoVencido = findViewById(R.id.textoPlazoVencido);
@@ -140,6 +165,15 @@ public class SesionDetalleActivity extends ActividadProtegida {
     }
 
     private void onVolverClick(View vista) {
+        cerrarOVolverAInicio();
+    }
+
+    private void cerrarOVolverAInicio() {
+        if (isTaskRoot()) {
+            Intent inicio = new Intent(this, MainActivity.class);
+            inicio.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(inicio);
+        }
         finish();
     }
 
@@ -173,6 +207,15 @@ public class SesionDetalleActivity extends ActividadProtegida {
             textoDuracionRealDetalle.setVisibility(View.VISIBLE);
         } else {
             textoDuracionRealDetalle.setVisibility(View.GONE);
+        }
+
+        if (s.planFinUtcMilis() != null) {
+            textoRecordatorioDetalle.setText(getString(
+                    R.string.detalle_recordatorio,
+                    FormatoSesion.etiquetaAntelacion(this, s.antelacionRecordatorio())));
+            textoRecordatorioDetalle.setVisibility(View.VISIBLE);
+        } else {
+            textoRecordatorioDetalle.setVisibility(View.GONE);
         }
 
         textoNotasDetalle.setText(!s.notas().trim().isEmpty()
@@ -301,7 +344,7 @@ public class SesionDetalleActivity extends ActividadProtegida {
         }
         modelo.consumirEvento();
         if (evento.tipo() == EventoSesion.Tipo.ELIMINADA) {
-            finish();
+            cerrarOVolverAInicio();
             return;
         }
         if (evento.tipo() == EventoSesion.Tipo.INICIADA) {

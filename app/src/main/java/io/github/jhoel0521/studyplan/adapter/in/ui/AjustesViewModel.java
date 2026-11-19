@@ -9,17 +9,19 @@ import java.util.concurrent.Executor;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarAjustesEstudio;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.ConfigurarRecordatorioPorDefecto;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.Tema;
 
 /**
- * Estado de la pantalla de ajustes: tema, idioma, bloqueo, No molestar y Pomodoro.
+ * Estado de la pantalla de ajustes: tema, idioma, bloqueo, No molestar, Pomodoro y recordatorios.
  *
- * <p>Implementa: HU-03, HU-04, HU-23, HU-24, RN-17 y RN-18.
+ * <p>Implementa: HU-03, HU-04, HU-23, HU-24, HU-34, RN-17 y RN-18.
  */
 public class AjustesViewModel extends ViewModel {
 
@@ -27,6 +29,7 @@ public class AjustesViewModel extends ViewModel {
     private final ConfigurarApariencia apariencia;
     private final ConfigurarBloqueo bloqueo;
     private final ConfigurarAjustesEstudio configurarEstudio;
+    private final ConfigurarRecordatorioPorDefecto configurarRecordatorio;
     private final Executor ejecutor;
     private final MutableLiveData<Ajustes> ajustes = new MutableLiveData<>();
     private final MutableLiveData<Boolean> avisoSinBloqueo = new MutableLiveData<>();
@@ -35,16 +38,24 @@ public class AjustesViewModel extends ViewModel {
 
     public AjustesViewModel(ConsultarAjustes consultarAjustes, ConfigurarApariencia apariencia,
                             ConfigurarBloqueo bloqueo, Executor ejecutor) {
-        this(consultarAjustes, apariencia, bloqueo, null, ejecutor);
+        this(consultarAjustes, apariencia, bloqueo, null, null, ejecutor);
     }
 
     public AjustesViewModel(ConsultarAjustes consultarAjustes, ConfigurarApariencia apariencia,
                             ConfigurarBloqueo bloqueo, ConfigurarAjustesEstudio configurarEstudio,
                             Executor ejecutor) {
+        this(consultarAjustes, apariencia, bloqueo, configurarEstudio, null, ejecutor);
+    }
+
+    public AjustesViewModel(ConsultarAjustes consultarAjustes, ConfigurarApariencia apariencia,
+                            ConfigurarBloqueo bloqueo, ConfigurarAjustesEstudio configurarEstudio,
+                            ConfigurarRecordatorioPorDefecto configurarRecordatorio,
+                            Executor ejecutor) {
         this.consultarAjustes = consultarAjustes;
         this.apariencia = apariencia;
         this.bloqueo = bloqueo;
         this.configurarEstudio = configurarEstudio;
+        this.configurarRecordatorio = configurarRecordatorio;
         this.ejecutor = ejecutor;
     }
 
@@ -127,5 +138,14 @@ public class AjustesViewModel extends ViewModel {
 
     public void consumirPomodoroGuardado() {
         pomodoroGuardado.setValue(null);
+    }
+
+    /** Guarda de inmediato el recordatorio por defecto para nuevas planificaciones ({@code HU-34}). */
+    public void elegirRecordatorioPorDefecto(AntelacionRecordatorio antelacion) {
+        if (configurarRecordatorio == null || antelacion == null) {
+            return;
+        }
+        ejecutor.execute(() ->
+                ajustes.postValue(configurarRecordatorio.ejecutar(antelacion)));
     }
 }

@@ -9,12 +9,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.ImageViewCompat;
+import androidx.lifecycle.Lifecycle;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,25 +28,35 @@ import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
 import io.github.jhoel0521.studyplan.domain.CandidataInvasion;
+import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
 import io.github.jhoel0521.studyplan.domain.FasePomodoro;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
 import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
  * Pantalla protegida de ejecución en vivo ({@code W7}): cronómetro Libre o Pomodoro con
  * {@link Handler} visual únicamente entre {@code onStart} y {@code onStop} (sin
- * {@code ForegroundService}), pausar/reanudar, detener y tarjetas contextuales
- * (HU-04, HU-22 a HU-24, HU-42, HU-43, RNF-03, RNF-12).
+ * {@code ForegroundService}), pausar/reanudar, detener, tarjetas contextuales y arranque directo
+ * desde recordatorios ({@code HU-04}, {@code HU-22} a {@code HU-24}, {@code HU-34}, {@code HU-42},
+ * {@code HU-43}, {@code RNF-03}, {@code RNF-12}).
  */
 public class SesionEnCursoActivity extends ActividadProtegida {
 
     public static final String EXTRA_SESION_ID = "extra_sesion_id";
+    public static final String EXTRA_INICIAR_DESDE_RECORDATORIO =
+            "extra_iniciar_desde_recordatorio";
+    private static final String ESTADO_SESION_ID = "estado_sesion_id";
+    private static final String ESTADO_INICIAR_RECORDATORIO = "estado_iniciar_recordatorio";
     private static final long TICK_MS = 1000L;
 
     private long sesionId;
+    private boolean iniciarDesdeRecordatorio;
+    @Nullable
+    private AlertDialog dialogoErrorInicio;
     private SesionEnCursoViewModel modelo;
 
     private ImageView colorMateria;
@@ -80,8 +95,19 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sesion_en_curso);
         aplicarInsets();
-        sesionId = getIntent().getLongExtra(EXTRA_SESION_ID, -1L);
+        if (savedInstanceState != null) {
+            sesionId = savedInstanceState.getLong(ESTADO_SESION_ID, -1L);
+            iniciarDesdeRecordatorio = savedInstanceState.getBoolean(ESTADO_INICIAR_RECORDATORIO, false);
+        } else {
+            leerIntent(getIntent());
+        }
         enlazarVistas();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                cerrarOVolverAInicio();
+            }
+        });
 
         modelo = viewModel(SesionEnCursoViewModel.class);
         modelo.resumen().observe(this, this::onResumen);
@@ -89,11 +115,57 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         modelo.nuevaSesionActiva().observe(this, this::onCambioASiguiente);
         modelo.metasAlcanzadas().observe(this, this::onMetasAlcanzadas);
         modelo.materiasSelector().observe(this, this::onMateriasParaCambio);
+        modelo.errorInicioDirecto().observe(this, this::onErrorInicioDirecto);
+    }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        leerIntent(intent);
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)
+                && !app().sesionBloqueo().estaBloqueada()) {
+            procesarEntrada();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ESTADO_SESION_ID, sesionId);
+        outState.putBoolean(ESTADO_INICIAR_RECORDATORIO, iniciarDesdeRecordatorio);
+    }
+
+    @Override
+    protected void onDestroy() {
+        cerrarDialogoErrorInicio();
+        super.onDestroy();
     }
 
     @Override
     protected void alEstarListo() {
-        modelo.cargar(sesionId);
+        procesarEntrada();
+    }
+
+    private void leerIntent(Intent intent) {
+        if (intent == null) {
+            return;
+        }
+        sesionId = intent.getLongExtra(EXTRA_SESION_ID, -1L);
+        iniciarDesdeRecordatorio = intent.getBooleanExtra(EXTRA_INICIAR_DESDE_RECORDATORIO, false);
+    }
+
+    private void procesarEntrada() {
+        if (sesionId > 0) {
+            NotificadorSesion.cancelarRecordatorio(this, sesionId);
+        }
+        if (iniciarDesdeRecordatorio) {
+            iniciarDesdeRecordatorio = false;
+            getIntent().removeExtra(EXTRA_INICIAR_DESDE_RECORDATORIO);
+            modelo.cargarOIniciarDesdeRecordatorio(sesionId);
+        } else {
+            modelo.cargar(sesionId);
+        }
     }
 
     @Override
@@ -240,9 +312,92 @@ public class SesionEnCursoActivity extends ActividadProtegida {
 
     private void onFinalizada(boolean termino) {
         if (termino) {
-            NotificadorSesion.cancelarAvisoRetorno(this);
-            finish();
+            cerrarOVolverAInicio();
         }
+    }
+
+    private void onErrorInicioDirecto(@Nullable ErrorValidacion error) {
+        if (error == null) {
+            return;
+        }
+        modelo.consumirErrorInicioDirecto();
+        if (error == ErrorValidacion.SESION_YA_EN_CURSO) {
+            resolverOtraSesionEnCurso();
+            return;
+        }
+        android.widget.Toast.makeText(
+                        this,
+                        MensajesDeError.textoSesion(this, error, null),
+                        android.widget.Toast.LENGTH_LONG)
+                .show();
+        cerrarOVolverAInicio();
+    }
+
+    private void resolverOtraSesionEnCurso() {
+        if (hayDialogoRecuperacionAbierto()
+                || (dialogoErrorInicio != null && dialogoErrorInicio.isShowing())) {
+            return;
+        }
+        app().ejecutor().execute(() -> {
+            java.util.Optional<io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp> diagOpt =
+                    app().evaluarRecuperacionSesion().ejecutar();
+            if (diagOpt.isPresent()) {
+                runOnUiThread(() -> {
+                    if (!isFinishing() && !isDestroyed() && !hayDialogoRecuperacionAbierto()) {
+                        DialogoRecuperacionSesion.mostrar(this, diagOpt.get(), this::alEstarListo);
+                    }
+                });
+                return;
+            }
+            java.util.Optional<SesionEstudio> activaOpt = app().sesionRepository().buscarEnCurso();
+            if (!activaOpt.isPresent()) {
+                runOnUiThread(this::cerrarOVolverAInicio);
+                return;
+            }
+            SesionEstudio activa = activaOpt.get();
+            String materiaActiva = app().materiaRepository()
+                    .obtener(activa.materiaId())
+                    .map(Materia::nombre)
+                    .orElse("");
+            runOnUiThread(() -> mostrarDialogoOtraSesionActiva(activa.id(), materiaActiva));
+        });
+    }
+
+    private void mostrarDialogoOtraSesionActiva(long otraSesionId, String materiaActiva) {
+        if (isFinishing() || isDestroyed() || hayDialogoRecuperacionAbierto()
+                || (dialogoErrorInicio != null && dialogoErrorInicio.isShowing())) {
+            return;
+        }
+        dialogoErrorInicio = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.error_sesion_ya_en_curso)
+                .setMessage(getString(R.string.sesion_en_curso_otra_activa_msg, materiaActiva))
+                .setNegativeButton(R.string.cancelar, (d, w) -> cerrarOVolverAInicio())
+                .setPositiveButton(R.string.sesion_en_curso_ir_a_activa, (d, w) -> {
+                    sesionId = otraSesionId;
+                    iniciarDesdeRecordatorio = false;
+                    getIntent().putExtra(EXTRA_SESION_ID, otraSesionId);
+                    getIntent().removeExtra(EXTRA_INICIAR_DESDE_RECORDATORIO);
+                    modelo.cargar(otraSesionId);
+                })
+                .setOnCancelListener(d -> cerrarOVolverAInicio())
+                .show();
+    }
+
+    private void cerrarDialogoErrorInicio() {
+        if (dialogoErrorInicio != null && dialogoErrorInicio.isShowing()) {
+            dialogoErrorInicio.dismiss();
+        }
+        dialogoErrorInicio = null;
+    }
+
+    private void cerrarOVolverAInicio() {
+        NotificadorSesion.cancelarAvisoRetorno(this);
+        if (isTaskRoot()) {
+            Intent inicio = new Intent(this, MainActivity.class);
+            inicio.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(inicio);
+        }
+        finish();
     }
 
     private void onCambioASiguiente(@Nullable Long nuevoId) {
@@ -294,7 +449,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     }
 
     private void onVolverClick(View v) {
-        finish();
+        cerrarOVolverAInicio();
     }
 
     private void onPausarReanudarClick(View v) {

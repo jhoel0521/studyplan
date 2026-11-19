@@ -126,6 +126,11 @@ public abstract class ActividadProtegida extends ActividadBase {
         });
     }
 
+    /** Indica si ya hay un diálogo modal de recuperación abierto en esta pantalla. */
+    protected boolean hayDialogoRecuperacionAbierto() {
+        return dialogoRecuperacion != null && dialogoRecuperacion.isShowing();
+    }
+
     /** Se llama cuando la app está lista (hay perfil y no hay nada que autenticar): aquí se cargan los datos. */
     protected void alEstarListo() {
     }

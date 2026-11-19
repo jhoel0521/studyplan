@@ -1,21 +1,29 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,6 +37,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
@@ -60,6 +69,10 @@ public class SesionFormularioActivity extends ActividadProtegida {
     private static final String ESTADO_MATERIA_ID = "estado_materia_id";
     private static final String ESTADO_DURACION_EDITADA = "estado_duracion_editada";
     private static final String ESTADO_BASE_CARGADA = "estado_base_cargada";
+    private static final String ESTADO_ANTELACION_MIN = "estado_antelacion_min";
+    private static final String ESTADO_ANTELACION_INICIAL = "estado_antelacion_inicial";
+    private static final String ESTADO_ANTELACION_MANUAL = "estado_antelacion_manual";
+    private static final String ESTADO_DIALOGO_PERMISO = "estado_dialogo_permiso";
     private static final String TAG_SELECTOR_FECHA = "selector_fecha_sesion";
     private static final String TAG_SELECTOR_HORA_INICIO = "selector_hora_inicio";
     private static final String TAG_SELECTOR_HORA_FIN = "selector_hora_fin";
@@ -85,6 +98,12 @@ public class SesionFormularioActivity extends ActividadProtegida {
     private TextInputEditText campoDuracionReal;
     private TextInputLayout grupoNotas;
     private TextInputEditText campoNotas;
+    private LinearLayout contenedorRecordatorioFormulario;
+    private MaterialAutoCompleteTextView selectorRecordatorioSesion;
+    private TextView textoRecordatorioVentanaVencida;
+    private LinearLayout contenedorBannerPermisoForm;
+    @Nullable
+    private AlertDialog dialogoPermiso;
     private TextView textoErrorFormulario;
     private MaterialButton botonGuardarSesion;
 
@@ -94,7 +113,16 @@ public class SesionFormularioActivity extends ActividadProtegida {
     private boolean duracionRealEditadaManualmente;
     private boolean actualizandoDuracionAutomatica;
     private boolean sesionBaseAplicada;
+    private AntelacionRecordatorio antelacionSeleccionada = AntelacionRecordatorio.MINUTOS_15;
+    private boolean antelacionInicialAplicada;
+    private boolean recordatorioElegidoManualmente;
+    private boolean dialogoPermisoMostrado;
     private List<ResumenMateria> listaMaterias = Collections.emptyList();
+
+    private final ActivityResultLauncher<String> lanzadorPermisoNotificaciones =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    this::onResultadoPermisoNotificaciones);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +137,7 @@ public class SesionFormularioActivity extends ActividadProtegida {
         modelo = viewModel(SesionFormularioViewModel.class);
         modelo.materiasActivas().observe(this, this::onMateriasActivas);
         modelo.fechaHoy().observe(this, this::onFechaHoy);
+        modelo.recordatorioPorDefecto().observe(this, this::onRecordatorioPorDefecto);
         modelo.sesionBase().observe(this, this::onSesionBase);
         modelo.evento().observe(this, this::onEvento);
 
@@ -136,12 +165,28 @@ public class SesionFormularioActivity extends ActividadProtegida {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        actualizarAvisosRecordatorio();
+    }
+
+    @Override
+    protected void onDestroy() {
+        cerrarDialogoPermiso();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ESTADO_MODO, modoActual);
         outState.putLong(ESTADO_MATERIA_ID, materiaSeleccionadaId);
         outState.putBoolean(ESTADO_DURACION_EDITADA, duracionRealEditadaManualmente);
         outState.putBoolean(ESTADO_BASE_CARGADA, sesionBaseAplicada);
+        outState.putInt(ESTADO_ANTELACION_MIN, antelacionSeleccionada.minutos());
+        outState.putBoolean(ESTADO_ANTELACION_INICIAL, antelacionInicialAplicada);
+        outState.putBoolean(ESTADO_ANTELACION_MANUAL, recordatorioElegidoManualmente);
+        outState.putBoolean(ESTADO_DIALOGO_PERMISO, dialogoPermisoMostrado);
     }
 
     private void leerParametrosIniciales(@Nullable Bundle savedInstanceState) {
@@ -151,6 +196,13 @@ public class SesionFormularioActivity extends ActividadProtegida {
             materiaSeleccionadaId = savedInstanceState.getLong(ESTADO_MATERIA_ID, -1L);
             duracionRealEditadaManualmente = savedInstanceState.getBoolean(ESTADO_DURACION_EDITADA, false);
             sesionBaseAplicada = savedInstanceState.getBoolean(ESTADO_BASE_CARGADA, false);
+            int min = savedInstanceState.getInt(
+                    ESTADO_ANTELACION_MIN, AntelacionRecordatorio.MINUTOS_15.minutos());
+            antelacionSeleccionada = AntelacionRecordatorio.deMinutos(
+                    min, AntelacionRecordatorio.MINUTOS_15);
+            antelacionInicialAplicada = savedInstanceState.getBoolean(ESTADO_ANTELACION_INICIAL, false);
+            recordatorioElegidoManualmente = savedInstanceState.getBoolean(ESTADO_ANTELACION_MANUAL, false);
+            dialogoPermisoMostrado = savedInstanceState.getBoolean(ESTADO_DIALOGO_PERMISO, false);
             return;
         }
         String extraModo = getIntent().getStringExtra(EXTRA_MODO);
@@ -182,17 +234,33 @@ public class SesionFormularioActivity extends ActividadProtegida {
         campoDuracionReal = findViewById(R.id.campoDuracionReal);
         grupoNotas = findViewById(R.id.grupoNotas);
         campoNotas = findViewById(R.id.campoNotas);
+        contenedorRecordatorioFormulario = findViewById(R.id.contenedorRecordatorioFormulario);
+        selectorRecordatorioSesion = findViewById(R.id.selectorRecordatorioSesion);
+        textoRecordatorioVentanaVencida = findViewById(R.id.textoRecordatorioVentanaVencida);
+        contenedorBannerPermisoForm = findViewById(R.id.contenedorBannerPermisoForm);
+        MaterialButton botonActivarNotificacionesForm =
+                findViewById(R.id.botonActivarNotificacionesForm);
         textoErrorFormulario = findViewById(R.id.textoErrorFormulario);
         botonGuardarSesion = findViewById(R.id.botonGuardarSesion);
+
+        selectorRecordatorioSesion.setAdapter(new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                FormatoSesion.etiquetasAntelacion(this)));
+        selectorRecordatorioSesion.setText(
+                FormatoSesion.etiquetaAntelacion(this, antelacionSeleccionada), false);
 
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         grupoModo.setOnCheckedChangeListener(this::onCambioModo);
         selectorMateria.setOnItemClickListener(this::onMateriaElegida);
+        selectorRecordatorioSesion.setOnItemClickListener(this::onRecordatorioElegido);
+        botonActivarNotificacionesForm.setOnClickListener(this::onActivarNotificacionesFormClick);
         botonElegirFecha.setOnClickListener(this::onElegirFechaClick);
         botonElegirHoraInicio.setOnClickListener(this::onElegirHoraInicioClick);
         botonElegirHoraFin.setOnClickListener(this::onElegirHoraFinClick);
         botonGuardarSesion.setOnClickListener(this::onGuardarClick);
 
+        campoFecha.addTextChangedListener(new ObservadorCambioHorario());
         campoHoraInicio.addTextChangedListener(new ObservadorCambioHorario());
         campoHoraFin.addTextChangedListener(new ObservadorCambioHorario());
         campoDuracionReal.addTextChangedListener(new ObservadorCambioDuracionReal());
@@ -217,6 +285,7 @@ public class SesionFormularioActivity extends ActividadProtegida {
             grupoModo.setVisibility(View.GONE);
             grupoMateria.setEnabled(false);
             grupoDuracionReal.setVisibility(View.GONE);
+            contenedorRecordatorioFormulario.setVisibility(View.VISIBLE);
             return;
         }
         grupoModo.setVisibility(View.VISIBLE);
@@ -228,6 +297,7 @@ public class SesionFormularioActivity extends ActividadProtegida {
         radioPlanificar.setChecked(!esPasada);
         radioPasada.setChecked(esPasada);
         grupoDuracionReal.setVisibility(esPasada ? View.VISIBLE : View.GONE);
+        contenedorRecordatorioFormulario.setVisibility(esPasada ? View.GONE : View.VISIBLE);
     }
 
     private void onMateriasActivas(List<ResumenMateria> materias) {
@@ -263,6 +333,21 @@ public class SesionFormularioActivity extends ActividadProtegida {
                 && textoDe(campoFecha).isEmpty()) {
             campoFecha.setText(hoy.iso());
         }
+        actualizarAvisosRecordatorio();
+    }
+
+    private void onRecordatorioPorDefecto(@Nullable AntelacionRecordatorio defecto) {
+        if (defecto == null
+                || antelacionInicialAplicada
+                || recordatorioElegidoManualmente
+                || MODO_REPROGRAMAR.equals(modoActual)) {
+            return;
+        }
+        antelacionInicialAplicada = true;
+        antelacionSeleccionada = defecto;
+        selectorRecordatorioSesion.setText(
+                FormatoSesion.etiquetaAntelacion(this, antelacionSeleccionada), false);
+        actualizarAvisosRecordatorio();
     }
 
     private void onSesionBase(DetalleSesion detalle) {
@@ -277,7 +362,14 @@ public class SesionFormularioActivity extends ActividadProtegida {
         campoHoraInicio.setText(s.horaInicio().texto());
         campoHoraFin.setText(s.horaFin().texto());
         campoNotas.setText(s.notas());
+        if (!recordatorioElegidoManualmente && !antelacionInicialAplicada) {
+            antelacionInicialAplicada = true;
+            antelacionSeleccionada = s.antelacionRecordatorio();
+            selectorRecordatorioSesion.setText(
+                    FormatoSesion.etiquetaAntelacion(this, antelacionSeleccionada), false);
+        }
         actualizarDuracionPlanificadaYReal();
+        actualizarAvisosRecordatorio();
     }
 
     private void onElegirFechaClick(View vista) {
@@ -378,6 +470,7 @@ public class SesionFormularioActivity extends ActividadProtegida {
     }
 
     private void actualizarDuracionPlanificadaYReal() {
+        actualizarAvisosRecordatorio();
         Resultado<Hora> inicio = Hora.parsear(
                 textoDe(campoHoraInicio), ErrorValidacion.HORA_INICIO_OBLIGATORIA);
         Resultado<Hora> fin = Hora.parsear(
@@ -411,7 +504,8 @@ public class SesionFormularioActivity extends ActividadProtegida {
         String notasTxt = textoDe(campoNotas);
 
         if (MODO_REPROGRAMAR.equals(modoActual)) {
-            modelo.reprogramar(sesionBaseId, fechaTxt, inicioTxt, finTxt, notasTxt);
+            modelo.reprogramar(
+                    sesionBaseId, fechaTxt, inicioTxt, finTxt, notasTxt, antelacionSeleccionada);
         } else if (MODO_PASADA.equals(modoActual)) {
             modelo.guardarPasada(
                     materiaSeleccionadaId,
@@ -421,7 +515,83 @@ public class SesionFormularioActivity extends ActividadProtegida {
                     textoDe(campoDuracionReal),
                     notasTxt);
         } else {
-            modelo.guardarPlanificada(materiaSeleccionadaId, fechaTxt, inicioTxt, finTxt, notasTxt);
+            modelo.guardarPlanificada(
+                    materiaSeleccionadaId,
+                    fechaTxt,
+                    inicioTxt,
+                    finTxt,
+                    notasTxt,
+                    antelacionSeleccionada);
+        }
+    }
+
+    private void onRecordatorioElegido(
+            AdapterView<?> padre, View vista, int posicion, long id) {
+        AntelacionRecordatorio[] valores = AntelacionRecordatorio.values();
+        if (posicion < 0 || posicion >= valores.length) {
+            return;
+        }
+        recordatorioElegidoManualmente = true;
+        antelacionInicialAplicada = true;
+        antelacionSeleccionada = valores[posicion];
+        actualizarAvisosRecordatorio();
+        if (antelacionSeleccionada.activo()
+                && !NotificadorSesion.tienePermisoNotificaciones(this)
+                && !dialogoPermisoMostrado) {
+            dialogoPermisoMostrado = true;
+            mostrarDialogoPermisoNotificaciones();
+        }
+    }
+
+    private void onActivarNotificacionesFormClick(View vista) {
+        if (!NotificadorSesion.tienePermisoNotificaciones(this)) {
+            mostrarDialogoPermisoNotificaciones();
+        }
+    }
+
+    private void mostrarDialogoPermisoNotificaciones() {
+        cerrarDialogoPermiso();
+        dialogoPermiso = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.permiso_notificaciones_dialogo_titulo)
+                .setMessage(R.string.permiso_notificaciones_dialogo_msg)
+                .setNegativeButton(R.string.accion_ahora_no, null)
+                .setPositiveButton(R.string.accion_continuar, this::onConfirmarPermisoNotificaciones)
+                .show();
+    }
+
+    private void onConfirmarPermisoNotificaciones(DialogInterface dialogo, int boton) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            lanzadorPermisoNotificaciones.launch(Manifest.permission.POST_NOTIFICATIONS);
+        } else {
+            NotificadorSesion.abrirAjustesNotificaciones(this);
+        }
+    }
+
+    private void onResultadoPermisoNotificaciones(Boolean concedido) {
+        actualizarAvisosRecordatorio();
+    }
+
+    private void actualizarAvisosRecordatorio() {
+        if (modelo == null
+                || textoRecordatorioVentanaVencida == null
+                || contenedorBannerPermisoForm == null) {
+            return;
+        }
+        boolean modoConRecordatorio = !MODO_PASADA.equals(modoActual);
+        boolean vencida = modoConRecordatorio
+                && modelo.esVentanaRecordatorioVencida(
+                        textoDe(campoFecha), textoDe(campoHoraInicio), antelacionSeleccionada);
+        textoRecordatorioVentanaVencida.setVisibility(vencida ? View.VISIBLE : View.GONE);
+        boolean faltaPermiso = modoConRecordatorio
+                && antelacionSeleccionada.activo()
+                && !NotificadorSesion.tienePermisoNotificaciones(this);
+        contenedorBannerPermisoForm.setVisibility(faltaPermiso ? View.VISIBLE : View.GONE);
+    }
+
+    private void cerrarDialogoPermiso() {
+        if (dialogoPermiso != null) {
+            dialogoPermiso.dismiss();
+            dialogoPermiso = null;
         }
     }
 

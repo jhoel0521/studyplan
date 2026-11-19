@@ -431,4 +431,35 @@
     <string name="reportes_pdf_col_no_real">No real.</string>
     <string name="reportes_pdf_total">Total</string>
     <string name="reportes_pdf_pagina">Página %1$d de %2$d</string>
+
+    <string name="notif_recordatorio_titulo">Sesión próxima</string>
+    <string name="notif_recordatorio_cuerpo">%1$s (%2$s)</string>
+    <string name="notif_recordatorio_privado">Tienes una sesión de estudio próxima</string>
+    <string name="notif_recordatorio_accion_iniciar">Iniciar</string>
+
+    <string name="recordatorio_ninguno">Sin recordatorio</string>
+    <string name="recordatorio_5_min">5 minutos antes</string>
+    <string name="recordatorio_15_min">15 minutos antes</string>
+    <string name="recordatorio_30_min">30 minutos antes</string>
+
+    <string name="ajustes_seccion_recordatorios">Recordatorios de sesiones</string>
+    <string name="ajustes_recordatorio_por_defecto">Recordatorio por defecto al planificar</string>
+    <string name="ajustes_recordatorio_nota">Solo se aplica al planificar nuevas sesiones</string>
+    <string name="ajustes_permiso_notificaciones_falta">Las notificaciones están desactivadas. Actívalas para recibir recordatorios antes de tus sesiones.</string>
+    <string name="ajustes_permiso_alarmas_falta">Los avisos puntuales están limitados. Permite alarmas y recordatorios para que lleguen a la hora exacta.</string>
+    <string name="ajustes_permiso_notificaciones_ir">Activar notificaciones</string>
+    <string name="ajustes_permiso_alarmas_ir">Permitir alarmas exactas</string>
+    <string name="permiso_notificaciones_dialogo_titulo">Recibir recordatorios de estudio</string>
+    <string name="permiso_notificaciones_dialogo_msg">StudyPlan usa notificaciones locales para avisarte antes de una sesión planificada. Puedes continuar sin ellas, aunque no recibirás avisos.</string>
+    <string name="permiso_alarmas_dialogo_titulo">Recordatorios a la hora exacta</string>
+    <string name="permiso_alarmas_dialogo_msg">Android limita cuándo suenan los recordatorios en segundo plano salvo que actives «Alarmas y recordatorios» para StudyPlan en los ajustes del sistema.</string>
+    <string name="accion_continuar">Continuar</string>
+    <string name="accion_ahora_no">Ahora no</string>
+
+    <string name="sesion_recordatorio_etiqueta">Recordatorio</string>
+    <string name="sesion_recordatorio_ventana_vencida">El aviso previo ya pasó; la sesión se guardará sin alarma inmediata.</string>
+    <string name="sesion_recordatorio_permiso_aviso">Activa las notificaciones del sistema para recibir este aviso antes de empezar.</string>
+    <string name="detalle_recordatorio">Recordatorio: %1$s</string>
+    <string name="sesion_en_curso_otra_activa_msg">No se puede iniciar esta sesión porque ya tienes otra sesión de %1$s en curso.</string>
+    <string name="sesion_en_curso_ir_a_activa">Ir a la sesión en curso</string>
 </resources>

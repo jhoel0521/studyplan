@@ -126,6 +126,17 @@
                     tools:visibility="visible" />
 
                 <TextView
+                    android:id="@+id/textoRecordatorioDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:maxWidth="600dp"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:visibility="gone"
+                    tools:text="Recordatorio: 15 minutos antes"
+                    tools:visibility="visible" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"

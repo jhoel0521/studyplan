@@ -1,25 +1,35 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Idioma;
@@ -27,9 +37,9 @@ import io.github.jhoel0521.studyplan.domain.Tema;
 
 /**
  * Pantalla de ajustes: tema, idioma, bloqueo con huella o PIN, técnicas de estudio (Pomodoro y
- * No molestar) y acceso a Privacidad (borrar datos).
+ * No molestar), recordatorios de sesiones y acceso a Privacidad (borrar datos).
  *
- * <p>Implementa: HU-03, HU-04, HU-23, HU-24, RN-17 y RN-18.
+ * <p>Implementa: HU-03, HU-04, HU-23, HU-24, HU-34, RN-17, RN-18 y RNF-18.
  */
 public class AjustesActivity extends ActividadProtegida {
 
@@ -43,7 +53,18 @@ public class AjustesActivity extends ActividadProtegida {
     private TextInputEditText campoPomodoroLargo;
     private TextInputEditText campoPomodoroCiclos;
     private TextView textoErrorPomodoro;
+    private MaterialAutoCompleteTextView selectorRecordatorioDefecto;
+    private LinearLayout contenedorPermisoNotificaciones;
+    private LinearLayout contenedorPermisoAlarmas;
+    @Nullable
+    private AlertDialog dialogoPermiso;
+    private AntelacionRecordatorio antelacionSeleccionada = AntelacionRecordatorio.MINUTOS_15;
     private boolean actualizando;
+
+    private final ActivityResultLauncher<String> lanzadorPermisoNotificaciones =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    this::onResultadoPermisoNotificaciones);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,14 +91,41 @@ public class AjustesActivity extends ActividadProtegida {
         campoPomodoroCiclos = findViewById(R.id.campoPomodoroCiclos);
         textoErrorPomodoro = findViewById(R.id.textoErrorPomodoro);
         MaterialButton botonGuardarPomodoro = findViewById(R.id.botonGuardarPomodoro);
+        selectorRecordatorioDefecto = findViewById(R.id.selectorRecordatorioDefecto);
+        contenedorPermisoNotificaciones = findViewById(R.id.contenedorPermisoNotificaciones);
+        contenedorPermisoAlarmas = findViewById(R.id.contenedorPermisoAlarmas);
+        MaterialButton botonAbrirAjustesNotificaciones =
+                findViewById(R.id.botonAbrirAjustesNotificaciones);
+        MaterialButton botonAbrirAjustesAlarmas = findViewById(R.id.botonAbrirAjustesAlarmas);
         MaterialButton botonPrivacidad = findViewById(R.id.botonPrivacidad);
+
+        selectorRecordatorioDefecto.setAdapter(new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_dropdown_item_1line,
+                FormatoSesion.etiquetasAntelacion(this)));
+
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         grupoTema.setOnCheckedChangeListener(this::onTemaCambiado);
         grupoIdioma.setOnCheckedChangeListener(this::onIdiomaCambiado);
         interruptorBloqueo.setOnCheckedChangeListener(this::onBloqueoCambiado);
         interruptorNoMolestarGlobal.setOnCheckedChangeListener(this::onNoMolestarCambiado);
         botonGuardarPomodoro.setOnClickListener(this::onGuardarPomodoroClick);
+        selectorRecordatorioDefecto.setOnItemClickListener(this::onRecordatorioDefectoElegido);
+        botonAbrirAjustesNotificaciones.setOnClickListener(this::onAbrirAjustesNotificacionesClick);
+        botonAbrirAjustesAlarmas.setOnClickListener(this::onAbrirAjustesAlarmasClick);
         botonPrivacidad.setOnClickListener(this::onPrivacidadClick);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        actualizarBannersPermisos();
+    }
+
+    @Override
+    protected void onDestroy() {
+        cerrarDialogoPermiso();
+        super.onDestroy();
     }
 
     @Override
@@ -96,6 +144,10 @@ public class AjustesActivity extends ActividadProtegida {
         campoPomodoroCorto.setText(String.valueOf(pom.descansoCortoMinutos()));
         campoPomodoroLargo.setText(String.valueOf(pom.descansoLargoMinutos()));
         campoPomodoroCiclos.setText(String.valueOf(pom.ciclosHastaLargo()));
+        antelacionSeleccionada = ajustes.recordatorioPorDefecto();
+        selectorRecordatorioDefecto.setText(
+                FormatoSesion.etiquetaAntelacion(this, antelacionSeleccionada), false);
+        actualizarBannersPermisos();
         actualizando = false;
         AplicadorApariencia.aplicarTema(ajustes.tema());
         protegerCapturas();
@@ -206,6 +258,92 @@ public class AjustesActivity extends ActividadProtegida {
 
     private void onPrivacidadClick(View vista) {
         startActivity(new Intent(this, BorrarDatosActivity.class));
+    }
+
+    private void onRecordatorioDefectoElegido(
+            AdapterView<?> padre, View vista, int posicion, long id) {
+        AntelacionRecordatorio[] valores = AntelacionRecordatorio.values();
+        if (posicion < 0 || posicion >= valores.length) {
+            return;
+        }
+        antelacionSeleccionada = valores[posicion];
+        modelo.elegirRecordatorioPorDefecto(antelacionSeleccionada);
+        actualizarBannersPermisos();
+        if (!antelacionSeleccionada.activo()) {
+            return;
+        }
+        if (!NotificadorSesion.tienePermisoNotificaciones(this)) {
+            mostrarDialogoExplicacionNotificaciones();
+        } else if (!NotificadorSesion.puedeProgramarAlarmasExactas(this)) {
+            mostrarDialogoExplicacionAlarmas();
+        }
+    }
+
+    private void onAbrirAjustesNotificacionesClick(View vista) {
+        NotificadorSesion.abrirAjustesNotificaciones(this);
+    }
+
+    private void onAbrirAjustesAlarmasClick(View vista) {
+        NotificadorSesion.abrirAjustesAlarmasExactas(this);
+    }
+
+    private void actualizarBannersPermisos() {
+        if (contenedorPermisoNotificaciones == null || contenedorPermisoAlarmas == null) {
+            return;
+        }
+        boolean mostrar = antelacionSeleccionada.activo();
+        boolean faltaNotif = mostrar && !NotificadorSesion.tienePermisoNotificaciones(this);
+        boolean faltaAlarmas = mostrar && !NotificadorSesion.puedeProgramarAlarmasExactas(this);
+        contenedorPermisoNotificaciones.setVisibility(faltaNotif ? View.VISIBLE : View.GONE);
+        contenedorPermisoAlarmas.setVisibility(faltaAlarmas ? View.VISIBLE : View.GONE);
+    }
+
+    private void mostrarDialogoExplicacionNotificaciones() {
+        cerrarDialogoPermiso();
+        dialogoPermiso = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.permiso_notificaciones_dialogo_titulo)
+                .setMessage(R.string.permiso_notificaciones_dialogo_msg)
+                .setNegativeButton(R.string.accion_ahora_no, null)
+                .setPositiveButton(R.string.accion_continuar, this::onConfirmarPermisoNotificaciones)
+                .show();
+    }
+
+    private void onConfirmarPermisoNotificaciones(DialogInterface dialogo, int boton) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            lanzadorPermisoNotificaciones.launch(Manifest.permission.POST_NOTIFICATIONS);
+        } else {
+            NotificadorSesion.abrirAjustesNotificaciones(this);
+        }
+    }
+
+    private void onResultadoPermisoNotificaciones(Boolean concedido) {
+        actualizarBannersPermisos();
+        if (Boolean.TRUE.equals(concedido)
+                && antelacionSeleccionada.activo()
+                && !NotificadorSesion.puedeProgramarAlarmasExactas(this)) {
+            mostrarDialogoExplicacionAlarmas();
+        }
+    }
+
+    private void mostrarDialogoExplicacionAlarmas() {
+        cerrarDialogoPermiso();
+        dialogoPermiso = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.permiso_alarmas_dialogo_titulo)
+                .setMessage(R.string.permiso_alarmas_dialogo_msg)
+                .setNegativeButton(R.string.accion_ahora_no, null)
+                .setPositiveButton(R.string.accion_continuar, this::onConfirmarAjustesAlarmas)
+                .show();
+    }
+
+    private void onConfirmarAjustesAlarmas(DialogInterface dialogo, int boton) {
+        NotificadorSesion.abrirAjustesAlarmasExactas(this);
+    }
+
+    private void cerrarDialogoPermiso() {
+        if (dialogoPermiso != null) {
+            dialogoPermiso.dismiss();
+            dialogoPermiso = null;
+        }
     }
 
     private static int idDeTema(Tema tema) {

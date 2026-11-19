@@ -50,6 +50,7 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
                     app.reprogramarSesion(),
                     app.listarMaterias(),
                     app.consultarSesion(),
+                    app.consultarAjustes(),
                     app.reloj(),
                     app.ejecutor());
         }
@@ -70,6 +71,7 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
                     app.decidirFinPlanificadoOInvasion(),
                     app.cambiarDeMateria(),
                     app.listarMaterias(),
+                    app.iniciarSesion(),
                     app.ejecutor());
         }
         if (clase.isAssignableFrom(RepartoSesionViewModel.class)) {
@@ -84,8 +86,13 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
             return (T) new ProteccionViewModel(app.consultarEstadoArranque(), app.ejecutor());
         }
         if (clase.isAssignableFrom(AjustesViewModel.class)) {
-            return (T) new AjustesViewModel(app.consultarAjustes(), app.configurarApariencia(),
-                    app.configurarBloqueo(), app.configurarAjustesEstudio(), app.ejecutor());
+            return (T) new AjustesViewModel(
+                    app.consultarAjustes(),
+                    app.configurarApariencia(),
+                    app.configurarBloqueo(),
+                    app.configurarAjustesEstudio(),
+                    app.configurarRecordatorioPorDefecto(),
+                    app.ejecutor());
         }
         if (clase.isAssignableFrom(BorrarDatosViewModel.class)) {
             return (T) new BorrarDatosViewModel(app.borrarDatos(), app.ejecutor());
