@@ -5,6 +5,7 @@ import java.util.Objects;
 import io.github.jhoel0521.studyplan.application.port.in.BorrarDatos;
 import io.github.jhoel0521.studyplan.application.port.out.AlmacenDatos;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
+import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
 
@@ -20,9 +21,10 @@ public final class BorrarDatosService implements BorrarDatos {
     private final SesionBloqueo sesion;
     private final MarcadorSalidaApp marcadorSalida;
     private final ControladorNoMolestar noMolestar;
+    private final ExportadorReporte exportadorReporte;
 
     public BorrarDatosService(AlmacenDatos almacen, SesionBloqueo sesion) {
-        this(almacen, sesion, null, null);
+        this(almacen, sesion, null, null, null);
     }
 
     public BorrarDatosService(
@@ -30,10 +32,20 @@ public final class BorrarDatosService implements BorrarDatos {
             SesionBloqueo sesion,
             MarcadorSalidaApp marcadorSalida,
             ControladorNoMolestar noMolestar) {
+        this(almacen, sesion, marcadorSalida, noMolestar, null);
+    }
+
+    public BorrarDatosService(
+            AlmacenDatos almacen,
+            SesionBloqueo sesion,
+            MarcadorSalidaApp marcadorSalida,
+            ControladorNoMolestar noMolestar,
+            ExportadorReporte exportadorReporte) {
         this.almacen = almacen;
         this.sesion = sesion;
         this.marcadorSalida = marcadorSalida;
         this.noMolestar = noMolestar;
+        this.exportadorReporte = exportadorReporte;
     }
 
     @Override
@@ -47,6 +59,9 @@ public final class BorrarDatosService implements BorrarDatos {
             }
             if (noMolestar != null) {
                 noMolestar.restaurarSiAplica();
+            }
+            if (exportadorReporte != null) {
+                exportadorReporte.limpiarTemporales();
             }
         }
     }

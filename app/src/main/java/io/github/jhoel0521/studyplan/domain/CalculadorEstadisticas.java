@@ -106,6 +106,147 @@ public final class CalculadorEstadisticas {
                 concentracion);
     }
 
+    /**
+     * Construye el reporte de estudio de un periodo ({@code HU-32}, {@code RN-31}) con la unión de
+     * materias que registran minutos reales, horas planificadas dentro del rango o sesiones
+     * {@code NO_REALIZADA} iniciadas en el periodo.
+     */
+    public static ReporteEstudio calcularReporte(
+            PeriodoEstadisticas periodo,
+            long generadoEnMilis,
+            Map<Long, Integer> minutosPorMateria,
+            Map<Long, Materia> catalogoMaterias,
+            List<SesionEstudio> sesionesDelPeriodo) {
+        Objects.requireNonNull(periodo, "periodo");
+
+        Map<Long, Integer> realesPorMateria = copiarPositivos(minutosPorMateria);
+        Map<Long, Integer> planificadosPorMateria = new HashMap<>();
+        Map<Long, Integer> noRealizadasPorMateria = new HashMap<>();
+        acumularSesionesReporte(
+                periodo, sesionesDelPeriodo, planificadosPorMateria, noRealizadasPorMateria);
+
+        int totalReales = sumarValores(realesPorMateria);
+        int totalPlanificados = 0;
+        int totalNoRealizadas = 0;
+
+        Set<Long> ids = unirClavesPositivas(
+                realesPorMateria, planificadosPorMateria, noRealizadasPorMateria);
+
+        List<DesgloseMateriaPeriodo> filas = new ArrayList<>();
+        for (Long id : ids) {
+            int minReal = realesPorMateria.getOrDefault(id, 0);
+            int minPlan = planificadosPorMateria.getOrDefault(id, 0);
+            int noReal = noRealizadasPorMateria.getOrDefault(id, 0);
+            if (minReal <= 0 && minPlan <= 0 && noReal <= 0) {
+                continue;
+            }
+            Materia materia = catalogoMaterias != null ? catalogoMaterias.get(id) : null;
+            String nombre = materia != null ? materia.nombre() : "";
+            boolean esGeneral = materia != null && materia.esGeneral();
+            int color = materia != null ? materia.color() : 0xFF607D8B;
+            boolean archivada = materia != null && materia.archivada();
+            double pct = totalReales <= 0 ? 0.0 : minReal * 100.0 / totalReales;
+
+            totalPlanificados += minPlan;
+            totalNoRealizadas += noReal;
+
+            filas.add(new DesgloseMateriaPeriodo(
+                    id, nombre, esGeneral, color, archivada, minReal, pct, minPlan, noReal));
+        }
+
+        filas.sort(
+                Comparator.comparingInt(DesgloseMateriaPeriodo::minutosReales)
+                        .reversed()
+                        .thenComparing(
+                                Comparator.comparingInt(
+                                                DesgloseMateriaPeriodo::minutosPlanificadosDeSesiones)
+                                        .reversed())
+                        .thenComparing(
+                                DesgloseMateriaPeriodo::nombreMateria,
+                                String.CASE_INSENSITIVE_ORDER)
+                        .thenComparingLong(DesgloseMateriaPeriodo::materiaId));
+
+        return new ReporteEstudio(
+                periodo,
+                generadoEnMilis,
+                filas,
+                totalPlanificados,
+                totalReales,
+                totalNoRealizadas);
+    }
+
+    private static Map<Long, Integer> copiarPositivos(Map<Long, Integer> origen) {
+        Map<Long, Integer> destino = new HashMap<>();
+        if (origen == null) {
+            return destino;
+        }
+        for (Map.Entry<Long, Integer> entrada : origen.entrySet()) {
+            if (entrada.getKey() != null && entrada.getValue() != null && entrada.getValue() > 0) {
+                destino.put(entrada.getKey(), entrada.getValue());
+            }
+        }
+        return destino;
+    }
+
+    private static void acumularSesionesReporte(
+            PeriodoEstadisticas periodo,
+            List<SesionEstudio> sesiones,
+            Map<Long, Integer> planificadosPorMateria,
+            Map<Long, Integer> noRealizadasPorMateria) {
+        if (sesiones == null) {
+            return;
+        }
+        Fecha inicio = periodo.inicio();
+        Fecha fin = periodo.fin();
+        for (SesionEstudio sesion : sesiones) {
+            if (sesion == null) {
+                continue;
+            }
+            if (sesion.estado().ocupaHorario() && sesion.tienePlan()) {
+                int minPlan = sesion.minutosPlanificadosEnRango(inicio, fin);
+                if (minPlan > 0) {
+                    planificadosPorMateria.put(
+                            sesion.materiaId(),
+                            planificadosPorMateria.getOrDefault(sesion.materiaId(), 0) + minPlan);
+                }
+            }
+            if (sesion.codigoEstado() == CodigoEstadoSesion.NO_REALIZADA
+                    && !sesion.fecha().esAnteriorA(inicio)
+                    && !sesion.fecha().esPosteriorA(fin)) {
+                noRealizadasPorMateria.put(
+                        sesion.materiaId(),
+                        noRealizadasPorMateria.getOrDefault(sesion.materiaId(), 0) + 1);
+            }
+        }
+    }
+
+    private static int sumarValores(Map<Long, Integer> mapa) {
+        int total = 0;
+        for (int valor : mapa.values()) {
+            total += Math.max(0, valor);
+        }
+        return total;
+    }
+
+    private static Set<Long> unirClavesPositivas(
+            Map<Long, Integer> reales,
+            Map<Long, Integer> planificados,
+            Map<Long, Integer> noRealizadas) {
+        Set<Long> ids = new LinkedHashSet<>();
+        agregarClavesPositivas(ids, reales);
+        agregarClavesPositivas(ids, planificados);
+        agregarClavesPositivas(ids, noRealizadas);
+        return ids;
+    }
+
+    private static void agregarClavesPositivas(Set<Long> destino, Map<Long, Integer> fuente) {
+        for (Map.Entry<Long, Integer> entrada : fuente.entrySet()) {
+            if (entrada.getValue() != null && entrada.getValue() > 0) {
+                destino.add(entrada.getKey());
+            }
+        }
+    }
+
     private static List<DesgloseMateriaPeriodo> construirDistribucion(
             int minutosTotalesActual,
             Map<Long, Integer> minutosPorMateria,
