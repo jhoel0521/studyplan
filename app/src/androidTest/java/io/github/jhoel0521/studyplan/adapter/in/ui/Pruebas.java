@@ -13,6 +13,8 @@ import org.hamcrest.Matcher;
 
 import android.view.View;
 
+import java.util.concurrent.TimeUnit;
+
 import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Tema;
@@ -35,7 +37,14 @@ final class Pruebas {
 
     /** Borra todos los datos y devuelve el tema y el idioma a sus valores por defecto. */
     static void reiniciarEstado() {
-        app().borrarDatos().ejecutar(AlcanceBorrado.TELEFONO);
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+        try {
+            app().ejecutor().submit(() ->
+                    app().borrarDatos().ejecutar(AlcanceBorrado.TELEFONO))
+                    .get(ESPERA_MAXIMA_MS, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            throw new IllegalStateException("No se pudo reiniciar el estado de prueba", e);
+        }
         android.content.Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ctx.getSharedPreferences("marcador_salida_app_prefs", android.content.Context.MODE_PRIVATE)
                 .edit().clear().commit();
@@ -46,7 +55,7 @@ final class Pruebas {
         }
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             AplicadorApariencia.aplicarTema(Tema.SISTEMA);
-            AplicadorApariencia.aplicarIdioma(Idioma.ES);
+            AplicadorApariencia.aplicarIdioma(ctx, Idioma.ES);
         });
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }

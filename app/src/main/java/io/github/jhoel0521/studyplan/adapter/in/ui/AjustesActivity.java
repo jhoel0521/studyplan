@@ -131,7 +131,7 @@ public class AjustesActivity extends ActividadProtegida {
         }
         Idioma idioma = idElegido == R.id.idiomaIngles ? Idioma.EN : Idioma.ES;
         modelo.elegirIdioma(idioma);
-        AplicadorApariencia.aplicarIdioma(idioma);
+        AplicadorApariencia.aplicarIdioma(this, idioma);
     }
 
     private void onBloqueoCambiado(CompoundButton boton, boolean activado) {

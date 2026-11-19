@@ -86,6 +86,7 @@ public class TecnicasEstudioEspressoTest {
             Pruebas.esperarVisible(withId(R.id.listaEventosDetalle));
             Pruebas.esperarVisible(withText(R.string.evento_inicio));
             onView(withText(R.string.evento_pausa)).check(matches(isDisplayed()));
+            onView(withText(R.string.topico_descanso_comida)).check(matches(isDisplayed()));
             onView(withText(R.string.evento_fin)).check(matches(isDisplayed()));
         }
     }

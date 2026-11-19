@@ -138,9 +138,9 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
         }
 
         int planVisible = 0;
-        for (ItemSesionCalendario item : itemsVisibles) {
-            if (item.estado().ocupaHorario()) {
-                planVisible += Math.max(0, item.duracionPlanificadaMinutos());
+        for (SesionEstudio s : sesionesFiltradas) {
+            if (s.estado().ocupaHorario()) {
+                planVisible += s.minutosPlanificadosEnRango(visibleInicio, visibleFin);
             }
         }
         int realVisible = calcularRealVisible(
@@ -257,8 +257,8 @@ public final class ConsultarCalendarioService implements ConsultarCalendario {
                     false));
             return;
         }
-        int minPrimerDia = 24 * 60 - s.horaInicio().minutosDesdeMedianoche();
-        int minSegundoDia = s.horaFin().minutosDesdeMedianoche();
+        int minPrimerDia = s.minutosPlanificadosEnRango(s.fecha(), s.fecha());
+        int minSegundoDia = s.minutosPlanificadosEnRango(s.fechaFinLocal(), s.fechaFinLocal());
         destino.add(new ItemSesionCalendario(
                 s.id(),
                 s.materiaId(),

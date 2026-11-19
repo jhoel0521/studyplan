@@ -407,6 +407,36 @@ public final class SesionEstudio {
         return duracionPlanificadaMinutos;
     }
 
+    /**
+     * Minutos planificados de la sesión dentro del rango {@code [inicio, fin]} aplicando el corte
+     * estricto diario en medianoche ({@code HU-32}, {@code RN-31}). Si cruza medianoche con fin
+     * exacto {@code 00:00}, asigna {@code 0} minutos al día siguiente.
+     */
+    public int minutosPlanificadosEnRango(Fecha inicio, Fecha fin) {
+        if (inicio == null || fin == null || !tienePlan() || duracionPlanificadaMinutos <= 0) {
+            return 0;
+        }
+        if (fin.esAnteriorA(inicio)) {
+            return 0;
+        }
+        if (!cruzaMedianoche()) {
+            Fecha dia = fecha();
+            return (!dia.esAnteriorA(inicio) && !dia.esPosteriorA(fin))
+                    ? duracionPlanificadaMinutos
+                    : 0;
+        }
+        int total = 0;
+        Fecha diaInicio = fecha();
+        if (!diaInicio.esAnteriorA(inicio) && !diaInicio.esPosteriorA(fin)) {
+            total += Math.max(0, 24 * 60 - horaInicio().minutosDesdeMedianoche());
+        }
+        Fecha diaFin = fechaFinLocal();
+        if (!diaFin.esAnteriorA(inicio) && !diaFin.esPosteriorA(fin)) {
+            total += Math.max(0, horaFin().minutosDesdeMedianoche());
+        }
+        return total;
+    }
+
     public Integer duracionRealMinutos() {
         return duracionRealMinutos;
     }

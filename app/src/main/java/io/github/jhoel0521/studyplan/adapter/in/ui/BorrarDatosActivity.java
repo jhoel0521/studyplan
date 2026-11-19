@@ -78,7 +78,7 @@ public class BorrarDatosActivity extends ActividadProtegida {
                 modelo.cancelar();
                 finish();
                 AplicadorApariencia.aplicarTema(Tema.SISTEMA);
-                AplicadorApariencia.aplicarIdioma(Idioma.ES);
+                AplicadorApariencia.aplicarIdioma(this, Idioma.ES);
                 break;
             default:
                 break;

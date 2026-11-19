@@ -1,5 +1,8 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.os.LocaleList;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -8,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
 
@@ -19,6 +24,26 @@ import io.github.jhoel0521.studyplan.R;
  * {@code R.id.main} como vista raíz.
  */
 public abstract class ActividadBase extends AppCompatActivity {
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(envolverIdiomaPorDefecto(newBase));
+    }
+
+    /**
+     * Evita que en dispositivos con idioma del sistema inglés la lista de locales {@code [es, en-US]}
+     * haga que {@code values-en/} invalide los textos por defecto en español ({@code values/}) cuando
+     * el idioma activo de la app es español ({@code RNF-08}).
+     */
+    private static Context envolverIdiomaPorDefecto(Context base) {
+        Locale deseado = AplicadorApariencia.idiomaActivo(base);
+        if (deseado == null || !"es".equalsIgnoreCase(deseado.getLanguage())) {
+            return base;
+        }
+        Configuration config = new Configuration(base.getResources().getConfiguration());
+        config.setLocales(new LocaleList(deseado));
+        return base.createConfigurationContext(config);
+    }
 
     /** Conserva el manejo de insets de la plantilla: el relleno de la raíz deja libres las barras del sistema. */
     protected void aplicarInsets() {
