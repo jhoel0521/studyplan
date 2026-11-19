@@ -17,6 +17,8 @@ import io.github.jhoel0521.studyplan.application.service.DecidirFinPlanificadoOI
 import io.github.jhoel0521.studyplan.application.service.DetenerSesionService;
 import io.github.jhoel0521.studyplan.application.service.IniciarSesionService;
 import io.github.jhoel0521.studyplan.application.service.PausarReanudarSesionService;
+import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Materia;
@@ -192,5 +194,54 @@ public class SesionEnCursoViewModelTest {
                 sesiones, evs, mats, marc, reloj).ejecutar();
         vm.cargar(s1.id());
         assertTrue(vm.resumen().getValue().salidaPendienteResolver());
+    }
+
+    @Test
+    public void cargarOIniciarDesdeRecordatorioIniciaLibreReabreActivaYPublicaConcurrencia() {
+        FakeEventoEstudioRepository evs = new FakeEventoEstudioRepository();
+        FakeMateriaRepository mats = new FakeMateriaRepository();
+        FakeAjustesRepository aj = new FakeAjustesRepository();
+        FakeControladorNoMolestar dnd = new FakeControladorNoMolestar();
+        FakeProgramadorAvisosSesion prog = new FakeProgramadorAvisosSesion();
+        FakeMarcadorSalidaApp marc = new FakeMarcadorSalidaApp();
+        DetenerSesionService det = new DetenerSesionService(
+                sesiones, evs, dnd, prog, marc, null, null, null, mats, reloj);
+        IniciarSesionService initSrv = new IniciarSesionService(
+                sesiones, evs, mats, aj, dnd, prog, marc, reloj);
+
+        SesionEnCursoViewModel vm = new SesionEnCursoViewModel(
+                new ConsultarEjecucionSesionService(sesiones, evs, mats, aj, dnd, reloj),
+                new PausarReanudarSesionService(sesiones, evs, mats, aj, dnd, prog, reloj),
+                det,
+                new DecidirFinPlanificadoOInvasionService(
+                        sesiones, evs, mats, aj, dnd, prog, marc, det, null, reloj),
+                null,
+                null,
+                initSrv,
+                Runnable::run);
+
+        Materia m = mats.guardar(Materia.crear("Biología", 0xFF2E7D32, null).valor());
+        SesionEstudio s2 = sesiones.guardar(SesionEstudio.planificar(
+                m.id(),
+                reloj.hoy(),
+                reloj.hoy(),
+                Hora.de(11, 0).valor(),
+                Hora.de(12, 0).valor(),
+                "",
+                null).valor());
+
+        // Inicia directamente PENDIENTE -> EN_CURSO en Libre + heredar global
+        vm.cargarOIniciarDesdeRecordatorio(s1.id());
+        assertNotNull(vm.resumen().getValue());
+        assertEquals(CodigoEstadoSesion.EN_CURSO, vm.resumen().getValue().sesion().codigoEstado());
+        assertEquals(TecnicaEstudio.LIBRE, vm.resumen().getValue().sesion().tecnica());
+
+        // Llamada repetida cuando ya está EN_CURSO recarga sin error
+        vm.cargarOIniciarDesdeRecordatorio(s1.id());
+        assertEquals(null, vm.errorInicioDirecto().getValue());
+
+        // Intentar otra sesión mientras s1 sigue activa publica SESION_YA_EN_CURSO
+        vm.cargarOIniciarDesdeRecordatorio(s2.id());
+        assertEquals(ErrorValidacion.SESION_YA_EN_CURSO, vm.errorInicioDirecto().getValue());
     }
 }

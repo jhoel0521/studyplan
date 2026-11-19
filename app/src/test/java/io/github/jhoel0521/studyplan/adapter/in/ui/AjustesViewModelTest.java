@@ -13,11 +13,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import io.github.jhoel0521.studyplan.application.service.ConfigurarAjustesEstudioService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarAparienciaService;
 import io.github.jhoel0521.studyplan.application.service.ConfigurarBloqueoService;
+import io.github.jhoel0521.studyplan.application.service.ConfigurarRecordatorioPorDefectoService;
 import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
 import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Tema;
 import io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository;
@@ -45,6 +48,8 @@ public class AjustesViewModelTest {
                 new ConsultarAjustesService(repositorio),
                 new ConfigurarAparienciaService(repositorio),
                 new ConfigurarBloqueoService(repositorio, disponibilidad, new SesionBloqueo()),
+                new ConfigurarAjustesEstudioService(repositorio),
+                new ConfigurarRecordatorioPorDefectoService(repositorio),
                 Runnable::run);
     }
 
@@ -53,6 +58,7 @@ public class AjustesViewModelTest {
         modelo.cargar();
         assertEquals(Tema.SISTEMA, ajustesPublicados().tema());
         assertEquals(Idioma.ES, ajustesPublicados().idioma());
+        assertEquals(AntelacionRecordatorio.MINUTOS_15, ajustesPublicados().recordatorioPorDefecto());
     }
 
     @Test
@@ -91,6 +97,22 @@ public class AjustesViewModelTest {
         modelo.cambiarBloqueo(true);
         modelo.cambiarBloqueo(false);
         assertFalse(repositorio.obtener().bloqueoActivo());
+    }
+
+    @Test
+    public void elegirRecordatorioPorDefectoLoGuardaYLoPublica() {
+        modelo.elegirRecordatorioPorDefecto(AntelacionRecordatorio.MINUTOS_30);
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_30,
+                repositorio.obtener().recordatorioPorDefecto());
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_30,
+                ajustesPublicados().recordatorioPorDefecto());
+
+        modelo.elegirRecordatorioPorDefecto(AntelacionRecordatorio.SIN_RECORDATORIO);
+        assertEquals(
+                AntelacionRecordatorio.SIN_RECORDATORIO,
+                repositorio.obtener().recordatorioPorDefecto());
     }
 
     private Ajustes ajustesPublicados() {

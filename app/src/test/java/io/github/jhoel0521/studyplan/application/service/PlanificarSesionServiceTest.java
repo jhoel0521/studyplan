@@ -3,6 +3,7 @@ package io.github.jhoel0521.studyplan.application.service;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
@@ -11,12 +12,14 @@ import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.ResultadoSesion;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
+import io.github.jhoel0521.studyplan.fakes.FakeProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -156,5 +159,66 @@ public class PlanificarSesionServiceTest {
         ResultadoSesion reemplazo = servicio.ejecutar(
                 algebraId, HOY, Hora.de(10, 0).valor(), Hora.de(11, 0).valor(), null);
         assertTrue(reemplazo.esValido());
+    }
+
+    @Test
+    public void planificaConRecordatorioFuturoProgramaAlarmaEnUtcConDesfase() {
+        FakeReloj relojLocal = new FakeReloj(HOY, Hora.de(9, 0).valor(), -240);
+        FakeProgramadorRecordatorios recordatorios = new FakeProgramadorRecordatorios();
+        PlanificarSesionService servicioConRecordatorio =
+                new PlanificarSesionService(sesiones, materias, relojLocal, recordatorios);
+
+        ResultadoSesion res = servicioConRecordatorio.ejecutar(
+                algebraId,
+                HOY,
+                Hora.de(10, 0).valor(),
+                Hora.de(11, 0).valor(),
+                null,
+                AntelacionRecordatorio.MINUTOS_15);
+
+        assertTrue(res.esValido());
+        SesionEstudio guardada = res.sesion();
+        assertEquals(AntelacionRecordatorio.MINUTOS_15, guardada.antelacionRecordatorio());
+        assertFalse(guardada.recordatorioVencidoAlPlanificar(relojLocal.ahoraMilis()));
+        assertTrue(recordatorios.estaProgramada(guardada.id()));
+        assertEquals(
+                Long.valueOf(relojLocal.instanteDe(HOY, Hora.de(9, 45).valor())),
+                recordatorios.instanteDe(guardada.id()));
+    }
+
+    @Test
+    public void planificaEnVentanaYaVencidaGuardaSesionSinProgramarAlarma() {
+        FakeReloj relojLocal = new FakeReloj(HOY, Hora.de(9, 50).valor(), -240);
+        FakeProgramadorRecordatorios recordatorios = new FakeProgramadorRecordatorios();
+        PlanificarSesionService servicioConRecordatorio =
+                new PlanificarSesionService(sesiones, materias, relojLocal, recordatorios);
+
+        ResultadoSesion res = servicioConRecordatorio.ejecutar(
+                algebraId,
+                HOY,
+                Hora.de(10, 0).valor(),
+                Hora.de(11, 0).valor(),
+                null,
+                AntelacionRecordatorio.MINUTOS_15);
+
+        assertTrue(res.esValido());
+        assertTrue(res.sesion().recordatorioVencidoAlPlanificar(relojLocal.ahoraMilis()));
+        assertEquals(0, recordatorios.cantidadProgramadas());
+        assertNull(recordatorios.instanteDe(res.sesion().id()));
+    }
+
+    @Test
+    public void sobrecargaDeCincoArgumentosUsaSinRecordatorio() {
+        FakeReloj relojLocal = new FakeReloj(HOY, Hora.de(9, 0).valor(), -240);
+        FakeProgramadorRecordatorios recordatorios = new FakeProgramadorRecordatorios();
+        PlanificarSesionService servicioConRecordatorio =
+                new PlanificarSesionService(sesiones, materias, relojLocal, recordatorios);
+
+        ResultadoSesion res = servicioConRecordatorio.ejecutar(
+                algebraId, HOY, Hora.de(12, 0).valor(), Hora.de(13, 0).valor(), null);
+
+        assertTrue(res.esValido());
+        assertEquals(AntelacionRecordatorio.SIN_RECORDATORIO, res.sesion().antelacionRecordatorio());
+        assertEquals(0, recordatorios.cantidadProgramadas());
     }
 }

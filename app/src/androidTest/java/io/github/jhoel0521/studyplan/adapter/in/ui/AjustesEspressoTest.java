@@ -2,6 +2,10 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
@@ -16,6 +20,7 @@ import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Tema;
 
@@ -55,6 +60,53 @@ public class AjustesEspressoTest {
         Ajustes guardados = Pruebas.app().consultarAjustes().ejecutar();
         assertEquals(Tema.OSCURO, guardados.tema());
         assertEquals(Idioma.EN, guardados.idioma());
+    }
+
+    @Test
+    @SuppressWarnings("unused")
+    public void recordatorioPorDefectoSeGuardaAlElegirOMostrarBannersSinBloquear()
+            throws InterruptedException {
+        try (ActivityScenario<AjustesActivity> escenario =
+                     ActivityScenario.launch(AjustesActivity.class)) {
+            onView(withId(R.id.selectorRecordatorioDefecto)).perform(scrollTo());
+            Pruebas.esperarVisible(withId(R.id.selectorRecordatorioDefecto));
+            onView(withId(R.id.selectorRecordatorioDefecto))
+                    .check(matches(withText(R.string.recordatorio_15_min)));
+
+            onView(withId(R.id.selectorRecordatorioDefecto)).perform(click());
+            onView(withText(R.string.recordatorio_ninguno))
+                    .inRoot(isPlatformPopup())
+                    .perform(click());
+
+            esperarRecordatorioDefecto(AntelacionRecordatorio.SIN_RECORDATORIO);
+            onView(withId(R.id.selectorRecordatorioDefecto))
+                    .check(matches(withText(R.string.recordatorio_ninguno)));
+
+            // Verifica que seleccionar 30 min abre diálogo si falta permiso o guarda directamente
+            onView(withId(R.id.selectorRecordatorioDefecto)).perform(click());
+            onView(withText(R.string.recordatorio_30_min))
+                    .inRoot(isPlatformPopup())
+                    .perform(click());
+
+            esperarRecordatorioDefecto(AntelacionRecordatorio.MINUTOS_30);
+        }
+
+        Ajustes guardados = Pruebas.app().consultarAjustes().ejecutar();
+        assertEquals(AntelacionRecordatorio.MINUTOS_30, guardados.recordatorioPorDefecto());
+    }
+
+    @SuppressWarnings("BusyWait") // sondeo con tope: la base se escribe en otro hilo
+    private static void esperarRecordatorioDefecto(AntelacionRecordatorio esperado)
+            throws InterruptedException {
+        long limite = System.currentTimeMillis() + 8000;
+        while (System.currentTimeMillis() < limite) {
+            if (Pruebas.app().consultarAjustes().ejecutar().recordatorioPorDefecto() == esperado) {
+                Thread.sleep(200);
+                return;
+            }
+            Thread.sleep(100);
+        }
+        throw new AssertionError("No se guardó el recordatorio por defecto: " + esperado);
     }
 
     @SuppressWarnings("BusyWait") // sondeo con tope: la base se escribe en otro hilo

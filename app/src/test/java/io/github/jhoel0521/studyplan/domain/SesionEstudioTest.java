@@ -162,4 +162,78 @@ public class SesionEstudioTest {
         // Sesión adyacente al día siguiente 01:00 a 02:00 NO se cruza
         assertFalse(nocturna.seSolapaCon(HOY.sumarDias(1), una, dos, -240));
     }
+
+    @Test
+    public void recordatorioCalculaInstanteVentanaEnCruceMedianocheYSeConservaEnTransiciones() {
+        Hora diez = Hora.de(10, 0).valor();
+        Hora once = Hora.de(11, 0).valor();
+        SesionEstudio conAviso = SesionEstudio.planificar(
+                1L,
+                HOY,
+                HOY,
+                diez,
+                once,
+                -240,
+                "Repaso",
+                null,
+                AntelacionRecordatorio.MINUTOS_15).valor().conId(30L);
+
+        long inicioUtc = conAviso.planInicioUtcMilis();
+        long esperadoDisparo = inicioUtc - 15 * Instante.MILIS_POR_MINUTO;
+        assertEquals(AntelacionRecordatorio.MINUTOS_15, conAviso.antelacionRecordatorio());
+        assertEquals(Long.valueOf(esperadoDisparo), conAviso.instanteRecordatorioUtcMilis());
+
+        // Fronteras exactas de ventana y aviso vencido al planificar
+        assertFalse(conAviso.recordatorioVencidoAlPlanificar(esperadoDisparo - 1L));
+        assertTrue(conAviso.recordatorioVencidoAlPlanificar(esperadoDisparo));
+        assertTrue(conAviso.recordatorioVencidoAlPlanificar(inicioUtc - 1L));
+        assertFalse(conAviso.recordatorioVencidoAlPlanificar(inicioUtc));
+
+        assertFalse(conAviso.estaEnVentanaRecordatorio(esperadoDisparo - 1L));
+        assertTrue(conAviso.estaEnVentanaRecordatorio(esperadoDisparo));
+        assertTrue(conAviso.estaEnVentanaRecordatorio(inicioUtc));
+        assertFalse(conAviso.estaEnVentanaRecordatorio(inicioUtc + 1L));
+
+        // Sesión 00:10 del día siguiente con aviso de 30 min -> dispara a las 23:40 de hoy
+        SesionEstudio trasMedianoche = SesionEstudio.planificar(
+                1L,
+                HOY.sumarDias(1),
+                HOY,
+                Hora.de(0, 10).valor(),
+                Hora.de(1, 10).valor(),
+                -240,
+                null,
+                null,
+                AntelacionRecordatorio.MINUTOS_30).valor();
+        long veintitresCuarentaHoy = Instante.desdeFechaYHoraLocal(
+                HOY, Hora.de(23, 40).valor(), -240).utcMilis();
+        assertEquals(Long.valueOf(veintitresCuarentaHoy), trasMedianoche.instanteRecordatorioUtcMilis());
+        assertTrue(trasMedianoche.estaEnVentanaRecordatorio(veintitresCuarentaHoy));
+
+        // Transiciones preservan antelación
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_15,
+                conAviso.iniciar(TecnicaEstudio.LIBRE, null).valor().antelacionRecordatorio());
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_15,
+                conAviso.vencer().valor().antelacionRecordatorio());
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_15,
+                conAviso.marcarReprogramada().valor().antelacionRecordatorio());
+
+        // Pasada y Estudiar ahora siempre excluyen recordatorio
+        SesionEstudio pasada = SesionEstudio.registrarPasada(
+                1L, HOY.sumarDias(-1), HOY, diez, once, 60, null).valor();
+        assertEquals(AntelacionRecordatorio.SIN_RECORDATORIO, pasada.antelacionRecordatorio());
+        assertNull(pasada.instanteRecordatorioUtcMilis());
+
+        SesionEstudio ahora = SesionEstudio.estudiarAhora(
+                1L,
+                Instante.desdeFechaYHoraLocal(HOY, diez, -240),
+                TecnicaEstudio.LIBRE,
+                null,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
+        assertEquals(AntelacionRecordatorio.SIN_RECORDATORIO, ahora.antelacionRecordatorio());
+        assertNull(ahora.instanteRecordatorioUtcMilis());
+    }
 }

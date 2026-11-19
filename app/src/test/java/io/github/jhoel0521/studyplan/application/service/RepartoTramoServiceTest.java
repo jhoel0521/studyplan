@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
@@ -21,8 +22,11 @@ import io.github.jhoel0521.studyplan.fakes.FakeEventoEstudioRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeMarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.fakes.FakeProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
+
+import static org.junit.Assert.assertFalse;
 
 /**
  * Pruebas unitarias de {@link DecidirFinPlanificadoOInvasionService} y
@@ -120,5 +124,37 @@ public class RepartoTramoServiceTest {
         assertEquals(Integer.valueOf(65), sesiones.buscarPorId(s1.id()).get().duracionRealMinutos());
         assertEquals(Integer.valueOf(65), sesiones.buscarPorId(s2.id()).get().duracionRealMinutos());
         assertTrue(sesiones.listarEnCurso().isEmpty());
+    }
+
+    @Test
+    public void repartirTramoCancelaRecordatorioDeSegundaSesionInvadida() {
+        FakeProgramadorRecordatorios recordatorios = new FakeProgramadorRecordatorios();
+        RepartirTramoSesionService repartirConRecordatorios = new RepartirTramoSesionService(
+                sesiones, eventos, noMolestar, programador, marcador, null, reloj, recordatorios);
+
+        Fecha hoy = reloj.hoy();
+        SesionEstudio s1 = sesiones.guardar(SesionEstudio.planificar(
+                mate.id(), hoy, hoy, Hora.de(10, 0).valor(), Hora.de(11, 0).valor(), "", null)
+                .valor());
+        SesionEstudio s2 = sesiones.guardar(SesionEstudio.planificar(
+                ingles.id(),
+                hoy,
+                hoy,
+                Hora.de(11, 0).valor(),
+                Hora.de(12, 0).valor(),
+                0,
+                "",
+                null,
+                AntelacionRecordatorio.MINUTOS_15)
+                .valor());
+        recordatorios.programar(s2.id(), s2.instanteRecordatorioUtcMilis());
+
+        long tInicio = reloj.ahoraMilis();
+        iniciar.ejecutar(s1.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL);
+        reloj.avanzarMilis(130 * MIN);
+
+        assertTrue(repartirConRecordatorios.ejecutar(s1.id(), s2.id(), tInicio + 65 * MIN).esValido());
+        assertFalse(recordatorios.estaProgramada(s2.id()));
+        assertTrue(recordatorios.cancelaciones().contains(s2.id()));
     }
 }

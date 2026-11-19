@@ -36,6 +36,8 @@ public class StudyPlanApplicationTest {
         assertNotNull(app.reprogramarSesion());
         assertNotNull(app.consultarSesion());
         assertNotNull(app.eliminarSesion());
+        assertNotNull(app.configurarRecordatorioPorDefecto());
+        assertNotNull(app.reprogramarRecordatoriosPendientes());
         assertNotNull(app.ejecutor());
         assertNotNull(app.fabrica());
     }

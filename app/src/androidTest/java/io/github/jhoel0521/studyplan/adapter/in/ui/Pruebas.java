@@ -50,6 +50,8 @@ final class Pruebas {
                 .edit().clear().commit();
         ctx.getSharedPreferences("preferencias_no_molestar_sistema", android.content.Context.MODE_PRIVATE)
                 .edit().clear().commit();
+        NotificadorSesion.cancelarAvisoRetorno(ctx);
+        NotificadorSesion.cancelarTodosRecordatorios(ctx);
         if (app().contadorActividades() != null) {
             app().contadorActividades().reiniciarParaPruebas();
         }

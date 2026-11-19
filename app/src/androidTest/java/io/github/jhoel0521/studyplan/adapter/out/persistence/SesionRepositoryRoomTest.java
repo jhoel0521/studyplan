@@ -14,6 +14,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
@@ -185,16 +187,70 @@ public class SesionRepositoryRoomTest {
                 Fecha.de(2026, 12, 1).valor(), Fecha.de(2026, 12, 7).valor());
         assertTrue(vacio.isEmpty());
 
-        assertEquals(7, base.getOpenHelper().getReadableDatabase().getVersion());
+        assertEquals(8, base.getOpenHelper().getReadableDatabase().getVersion());
         Context contexto = ApplicationProvider.getApplicationContext();
         String[] permisos = contexto.getPackageManager()
                 .getPackageInfo(contexto.getPackageName(), android.content.pm.PackageManager.GET_PERMISSIONS)
                 .requestedPermissions;
         if (permisos != null) {
+            boolean declaraScheduleExactAlarm = false;
             for (String p : permisos) {
                 assertFalse(p.endsWith(".INTERNET")
-                        || p.endsWith(".SCHEDULE_EXACT_ALARM"));
+                        || p.endsWith(".USE_EXACT_ALARM"));
+                if (p.endsWith(".SCHEDULE_EXACT_ALARM")) {
+                    declaraScheduleExactAlarm = true;
+                }
             }
+            assertTrue(declaraScheduleExactAlarm);
         }
+    }
+
+    @Test
+    public void guardaYLeeAntelacionRecordatorioEnSesionesYAjustes() {
+        AjustesRepositoryRoom ajustesRepo = new AjustesRepositoryRoom(base.ajustesDao());
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_15,
+                ajustesRepo.obtener().recordatorioPorDefecto());
+
+        ajustesRepo.guardar(
+                Ajustes.porDefecto().conRecordatorioPorDefecto(AntelacionRecordatorio.MINUTOS_5));
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_5,
+                ajustesRepo.obtener().recordatorioPorDefecto());
+
+        SesionEstudio con30 = sesiones.guardar(SesionEstudio.planificar(
+                algebraId,
+                JUEVES,
+                LUNES,
+                Hora.de(8, 0).valor(),
+                Hora.de(9, 0).valor(),
+                -240,
+                "Repaso",
+                null,
+                AntelacionRecordatorio.MINUTOS_30)
+                .valor());
+        SesionEstudio sinRec = sesiones.guardar(SesionEstudio.planificar(
+                algebraId,
+                JUEVES,
+                LUNES,
+                Hora.de(11, 0).valor(),
+                Hora.de(12, 0).valor(),
+                -240,
+                null,
+                null,
+                AntelacionRecordatorio.SIN_RECORDATORIO)
+                .valor());
+
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_30,
+                sesiones.buscarPorId(con30.id()).orElseThrow(AssertionError::new).antelacionRecordatorio());
+        assertEquals(
+                AntelacionRecordatorio.SIN_RECORDATORIO,
+                sesiones.buscarPorId(sinRec.id()).orElseThrow(AssertionError::new).antelacionRecordatorio());
+
+        almacen.borrarTodo();
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_15,
+                ajustesRepo.obtener().recordatorioPorDefecto());
     }
 }

@@ -6,12 +6,15 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Idioma;
 import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 import io.github.jhoel0521.studyplan.domain.Tema;
 
 /**
@@ -42,7 +45,13 @@ public class MapeadoresTest {
 
     @Test
     public void losAjustesIdaYVueltaConservanSusDatos() {
-        Ajustes ajustes = new Ajustes(Tema.OSCURO, Idioma.EN, true);
+        Ajustes ajustes = new Ajustes(
+                Tema.OSCURO,
+                Idioma.EN,
+                true,
+                false,
+                Ajustes.porDefecto().pomodoro(),
+                AntelacionRecordatorio.MINUTOS_30);
         assertEquals(ajustes, Mapeadores.aDominio(Mapeadores.aEntidad(ajustes)));
     }
 
@@ -52,7 +61,21 @@ public class MapeadoresTest {
         fila.tema = "FUTURO";
         fila.idioma = "FR";
         fila.bloqueoActivo = true;
-        assertEquals(new Ajustes(Tema.SISTEMA, Idioma.ES, true), Mapeadores.aDominio(fila));
+        fila.recordatorioMinutos = 999;
+        assertEquals(
+                new Ajustes(
+                        Tema.SISTEMA,
+                        Idioma.ES,
+                        true,
+                        false,
+                        Ajustes.porDefecto().pomodoro(),
+                        AntelacionRecordatorio.MINUTOS_15),
+                Mapeadores.aDominio(fila));
+
+        fila.recordatorioMinutos = 0;
+        assertEquals(
+                AntelacionRecordatorio.SIN_RECORDATORIO,
+                Mapeadores.aDominio(fila).recordatorioPorDefecto());
     }
 
     @Test
@@ -115,5 +138,40 @@ public class MapeadoresTest {
 
         entidad.topico = null;
         assertEquals(java.util.Optional.empty(), Mapeadores.aDominio(entidad).topico());
+    }
+
+    @Test
+    public void sesionMapeaAntelacionRecordatorioYToleraNuloOValorDesconocido() {
+        SesionEstudio conRec = SesionEstudio.restaurar(
+                9L,
+                3L,
+                1_700_000_000_000L,
+                1_700_003_600_000L,
+                -240,
+                60,
+                null,
+                CodigoEstadoSesion.PENDIENTE,
+                "",
+                null,
+                TecnicaEstudio.LIBRE,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL,
+                null,
+                null,
+                null,
+                null,
+                AntelacionRecordatorio.MINUTOS_30);
+        SesionEntity entidad = Mapeadores.aEntidad(conRec);
+        assertEquals(Integer.valueOf(30), entidad.recordatorioMinutos);
+        assertEquals(AntelacionRecordatorio.MINUTOS_30, Mapeadores.aDominio(entidad).antelacionRecordatorio());
+
+        entidad.recordatorioMinutos = null;
+        assertEquals(
+                AntelacionRecordatorio.SIN_RECORDATORIO,
+                Mapeadores.aDominio(entidad).antelacionRecordatorio());
+
+        entidad.recordatorioMinutos = 999;
+        assertEquals(
+                AntelacionRecordatorio.SIN_RECORDATORIO,
+                Mapeadores.aDominio(entidad).antelacionRecordatorio());
     }
 }

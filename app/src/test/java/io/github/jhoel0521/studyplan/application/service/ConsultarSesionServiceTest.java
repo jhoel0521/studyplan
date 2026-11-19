@@ -3,6 +3,7 @@ package io.github.jhoel0521.studyplan.application.service;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
@@ -93,5 +94,35 @@ public class ConsultarSesionServiceTest {
         assertFalse(detalle.puedeCompletar());
         assertFalse(detalle.puedeReprogramar());
         assertFalse(detalle.puedeEliminar());
+    }
+
+    @Test
+    public void exponePuedeIniciarEnCruceDeMedianocheSoloDentroDeVentanaRecordatorio() {
+        FakeReloj relojLocal = new FakeReloj(HOY, Hora.de(23, 39).valor(), -240);
+        VencerSesionesPendientesService vencer = new VencerSesionesPendientesService(sesiones, relojLocal);
+        ConsultarSesionService consultar = new ConsultarSesionService(sesiones, materias, relojLocal, vencer);
+
+        SesionEstudio madruga = sesiones.guardar(
+                SesionEstudio.planificar(
+                                materiaId,
+                                HOY.sumarDias(1),
+                                HOY,
+                                Hora.de(0, 10).valor(),
+                                Hora.de(1, 10).valor(),
+                                -240,
+                                null,
+                                null,
+                                AntelacionRecordatorio.MINUTOS_30)
+                        .valor());
+
+        DetalleSesion antesDeVentana = consultar.ejecutar(madruga.id())
+                .orElseThrow(AssertionError::new);
+        assertFalse(antesDeVentana.puedeIniciar());
+
+        relojLocal.fijar(HOY, Hora.de(23, 40).valor());
+        DetalleSesion enVentana = consultar.ejecutar(madruga.id())
+                .orElseThrow(AssertionError::new);
+        assertTrue(enVentana.puedeIniciar());
+        assertEquals(AntelacionRecordatorio.MINUTOS_30, enVentana.sesion().antelacionRecordatorio());
     }
 }

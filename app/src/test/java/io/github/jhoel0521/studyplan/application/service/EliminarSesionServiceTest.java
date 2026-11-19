@@ -3,12 +3,14 @@ package io.github.jhoel0521.studyplan.application.service;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.fakes.FakeProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
 
 import static org.junit.Assert.assertEquals;
@@ -67,5 +69,43 @@ public class EliminarSesionServiceTest {
         }
 
         assertEquals(ErrorValidacion.SESION_NO_ENCONTRADA, servicio.ejecutar(888L).error());
+    }
+
+    @Test
+    public void eliminarPendienteCancelaRecordatorioYNoCancelaSiFallaValidacion() {
+        FakeProgramadorRecordatorios recordatorios = new FakeProgramadorRecordatorios();
+        EliminarSesionService conRecordatorios = new EliminarSesionService(sesiones, recordatorios);
+
+        SesionEstudio pendiente = sesiones.guardar(SesionEstudio.planificar(
+                1L,
+                HOY,
+                HOY,
+                Hora.de(10, 0).valor(),
+                Hora.de(11, 0).valor(),
+                -240,
+                null,
+                null,
+                AntelacionRecordatorio.MINUTOS_15)
+                .valor());
+        recordatorios.programar(pendiente.id(), pendiente.instanteRecordatorioUtcMilis());
+
+        SesionEstudio completada = sesiones.guardar(SesionEstudio.restaurar(
+                null,
+                1L,
+                HOY,
+                Hora.de(12, 0).valor(),
+                Hora.de(13, 0).valor(),
+                60,
+                60,
+                CodigoEstadoSesion.COMPLETADA,
+                null,
+                null));
+
+        assertEquals(ErrorValidacion.SESION_NO_ELIMINABLE, conRecordatorios.ejecutar(completada.id()).error());
+        assertTrue(recordatorios.cancelaciones().isEmpty());
+
+        assertTrue(conRecordatorios.ejecutar(pendiente.id()).esValido());
+        assertFalse(recordatorios.estaProgramada(pendiente.id()));
+        assertTrue(recordatorios.cancelaciones().contains(pendiente.id()));
     }
 }

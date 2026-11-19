@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
@@ -350,6 +351,92 @@ public class SesionesEspressoTest {
                     withContentDescription(containsString("22:00"))))
                     .perform(scrollTo())
                     .check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unused")
+    public void formularioPreseleccionaRecordatorioOcultaEnPasadaYConservaEnReprogramacionYRotacion()
+            throws InterruptedException {
+        Pruebas.app().configurarRecordatorioPorDefecto().ejecutar(AntelacionRecordatorio.MINUTOS_30);
+        Fecha manana = Pruebas.app().reloj().hoy().sumarDias(1);
+
+        try (ActivityScenario<SesionFormularioActivity> form = ActivityScenario.launch(
+                intentoFormulario(SesionFormularioActivity.MODO_PLANIFICAR, manana.iso()))) {
+            Pruebas.esperarVisible(withId(R.id.selectorRecordatorioSesion));
+            onView(withId(R.id.selectorRecordatorioSesion))
+                    .check(matches(withText(R.string.recordatorio_30_min)));
+
+            // En modo Pasada debe ocultarse (GONE) y volver en Planificar
+            onView(withId(R.id.radioPasada)).perform(scrollTo(), click());
+            Pruebas.esperarAusente(allOf(withId(R.id.selectorRecordatorioSesion), isDisplayed()));
+            onView(withId(R.id.radioPlanificar)).perform(scrollTo(), click());
+            Pruebas.esperarVisible(withId(R.id.selectorRecordatorioSesion));
+
+            // Cambiar manualmente y verificar supervivencia tras rotación
+            elegirMateria("Cálculo");
+            onView(withId(R.id.campoHoraInicio)).perform(scrollTo(), replaceText("10:00"), closeSoftKeyboard());
+            onView(withId(R.id.campoHoraFin)).perform(scrollTo(), replaceText("11:00"), closeSoftKeyboard());
+            elegirRecordatorio(R.string.recordatorio_5_min);
+            onView(withId(R.id.selectorRecordatorioSesion))
+                    .check(matches(withText(R.string.recordatorio_5_min)));
+
+            form.recreate();
+            Pruebas.esperarVisible(withId(R.id.selectorRecordatorioSesion));
+            onView(withId(R.id.selectorRecordatorioSesion))
+                    .check(matches(withText(R.string.recordatorio_5_min)));
+
+            onView(withId(R.id.botonGuardarSesion)).perform(scrollTo(), click());
+            long limite = System.currentTimeMillis() + 5000;
+            while (Pruebas.app().sesionRepository().listarPorFecha(manana).isEmpty()
+                    && System.currentTimeMillis() < limite) {
+                Thread.sleep(100);
+            }
+        }
+
+        SesionEstudio guardada = Pruebas.app().sesionRepository().listarPorFecha(manana).get(0);
+        assertEquals(AntelacionRecordatorio.MINUTOS_5, guardada.antelacionRecordatorio());
+
+        // Modo Reprogramar conserva los 5 min originales, tolera cambiarlo a 30 min y persiste al guardar
+        Intent rep = new Intent(ApplicationProvider.getApplicationContext(), SesionFormularioActivity.class);
+        rep.putExtra(SesionFormularioActivity.EXTRA_MODO, SesionFormularioActivity.MODO_REPROGRAMAR);
+        rep.putExtra(SesionFormularioActivity.EXTRA_SESION_ID, guardada.id());
+        Fecha pasadoManana = manana.sumarDias(1);
+
+        try (ActivityScenario<SesionFormularioActivity> formRep = ActivityScenario.launch(rep)) {
+            Pruebas.esperarVisible(withId(R.id.selectorRecordatorioSesion));
+            onView(withId(R.id.selectorRecordatorioSesion))
+                    .check(matches(withText(R.string.recordatorio_5_min)));
+            elegirRecordatorio(R.string.recordatorio_30_min);
+            onView(withId(R.id.campoFecha)).perform(scrollTo(), replaceText(pasadoManana.iso()), closeSoftKeyboard());
+            onView(withId(R.id.botonGuardarSesion)).perform(scrollTo(), click());
+
+            long limite = System.currentTimeMillis() + 5000;
+            while (Pruebas.app().sesionRepository().listarPorFecha(pasadoManana).isEmpty()
+                    && System.currentTimeMillis() < limite) {
+                Thread.sleep(100);
+            }
+        }
+        assertEquals(
+                AntelacionRecordatorio.MINUTOS_30,
+                Pruebas.app().sesionRepository()
+                        .listarPorFecha(pasadoManana)
+                        .get(0)
+                        .antelacionRecordatorio());
+    }
+
+    private static void elegirRecordatorio(int textoRes) throws InterruptedException {
+        boolean permisoAntes = NotificadorSesion.tienePermisoNotificaciones(
+                ApplicationProvider.getApplicationContext());
+        onView(withId(R.id.selectorRecordatorioSesion)).perform(scrollTo(), click());
+        onView(withText(textoRes)).inRoot(isPlatformPopup()).perform(click());
+        if (!permisoAntes && textoRes != R.string.recordatorio_ninguno) {
+            try {
+                Pruebas.esperarVisible(withText(R.string.accion_ahora_no));
+                onView(withText(R.string.accion_ahora_no)).perform(click());
+            } catch (AssertionError ignored) {
+                // Si el diálogo no abrió por ya haberse mostrado, continuar con el banner inline
+            }
         }
     }
 }
