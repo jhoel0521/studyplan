@@ -20,9 +20,6 @@ import org.junit.runner.RunWith;
 import java.util.Collections;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.adapter.out.persistence.MateriaRepositoryRoom;
-import io.github.jhoel0521.studyplan.adapter.out.persistence.StudyPlanDatabase;
-import io.github.jhoel0521.studyplan.adapter.out.persistence.TramoDiarioRepositoryRoom;
 import io.github.jhoel0521.studyplan.domain.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
@@ -45,57 +42,65 @@ public class EstadisticasEspressoTest {
         app.configurarPerfil().ejecutar("Ana", 20);
         Fecha hoy = app.reloj().hoy();
 
-        StudyPlanDatabase db = StudyPlanDatabase.abrir(app);
-        MateriaRepositoryRoom materiasRoom = new MateriaRepositoryRoom(db.materiaDao());
-        TramoDiarioRepositoryRoom tramosRoom = new TramoDiarioRepositoryRoom(db.tramoDiarioDao());
-
         Materia calculo = app.registrarMateria().ejecutar("Cálculo", 0xFF1565C0, "Prof. A").valor();
         Materia archivada = app.registrarMateria().ejecutar("Historia", 0xFF6A1B9A, "Prof. B").valor();
-        app.archivarMateria().ejecutar(archivada.id());
-        Materia general = materiasRoom.guardar(Materia.crearGeneral(0xFF78909C));
-        Fecha ayer = hoy.sumarDias(-1);
+        Materia general = app.materiaRepository().guardar(Materia.crearGeneral(0xFF78909C));
+        int desfase = app.reloj().ahoraInstante().desfaseMinutos();
 
-        // Sesión completada en Cálculo con pausa + tópico y estudio externo sin clasificar
+        // Sesión completada en Cálculo en hoy (siempre dentro de la semana y mes actuales)
         SesionEstudio s1 = app.sesionRepository().guardar(SesionEstudio.planificar(
-                calculo.id(), ayer, ayer, Hora.de(9, 0).valor(), Hora.de(10, 0).valor(), null, null)
+                calculo.id(), hoy, hoy, Hora.de(8, 0).valor(), Hora.de(9, 0).valor(),
+                desfase, null, null)
                 .valor()
                 .iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
                 .valor()
                 .detener(60)
                 .valor());
-        tramosRoom.guardarTramos(s1.id(), Collections.singletonMap(ayer, 60));
-        long t0 = app.reloj().instanteDe(ayer, Hora.de(9, 0).valor());
+        app.tramoDiarioRepository().guardarTramos(s1.id(), Collections.singletonMap(hoy, 60));
+        long t0 = app.reloj().instanteDe(hoy, Hora.de(8, 0).valor());
         app.eventoEstudioRepository().guardar(EventoEstudio.crear(
-                s1.id(), TipoEventoEstudio.INICIO, t0, -240, "").valor());
+                s1.id(), TipoEventoEstudio.INICIO, t0, desfase, "").valor());
         app.eventoEstudioRepository().guardar(EventoEstudio.crear(
-                s1.id(), TipoEventoEstudio.PAUSA, t0 + 20 * 60_000L, -240, "").valor());
+                s1.id(), TipoEventoEstudio.PAUSA, t0 + 20 * 60_000L, desfase, "").valor());
         app.eventoEstudioRepository().guardar(EventoEstudio.crear(
-                s1.id(), TipoEventoEstudio.REANUDACION, t0 + 25 * 60_000L, -240, "",
+                s1.id(), TipoEventoEstudio.REANUDACION, t0 + 25 * 60_000L, desfase, "",
                 TopicoEventoEstudio.DESCANSO_COMIDA).valor());
         app.eventoEstudioRepository().guardar(EventoEstudio.crear(
-                s1.id(), TipoEventoEstudio.SALIDA_APP, t0 + 30 * 60_000L, -240, "").valor());
+                s1.id(), TipoEventoEstudio.SALIDA_APP, t0 + 30 * 60_000L, desfase, "").valor());
         app.eventoEstudioRepository().guardar(EventoEstudio.crear(
-                s1.id(), TipoEventoEstudio.ESTUDIO_APP_CERRADA, t0 + 40 * 60_000L, -240, "",
+                s1.id(), TipoEventoEstudio.ESTUDIO_APP_CERRADA, t0 + 40 * 60_000L, desfase, "",
                 TopicoEventoEstudio.SIN_CLASIFICAR).valor());
         app.eventoEstudioRepository().guardar(EventoEstudio.crear(
-                s1.id(), TipoEventoEstudio.FIN, t0 + 60 * 60_000L, -240, "").valor());
+                s1.id(), TipoEventoEstudio.FIN, t0 + 60 * 60_000L, desfase, "").valor());
 
-        // Sesión completada en materia archivada
-        SesionEstudio s2 = app.sesionRepository().guardar(SesionEstudio.registrarPasada(
-                archivada.id(), ayer, hoy, Hora.de(11, 0).valor(), Hora.de(11, 30).valor(), -240, 30, "")
+        // Sesión completada en Historia antes de archivarla (sin depender de registrarPasada)
+        SesionEstudio s2 = app.sesionRepository().guardar(SesionEstudio.planificar(
+                archivada.id(), hoy, hoy, Hora.de(9, 30).valor(), Hora.de(10, 0).valor(),
+                desfase, null, null)
+                .valor()
+                .iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .valor()
+                .detener(30)
                 .valor());
-        tramosRoom.guardarTramos(s2.id(), Collections.singletonMap(ayer, 30));
+        app.tramoDiarioRepository().guardarTramos(s2.id(), Collections.singletonMap(hoy, 30));
+        app.archivarMateria().ejecutar(archivada.id());
 
         // Sesión completada en Estudios varios
-        SesionEstudio s3 = app.sesionRepository().guardar(SesionEstudio.registrarPasada(
-                general.id(), ayer, hoy, Hora.de(12, 0).valor(), Hora.de(12, 30).valor(), -240, 30, "")
+        SesionEstudio s3 = app.sesionRepository().guardar(SesionEstudio.planificar(
+                general.id(), hoy, hoy, Hora.de(10, 30).valor(), Hora.de(11, 0).valor(),
+                desfase, null, null)
+                .valor()
+                .iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .valor()
+                .detener(30)
                 .valor());
-        tramosRoom.guardarTramos(s3.id(), Collections.singletonMap(ayer, 30));
+        app.tramoDiarioRepository().guardarTramos(s3.id(), Collections.singletonMap(hoy, 30));
 
-        // Sesión futura pendiente (no debe contar en la tasa de cumplimiento)
-        Fecha manana = hoy.sumarDias(1);
-        app.planificarSesion().ejecutar(
-                calculo.id(), manana, Hora.de(15, 0).valor(), Hora.de(16, 0).valor(), "");
+        // Sesión reprogramada (cuenta en denominador de cumplimiento: 3 de 4 = 75 %) + pendiente
+        SesionEstudio sReprog = app.planificarSesion().ejecutar(
+                calculo.id(), hoy, Hora.de(12, 0).valor(), Hora.de(13, 0).valor(), "").sesion();
+        app.reprogramarSesion().ejecutar(
+                sReprog.id(), hoy, Hora.de(23, 0).valor(), Hora.de(23, 30).valor(), "");
     }
 
     @After
@@ -114,20 +119,30 @@ public class EstadisticasEspressoTest {
                     .check(matches(withText(org.hamcrest.Matchers.anyOf(
                             containsString("2.0"), containsString("2,0")))));
             onView(withId(R.id.graficoDistribucionMaterias)).check(matches(isDisplayed()));
-            onView(withText(containsString("Cálculo"))).check(matches(isDisplayed()));
-            onView(withText(containsString("Historia"))).check(matches(isDisplayed()));
-            onView(withText(containsString("Estudios varios"))).check(matches(isDisplayed()));
+            onView(withText(containsString("Cálculo"))).perform(scrollTo()).check(matches(isDisplayed()));
+            onView(withText(containsString("Historia"))).perform(scrollTo()).check(matches(isDisplayed()));
+            onView(withText(containsString("Estudios varios"))).perform(scrollTo()).check(matches(isDisplayed()));
             onView(withId(R.id.textoCumplimientoValor))
-                    .check(matches(withText(containsString("100 %"))));
+                    .perform(scrollTo())
+                    .check(matches(withText(containsString("75 % (3 de 4)"))));
             onView(withId(R.id.textoPendientesAviso))
+                    .perform(scrollTo())
                     .check(matches(withText(containsString("1"))));
 
             // Cambiar a Mes
             onView(withId(R.id.btnPeriodoMes)).perform(click());
+            onView(withId(R.id.textoTotalHorasEstadisticas)).perform(scrollTo());
             Pruebas.esperarVisible(withId(R.id.textoTotalHorasEstadisticas));
+            onView(withId(R.id.textoTotalHorasEstadisticas))
+                    .check(matches(withText(org.hamcrest.Matchers.anyOf(
+                            containsString("2.0"), containsString("2,0")))));
+            onView(withId(R.id.textoCumplimientoValor))
+                    .perform(scrollTo())
+                    .check(matches(withText(containsString("75 % (3 de 4)"))));
 
             // Subvista Concentración
             onView(withId(R.id.btnSubvistaConcentracion)).perform(click());
+            onView(withId(R.id.textoIndiceConcentracion)).perform(scrollTo());
             Pruebas.esperarVisible(withId(R.id.textoIndiceConcentracion));
             onView(withId(R.id.textoEstudioExternoResumen))
                     .perform(scrollTo())

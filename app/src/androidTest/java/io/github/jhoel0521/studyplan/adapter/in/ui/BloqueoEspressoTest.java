@@ -5,11 +5,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,8 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.adapter.out.persistence.AjustesRepositoryRoom;
-import io.github.jhoel0521.studyplan.adapter.out.persistence.StudyPlanDatabase;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
 
 /**
@@ -34,14 +29,8 @@ public class BloqueoEspressoTest {
     public void conPerfilYBloqueoActivo() {
         Pruebas.reiniciarEstado();
         Pruebas.app().configurarPerfil().ejecutar("Ana", 20);
-        // El teléfono de pruebas puede no tener bloqueo de pantalla: se escribe el ajuste directamente en la base.
-        Context contexto = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        StudyPlanDatabase base = StudyPlanDatabase.abrir(contexto);
-        try {
-            new AjustesRepositoryRoom(base.ajustesDao()).guardar(Ajustes.porDefecto().conBloqueoActivo(true));
-        } finally {
-            base.close();
-        }
+        // El teléfono de pruebas puede no tener bloqueo de pantalla: se escribe el ajuste usando la instancia única de Room.
+        Pruebas.app().ajustesRepository().guardar(Ajustes.porDefecto().conBloqueoActivo(true));
         // Se lee el ajuste como al arrancar y se simula volver de segundo plano: la sesión queda bloqueada.
         Pruebas.app().consultarEstadoArranque().ejecutar();
         Pruebas.app().sesionBloqueo().alVolverAPrimerPlano();
