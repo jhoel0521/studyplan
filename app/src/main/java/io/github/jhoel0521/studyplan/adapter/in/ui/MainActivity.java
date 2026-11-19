@@ -100,7 +100,7 @@ public class MainActivity extends ActividadProtegida {
         listaSesionesHoy.setLayoutManager(new LinearLayoutManager(this));
         listaSesionesHoy.setAdapter(adaptadorSesionesHoy);
 
-        barraSuperior.setOnMenuItemClickListener(this::onAjustesClick);
+        barraSuperior.setOnMenuItemClickListener(this::onMenuBarraSuperiorClick);
         botonNuevaSesion.setOnClickListener(this::onNuevaSesionClick);
         botonEditarMeta.setOnClickListener(this::onEditarMetaClick);
         botonHistorial.setOnClickListener(this::onHistorialMetasClick);
@@ -297,8 +297,13 @@ public class MainActivity extends ActividadProtegida {
         startActivity(intento);
     }
 
-    private boolean onAjustesClick(MenuItem opcion) {
-        if (opcion.getItemId() == R.id.accion_ajustes) {
+    private boolean onMenuBarraSuperiorClick(MenuItem opcion) {
+        int id = opcion.getItemId();
+        if (id == R.id.accion_reportes) {
+            startActivity(new Intent(this, ReportesActivity.class));
+            return true;
+        }
+        if (id == R.id.accion_ajustes) {
             startActivity(new Intent(this, AjustesActivity.class));
             return true;
         }

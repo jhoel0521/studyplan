@@ -68,10 +68,21 @@ public class EventoEstudioAdapter extends ListAdapter<EventoEstudio, EventoEstud
             textoHora.setText(FormatoSesion.horaEventoConZona(
                     evento, FormatoSesion.desfaseActualSistema()));
             textoTipo.setText(etiquetaDe(evento.tipo()));
-            if (evento.nota() == null || evento.nota().isEmpty()) {
+            String topico = evento.topico().isPresent()
+                    ? TopicosUi.etiqueta(itemView.getContext(), evento.topico().get())
+                    : "";
+            String nota = evento.nota();
+            if (topico.isEmpty() && nota.isEmpty()) {
                 textoNota.setVisibility(View.GONE);
+            } else if (topico.isEmpty()) {
+                textoNota.setText(nota);
+                textoNota.setVisibility(View.VISIBLE);
+            } else if (nota.isEmpty()) {
+                textoNota.setText(topico);
+                textoNota.setVisibility(View.VISIBLE);
             } else {
-                textoNota.setText(evento.nota());
+                textoNota.setText(itemView.getContext().getString(
+                        R.string.evento_topico_y_nota, topico, nota));
                 textoNota.setVisibility(View.VISIBLE);
             }
         }

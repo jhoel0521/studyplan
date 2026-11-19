@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/accion_reportes"
+        android:icon="@drawable/ic_reporte"
+        android:title="@string/reportes_titulo"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/accion_ajustes"
         android:icon="@drawable/ic_ajustes"
         android:title="@string/ajustes_titulo"

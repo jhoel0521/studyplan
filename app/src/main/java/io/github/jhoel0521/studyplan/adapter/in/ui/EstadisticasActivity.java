@@ -1,5 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -119,6 +120,7 @@ public class EstadisticasActivity extends ActividadProtegida {
         grupoSubvista.addOnButtonCheckedListener(this::onSubvistaCambiada);
         findViewById(R.id.btnPeriodoAnteriorEstadisticas).setOnClickListener(this::onAnteriorClick);
         findViewById(R.id.btnPeriodoSiguienteEstadisticas).setOnClickListener(this::onSiguienteClick);
+        findViewById(R.id.botonAbrirReportes).setOnClickListener(this::onAbrirReportesClick);
     }
 
     private void configurarGraficoDona() {
@@ -165,6 +167,15 @@ public class EstadisticasActivity extends ActividadProtegida {
 
     private void onSiguienteClick(View v) {
         modelo.periodoSiguiente();
+    }
+
+    private void onAbrirReportesClick(View v) {
+        PeriodoEstadisticas actual = modelo.periodo().getValue();
+        if (actual != null) {
+            startActivity(ReportesActivity.crearIntent(this, actual.tipo(), actual.fechaFoco()));
+        } else {
+            startActivity(new Intent(this, ReportesActivity.class));
+        }
     }
 
     private void onPeriodo(@Nullable PeriodoEstadisticas p) {
@@ -222,8 +233,8 @@ public class EstadisticasActivity extends ActividadProtegida {
         if (e.tasaCumplimientoPorcentaje() == null) {
             textoCumplimientoValor.setText(R.string.estadisticas_cumplimiento_vacio);
         } else {
-            int cumplidas = e.completadas() + e.completadasTardias();
-            int evaluables = cumplidas + e.noRealizadas();
+            int cumplidas = e.totalCumplidas();
+            int evaluables = e.totalCerradas();
             int pct = (int) Math.round(e.tasaCumplimientoPorcentaje());
             textoCumplimientoValor.setText(
                     getString(R.string.estadisticas_cumplimiento_valor, pct, cumplidas, evaluables));

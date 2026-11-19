@@ -257,6 +257,7 @@
     <string name="evento_cambio_sesion">Switched to next session</string>
     <string name="evento_ajuste_manual">Manual adjustment</string>
     <string name="evento_fin">End</string>
+    <string name="evento_topico_y_nota">%1$s · %2$s</string>
 
     <string name="sesion_en_curso_titulo">Session in progress</string>
     <string name="sesion_en_curso_pausada">Paused</string>
@@ -403,4 +404,31 @@
     <string name="estadisticas_sin_datos_metrica">—</string>
     <string name="estadisticas_sin_topicos">No pauses or interruptions recorded</string>
     <string name="estadisticas_materia_archivada">Archived</string>
+
+    <string name="reportes_titulo">Reports</string>
+    <string name="accion_ver_reportes">View reports</string>
+    <string name="reportes_planificadas_titulo">Planned</string>
+    <string name="reportes_reales_titulo">Real</string>
+    <string name="reportes_cumplimiento_titulo">Compliance</string>
+    <string name="reportes_no_realizadas_titulo">Missed</string>
+    <string name="reportes_cumplimiento_porcentaje">%1$d %%</string>
+    <string name="reportes_fila_resumen">Plan: %1$s h · Real: %2$s h · Comp.: %3$s · Missed: %4$d</string>
+    <string name="reportes_fila_cd">%1$s: planned %2$s hours, real %3$s hours, compliance %4$s, missed %5$d</string>
+    <string name="reportes_sin_datos">No study data or planned sessions in this period</string>
+    <string name="reportes_exportar_pdf">Export PDF</string>
+    <string name="reportes_exportar_csv">Export CSV</string>
+    <string name="reportes_compartir_titulo">Share report</string>
+    <string name="reportes_error_sin_app">No app available to share the report</string>
+    <string name="reportes_error_sin_datos">No data in this period to export</string>
+    <string name="reportes_error_escritura">Could not generate the report file</string>
+    <string name="reportes_pdf_titulo">StudyPlan — Study report</string>
+    <string name="reportes_pdf_periodo">Period (%1$s): %2$s</string>
+    <string name="reportes_pdf_generado">Generated: %1$s</string>
+    <string name="reportes_pdf_col_materia">Subject</string>
+    <string name="reportes_pdf_col_plan">Plan (h)</string>
+    <string name="reportes_pdf_col_real">Real (h)</string>
+    <string name="reportes_pdf_col_cumpl">Comp.</string>
+    <string name="reportes_pdf_col_no_real">Missed</string>
+    <string name="reportes_pdf_total">Total</string>
+    <string name="reportes_pdf_pagina">Page %1$d of %2$d</string>
 </resources>

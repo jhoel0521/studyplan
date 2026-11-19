@@ -270,6 +270,15 @@
                             tools:visibility="visible" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonAbrirReportes"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:minHeight="48dp"
+                    android:text="@string/accion_ver_reportes" />
             </LinearLayout>
 
             <LinearLayout

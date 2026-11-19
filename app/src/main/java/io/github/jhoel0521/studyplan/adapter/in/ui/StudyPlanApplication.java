@@ -21,6 +21,7 @@ import io.github.jhoel0521.studyplan.adapter.out.persistence.StudyPlanDatabase;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.TramoDiarioRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.security.DisponibilidadBloqueoBiometrico;
 import io.github.jhoel0521.studyplan.adapter.out.system.ControladorNoMolestarSistema;
+import io.github.jhoel0521.studyplan.adapter.out.system.ExportadorReporteSistema;
 import io.github.jhoel0521.studyplan.adapter.out.system.MarcadorSalidaAppPrefs;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
 import io.github.jhoel0521.studyplan.application.port.in.ArchivarMateria;
@@ -50,6 +51,7 @@ import io.github.jhoel0521.studyplan.application.port.in.EliminarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.EstudiarAhora;
 import io.github.jhoel0521.studyplan.application.port.in.EvaluarRecuperacionSesion;
+import io.github.jhoel0521.studyplan.application.port.in.GenerarReporteEstudio;
 import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
@@ -63,10 +65,14 @@ import io.github.jhoel0521.studyplan.application.port.in.RepartirTramoSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ReprogramarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
 import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
+import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.BorrarDatosService;
 import io.github.jhoel0521.studyplan.application.service.CambiarDeMateriaService;
@@ -93,6 +99,7 @@ import io.github.jhoel0521.studyplan.application.service.EliminarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.EliminarSesionService;
 import io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService;
 import io.github.jhoel0521.studyplan.application.service.EvaluarRecuperacionSesionService;
+import io.github.jhoel0521.studyplan.application.service.GenerarReporteEstudioService;
 import io.github.jhoel0521.studyplan.application.service.IniciarSesionService;
 import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
 import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
@@ -135,7 +142,10 @@ public class StudyPlanApplication extends Application {
     private DesarchivarMateria desarchivarMateria;
     private EliminarMateria eliminarMateria;
     private Reloj reloj;
+    private AjustesRepository ajustesRepository;
+    private MateriaRepository materiaRepository;
     private SesionRepository sesionRepository;
+    private TramoDiarioRepository tramoDiarioRepository;
     private VencerSesionesPendientes vencerSesionesPendientes;
     private PlanificarSesion planificarSesion;
     private RegistrarSesionPasada registrarSesionPasada;
@@ -163,6 +173,8 @@ public class StudyPlanApplication extends Application {
     private EstudiarAhora estudiarAhora;
     private CambiarDeMateria cambiarDeMateria;
     private ConsultarEstadisticas consultarEstadisticas;
+    private GenerarReporteEstudio generarReporteEstudio;
+    private ExportadorReporte exportadorReporte;
     private ContadorActividades contadorActividades;
     private FabricaViewModels fabrica;
 
@@ -199,12 +211,17 @@ public class StudyPlanApplication extends Application {
         ProgramadorAvisosAlarmManager programador = new ProgramadorAvisosAlarmManager(
                 this, ReceptorAvisosSesion.class, SesionEnCursoActivity.class);
         MarcadorSalidaAppPrefs marcadorSalida = new MarcadorSalidaAppPrefs(this);
+        ExportadorReporteSistema exportadorSistema = new ExportadorReporteSistema(this);
+        exportadorReporte = exportadorSistema;
         SesionBloqueo sesion = new SesionBloqueo();
 
         sesionBloqueo = sesion;
         reloj = relojSistema;
+        ajustesRepository = ajustes;
+        materiaRepository = materias;
         sesionRepository = sesiones;
         eventoEstudioRepository = eventos;
+        tramoDiarioRepository = tramos;
         controladorNoMolestar = noMolestar;
         vencerSesionesPendientes = new VencerSesionesPendientesService(
                 sesiones, eventos, noMolestar, programador, tramos, relojSistema);
@@ -216,7 +233,8 @@ public class StudyPlanApplication extends Application {
         consultarEstadoArranque = new ConsultarEstadoArranqueService(perfiles, ajustes, sesion);
         obtenerResumenInicio = new ObtenerResumenInicioService(
                 perfiles, sesiones, materias, tramos, metas, relojSistema, vencerSesionesPendientes);
-        borrarDatos = new BorrarDatosService(almacen, sesion, marcadorSalida, noMolestar);
+        borrarDatos = new BorrarDatosService(
+                almacen, sesion, marcadorSalida, noMolestar, exportadorSistema);
         registrarMateria = new RegistrarMateriaService(materias, metas, relojSistema);
         editarMateria = new EditarMateriaService(materias, metas, relojSistema);
         consultarMateria = new ConsultarMateriaService(materias);
@@ -267,6 +285,8 @@ public class StudyPlanApplication extends Application {
                 sesiones, eventos, materias, ajustes, noMolestar, programador, marcadorSalida, tramos, relojSistema);
         consultarEstadisticas = new ConsultarEstadisticasService(
                 vencerSesionesPendientes, tramos, sesiones, materias, eventos, relojSistema);
+        generarReporteEstudio = new GenerarReporteEstudioService(
+                vencerSesionesPendientes, tramos, sesiones, materias, relojSistema);
         fabrica = new FabricaViewModels(this);
     }
 
@@ -277,7 +297,7 @@ public class StudyPlanApplication extends Application {
             Ajustes guardados = consultarAjustes.ejecutar();
             principal.post(() -> {
                 AplicadorApariencia.aplicarTema(guardados.tema());
-                AplicadorApariencia.aplicarIdioma(guardados.idioma());
+                AplicadorApariencia.aplicarIdioma(this, guardados.idioma());
             });
         });
     }
@@ -462,6 +482,14 @@ public class StudyPlanApplication extends Application {
         return consultarEstadisticas;
     }
 
+    public GenerarReporteEstudio generarReporteEstudio() {
+        return generarReporteEstudio;
+    }
+
+    public ExportadorReporte exportadorReporte() {
+        return exportadorReporte;
+    }
+
     public ContadorActividades contadorActividades() {
         return contadorActividades;
     }
@@ -469,5 +497,17 @@ public class StudyPlanApplication extends Application {
     /** Acceso interno al repositorio de sesiones para sembrar escenarios de prueba instrumentados. */
     SesionRepository sesionRepository() {
         return sesionRepository;
+    }
+
+    AjustesRepository ajustesRepository() {
+        return ajustesRepository;
+    }
+
+    MateriaRepository materiaRepository() {
+        return materiaRepository;
+    }
+
+    TramoDiarioRepository tramoDiarioRepository() {
+        return tramoDiarioRepository;
     }
 }

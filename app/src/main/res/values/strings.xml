@@ -257,6 +257,7 @@
     <string name="evento_cambio_sesion">Cambio a siguiente sesión</string>
     <string name="evento_ajuste_manual">Ajuste manual</string>
     <string name="evento_fin">Fin</string>
+    <string name="evento_topico_y_nota">%1$s · %2$s</string>
 
     <string name="sesion_en_curso_titulo">Sesión en curso</string>
     <string name="sesion_en_curso_pausada">En pausa</string>
@@ -403,4 +404,31 @@
     <string name="estadisticas_sin_datos_metrica">—</string>
     <string name="estadisticas_sin_topicos">Sin pausas ni interrupciones registradas</string>
     <string name="estadisticas_materia_archivada">Archivada</string>
+
+    <string name="reportes_titulo">Reportes</string>
+    <string name="accion_ver_reportes">Ver reportes</string>
+    <string name="reportes_planificadas_titulo">Planificadas</string>
+    <string name="reportes_reales_titulo">Reales</string>
+    <string name="reportes_cumplimiento_titulo">Cumplimiento</string>
+    <string name="reportes_no_realizadas_titulo">No realizadas</string>
+    <string name="reportes_cumplimiento_porcentaje">%1$d %%</string>
+    <string name="reportes_fila_resumen">Plan: %1$s h · Real: %2$s h · Cumpl.: %3$s · No real.: %4$d</string>
+    <string name="reportes_fila_cd">%1$s: planificadas %2$s horas, reales %3$s horas, cumplimiento %4$s, no realizadas %5$d</string>
+    <string name="reportes_sin_datos">Sin datos registrados ni planificados en este periodo</string>
+    <string name="reportes_exportar_pdf">Exportar PDF</string>
+    <string name="reportes_exportar_csv">Exportar CSV</string>
+    <string name="reportes_compartir_titulo">Compartir reporte</string>
+    <string name="reportes_error_sin_app">No hay una aplicación disponible para compartir el reporte</string>
+    <string name="reportes_error_sin_datos">No hay datos en este periodo para exportar</string>
+    <string name="reportes_error_escritura">No se pudo generar el archivo del reporte</string>
+    <string name="reportes_pdf_titulo">StudyPlan — Reporte de estudio</string>
+    <string name="reportes_pdf_periodo">Periodo (%1$s): %2$s</string>
+    <string name="reportes_pdf_generado">Generado: %1$s</string>
+    <string name="reportes_pdf_col_materia">Materia</string>
+    <string name="reportes_pdf_col_plan">Plan (h)</string>
+    <string name="reportes_pdf_col_real">Real (h)</string>
+    <string name="reportes_pdf_col_cumpl">Cumpl.</string>
+    <string name="reportes_pdf_col_no_real">No real.</string>
+    <string name="reportes_pdf_total">Total</string>
+    <string name="reportes_pdf_pagina">Página %1$d de %2$d</string>
 </resources>

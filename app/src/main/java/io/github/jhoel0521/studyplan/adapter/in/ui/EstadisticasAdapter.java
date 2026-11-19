@@ -76,13 +76,7 @@ public final class EstadisticasAdapter {
                 Context ctx = itemView.getContext();
                 ImageViewCompat.setImageTintList(
                         indicadorColor, ColorStateList.valueOf(item.colorMateria()));
-                String etiquetaNombre = item.esGeneral()
-                        ? ctx.getString(R.string.materia_general_nombre)
-                        : item.nombreMateria();
-                if (item.archivada()) {
-                    etiquetaNombre = etiquetaNombre
-                            + " (" + ctx.getString(R.string.estadisticas_materia_archivada) + ")";
-                }
+                String etiquetaNombre = nombreVisible(ctx, item);
                 nombre.setText(etiquetaNombre);
                 String horas = String.format(Locale.getDefault(), "%.1f", item.horasReales());
                 int porcentaje = (int) Math.round(item.porcentajeTiempo());
@@ -95,6 +89,17 @@ public final class EstadisticasAdapter {
                         porcentaje));
             }
         }
+    }
+
+    static String nombreVisible(Context ctx, DesgloseMateriaPeriodo item) {
+        String etiquetaNombre = item.esGeneral()
+                ? ctx.getString(R.string.materia_general_nombre)
+                : item.nombreMateria();
+        if (item.archivada()) {
+            etiquetaNombre = etiquetaNombre
+                    + " (" + ctx.getString(R.string.estadisticas_materia_archivada) + ")";
+        }
+        return etiquetaNombre;
     }
 
     public static final class TopicosAdapter
