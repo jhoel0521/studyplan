@@ -163,7 +163,7 @@ Nota: Elaboración propia a partir de las especificaciones de OpenSpec.
 
 ### Épica Configuración inicial
 
-La primera épica implementada reúne el perfil inicial (HU-01), el Inicio parcial (HU-02), el tema y el idioma (HU-03), el bloqueo con huella o PIN (HU-04) y el borrado de datos del teléfono (HU-38). La @figura:clases_configuracion muestra sus 58 clases agrupadas por paquete. En la capa de presentación se detallan los métodos del ciclo de vida (onCreate, onStart) y de los listeners (onGuardarClick, onAjustesClick y los demás), que se escriben como métodos con nombre para que se vean en la revisión de código. Las Activities protegidas heredan de ActividadProtegida, que consulta al núcleo si falta el perfil o si hay que autenticar antes de mostrar datos; PerfilInicialActivity y AutenticacionActivity heredan de ActividadBase porque no muestran datos del estudiante.
+La primera épica implementada reúne el perfil inicial (HU-01), el Inicio parcial (HU-02), el tema y el idioma (HU-03), el bloqueo con huella o PIN (HU-04) y el borrado de datos del teléfono (HU-38). La @figura:clases_configuracion muestra sus 58 clases agrupadas por paquete. En la capa de presentación se detallan los métodos del ciclo de vida (onCreate, onStart) y de los listeners (onGuardarClick, onMenuBarraSuperiorClick y los demás), que se escriben como métodos con nombre para que se vean en la revisión de código. Las Activities protegidas heredan de ActividadProtegida, que consulta al núcleo si falta el perfil o si hay que autenticar antes de mostrar datos; PerfilInicialActivity y AutenticacionActivity heredan de ActividadBase porque no muestran datos del estudiante.
 
 ![Diagrama de clases de la épica Configuración inicial](../recursos/diagramas/diagrama_clases_configuracion.png){#clases_configuracion ancho=16.5}
 
@@ -229,4 +229,20 @@ La sexta épica implementada (`add-metas-semanales`, Room v6 con `MIGRATION_5_6`
 
 Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
 
-[[pendiente: diagramas de clases de las épicas siguientes (estadísticas y copia de seguridad), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
+### Épica Estadísticas y blindaje de ejecución
+
+La séptima épica implementada (`add-estadisticas`, Room v7 con `MIGRATION_6_7` que incorpora `topico` en `evento_estudio`) habilita la pestaña **Estadísticas** (`DestinoPrincipal.ESTADISTICAS` → `EstadisticasActivity`), calcula el total de horas reales con variación semanal o mensual (`HU-29`, `RN-31`), presenta la distribución por materia mediante `MPAndroidChart` (`HU-30`), evalúa la tasa de cumplimiento excluyendo sesiones aún vigentes (`HU-31`), mide concentración, puntualidad, respeto del tiempo y tópicos agrupados de pausas o salidas (`HU-45`, `RN-30`), y blinda la detección de regresos y descansos Pomodoro (`HU-39`, `HU-41`). La @figura:clases_estadisticas presenta sus clases agrupadas por capa y `DesgloseMateriaPeriodo` como base compartida para reportes.
+
+![Diagrama de clases de la épica Estadísticas](../recursos/diagramas/diagrama_clases_estadisticas.png){#clases_estadisticas ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
+
+### Épica Reportes y exportación
+
+La octava épica implementada (`add-reportes`, sin cambios de esquema sobre Room v7) reutiliza `DesgloseMateriaPeriodo` y `CalculadorEstadisticas` (`calcularReporte`) junto con el corte diario unificado `SesionEstudio.minutosPlanificadosEnRango` (`RN-31`) para presentar reportes semanales o mensuales con horas planificadas, horas reales, cumplimiento y sesiones no realizadas (`HU-32`), accesibles desde Estadísticas conservando el periodo activo o desde la barra superior de Inicio sin alterar las cuatro pestañas fijas (`W8`). En `HU-33`, `GeneradorCsvReporte` emite UTF-8 con prefijo BOM, delimitador `,`, fin de línea `CRLF`, decimales con punto (`Locale.ROOT`) y mitigación `CWE-1236` para apertura en Google Sheets e importación en Excel Windows, mientras `ExportadorReporteSistema` genera PDF A4 multipágina (`PdfDocument`) independiente de densidad y tema, los expone vía `FileProvider` con retención acotada en caché y los limpia desde `BorrarDatosService` (`HU-38`). La @figura:clases_reportes muestra sus clases por capa.
+
+![Diagrama de clases de la épica Reportes](../recursos/diagramas/diagrama_clases_reportes.png){#clases_reportes ancho=16.5}
+
+Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
+
+[[pendiente: diagramas de clases de las épicas siguientes (recordatorios), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]

@@ -115,16 +115,23 @@ ENTRADA_ESTADISTICAS = ["ConsultarEstadisticas"]
 SERVICIOS_ESTADISTICAS = ["ConsultarEstadisticasService"]
 DOMINIO_ESTADISTICAS = ["CalculadorEstadisticas", "ConcentracionPeriodo", "DesgloseMateriaPeriodo", "EstadisticasPeriodo", "PeriodoEstadisticas", "ResumenTopico", "SalidaRegistrada", "TopicoEventoEstudio"]
 
+PRESENTACION_REPORTES = ["ReportesActivity", "ReportesAdapter", "ReportesViewModel"]
+ENTRADA_REPORTES = ["GenerarReporteEstudio"]
+SERVICIOS_REPORTES = ["GenerarReporteEstudioService"]
+SALIDA_REPORTES = ["ExportadorReporte", "ResultadoExportacion"]
+DOMINIO_REPORTES = ["FormatoExportacionReporte", "GeneradorCsvReporte", "ReporteEstudio"]
+SISTEMA_REPORTES = ["ExportadorReporteSistema"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS + PRESENTACION_ESTADISTICAS,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS,
-    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS + PRESENTACION_ESTADISTICAS + PRESENTACION_REPORTES,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS + ENTRADA_REPORTES,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS + SERVICIOS_REPORTES,
+    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS + SALIDA_REPORTES,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS + DOMINIO_REPORTES,
     "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS + PERSISTENCIA_METAS,
     "adapter/out/security": SEGURIDAD_CONFIG,
-    "adapter/out/system": SISTEMA_TECNICAS,
+    "adapter/out/system": SISTEMA_TECNICAS + SISTEMA_REPORTES,
 }
 
 
@@ -492,6 +499,123 @@ def clases_metas():
         c.draw(d)
     dg.assoc(d, infra[2].right(0.3), nucleo[3].bottom(0.5), "implementa", None, None)
     img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(dg.OUT / "diagrama_clases_metas.png", dpi=(200, 200))
+
+
+def clases_estadisticas():
+    """Clases de la épica E7: estadísticas de estudio, concentración, tópicos y blindaje de salidas."""
+    W, H = 3960, 4400
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, ws1 = [40, 960, 1880, 2720], [860, 860, 780, 1200]
+    fila1 = [caja_con_metodos("EstadisticasActivity", xs1[0], 80, ws1[0]),
+             caja_con_metodos("EstadisticasViewModel", xs1[1], 80, ws1[1]),
+             caja_con_metodos("EstadisticasAdapter", xs1[2], 80, ws1[2]),
+             caja_con_metodos("TopicosUi", xs1[3], 80, ws1[3])]
+    for c in fila1:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.25), fila1[1].left(0.25), "observa", None, None)
+    dg.assoc(d, fila1[2].right(0.25), fila1[3].left(0.25), "etiquetas", None, None)
+
+    ynota = 80 + alto(fila1) + 24
+    d.text((40, ynota),
+           "EstadisticasActivity hereda de ActividadProtegida y enlaza DestinoPrincipal.ESTADISTICAS; DialogoRecuperacionSesion (W13) y EventoEstudioAdapter muestran TopicosUi.",
+           font=dg.font(24, italic=True), fill=dg.GRAY)
+
+    y2 = ynota + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    nucleo = [
+        caja_de_paquete("domain (agregados, métricas y tópicos)", DOMINIO_ESTADISTICAS, xs1[0], y2, ws1[0], "domain"),
+        caja_con_metodos("ConsultarEstadisticas", xs1[1], y2, ws1[1], "port.in"),
+        caja_con_metodos("ConsultarEstadisticasService", xs1[2], y2, ws1[2]),
+        caja_de_paquete("application.port.out (reutilizados)",
+                        ["TramoDiarioRepository", "SesionRepository", "MateriaRepository",
+                         "EventoEstudioRepository", "Reloj"], xs1[3], y2, ws1[3], "port.out"),
+    ]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, nucleo[2].left(0.3), nucleo[1].right(0.3), "implementa", None, None)
+    dg.assoc(d, nucleo[2].right(0.3), nucleo[3].left(0.3), "consulta", None, None)
+
+    y3 = y2 + alto(nucleo) + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Infraestructura · Room v7 (MIGRATION_6_7) y preferencias", font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("EventoEstudioEntity", xs1[0], y3, ws1[0], "Entity", con_campos=True),
+             caja_con_metodos("EventoEstudioDao", xs1[1], y3, ws1[1], "Dao"),
+             caja_con_metodos("EventoEstudioRepositoryRoom", xs1[2], y3, ws1[2]),
+             caja_con_metodos("MarcadorSalidaAppPrefs", xs1[3], y3, ws1[3])]
+    for c in infra:
+        c.draw(d)
+    dg.assoc(d, infra[2].left(0.3), infra[1].right(0.3), "JOIN rango UTC", None, None)
+    img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(
+        dg.OUT / "diagrama_clases_estadisticas.png", dpi=(200, 200))
+
+
+def clases_reportes():
+    """Clases de la épica E8: reporte de estudio por periodo y exportación nativa PDF/CSV."""
+    W, H = 3760, 4200
+    img = Image.new("RGB", (W, H), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
+
+    xs1, ws1 = [40, 1280, 2480], [1160, 1140, 1240]
+    fila1 = [caja_con_metodos("ReportesActivity", xs1[0], 80, ws1[0]),
+             caja_con_metodos("ReportesViewModel", xs1[1], 80, ws1[1]),
+             caja_con_metodos("ReportesAdapter", xs1[2], 80, ws1[2])]
+    for c in fila1:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.3), fila1[1].left(0.3), "observa", None, None)
+
+    ynota = 80 + alto(fila1) + 24
+    d.text((40, ynota),
+           "ReportesActivity hereda de ActividadProtegida; recibe periodo desde EstadisticasActivity o MainActivity y comparte formato de nombre con EstadisticasAdapter.",
+           font=dg.font(24, italic=True), fill=dg.GRAY)
+
+    y2 = ynota + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    xs2, ws2 = [40, 960, 1880, 2760], [860, 860, 820, 960]
+    nucleo = [
+        caja_de_paquete("domain (reporte y CSV)", DOMINIO_REPORTES, xs2[0], y2, ws2[0], "domain"),
+        caja_con_metodos("GenerarReporteEstudio", xs2[1], y2, ws2[1], "port.in"),
+        caja_con_metodos("GenerarReporteEstudioService", xs2[2], y2, ws2[2]),
+        caja_de_paquete("application.port.out",
+                        ["ExportadorReporte", "ResultadoExportacion",
+                         "TramoDiarioRepository (reutilizado)", "SesionRepository (reutilizado)",
+                         "MateriaRepository (reutilizado)", "Reloj (reutilizado)"],
+                        xs2[3], y2, ws2[3], "port.out"),
+    ]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, nucleo[2].left(0.3), nucleo[1].right(0.3), "implementa", None, None)
+    dg.assoc(d, nucleo[2].right(0.3), nucleo[3].left(0.3), "consulta", None, None)
+
+    ynota_n = y2 + alto(nucleo) + 24
+    d.text((40, ynota_n),
+           "Reutiliza SesionEstudio.minutosPlanificadosEnRango, CalculadorEstadisticas.calcularReporte y DesgloseMateriaPeriodo (RN-31, RN-05, RN-08).",
+           font=dg.font(24, italic=True), fill=dg.GRAY)
+
+    y3 = ynota_n + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Infraestructura · adapter.out.system (PDF A4, CSV BOM y FileProvider)",
+           font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("ExportadorReporteSistema", xs2[0], y3, 1800)]
+    for c in infra:
+        c.draw(d)
+    d.text((1900, y3 + 40),
+           "• PdfDocument A4 (595×842 pt) independiente de densidad\n"
+           "• GeneradorCsvReporte UTF-8 con BOM y mitigación CWE-1236\n"
+           "• Caché privada (cacheDir/reportes/, retención 3 archivos)\n"
+           "• BorrarDatosService invoca limpiarTemporales() (HU-38)",
+           font=dg.font(24), fill=dg.GRAY)
+    img.crop((0, 0, W, int(y3 + alto(infra) + 60))).save(
+        dg.OUT / "diagrama_clases_reportes.png", dpi=(200, 200))
 
 
 # ---------------------------------------------------------------- modelo lógico y diccionario de datos
@@ -870,6 +994,8 @@ def generar():
     clases_calendario()
     clases_tecnicas()
     clases_metas()
+    clases_estadisticas()
+    clases_reportes()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()
@@ -881,7 +1007,8 @@ def generar():
 if __name__ == "__main__":
     generar()
     for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
-              "diagrama_clases_calendario", "diagrama_clases_tecnicas", "modelo_logico",
-              "secuencia_registrar_materia", "secuencia_planificar_sesion", "secuencia_consultar_calendario",
-              "secuencia_ejecucion_sesion"):
+              "diagrama_clases_calendario", "diagrama_clases_tecnicas", "diagrama_clases_metas",
+              "diagrama_clases_estadisticas", "diagrama_clases_reportes", "modelo_logico",
+              "secuencia_registrar_materia", "secuencia_planificar_sesion",
+              "secuencia_consultar_calendario", "secuencia_ejecucion_sesion"):
         print((dg.OUT / f"{f}.png").relative_to(RAIZ))

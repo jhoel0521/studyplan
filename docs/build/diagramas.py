@@ -480,7 +480,7 @@ def flujo_pantallas():
     caja("ses", C2, Y3, "Sesión en curso", "HU-22 a HU-24 · estados RN-07",
          ["Cronómetro libre o Pomodoro", "Pausar / reanudar · Detener", "No molestar (opcional)"], "OE4")
     caja("rep", C3, Y3, "Reporte", "HU-32, HU-33",
-         ["Plan vs. real por materia", "Sesiones no realizadas", "Compartir PDF o CSV"], "OE5")
+         ["Plan vs. real por materia", "Sesiones no realizadas", "Compartir PDF o CSV"], "OE5", LIGHT)
     caja("fmat", C4, Y3, "Formulario de materia", "HU-06 a HU-08, HU-26, HU-46",
          ["Nombre, color y docente (meta: E6)", "Nombre duplicado: se rechaza", "Archivar o desarchivar · Eliminar"],
          "OE2", LIGHT)
@@ -523,8 +523,8 @@ def flujo_pantallas():
     rotulo(C2 + 90, 1010, "Iniciar sesión: desde la\nlista o la notificación de\nrecordatorio (HU-34)", "lm")
     flecha([top("ses", -70), (C2 - 70, gy1)])
     rotulo(C2 - 90, 1130, "Detener sin tramo\ncontinuo: Completada\ny vuelve a la pestaña", "rm")
-    flecha([(C3, gy1), top("rep")], discontinua=True)
-    rotulo(C3 + 14, 1050, "«Ver reporte»\n(a confirmar)", "lm")
+    flecha([(C3, gy1), top("rep")])
+    rotulo(C3 + 14, 1050, "«Ver reportes» (Estadísticas)\no barra superior de Inicio", "lm")
     flecha([(C4, gy1), top("fmat")])
     rotulo(C4 + 14, 1050, "«+» o tocar\nuna materia", "lm")
     flecha([(950, gy1), (950, 1010), (C0, 1010), top("det")], discontinua=True)
