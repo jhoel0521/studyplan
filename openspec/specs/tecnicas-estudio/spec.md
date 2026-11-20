@@ -233,7 +233,7 @@ Como estudiante, quiero empezar a estudiar una materia en el momento, sin haber 
 #### Scenario: Acceso desde Inicio
 - **GIVEN** que el estudiante está en la pantalla de inicio y no hay una sesión En curso
 - **WHEN** pulsa el botón flotante «▶ Estudiar ahora»
-- **THEN** el sistema le pide la materia, con «Estudios varios» y «Nueva materia» entre las opciones, y la técnica de estudio
+- **THEN** el sistema le pide la materia, con «Estudios varios» y «Nueva materia» entre las opciones, y la técnica de estudio, y la sesión no empieza hasta que pulsa «▶ Comenzar»
 
 #### Scenario: Empezar sin plan
 - **GIVEN** que el estudiante eligió «Matemáticas» y la materia no tiene sesiones Pendientes hoy
@@ -267,8 +267,13 @@ Como estudiante, quiero empezar a estudiar una materia en el momento, sin haber 
 
 #### Scenario: Ya hay una sesión En curso
 - **GIVEN** que ya existe una sesión En curso
-- **WHEN** el estudiante pulsa «▶ Estudiar ahora»
-- **THEN** el sistema no crea otra y abre la sesión En curso
+- **WHEN** el estudiante pulsa el botón flotante de la pantalla de inicio
+- **THEN** el sistema no crea otra ni pide materia: el botón dice «Volver a la sesión» y abre la sesión En curso
+
+#### Scenario: Materia elegida visible
+- **GIVEN** que el estudiante abrió «Estudiar ahora»
+- **WHEN** toca una materia de la lista
+- **THEN** esa fila queda marcada con su indicador y su fondo, las demás se desmarcan, y el botón «▶ Comenzar», desactivado mientras no haya materia elegida, se activa
 
 ### Requirement: HU-48 Cambiar de materia durante la sesión
 Como estudiante, quiero pasar a estudiar otra materia sin detener el tiempo para reflejar que cambié de tema, por ejemplo al llegar compañeros de otra asignatura. El sistema SHALL cumplir los escenarios siguientes (prioridad Must, 3 pts; propuesta de la IA, aceptada por el Product Owner).
