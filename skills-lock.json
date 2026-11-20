@@ -42,6 +42,48 @@
       "skillPath": "skills/apa-revisar/SKILL.md",
       "computedHash": "fa4da78d79db383b111be4b84921d12f459829ec0e7b096e5aa531717837000f",
       "installMode": "copy"
+    },
+    "ux-check": {
+      "source": "jhoel0521/ux-kit",
+      "commit": "6b20e7c62687a2737575c853e27998585f719312",
+      "sourceType": "github",
+      "skillPath": "skills/ux-check/SKILL.md",
+      "computedHash": "a43dc65535111d3132545db006c2ca7288a87b9f66b4d51ac1bcc044de8aad77"
+    },
+    "ux-discover": {
+      "source": "jhoel0521/ux-kit",
+      "commit": "6b20e7c62687a2737575c853e27998585f719312",
+      "sourceType": "github",
+      "skillPath": "skills/ux-discover/SKILL.md",
+      "computedHash": "aa537a7293037c54138bf2eb919bfcccbfc0d173b407bcccfc54189ac6012c6c"
+    },
+    "ux-guide": {
+      "source": "jhoel0521/ux-kit",
+      "commit": "6b20e7c62687a2737575c853e27998585f719312",
+      "sourceType": "github",
+      "skillPath": "skills/ux-guide/SKILL.md",
+      "computedHash": "2b612fda97e264d6b37809e5a0c6605461a644f77c6f3ce2115b4f352c915af3"
+    },
+    "ux-init": {
+      "source": "jhoel0521/ux-kit",
+      "commit": "6b20e7c62687a2737575c853e27998585f719312",
+      "sourceType": "github",
+      "skillPath": "skills/ux-init/SKILL.md",
+      "computedHash": "37ed03758e5df22a99666ded36d504e74cde4e57f41fbf25eca18f595683b874"
+    },
+    "ux-laws": {
+      "source": "jhoel0521/ux-kit",
+      "commit": "6b20e7c62687a2737575c853e27998585f719312",
+      "sourceType": "github",
+      "skillPath": "skills/ux-laws/SKILL.md",
+      "computedHash": "a5f899b745aadced2b97a0281ac53e55c675e22bf8d36ef006be593f60156b8b"
+    },
+    "ux-plan-review": {
+      "source": "jhoel0521/ux-kit",
+      "commit": "6b20e7c62687a2737575c853e27998585f719312",
+      "sourceType": "github",
+      "skillPath": "skills/ux-plan-review/SKILL.md",
+      "computedHash": "fcd3e0e2d690c2c05db3f868d873cd1c41417190a974540ddde1b760cf778b5b"
     }
   }
 }
