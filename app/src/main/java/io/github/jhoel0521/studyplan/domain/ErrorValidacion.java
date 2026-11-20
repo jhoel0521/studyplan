@@ -67,5 +67,7 @@ public enum ErrorValidacion {
     /** La hora de corte elegida para repartir un tramo no cae dentro del intervalo efectivo (RN-28). */
     CORTE_REPARTO_INVALIDO,
     /** La materia general «Estudios varios» no admite edición, archivado, eliminación ni meta propia (RN-32). */
-    MATERIA_GENERAL_PROTEGIDA
+    MATERIA_GENERAL_PROTEGIDA,
+    /** La app no tiene acceso a No molestar, así que no se puede alternar en la sesión (HU-24, RNF-18). */
+    SIN_PERMISO_NO_MOLESTAR
 }

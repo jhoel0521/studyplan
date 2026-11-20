@@ -84,6 +84,9 @@ final class MensajesDeError {
         MENSAJES_SESION.put(
                 ErrorValidacion.SESION_YA_EN_CURSO,
                 R.string.error_sesion_ya_en_curso);
+        MENSAJES_SESION.put(
+                ErrorValidacion.SIN_PERMISO_NO_MOLESTAR,
+                R.string.error_sesion_sin_permiso_no_molestar);
     }
 
     private MensajesDeError() {

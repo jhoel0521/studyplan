@@ -361,6 +361,7 @@
     <string name="felicitacion_meta_materia_item">%1$s: %2$s / %3$s h</string>
     <string name="felicitacion_volver_inicio">Volver al inicio</string>
     <string name="error_sesion_ya_en_curso">Ya tienes otra sesión en curso</string>
+    <string name="error_sesion_sin_permiso_no_molestar">Falta el permiso de No molestar</string>
 
     <string name="topico_pdf_moodle">PDF / Moodle</string>
     <string name="topico_libro_apuntes">Libro / apuntes</string>

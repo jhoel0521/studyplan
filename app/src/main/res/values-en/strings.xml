@@ -361,6 +361,7 @@
     <string name="felicitacion_meta_materia_item">%1$s: %2$s / %3$s h</string>
     <string name="felicitacion_volver_inicio">Back to home</string>
     <string name="error_sesion_ya_en_curso">You already have another session in progress</string>
+    <string name="error_sesion_sin_permiso_no_molestar">Do Not Disturb permission is missing</string>
 
     <string name="topico_pdf_moodle">PDF / Moodle</string>
     <string name="topico_libro_apuntes">Book / notes</string>
