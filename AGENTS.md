@@ -22,7 +22,7 @@ Proyecto académico con intención de publicarse en Google Play.
 | Datos | Room (SQLite), offline-first, un usuario local | backend propio, Firebase |
 | Respaldo | Google Drive `appDataFolder` + cifrado AES-256-GCM opcional | usar INTERNET para otra cosa |
 | Gráficos | MPAndroidChart | |
-| Recordatorios | WorkManager / AlarmManager | servicios en primer plano permanentes |
+| Recordatorios | WorkManager / AlarmManager | servicios en primer plano permanentes (se permite uno solo mientras haya una sesión En curso, HU-49) |
 
 Si hace falta una dependencia nueva, **propónla y espera aprobación humana**.
 
