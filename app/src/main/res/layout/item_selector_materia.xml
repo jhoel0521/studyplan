@@ -5,21 +5,33 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:background="@drawable/fondo_fila_selector"
     android:foreground="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:minHeight="48dp"
+    android:minHeight="@dimen/button_height"
     android:orientation="horizontal"
-    android:paddingStart="16dp"
+    android:paddingStart="4dp"
     android:paddingTop="10dp"
     android:paddingEnd="16dp"
     android:paddingBottom="10dp"
     tools:context=".adapter.in.ui.MainActivity"
     tools:fitsSystemWindows="true">
 
+    <!-- Indicador de la fila elegida; la fila entera es el objetivo táctil y TalkBack la anuncia como opción. -->
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radioSelectorMateria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:importantForAccessibility="no"
+        android:minHeight="48dp" />
+
     <ImageView
         android:id="@+id/colorSelectorMateria"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_circulo"
         tools:tint="?attr/colorPrimary" />
@@ -30,6 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:maxWidth="600dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textAppearance="@style/TextAppearance.StudyPlan.Fila"
         tools:text="Matemáticas" />
 </LinearLayout>

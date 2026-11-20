@@ -2,6 +2,7 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -102,6 +103,10 @@ public final class SelectorColorDialogo {
                 View muestra = inflador.inflate(R.layout.item_color, atajos, false);
                 ImageView circulo = muestra.findViewById(R.id.colorCirculo);
                 circulo.setColorFilter(color);
+                // Marca de elegido en blanco o negro, el que más contraste con la muestra (design.md, decisión 6).
+                ImageView marca = muestra.findViewById(R.id.colorCheck);
+                marca.setColorFilter(ColorMateria.contraste(Color.WHITE, color)
+                        >= ColorMateria.contraste(Color.BLACK, color) ? Color.WHITE : Color.BLACK);
                 muestra.setTag(color);
                 muestra.setContentDescription(contexto.getString(R.string.materia_color_n, i + 1));
                 muestra.setOnClickListener(this::onAtajoClick);

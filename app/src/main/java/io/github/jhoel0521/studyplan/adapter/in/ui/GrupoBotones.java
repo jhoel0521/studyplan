@@ -1,8 +1,13 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
+import android.util.TypedValue;
+import android.view.View;
+
 import androidx.annotation.NonNull;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.shape.AbsoluteCornerSize;
 import com.google.android.material.shape.CornerFamily;
 import com.google.android.material.shape.CornerSize;
@@ -38,6 +43,26 @@ final class GrupoBotones {
                     .setBottomRightCorner(CornerFamily.ROUNDED, derecha)
                     .build();
             visibles[i].setShapeAppearanceModel(forma);
+        }
+    }
+
+    /**
+     * Deja cada botón de un grupo alternable en una sola línea y reduce su letra de 16 a 8 sp si la etiqueta no
+     * cabe, para que todos los botones conserven la misma altura (design.md, decisión 17; HU-03, escenario «Texto
+     * ampliado»). {@link MaterialButtonToggleGroup} ya fija una línea con «…» al añadir los botones, así que el
+     * autoajuste se aplica desde código después de inflar el layout; «…» queda solo como último recurso.
+     *
+     * @param grupo grupo alternable ya inflado
+     */
+    static void ajustarEnUnaLinea(@NonNull MaterialButtonToggleGroup grupo) {
+        for (int i = 0; i < grupo.getChildCount(); i++) {
+            View hijo = grupo.getChildAt(i);
+            if (hijo instanceof MaterialButton) {
+                MaterialButton boton = (MaterialButton) hijo;
+                boton.setMaxLines(1);
+                TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                        boton, 8, 16, 1, TypedValue.COMPLEX_UNIT_SP);
+            }
         }
     }
 }

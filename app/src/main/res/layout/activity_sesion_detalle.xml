@@ -55,8 +55,8 @@
 
                     <ImageView
                         android:id="@+id/colorMateriaDetalle"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_circulo"
                         tools:tint="?attr/colorPrimary" />
@@ -156,11 +156,11 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonVerReprogramada"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:visibility="gone"
                     tools:text="Ver sesión reprogramada (2026-11-16 · 09:00 – 10:00)"
                     tools:visibility="visible" />
@@ -286,49 +286,52 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/botonIniciarSesion"
+                        style="@style/Widget.StudyPlan.Button.Tonal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/button_height"
                         android:text="@string/sesion_detalle_iniciar" />
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonIrEnCurso"
+                    style="@style/Widget.StudyPlan.Button.Tonal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/sesion_detalle_ir_en_curso"
                     android:visibility="gone" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonRegistrarTardio"
+                    style="@style/Widget.StudyPlan.Button.Tonal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/sesion_detalle_registrar_tardio"
                     android:visibility="gone" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonReprogramarSesion"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.StudyPlan.Button.Tonal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/sesion_detalle_reprogramar"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonEliminarSesion"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.StudyPlan.Button.Destructive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:minHeight="48dp"
+                    android:layout_marginTop="16dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/sesion_detalle_eliminar"
                     android:textColor="?attr/colorError"
                     android:visibility="gone"

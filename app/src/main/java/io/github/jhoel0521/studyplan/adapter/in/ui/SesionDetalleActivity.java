@@ -192,7 +192,7 @@ public class SesionDetalleActivity extends ActividadProtegida {
         contenedorDetalle.setVisibility(View.VISIBLE);
 
         SesionEstudio s = detalle.sesion();
-        colorMateriaDetalle.setColorFilter(detalle.colorMateria());
+        AcentoMateria.punto(colorMateriaDetalle, detalle.colorMateria());
         nombreMateriaDetalle.setText(detalle.nombreMateria());
         EstadoSesionVisual.aplicar(s.codigoEstado(), iconoEstadoDetalle, etiquetaEstadoDetalle);
 

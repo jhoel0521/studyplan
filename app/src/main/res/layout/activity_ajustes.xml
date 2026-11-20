@@ -207,11 +207,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonGuardarPomodoro"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.StudyPlan.Button.Tonal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/ajustes_pomodoro_guardar" />
 
             <TextView
@@ -266,11 +266,11 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonAbrirAjustesNotificaciones"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/ajustes_permiso_notificaciones_ir" />
             </LinearLayout>
 
@@ -295,21 +295,21 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonAbrirAjustesAlarmas"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/ajustes_permiso_alarmas_ir" />
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonPrivacidad"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.StudyPlan.Button.Outlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/ajustes_privacidad" />
         </LinearLayout>
     </ScrollView>

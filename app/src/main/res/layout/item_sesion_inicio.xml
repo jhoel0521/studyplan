@@ -4,7 +4,7 @@
     style="?attr/materialCardViewOutlinedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="@dimen/spacing_card_gap"
     android:clickable="true"
     android:focusable="true"
     android:minHeight="72dp"
@@ -14,27 +14,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="12dp">
+        android:orientation="horizontal">
 
-        <ImageView
+        <!-- Barra de 4 dp con el color de la materia (solo acento; design.md, decisión 6). -->
+        <View
             android:id="@+id/colorMateriaItem"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_circulo"
-            tools:tint="?attr/colorPrimary" />
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/fondo_barra_materia"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/nombreMateriaItem"
@@ -51,6 +53,7 @@
                 android:layout_marginTop="2dp"
                 android:maxWidth="600dp"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 tools:text="10:00 – 11:30 · 90 min" />
 
             <LinearLayout

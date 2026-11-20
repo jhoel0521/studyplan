@@ -8,8 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.AccessibilityDelegateCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
@@ -53,8 +57,9 @@ final class SelectorEstudioBottomSheet {
         TextView titulo = vista.findViewById(R.id.tituloSelectorEstudio);
         titulo.setText(tituloRes);
 
-        RadioButton opLibre = vista.findViewById(R.id.opcionTecnicaLibre);
-        RadioButton opPomodoro = vista.findViewById(R.id.opcionTecnicaPomodoro);
+        MaterialButton opLibre = vista.findViewById(R.id.opcionTecnicaLibre);
+        MaterialButton opPomodoro = vista.findViewById(R.id.opcionTecnicaPomodoro);
+        GrupoBotones.ajustarEnUnaLinea(vista.findViewById(R.id.grupoTecnicaSelector));
         if (tecnicaInicial == TecnicaEstudio.POMODORO) {
             opPomodoro.setChecked(true);
         } else {
@@ -63,15 +68,18 @@ final class SelectorEstudioBottomSheet {
 
         LinearLayout lista = vista.findViewById(R.id.contenedorListaMateriasSelector);
         LayoutInflater inflador = LayoutInflater.from(contexto);
+        MaterialButton btnComenzarSelector = vista.findViewById(R.id.botonComenzarSelector);
+        // Acción de la fila elegida: tocar una fila solo la marca; «Comenzar» la ejecuta (HU-47, decisión 20).
+        Runnable[] eleccion = {null};
         boolean incluyoGeneral = false;
         if (materias != null) {
             for (Materia m : materias) {
                 if (m.esGeneral()) {
                     incluyoGeneral = true;
                 }
-                agregarFilaMateria(inflador, lista, m, m.esGeneral()
+                agregarFilaMateria(inflador, lista, m.esGeneral()
                         ? contexto.getString(R.string.materia_general_nombre)
-                        : m.nombre(), m.color(), v -> {
+                        : m.nombre(), m.color(), btnComenzarSelector, eleccion, () -> {
                     TecnicaEstudio tecnica = opPomodoro.isChecked()
                             ? TecnicaEstudio.POMODORO : TecnicaEstudio.LIBRE;
                     dialogo.dismiss();
@@ -84,16 +92,22 @@ final class SelectorEstudioBottomSheet {
             agregarFilaMateria(
                     inflador,
                     lista,
-                    null,
                     contexto.getString(R.string.materia_general_nombre),
                     colorGeneral,
-                    v -> {
+                    btnComenzarSelector,
+                    eleccion,
+                    () -> {
                         TecnicaEstudio tecnica = opPomodoro.isChecked()
                                 ? TecnicaEstudio.POMODORO : TecnicaEstudio.LIBRE;
                         dialogo.dismiss();
                         listener.alElegirMateria(null, null, tecnica);
                     });
         }
+        btnComenzarSelector.setOnClickListener(v -> {
+            if (eleccion[0] != null) {
+                eleccion[0].run();
+            }
+        });
 
         MaterialButton btnNueva = vista.findViewById(R.id.botonMostrarNuevaMateria);
         View panelNueva = vista.findViewById(R.id.panelNuevaMateriaSelector);
@@ -104,6 +118,8 @@ final class SelectorEstudioBottomSheet {
         btnNueva.setOnClickListener(v -> {
             panelNueva.setVisibility(View.VISIBLE);
             btnNueva.setVisibility(View.GONE);
+            // El panel trae su propio «Comenzar»: no se muestran dos acciones primarias a la vez.
+            btnComenzarSelector.setVisibility(View.GONE);
             campoNombre.requestFocus();
         });
 
@@ -128,16 +144,42 @@ final class SelectorEstudioBottomSheet {
     private static void agregarFilaMateria(
             LayoutInflater inflador,
             LinearLayout contenedor,
-            @Nullable Materia materia,
             String nombreVisible,
             int color,
-            View.OnClickListener onClick) {
+            MaterialButton botonComenzar,
+            Runnable[] eleccion,
+            Runnable alComenzar) {
         View fila = inflador.inflate(R.layout.item_selector_materia, contenedor, false);
         ImageView icono = fila.findViewById(R.id.colorSelectorMateria);
         TextView texto = fila.findViewById(R.id.nombreSelectorMateria);
-        icono.setColorFilter(color);
+        AcentoMateria.punto(icono, color);
         texto.setText(nombreVisible);
-        fila.setOnClickListener(onClick);
+        ViewCompat.setAccessibilityDelegate(fila, new AccessibilityDelegateCompat() {
+            @Override
+            public void onInitializeAccessibilityNodeInfo(
+                    @NonNull View host, @NonNull AccessibilityNodeInfoCompat info) {
+                super.onInitializeAccessibilityNodeInfo(host, info);
+                info.setClassName(RadioButton.class.getName());
+                info.setCheckable(true);
+                info.setChecked(host.isActivated());
+            }
+        });
+        fila.setOnClickListener(v -> {
+            for (int i = 0; i < contenedor.getChildCount(); i++) {
+                marcar(contenedor.getChildAt(i), false);
+            }
+            marcar(fila, true);
+            eleccion[0] = alComenzar;
+            botonComenzar.setEnabled(true);
+        });
         contenedor.addView(fila);
+    }
+
+    private static void marcar(View fila, boolean elegida) {
+        fila.setActivated(elegida);
+        RadioButton radio = fila.findViewById(R.id.radioSelectorMateria);
+        if (radio != null) {
+            radio.setChecked(elegida);
+        }
     }
 }

@@ -92,10 +92,12 @@
     <string name="materia_color_rapidos">Colores rápidos</string>
 
     <!-- Inicio completo y sesiones de estudio (HU-02, HU-10 a HU-15) -->
-    <string name="inicio_nueva_sesion">+ Nueva sesión</string>
+    <string name="inicio_nueva_sesion">Nueva sesión</string>
     <string name="inicio_sin_materias_aviso">Registra primero una materia activa para planificar tu estudio</string>
     <string name="inicio_ir_materias">Ir a materias</string>
     <string name="inicio_proxima_sesion">Próxima sesión pendiente</string>
+    <string name="inicio_sesion_en_curso">Sesión en curso</string>
+    <string name="inicio_volver_sesion">Volver a la sesión</string>
     <string name="inicio_sesiones_hoy">Sesiones de hoy</string>
     <string name="inicio_sin_sesiones_hoy">No tienes sesiones para hoy</string>
     <string name="sesion_rango_horario">%1$s – %2$s</string>
@@ -260,6 +262,7 @@
     <string name="evento_topico_y_nota">%1$s · %2$s</string>
 
     <string name="sesion_en_curso_titulo">Sesión en curso</string>
+    <string name="sesion_en_curso_progreso_fase">Progreso de la fase actual</string>
     <string name="sesion_en_curso_pausada">En pausa</string>
     <string name="sesion_en_curso_activa">Estudiando</string>
     <string name="sesion_en_curso_pausar">Pausar</string>
@@ -296,6 +299,9 @@
     <string name="reparto_menos_5">− 5 min</string>
     <string name="reparto_mas_5">+ 5 min</string>
     <string name="reparto_confirmar">Guardar reparto</string>
+    <string name="reparto_sesion_cruzada">Tu sesión siguiente se cruzó:</string>
+    <string name="reparto_repartir_tiempo">Repartir el tiempo</string>
+    <string name="reparto_chip_minutos">%1$s: %2$d min</string>
 
     <string name="ajustes_tecnicas_titulo">Técnicas de estudio</string>
     <string name="ajustes_no_molestar_global">Activar No molestar al estudiar</string>
@@ -338,6 +344,7 @@
     <string name="selector_estudio_titulo">¿Qué vas a estudiar?</string>
     <string name="selector_estudio_titulo_cambio">Cambiar a otra materia</string>
     <string name="selector_nueva_materia">Nueva materia</string>
+    <string name="selector_comenzar">Comenzar</string>
     <string name="selector_nueva_materia_nombre">Nombre de la materia</string>
     <string name="selector_iniciar_estudio">Comenzar</string>
     <string name="dialogo_sesion_pendiente_titulo">¿Es tu sesión de %1$s?</string>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chip con el color de materia al 15 %; el relleno se aplica como tinte con AcentoMateria.chip(...). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <corners android:radius="@dimen/radius_chip" />
+    <solid android:color="@android:color/white" />
+</shape>

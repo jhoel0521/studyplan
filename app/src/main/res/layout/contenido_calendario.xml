@@ -32,38 +32,38 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonVistaDia"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.StudyPlan.Button.Toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/button_height"
             android:text="@string/calendario_vista_dia" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonVistaSemana"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.StudyPlan.Button.Toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/button_height"
             android:text="@string/calendario_vista_semana" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonVistaMes"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.StudyPlan.Button.Toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/button_height"
             android:text="@string/calendario_vista_mes" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonPeriodoAnterior"
-        style="@style/Widget.Material3.Button.IconButton"
+        style="@style/Widget.StudyPlan.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/calendario_anterior"
         android:minWidth="48dp"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/button_height"
         app:icon="@drawable/ic_chevron_izq"
         app:layout_constraintBottom_toBottomOf="@id/textoTituloPeriodo"
         app:layout_constraintStart_toStartOf="parent"
@@ -86,13 +86,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonPeriodoSiguiente"
-        style="@style/Widget.Material3.Button.IconButton"
+        style="@style/Widget.StudyPlan.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/calendario_siguiente"
         android:minWidth="48dp"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/button_height"
         app:icon="@drawable/ic_chevron_der"
         app:layout_constraintBottom_toBottomOf="@id/textoTituloPeriodo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -116,11 +116,11 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonFiltroActivo"
-        style="@style/Widget.Material3.Button.TonalButton"
+        style="@style/Widget.StudyPlan.Button.Tonal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/button_height"
         android:text="@string/calendario_filtro_activo_chip"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/textoResumenPeriodo"

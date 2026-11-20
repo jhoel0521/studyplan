@@ -48,7 +48,7 @@ public class MainActivity extends ActividadProtegida {
     private LinearProgressIndicator barraProgreso;
     private MaterialButton botonNuevaSesion;
     private MaterialCardView tarjetaProximaSesion;
-    private ImageView colorMateriaProxima;
+    private View colorMateriaProxima;
     private TextView nombreMateriaProxima;
     private TextView horarioProxima;
     private ImageView iconoEstadoProxima;
@@ -59,6 +59,9 @@ public class MainActivity extends ActividadProtegida {
 
     @Nullable
     private ResumenInicio ultimoResumen;
+    private MaterialCardView tarjetaSesionEnCurso;
+    private TextView nombreMateriaEnCursoInicio;
+    private ExtendedFloatingActionButton botonEstudiarAhora;
     private boolean hayMateriasActivas;
     private List<Materia> materiasSelector = Collections.emptyList();
 
@@ -86,7 +89,11 @@ public class MainActivity extends ActividadProtegida {
         botonNuevaSesion = findViewById(R.id.botonNuevaSesion);
         MaterialButton botonEditarMeta = findViewById(R.id.botonEditarMetaSemana);
         MaterialButton botonHistorial = findViewById(R.id.botonHistorialMetas);
-        ExtendedFloatingActionButton botonEstudiarAhora = findViewById(R.id.botonEstudiarAhora);
+        botonEstudiarAhora = findViewById(R.id.botonEstudiarAhora);
+        tarjetaSesionEnCurso = findViewById(R.id.tarjetaSesionEnCurso);
+        nombreMateriaEnCursoInicio = findViewById(R.id.nombreMateriaEnCursoInicio);
+        MaterialButton botonVolverSesion = findViewById(R.id.botonVolverSesionInicio);
+        botonVolverSesion.setOnClickListener(this::onVolverSesionClick);
         tarjetaProximaSesion = findViewById(R.id.tarjetaProximaSesion);
         colorMateriaProxima = findViewById(R.id.colorMateriaProxima);
         nombreMateriaProxima = findViewById(R.id.nombreMateriaProxima);
@@ -106,6 +113,7 @@ public class MainActivity extends ActividadProtegida {
         botonHistorial.setOnClickListener(this::onHistorialMetasClick);
         botonEstudiarAhora.setOnClickListener(this::onEstudiarAhoraClick);
         tarjetaProximaSesion.setOnClickListener(this::onProximaSesionClick);
+        AcentoMateria.comoBoton(tarjetaProximaSesion);
     }
 
     @Override
@@ -147,9 +155,20 @@ public class MainActivity extends ActividadProtegida {
             return;
         }
         modelo.consumirEventos();
+        abrirSesionEnCurso(sesionId);
+    }
+
+    private void abrirSesionEnCurso(long sesionId) {
         Intent intento = new Intent(this, SesionEnCursoActivity.class);
         intento.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, sesionId);
         startActivity(intento);
+    }
+
+    /** «Volver a la sesión» de la tarjeta de Inicio (HU-02 «Sesión en curso visible»). */
+    private void onVolverSesionClick(View vista) {
+        if (ultimoResumen != null && ultimoResumen.sesionEnCurso() != null) {
+            abrirSesionEnCurso(ultimoResumen.sesionEnCurso().sesionId());
+        }
     }
 
     private void onEditarMetaClick(View vista) {
@@ -180,7 +199,26 @@ public class MainActivity extends ActividadProtegida {
         startActivity(new Intent(this, HistorialMetasActivity.class));
     }
 
+    /** Aviso de sesión En curso y texto del botón flotante (HU-02, HU-47; design.md, decisión 21). */
+    private void mostrarSesionEnCurso(@Nullable DetalleSesionInicio enCurso) {
+        if (enCurso == null) {
+            tarjetaSesionEnCurso.setVisibility(View.GONE);
+            botonEstudiarAhora.setText(R.string.accion_estudiar_ahora);
+            botonEstudiarAhora.setContentDescription(getString(R.string.accion_estudiar_ahora));
+            return;
+        }
+        nombreMateriaEnCursoInicio.setText(enCurso.nombreMateria());
+        tarjetaSesionEnCurso.setVisibility(View.VISIBLE);
+        botonEstudiarAhora.setText(R.string.inicio_volver_sesion);
+        botonEstudiarAhora.setContentDescription(getString(R.string.inicio_volver_sesion));
+    }
+
     private void onEstudiarAhoraClick(View vista) {
+        // Con una sesión En curso no se pide materia ni se crea otra: se vuelve a ella (HU-47).
+        if (ultimoResumen != null && ultimoResumen.sesionEnCurso() != null) {
+            abrirSesionEnCurso(ultimoResumen.sesionEnCurso().sesionId());
+            return;
+        }
         SelectorEstudioBottomSheet.mostrar(
                 this,
                 R.string.selector_estudio_titulo,
@@ -222,7 +260,8 @@ public class MainActivity extends ActividadProtegida {
 
     private void mostrarDialogoSesionPendiente(
             DetalleSesionInicio pendiente, @Nullable Long materiaId, TecnicaEstudio tecnica) {
-        new MaterialAlertDialogBuilder(this)
+        // «Iniciar la planificada» en relleno y «Empezar sesión nueva» en contorno (design.md, decisión 7).
+        new MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_StudyPlan_MaterialAlertDialog_Destacado)
                 .setTitle(getString(R.string.dialogo_sesion_pendiente_titulo, pendiente.nombreMateria()))
                 .setMessage(getString(
                         R.string.dialogo_sesion_pendiente_msg,
@@ -237,6 +276,7 @@ public class MainActivity extends ActividadProtegida {
 
     private void onResumen(ResumenInicio resumen) {
         ultimoResumen = resumen;
+        mostrarSesionEnCurso(resumen.sesionEnCurso());
         saludo.setText(getString(R.string.inicio_saludo, resumen.nombre()));
         textoProgreso.setText(getString(R.string.inicio_progreso,
                 FormatoHoras.texto(resumen.horasRealizadas()), FormatoHoras.texto(resumen.metaSemanalHoras())));
@@ -244,7 +284,7 @@ public class MainActivity extends ActividadProtegida {
 
         DetalleSesionInicio proxima = resumen.proximaSesion();
         if (proxima != null) {
-            colorMateriaProxima.setColorFilter(proxima.colorMateria());
+            AcentoMateria.barra(colorMateriaProxima, proxima.colorMateria());
             nombreMateriaProxima.setText(proxima.nombreMateria());
             horarioProxima.setText(FormatoSesion.rangoYDuracion(this, proxima, true));
             EstadoSesionVisual.aplicar(proxima.estado(), iconoEstadoProxima, etiquetaEstadoProxima);

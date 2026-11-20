@@ -138,10 +138,12 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Grupo de botones unidos, como el btn-group de Bootstrap: mismo color y esquinas redondeadas solo en los extremos. -->
+            <!-- Grupo de botones unidos, como el btn-group de Bootstrap: mismo color y esquinas redondeadas solo en los extremos.
+                 Solo iconos (design.md, decisión 18): en pantalla chica los textos no cabían; TalkBack lee contentDescription
+                 y MateriaFormularioActivity añade el tooltip con TooltipCompat. -->
             <LinearLayout
                 android:id="@+id/grupoBotonesMateria"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:orientation="horizontal">
@@ -149,23 +151,35 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonGuardarMateria"
                     style="@style/Widget.StudyPlan.BotonGrupo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/materia_guardar" />
+                    android:contentDescription="@string/materia_guardar"
+                    app:icon="@drawable/ic_guardar"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonArchivarMateria"
                     style="@style/Widget.StudyPlan.BotonGrupo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/materia_archivar" />
+                    android:contentDescription="@string/materia_archivar"
+                    app:icon="@drawable/ic_archivar"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonEliminarMateria"
                     style="@style/Widget.StudyPlan.BotonGrupo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/materia_eliminar" />
+                    android:contentDescription="@string/materia_eliminar"
+                    app:icon="@drawable/ic_eliminar"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

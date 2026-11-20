@@ -60,7 +60,7 @@ public class FelicitacionMetasActivity extends ActividadProtegida {
             for (String linea : lineas) {
                 TextView tv = new TextView(this);
                 tv.setText(linea);
-                tv.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium);
+                tv.setTextAppearance(R.style.TextAppearance_StudyPlan_TitleMedium);
                 tv.setPadding(0, 8, 0, 8);
                 contenedor.addView(tv);
             }

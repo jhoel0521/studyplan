@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/indicadorColorMateriaReporte"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_circulo"
         app:layout_constraintBottom_toBottomOf="@id/textoNombreMateriaReporte"

@@ -7,8 +7,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -80,8 +83,19 @@ public final class DialogoRecuperacionSesion {
                 ? actividad.getString(R.string.recuperacion_sigkill_titulo, horaSalida.texto())
                 : actividad.getString(R.string.recuperacion_titulo, horaSalida.texto());
 
+        // Título propio: el DialogTitle de AppCompat lo limita a dos líneas y con la fuente grande del sistema se
+        // cortaba la pregunta (RNF-06, texto ampliado).
+        TextView vistaTitulo = new TextView(actividad);
+        TextViewCompat.setTextAppearance(vistaTitulo, R.style.TextAppearance_StudyPlan_HeadlineSmall);
+        vistaTitulo.setTextColor(MaterialColors.getColor(
+                vistaTitulo, com.google.android.material.R.attr.colorOnSurface));
+        int margen = Math.round(24 * actividad.getResources().getDisplayMetrics().density);
+        vistaTitulo.setPadding(margen, margen, margen, 0);
+        vistaTitulo.setText(titulo);
+        ViewCompat.setAccessibilityHeading(vistaTitulo, true);
+
         AlertDialog dialogo = new MaterialAlertDialogBuilder(actividad)
-                .setTitle(titulo)
+                .setCustomTitle(vistaTitulo)
                 .setView(vista)
                 .setCancelable(false)
                 .setPositiveButton(R.string.recuperacion_confirmar, null)

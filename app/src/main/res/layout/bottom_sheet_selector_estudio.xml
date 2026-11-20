@@ -19,32 +19,45 @@
             android:layout_height="wrap_content"
             android:maxWidth="600dp"
             android:text="@string/selector_estudio_titulo"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
             tools:text="¿Qué vas a estudiar?" />
 
-        <RadioGroup
-            android:id="@+id/grupoTecnicaSelector"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="16dp"
+            android:maxWidth="600dp"
+            android:text="@string/sesion_detalle_tecnica"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="Técnica de estudio" />
 
-            <RadioButton
+        <!-- Libre / Pomodoro como grupo de botones alternables (design.md, decisión 2). -->
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/grupoTecnicaSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/opcionTecnicaLibre"
+                style="@style/Widget.StudyPlan.Button.Toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/sesion_tecnica_libre" />
 
-            <RadioButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/opcionTecnicaPomodoro"
+                style="@style/Widget.StudyPlan.Button.Toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/sesion_tecnica_pomodoro" />
-        </RadioGroup>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <LinearLayout
             android:id="@+id/contenedorListaMateriasSelector"
@@ -55,13 +68,24 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonMostrarNuevaMateria"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.StudyPlan.Button.Outlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:minHeight="48dp"
+            android:minHeight="@dimen/button_height"
             android:text="@string/selector_nueva_materia"
             app:icon="@drawable/ic_agregar" />
+
+        <!-- La sesión empieza solo con «Comenzar», desactivado hasta elegir una materia (HU-47, decisión 20). -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonComenzarSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:enabled="false"
+            android:minHeight="@dimen/button_height"
+            android:text="@string/selector_comenzar"
+            app:icon="@drawable/ic_reproducir" />
 
         <LinearLayout
             android:id="@+id/panelNuevaMateriaSelector"
@@ -95,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/selector_iniciar_estudio" />
         </LinearLayout>
     </LinearLayout>

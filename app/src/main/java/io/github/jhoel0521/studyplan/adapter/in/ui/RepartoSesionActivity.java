@@ -31,7 +31,11 @@ public class RepartoSesionActivity extends ActividadProtegida {
 
     private View barraPrimera;
     private View barraSegunda;
-    private TextView textoResumen;
+    private View textoResumen;
+    private TextView chipPrimera;
+    private TextView chipSegunda;
+    private View barraSesionCruzada;
+    private TextView nombreSesionCruzada;
     private TextView textoHoraCorte;
     private Slider sliderCorte;
     private TextView textoError;
@@ -62,6 +66,10 @@ public class RepartoSesionActivity extends ActividadProtegida {
         barraPrimera = findViewById(R.id.barraPrimeraReparto);
         barraSegunda = findViewById(R.id.barraSegundaReparto);
         textoResumen = findViewById(R.id.textoResumenReparto);
+        chipPrimera = findViewById(R.id.chipPrimeraReparto);
+        chipSegunda = findViewById(R.id.chipSegundaReparto);
+        barraSesionCruzada = findViewById(R.id.barraSesionCruzadaReparto);
+        nombreSesionCruzada = findViewById(R.id.nombreSesionCruzadaReparto);
         textoHoraCorte = findViewById(R.id.textoHoraCorteReparto);
         sliderCorte = findViewById(R.id.sliderCorteReparto);
         textoError = findViewById(R.id.textoErrorReparto);
@@ -90,8 +98,11 @@ public class RepartoSesionActivity extends ActividadProtegida {
             return;
         }
         ResultadoReparto rep = est.reparto;
-        barraPrimera.setBackgroundColor(est.colorPrimera);
-        barraSegunda.setBackgroundColor(est.colorSegunda);
+        // Colores de materia ajustados a la superficie del tema (design.md, decisión 6).
+        barraPrimera.setBackgroundColor(AcentoMateria.ajustado(barraPrimera, est.colorPrimera));
+        barraSegunda.setBackgroundColor(AcentoMateria.ajustado(barraSegunda, est.colorSegunda));
+        AcentoMateria.barra(barraSesionCruzada, est.colorSegunda);
+        nombreSesionCruzada.setText(est.nombreSegunda);
 
         LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams) barraPrimera.getLayoutParams();
         lp1.weight = Math.max(1f, rep.minutosPrimeraSesion());
@@ -101,7 +112,13 @@ public class RepartoSesionActivity extends ActividadProtegida {
         lp2.weight = Math.max(1f, rep.minutosSegundaSesion());
         barraSegunda.setLayoutParams(lp2);
 
-        textoResumen.setText(getString(
+        chipPrimera.setText(getString(
+                R.string.reparto_chip_minutos, est.nombrePrimera, rep.minutosPrimeraSesion()));
+        chipSegunda.setText(getString(
+                R.string.reparto_chip_minutos, est.nombreSegunda, rep.minutosSegundaSesion()));
+        AcentoMateria.chip(chipPrimera, est.colorPrimera);
+        AcentoMateria.chip(chipSegunda, est.colorSegunda);
+        textoResumen.setContentDescription(getString(
                 R.string.reparto_resumen,
                 est.nombrePrimera,
                 rep.minutosPrimeraSesion(),

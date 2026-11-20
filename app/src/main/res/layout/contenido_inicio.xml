@@ -38,6 +38,8 @@
                 android:id="@+id/saludo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
@@ -46,80 +48,168 @@
                 app:layout_constraintWidth_max="600dp"
                 tools:text="¡Hola, Ana!" />
 
-            <TextView
-                android:id="@+id/tituloProgreso"
+            <!-- Aviso de sesión En curso (HU-02 «Sesión en curso visible», HU-47; design.md, decisión 21). -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tarjetaSesionEnCurso"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/inicio_progreso_semana"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="?attr/colorPrimaryContainer"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/saludo"
                 app:layout_constraintWidth_max="600dp"
-                tools:text="Progreso de la semana" />
+                app:strokeWidth="0dp"
+                tools:visibility="visible">
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/barraProgreso"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="600dp"
+                        android:text="@string/inicio_sesion_en_curso"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        tools:text="Sesión en curso" />
+
+                    <TextView
+                        android:id="@+id/nombreMateriaEnCursoInicio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:maxWidth="600dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="?attr/colorOnPrimaryContainer"
+                        tools:text="Álgebra" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonVolverSesionInicio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:minHeight="@dimen/button_height"
+                        android:text="@string/inicio_volver_sesion"
+                        app:icon="@drawable/ic_reproducir" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tarjeta de progreso semanal sobre colorPrimary (design.md, «Visual por pantalla»: Inicio). -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tarjetaProgreso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tarjetaSesionEnCurso"
+                app:layout_constraintWidth_max="600dp"
+                app:layout_goneMarginTop="16dp"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="18dp">
+
+                    <TextView
+                        android:id="@+id/tituloProgreso"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inicio_progreso_semana"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_max="600dp"
+                        tools:text="Progreso de la semana" />
+
+                    <TextView
+                        android:id="@+id/textoProgreso"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textAppearance="?attr/textAppearanceHeadlineLarge"
+                        android:textColor="?attr/colorOnPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tituloProgreso"
+                        app:layout_constraintWidth_max="600dp"
+                        tools:text="12 / 20 h" />
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/barraProgreso"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:contentDescription="@string/inicio_progreso_semana"
+                        android:max="100"
+                        android:progress="0"
+                        app:indicatorColor="?attr/colorOnPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textoProgreso"
+                        app:layout_constraintWidth_max="600dp"
+                        app:trackColor="@color/sp_pista_sobre_primario"
+                        app:trackCornerRadius="4dp"
+                        app:trackThickness="8dp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonEditarMetaSemana"
+                style="@style/Widget.StudyPlan.Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_height"
+                android:text="@string/inicio_editar_meta" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonHistorialMetas"
+                style="@style/Widget.StudyPlan.Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_height"
+                android:text="@string/inicio_ver_historial_metas" />
+
+            <!-- Fila que baja de línea con la fuente más grande del sistema (design.md, decisión 8). -->
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/filaAccionesMeta"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:contentDescription="@string/inicio_progreso_semana"
-                android:max="100"
-                android:progress="0"
+                app:constraint_referenced_ids="botonEditarMetaSemana,botonHistorialMetas"
+                app:flow_horizontalBias="0"
+                app:flow_horizontalGap="12dp"
+                app:flow_horizontalStyle="packed"
+                app:flow_verticalGap="8dp"
+                app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tituloProgreso"
+                app:layout_constraintTop_toBottomOf="@id/tarjetaProgreso"
                 app:layout_constraintWidth_max="600dp" />
-
-            <TextView
-                android:id="@+id/textoProgreso"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/barraProgreso"
-                app:layout_constraintWidth_max="600dp"
-                tools:text="1,5 / 20 h" />
-
-            <LinearLayout
-                android:id="@+id/filaAccionesMeta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textoProgreso">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/botonEditarMetaSemana"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:text="@string/inicio_editar_meta" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/botonHistorialMetas"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:minHeight="48dp"
-                    android:text="@string/inicio_ver_historial_metas" />
-            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonNuevaSesion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/inicio_nueva_sesion"
                 app:icon="@drawable/ic_agregar"
                 app:layout_constraintStart_toStartOf="parent"
@@ -145,82 +235,92 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxWidth="600dp"
-                        android:text="@string/inicio_proxima_sesion"
-                        android:textAppearance="?attr/textAppearanceLabelLarge"
-                        tools:text="Próxima sesión pendiente" />
+                    <!-- Barra de 4 dp con el color de la materia (solo acento; design.md, decisión 6). -->
+                    <View
+                        android:id="@+id/colorMateriaProxima"
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp"
+                        android:background="@drawable/fondo_barra_materia"
+                        android:importantForAccessibility="no" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="12dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="12dp">
 
-                        <ImageView
-                            android:id="@+id/colorMateriaProxima"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_circulo"
-                            tools:tint="?attr/colorPrimary" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="600dp"
+                            android:text="@string/inicio_proxima_sesion"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:text="Próxima sesión pendiente" />
+
+                        <TextView
+                            android:id="@+id/nombreMateriaProxima"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:maxWidth="600dp"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            tools:text="Cálculo Diferencial" />
+
+                        <TextView
+                            android:id="@+id/horarioProxima"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:maxWidth="600dp"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            tools:text="2026-11-15 · 09:00 – 10:30 · 90 min" />
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_marginTop="6dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/iconoEstadoProxima"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_estado_pendiente"
+                                tools:tint="?attr/colorPrimary" />
 
                             <TextView
-                                android:id="@+id/nombreMateriaProxima"
+                                android:id="@+id/etiquetaEstadoProxima"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
                                 android:maxWidth="600dp"
-                                android:textAppearance="?attr/textAppearanceTitleMedium"
-                                tools:text="Cálculo Diferencial" />
-
-                            <TextView
-                                android:id="@+id/horarioProxima"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:maxWidth="600dp"
-                                android:textAppearance="?attr/textAppearanceBodyMedium"
-                                tools:text="2026-11-15 · 09:00 – 10:30 · 90 min" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:id="@+id/iconoEstadoProxima"
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:importantForAccessibility="no"
-                                    android:src="@drawable/ic_estado_pendiente"
-                                    tools:tint="?attr/colorPrimary" />
-
-                                <TextView
-                                    android:id="@+id/etiquetaEstadoProxima"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
-                                    android:maxWidth="600dp"
-                                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                                    tools:text="Pendiente" />
-                            </LinearLayout>
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                tools:text="Pendiente" />
                         </LinearLayout>
                     </LinearLayout>
+
+                    <!-- Chevron: el borde de 1 dp no basta para reconocer la tarjeta como tocable (decisión 8). -->
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="12dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_chevron_der"
+                        app:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -277,6 +377,6 @@
             android:layout_margin="16dp"
             android:contentDescription="@string/accion_estudiar_ahora"
             android:text="@string/accion_estudiar_ahora"
-            app:icon="@android:drawable/ic_media_play" />
+            app:icon="@drawable/ic_reproducir" />
     </FrameLayout>
 </LinearLayout>

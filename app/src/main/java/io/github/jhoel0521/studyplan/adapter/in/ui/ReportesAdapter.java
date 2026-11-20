@@ -1,7 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -66,8 +64,7 @@ final class ReportesAdapter extends RecyclerView.Adapter<ReportesAdapter.Vista> 
 
         void enlazar(DesgloseMateriaPeriodo item) {
             Context ctx = itemView.getContext();
-            ImageViewCompat.setImageTintList(
-                    indicadorColor, ColorStateList.valueOf(item.colorMateria()));
+            AcentoMateria.punto(indicadorColor, item.colorMateria());
             String etiquetaNombre = EstadisticasAdapter.nombreVisible(ctx, item);
             nombre.setText(etiquetaNombre);
 

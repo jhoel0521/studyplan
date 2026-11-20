@@ -1,7 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,13 +12,14 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.widget.ImageViewCompat;
 import androidx.lifecycle.Lifecycle;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
 import java.util.Locale;
@@ -64,6 +64,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     private TextView textoFasePomodoro;
     private TextView textoCronometro;
     private TextView textoEstadoEnCurso;
+    private CircularProgressIndicator anilloProgreso;
     private TextView textoEstadoNoMolestar;
     private MaterialButton botonPausarReanudar;
     private MaterialButton botonDetener;
@@ -184,6 +185,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     private void enlazarVistas() {
         MaterialToolbar barraSuperior = findViewById(R.id.barraSuperior);
         colorMateria = findViewById(R.id.colorMateriaEnCurso);
+        anilloProgreso = findViewById(R.id.anilloProgresoEnCurso);
         nombreMateria = findViewById(R.id.nombreMateriaEnCurso);
         textoFasePomodoro = findViewById(R.id.textoFasePomodoro);
         textoCronometro = findViewById(R.id.textoCronometro);
@@ -228,7 +230,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         instanteCargaMs = System.currentTimeMillis();
         ticksDesdeRecarga = 0;
 
-        ImageViewCompat.setImageTintList(colorMateria, ColorStateList.valueOf(r.colorMateria()));
+        AcentoMateria.punto(colorMateria, r.colorMateria());
         nombreMateria.setText(r.nombreMateria());
         textoEstadoEnCurso.setText(r.pausada()
                 ? R.string.sesion_en_curso_pausada
@@ -237,6 +239,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
                 ? R.string.sesion_en_curso_reanudar
                 : R.string.sesion_en_curso_pausar);
         textoEstadoNoMolestar.setVisibility(r.noMolestarActivo() ? View.VISIBLE : View.GONE);
+        aplicarColorDeFase(r);
 
         if (r.sesion().tecnica() == TecnicaEstudio.POMODORO && r.estadoPomodoro() != null) {
             EstadoPomodoroCalculado pom = r.estadoPomodoro();
@@ -283,9 +286,69 @@ public class SesionEnCursoActivity extends ActividadProtegida {
             long restante = Math.max(
                     0L, ultimoResumen.estadoPomodoro().milisRestantesEnFase() - delta);
             textoCronometro.setText(formatearHms(restante));
+            actualizarAnillo(restante, duracionFaseMs(ultimoResumen));
         } else {
             textoCronometro.setText(formatearHms(milis));
+            actualizarAnillo(0L, 0L);
         }
+    }
+
+    /**
+     * Color del anillo y de la etiqueta de estado según la fase (design.md, decisión 5b): en pausa
+     * {@code colorWarning}, en descanso {@code colorSecondary} y estudiando {@code colorPrimary}. La etiqueta de
+     * texto acompaña siempre al color (RNF-06).
+     */
+    private void aplicarColorDeFase(ResumenEjecucionSesion r) {
+        int atributo;
+        if (r.pausada()) {
+            atributo = R.attr.colorWarning;
+        } else if (esDescanso(r)) {
+            atributo = com.google.android.material.R.attr.colorSecondary;
+        } else {
+            atributo = com.google.android.material.R.attr.colorPrimary;
+        }
+        int color = MaterialColors.getColor(anilloProgreso, atributo);
+        anilloProgreso.setIndicatorColor(color);
+        textoEstadoEnCurso.setTextColor(color);
+    }
+
+    private static boolean esDescanso(ResumenEjecucionSesion r) {
+        if (r.sesion().tecnica() != TecnicaEstudio.POMODORO || r.estadoPomodoro() == null) {
+            return false;
+        }
+        FasePomodoro fase = r.estadoPomodoro().faseActual();
+        return fase == FasePomodoro.DESCANSO_CORTO || fase == FasePomodoro.DESCANSO_LARGO;
+    }
+
+    /** Duración configurada de la fase Pomodoro actual (RN-17), o 0 si no aplica (Libre o tiempo extra). */
+    private static long duracionFaseMs(ResumenEjecucionSesion r) {
+        if (r.sesion().tecnica() != TecnicaEstudio.POMODORO || r.estadoPomodoro() == null
+                || r.sesion().configuracionPomodoroSnapshot() == null) {
+            return 0L;
+        }
+        int minutos;
+        switch (r.estadoPomodoro().faseActual()) {
+            case TRABAJO:
+                minutos = r.sesion().configuracionPomodoroSnapshot().trabajoMinutos();
+                break;
+            case DESCANSO_CORTO:
+                minutos = r.sesion().configuracionPomodoroSnapshot().descansoCortoMinutos();
+                break;
+            case DESCANSO_LARGO:
+                minutos = r.sesion().configuracionPomodoroSnapshot().descansoLargoMinutos();
+                break;
+            default:
+                minutos = 0;
+        }
+        return minutos * 60_000L;
+    }
+
+    /** Progreso de la fase (0 a 1000); sin duración conocida (Libre o tiempo extra) el anillo queda completo. */
+    private void actualizarAnillo(long restanteMs, long duracionMs) {
+        int progreso = duracionMs <= 0L
+                ? anilloProgreso.getMax()
+                : (int) Math.round(anilloProgreso.getMax() * (1.0 - Math.min(1.0, (double) restanteMs / duracionMs)));
+        anilloProgreso.setProgressCompat(progreso, false);
     }
 
     private String textoDeFase(FasePomodoro fase, int ciclo, int objetivo) {

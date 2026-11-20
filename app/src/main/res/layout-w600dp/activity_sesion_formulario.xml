@@ -103,14 +103,14 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonElegirFecha"
-                    style="@style/Widget.Material3.Button.IconButton.Outlined"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    style="@style/Widget.StudyPlan.Button.Icon.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
                     android:contentDescription="@string/sesion_form_elegir_fecha"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
+                    android:minWidth="@dimen/button_height"
+                    android:minHeight="@dimen/button_height"
                     app:icon="@drawable/ic_calendario" />
             </LinearLayout>
 
@@ -143,14 +143,14 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonElegirHoraInicio"
-                    style="@style/Widget.Material3.Button.IconButton.Outlined"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    style="@style/Widget.StudyPlan.Button.Icon.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
                     android:contentDescription="@string/sesion_form_elegir_hora_inicio"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
+                    android:minWidth="@dimen/button_height"
+                    android:minHeight="@dimen/button_height"
                     app:icon="@drawable/ic_reloj" />
             </LinearLayout>
 
@@ -183,14 +183,14 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonElegirHoraFin"
-                    style="@style/Widget.Material3.Button.IconButton.Outlined"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    style="@style/Widget.StudyPlan.Button.Icon.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
                     android:contentDescription="@string/sesion_form_elegir_hora_fin"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
+                    android:minWidth="@dimen/button_height"
+                    android:minHeight="@dimen/button_height"
                     app:icon="@drawable/ic_reloj" />
             </LinearLayout>
 
@@ -286,11 +286,11 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/botonActivarNotificacionesForm"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.StudyPlan.Button.Outlined"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:minHeight="48dp"
+                        android:minHeight="@dimen/button_height"
                         android:text="@string/ajustes_permiso_notificaciones_ir" />
                 </LinearLayout>
             </LinearLayout>
@@ -336,7 +336,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:minHeight="48dp"
+                android:minHeight="@dimen/button_height"
                 android:text="@string/sesion_form_guardar" />
         </LinearLayout>
     </ScrollView>

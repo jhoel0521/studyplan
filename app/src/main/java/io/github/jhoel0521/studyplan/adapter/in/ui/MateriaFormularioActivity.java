@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -94,6 +95,10 @@ public class MateriaFormularioActivity extends ActividadProtegida {
         botonGuardar.setOnClickListener(this::onGuardarClick);
         botonArchivar.setOnClickListener(this::onArchivarClick);
         botonEliminar.setOnClickListener(this::onEliminarClick);
+        // Acciones solo con icono: el tooltip repite el nombre que lee TalkBack (design.md, decisión 18).
+        TooltipCompat.setTooltipText(botonGuardar, botonGuardar.getContentDescription());
+        TooltipCompat.setTooltipText(botonArchivar, botonArchivar.getContentDescription());
+        TooltipCompat.setTooltipText(botonEliminar, botonEliminar.getContentDescription());
         botonArchivar.setVisibility(edicion ? View.VISIBLE : View.GONE);
         botonEliminar.setVisibility(edicion ? View.VISIBLE : View.GONE);
         if (edicion) {
@@ -154,7 +159,12 @@ public class MateriaFormularioActivity extends ActividadProtegida {
             botonArchivar.setVisibility(View.GONE);
             botonEliminar.setVisibility(View.GONE);
         } else {
-            botonArchivar.setText(materia.archivada() ? R.string.materia_desarchivar : R.string.materia_archivar);
+            // Solo icono (decisión 18): el estado cambia el icono, el nombre que lee TalkBack y el tooltip.
+            boolean archivada = materia.archivada();
+            botonArchivar.setIconResource(archivada ? R.drawable.ic_desarchivar : R.drawable.ic_archivar);
+            String accion = getString(archivada ? R.string.materia_desarchivar : R.string.materia_archivar);
+            botonArchivar.setContentDescription(accion);
+            TooltipCompat.setTooltipText(botonArchivar, accion);
             botonArchivar.setEnabled(true);
             botonEliminar.setEnabled(true);
         }

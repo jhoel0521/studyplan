@@ -62,7 +62,7 @@ public class SesionInicioAdapter extends ListAdapter<DetalleSesionInicio, Sesion
 
     /** Fila de sesión en Inicio. */
     final class SesionHolder extends RecyclerView.ViewHolder {
-        private final ImageView colorMateria;
+        private final View colorMateria;
         private final TextView nombreMateria;
         private final TextView horarioSesion;
         private final ImageView iconoEstado;
@@ -79,11 +79,12 @@ public class SesionInicioAdapter extends ListAdapter<DetalleSesionInicio, Sesion
 
         void enlazar(DetalleSesionInicio sesion) {
             Context contexto = itemView.getContext();
-            colorMateria.setColorFilter(sesion.colorMateria());
+            AcentoMateria.barra(colorMateria, sesion.colorMateria());
             nombreMateria.setText(sesion.nombreMateria());
             horarioSesion.setText(FormatoSesion.rangoYDuracion(contexto, sesion, false));
             EstadoSesionVisual.aplicar(sesion.estado(), iconoEstado, etiquetaEstado);
             itemView.setOnClickListener(this::onSesionClick);
+            AcentoMateria.comoBoton(itemView);
         }
 
         private void onSesionClick(View vista) {

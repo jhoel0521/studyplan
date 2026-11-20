@@ -53,7 +53,8 @@
             android:layout_marginTop="8dp"
             android:maxWidth="600dp"
             android:text="@string/recuperacion_topico_titulo"
-            android:textAppearance="?attr/textAppearanceLabelLarge"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone"
             tools:visibility="visible" />
 

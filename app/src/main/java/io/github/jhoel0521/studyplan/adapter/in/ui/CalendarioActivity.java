@@ -133,6 +133,7 @@ public class CalendarioActivity extends ActividadProtegida
     private void enlazarVistas() {
         barraCalendario = findViewById(R.id.barraCalendario);
         grupoVista = findViewById(R.id.grupoVistaCalendario);
+        GrupoBotones.ajustarEnUnaLinea(grupoVista);
         botonPeriodoAnterior = findViewById(R.id.botonPeriodoAnterior);
         botonPeriodoSiguiente = findViewById(R.id.botonPeriodoSiguiente);
         textoTituloPeriodo = findViewById(R.id.textoTituloPeriodo);
@@ -438,8 +439,9 @@ public class CalendarioActivity extends ActividadProtegida
             ImageView iconoEstado = vista.findViewById(R.id.iconoEstadoBloque);
             TextView textoEstado = vista.findViewById(R.id.textoEstadoBloque);
 
-            franja.setBackgroundColor(item.colorMateria());
-            tarjeta.setStrokeColor(item.colorMateria());
+            // Color de materia solo en la franja de 4 dp, ajustado a la superficie; el borde del bloque queda en
+            // colorOutlineVariant del estilo Widget.StudyPlan.Card.Compact (design.md, decisión 6).
+            franja.setBackgroundColor(AcentoMateria.ajustado(franja, item.colorMateria()));
             textoMateria.setText(item.nombreMateria());
             EstadoSesionVisual.aplicar(item.codigoEstado(), iconoEstado, textoEstado);
 
@@ -622,11 +624,11 @@ public class CalendarioActivity extends ActividadProtegida
         columnaTexto.setOrientation(LinearLayout.VERTICAL);
 
         TextView titulo = new TextView(this);
-        titulo.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleSmall);
+        titulo.setTextAppearance(R.style.TextAppearance_StudyPlan_TitleSmall);
 
         TextView descripcion = new TextView(this);
         descripcion.setText(descripcionRes);
-        descripcion.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall);
+        descripcion.setTextAppearance(R.style.TextAppearance_StudyPlan_BodySmall);
 
         EstadoSesionVisual.aplicar(estado, icono, titulo);
 

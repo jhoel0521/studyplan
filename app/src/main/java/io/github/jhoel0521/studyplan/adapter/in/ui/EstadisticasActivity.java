@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.core.widget.TextViewCompat;
+
+import com.google.android.material.color.MaterialColors;
+
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.domain.ConcentracionPeriodo;
 import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
@@ -80,6 +84,8 @@ public class EstadisticasActivity extends ActividadProtegida {
     private void enlazarVistas() {
         grupoPeriodo = findViewById(R.id.grupoPeriodoEstadisticas);
         grupoSubvista = findViewById(R.id.grupoSubvistaEstadisticas);
+        GrupoBotones.ajustarEnUnaLinea(grupoPeriodo);
+        GrupoBotones.ajustarEnUnaLinea(grupoSubvista);
         textoRango = findViewById(R.id.textoRangoEstadisticas);
         contenedorResumen = findViewById(R.id.contenedorResumenEstadisticas);
         contenedorConcentracion = findViewById(R.id.contenedorConcentracionEstadisticas);
@@ -218,7 +224,8 @@ public class EstadisticasActivity extends ActividadProtegida {
             for (DesgloseMateriaPeriodo m : materias) {
                 if (m.minutosReales() > 0) {
                     entradas.add(new PieEntry((float) m.minutosReales(), m.nombreMateria()));
-                    colores.add(m.colorMateria());
+                    // Porción con el color de la materia ajustado a la superficie (design.md, decisión 6).
+                    colores.add(AcentoMateria.ajustado(graficoDistribucion, m.colorMateria()));
                 }
             }
             PieDataSet set = new PieDataSet(entradas, "");
@@ -231,11 +238,18 @@ public class EstadisticasActivity extends ActividadProtegida {
         }
 
         if (e.tasaCumplimientoPorcentaje() == null) {
+            // Estado vacío en texto de cuerpo, no en el tamaño del porcentaje (design.md, decisión 9).
+            TextViewCompat.setTextAppearance(textoCumplimientoValor, R.style.TextAppearance_StudyPlan_BodyMedium);
+            textoCumplimientoValor.setTextColor(MaterialColors.getColor(
+                    textoCumplimientoValor, com.google.android.material.R.attr.colorOnSurfaceVariant));
             textoCumplimientoValor.setText(R.string.estadisticas_cumplimiento_vacio);
         } else {
             int cumplidas = e.totalCumplidas();
             int evaluables = e.totalCerradas();
             int pct = (int) Math.round(e.tasaCumplimientoPorcentaje());
+            TextViewCompat.setTextAppearance(textoCumplimientoValor, R.style.TextAppearance_StudyPlan_HeadlineSmall);
+            textoCumplimientoValor.setTextColor(MaterialColors.getColor(
+                    textoCumplimientoValor, com.google.android.material.R.attr.colorOnSurface));
             textoCumplimientoValor.setText(
                     getString(R.string.estadisticas_cumplimiento_valor, pct, cumplidas, evaluables));
         }

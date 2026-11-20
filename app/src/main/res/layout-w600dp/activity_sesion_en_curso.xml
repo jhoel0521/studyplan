@@ -37,8 +37,8 @@
 
                 <ImageView
                     android:id="@+id/colorMateriaEnCurso"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_circulo"
                     tools:tint="?attr/colorPrimary" />
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:maxWidth="600dp"
-                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
                     tools:text="Cálculo" />
             </LinearLayout>
 
@@ -59,30 +59,65 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:maxWidth="600dp"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorPrimary"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:visibility="gone"
                 tools:text="Trabajo · Ciclo 1/4"
                 tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/textoCronometro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:maxWidth="600dp"
-                android:textAppearance="?attr/textAppearanceDisplayMedium"
-                tools:text="00:25:00" />
+            <!-- Anillo de progreso de la fase con el cronómetro dentro (design.md, decisión 5b). Su color lo pone
+                 SesionEnCursoActivity según la fase: colorPrimary, colorWarning o colorSecondary. -->
+            <FrameLayout
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp">
 
-            <TextView
-                android:id="@+id/textoEstadoEnCurso"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:maxWidth="600dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                tools:text="Estudiando" />
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/anilloProgresoEnCurso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/sesion_en_curso_progreso_fase"
+                    android:max="1000"
+                    android:progress="1000"
+                    app:indicatorColor="?attr/colorPrimary"
+                    app:indicatorSize="220dp"
+                    app:trackColor="@color/sp_ring_track"
+                    app:trackCornerRadius="7dp"
+                    app:trackThickness="14dp" />
+
+                <LinearLayout
+                    android:layout_width="176dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textoCronometro"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceDisplayMedium"
+                        app:autoSizeMaxTextSize="56sp"
+                        app:autoSizeMinTextSize="24sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform"
+                        tools:text="18:42" />
+
+                    <TextView
+                        android:id="@+id/textoEstadoEnCurso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:maxWidth="600dp"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/colorPrimary"
+                        tools:text="Estudiando" />
+                </LinearLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/textoEstadoNoMolestar"
@@ -96,32 +131,54 @@
                 android:visibility="gone"
                 tools:visibility="visible" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <!-- «Pausar»/«Reanudar» en relleno y «Detener» en contorno; bajan de línea con la fuente grande. -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="24dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonPausarReanudar"
-                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/sesion_en_curso_pausar" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/botonDetenerEnCurso"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/button_height"
                     android:text="@string/sesion_en_curso_detener" />
-            </LinearLayout>
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="botonPausarReanudar,botonDetenerEnCurso"
+                    app:flow_horizontalGap="16dp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_verticalGap="16dp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Faltaba en la versión ancha y SesionEnCursoActivity lo enlaza: provocaba un NullPointerException
+                 al abrir la sesión en curso en pantallas de 600 dp o más (fallo previo a este cambio). -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonCambiarMateria"
+                style="@style/Widget.StudyPlan.Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:minHeight="@dimen/button_height"
+                android:text="@string/sesion_cambiar_materia" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tarjetaExtensionPomodoro"
-                style="@style/Widget.Material3.CardView.Outlined"
+                style="@style/Widget.StudyPlan.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -141,35 +198,46 @@
                         android:text="@string/sesion_en_curso_extender_titulo"
                         android:textAppearance="?attr/textAppearanceTitleSmall" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="8dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/botonMasUnPomodoro"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.StudyPlan.Button.Tonal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minHeight="48dp"
+                            android:minHeight="@dimen/button_height"
                             android:text="@string/sesion_en_curso_mas_pomodoro" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/botonTiempoExtraLibre"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/Widget.StudyPlan.Button.Outlined"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:minHeight="48dp"
+                            android:minHeight="@dimen/button_height"
                             android:text="@string/sesion_en_curso_tiempo_extra_libre" />
-                    </LinearLayout>
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="botonMasUnPomodoro,botonTiempoExtraLibre"
+                            app:flow_horizontalBias="0"
+                            app:flow_horizontalGap="8dp"
+                            app:flow_horizontalStyle="packed"
+                            app:flow_verticalGap="8dp"
+                            app:flow_wrapMode="chain"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tarjetaFinPlanificado"
-                style="@style/Widget.Material3.CardView.Outlined"
+                style="@style/Widget.StudyPlan.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -188,35 +256,46 @@
                         android:text="@string/sesion_en_curso_fin_plan_titulo"
                         android:textAppearance="?attr/textAppearanceTitleSmall" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="8dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/botonSigoEstudiando"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.StudyPlan.Button.Tonal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minHeight="48dp"
+                            android:minHeight="@dimen/button_height"
                             android:text="@string/sesion_en_curso_sigo" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/botonTermineFinPlan"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/Widget.StudyPlan.Button.Outlined"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:minHeight="48dp"
+                            android:minHeight="@dimen/button_height"
                             android:text="@string/sesion_en_curso_termine" />
-                    </LinearLayout>
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="botonSigoEstudiando,botonTermineFinPlan"
+                            app:flow_horizontalBias="0"
+                            app:flow_horizontalGap="16dp"
+                            app:flow_horizontalStyle="packed"
+                            app:flow_verticalGap="16dp"
+                            app:flow_wrapMode="chain"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tarjetaInvasionSesion"
-                style="@style/Widget.Material3.CardView.Outlined"
+                style="@style/Widget.StudyPlan.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -236,29 +315,40 @@
                         android:textAppearance="?attr/textAppearanceTitleSmall"
                         tools:text="Invadiendo horario de Inglés (11:00 – 12:00)" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="8dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/botonCambiarSiguiente"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.StudyPlan.Button.Tonal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:minHeight="48dp"
+                            android:minHeight="@dimen/button_height"
                             android:text="@string/sesion_en_curso_cambiar_siguiente" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/botonRepartirTramo"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/Widget.StudyPlan.Button.Outlined"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:minHeight="48dp"
+                            android:minHeight="@dimen/button_height"
                             android:text="@string/sesion_en_curso_repartir" />
-                    </LinearLayout>
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="botonCambiarSiguiente,botonRepartirTramo"
+                            app:flow_horizontalBias="0"
+                            app:flow_horizontalGap="8dp"
+                            app:flow_horizontalStyle="packed"
+                            app:flow_verticalGap="8dp"
+                            app:flow_wrapMode="chain"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

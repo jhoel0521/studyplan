@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -78,7 +77,7 @@ public class MateriasAdapter extends ListAdapter<FilaMateria, RecyclerView.ViewH
 
     /** Fila de una materia, activa o archivada. */
     private final class MateriaHolder extends RecyclerView.ViewHolder {
-        private final ImageView color;
+        private final View color;
         private final TextView nombre;
         private final TextView docente;
         private final LinearProgressIndicator barraMeta;
@@ -93,13 +92,14 @@ public class MateriasAdapter extends ListAdapter<FilaMateria, RecyclerView.ViewH
             barraMeta = vista.findViewById(R.id.barraMetaMateria);
             textoMeta = vista.findViewById(R.id.textoMetaMateria);
             horas = vista.findViewById(R.id.horasMateria);
+            AcentoMateria.comoBoton(vista);
         }
 
         void enlazar(FilaMateria fila) {
             Materia materia = fila.materia();
             boolean activa = fila.tipo() == FilaMateria.Tipo.ACTIVA;
             boolean esGeneral = materia.esGeneral();
-            color.setColorFilter(materia.color());
+            AcentoMateria.barra(color, materia.color());
             nombre.setText(esGeneral
                     ? itemView.getContext().getString(R.string.materia_general_nombre)
                     : materia.nombre());

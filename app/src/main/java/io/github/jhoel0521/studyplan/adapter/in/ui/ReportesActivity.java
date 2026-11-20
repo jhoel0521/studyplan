@@ -75,6 +75,7 @@ public class ReportesActivity extends ActividadProtegida {
         barra.setNavigationOnClickListener(this::onVolverClick);
 
         grupoPeriodo = findViewById(R.id.grupoPeriodoReportes);
+        GrupoBotones.ajustarEnUnaLinea(grupoPeriodo);
         textoRango = findViewById(R.id.textoRangoReportes);
         textoTotalPlanificadas = findViewById(R.id.textoTotalPlanificadasReportes);
         textoTotalReales = findViewById(R.id.textoTotalRealesReportes);

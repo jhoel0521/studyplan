@@ -92,10 +92,12 @@
     <string name="materia_color_rapidos">Quick colors</string>
 
     <!-- Full Home screen and study sessions (HU-02, HU-10 to HU-15) -->
-    <string name="inicio_nueva_sesion">+ New session</string>
+    <string name="inicio_nueva_sesion">New session</string>
     <string name="inicio_sin_materias_aviso">Add an active subject first to schedule your study</string>
     <string name="inicio_ir_materias">Go to subjects</string>
     <string name="inicio_proxima_sesion">Next pending session</string>
+    <string name="inicio_sesion_en_curso">Session in progress</string>
+    <string name="inicio_volver_sesion">Back to session</string>
     <string name="inicio_sesiones_hoy">Today\'s sessions</string>
     <string name="inicio_sin_sesiones_hoy">No sessions scheduled for today</string>
     <string name="sesion_rango_horario">%1$s – %2$s</string>
@@ -260,6 +262,7 @@
     <string name="evento_topico_y_nota">%1$s · %2$s</string>
 
     <string name="sesion_en_curso_titulo">Session in progress</string>
+    <string name="sesion_en_curso_progreso_fase">Current phase progress</string>
     <string name="sesion_en_curso_pausada">Paused</string>
     <string name="sesion_en_curso_activa">Studying</string>
     <string name="sesion_en_curso_pausar">Pause</string>
@@ -296,6 +299,9 @@
     <string name="reparto_menos_5">− 5 min</string>
     <string name="reparto_mas_5">+ 5 min</string>
     <string name="reparto_confirmar">Save split</string>
+    <string name="reparto_sesion_cruzada">Your next session overlapped:</string>
+    <string name="reparto_repartir_tiempo">Split the time</string>
+    <string name="reparto_chip_minutos">%1$s: %2$d min</string>
 
     <string name="ajustes_tecnicas_titulo">Study techniques</string>
     <string name="ajustes_no_molestar_global">Enable Do Not Disturb while studying</string>
@@ -338,6 +344,7 @@
     <string name="selector_estudio_titulo">What are you studying?</string>
     <string name="selector_estudio_titulo_cambio">Switch to another subject</string>
     <string name="selector_nueva_materia">New subject</string>
+    <string name="selector_comenzar">Start</string>
     <string name="selector_nueva_materia_nombre">Subject name</string>
     <string name="selector_iniciar_estudio">Start</string>
     <string name="dialogo_sesion_pendiente_titulo">Is this your %1$s session?</string>
