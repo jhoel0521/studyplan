@@ -178,4 +178,59 @@ public class RecuperacionSalidaServiceTest {
                 TecnicaEstudio.LIBRE, null, 60, eventos.listarPorSesion(s.id()), reloj.ahoraMilis());
         assertEquals(10 * MIN, milis);
     }
+
+    /** HU-50: un bloqueo sin desbloqueo no crea salida ni pide recuperación; la sesión sigue contando. */
+    @Test
+    public void unBloqueoSinDesbloqueoNoCreaSalidaNiPideRecuperacion() {
+        Fecha hoy = reloj.hoy();
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                fisica.id(), hoy, hoy, Hora.de(8, 0).valor(), Hora.de(9, 0).valor(), "", null)
+                .valor());
+        iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL);
+        reloj.avanzarMilis(10 * MIN);
+        assertTrue(new RegistrarBloqueoPantallaService(sesiones, eventos, reloj).ejecutar().isPresent());
+        int eventosAntes = eventos.listarPorSesion(s.id()).size();
+
+        reloj.avanzarMilis(5 * 60 * MIN); // 5 horas después, con el proceso terminado
+
+        assertFalse(evaluar.ejecutar().isPresent());
+        assertEquals(eventosAntes, eventos.listarPorSesion(s.id()).size());
+        assertTrue(sesiones.buscarEnCurso().isPresent());
+    }
+
+    /** HU-50: el bloqueo no evita el vencimiento de 3 días (RN-29). */
+    @Test
+    public void unBloqueoSinDesbloqueoVenceTrasTresDias() {
+        Fecha hoy = reloj.hoy();
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                fisica.id(), hoy, hoy, Hora.de(8, 0).valor(), Hora.de(9, 0).valor(), "", null)
+                .valor());
+        iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL);
+        reloj.avanzarMilis(10 * MIN);
+        new RegistrarBloqueoPantallaService(sesiones, eventos, reloj).ejecutar();
+
+        reloj.avanzarMilis(4 * 24 * 60 * MIN);
+
+        DiagnosticoRegresoApp diag = evaluar.ejecutar().get();
+        assertTrue(diag.vencidaPorTresDias());
+        assertFalse(sesiones.buscarEnCurso().isPresent());
+    }
+
+    /** HU-50: recién desbloqueado y de vuelta en la app no se fabrica una salida ni se pregunta nada. */
+    @Test
+    public void recienDesbloqueadoNoCreaSalidaNiPideRecuperacion() {
+        Fecha hoy = reloj.hoy();
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                fisica.id(), hoy, hoy, Hora.de(8, 0).valor(), Hora.de(9, 0).valor(), "", null)
+                .valor());
+        iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL);
+        reloj.avanzarMilis(10 * MIN);
+        new RegistrarBloqueoPantallaService(sesiones, eventos, reloj).ejecutar();
+        reloj.avanzarMilis(25 * MIN);
+        new RegistrarDesbloqueoService(sesiones, eventos, reloj).ejecutar();
+        int eventosAntes = eventos.listarPorSesion(s.id()).size();
+
+        assertFalse(evaluar.ejecutar().isPresent());
+        assertEquals(eventosAntes, eventos.listarPorSesion(s.id()).size());
+    }
 }

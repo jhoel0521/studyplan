@@ -106,4 +106,33 @@ public class CalculadorTiempoRealTest {
         assertEquals(Long.valueOf(5 * MIN), analisis.interrupcionesPorTopicoMs().get(TopicoEventoEstudio.SIN_CLASIFICAR));
         assertEquals(Long.valueOf(4 * MIN), analisis.interrupcionesPorTopicoMs().get(TopicoEventoEstudio.LLAMADA_MENSAJE));
     }
+
+    /** HU-50: 25 minutos con el teléfono bloqueado con el candado cuentan como estudio y no son salida. */
+    @Test
+    public void elBloqueoDePantallaCuentaComoEstudio() {
+        long t0 = 1_000_000L;
+        EventoEstudio inicio = EventoEstudio.restaurar(1L, 1L, TipoEventoEstudio.INICIO, t0, HOY, HORA, "");
+        EventoEstudio bloqueo = EventoEstudio.restaurar(
+                2L, 1L, TipoEventoEstudio.BLOQUEO_PANTALLA, t0 + 10 * MIN, HOY, HORA, "");
+        EventoEstudio desbloqueo = EventoEstudio.restaurar(
+                3L, 1L, TipoEventoEstudio.DESBLOQUEO, t0 + 35 * MIN, HOY, HORA, "");
+        EventoEstudio fin = EventoEstudio.restaurar(4L, 1L, TipoEventoEstudio.FIN, t0 + 60 * MIN, HOY, HORA, "");
+
+        assertEquals(60, CalculadorTiempoReal.calcularMinutosReales(
+                TecnicaEstudio.LIBRE, null, 60,
+                Arrays.asList(inicio, bloqueo, desbloqueo, fin), t0 + 60 * MIN));
+    }
+
+    /** HU-50: un bloqueo sin desbloqueo sigue contando hasta el final de la sesión. */
+    @Test
+    public void unBloqueoSinDesbloqueoSigueContando() {
+        long t0 = 1_000_000L;
+        EventoEstudio inicio = EventoEstudio.restaurar(1L, 1L, TipoEventoEstudio.INICIO, t0, HOY, HORA, "");
+        EventoEstudio bloqueo = EventoEstudio.restaurar(
+                2L, 1L, TipoEventoEstudio.BLOQUEO_PANTALLA, t0 + 10 * MIN, HOY, HORA, "");
+
+        assertEquals(300, CalculadorTiempoReal.calcularMinutosReales(
+                TecnicaEstudio.LIBRE, null, 60,
+                Arrays.asList(inicio, bloqueo), t0 + 300 * MIN));
+    }
 }

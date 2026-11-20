@@ -144,4 +144,35 @@ public final class CalculadorEstadisticasTest {
         assertEquals(2, c.resumenTopicosInterrupciones().size());
         assertTrue(c.estudioFueraPorTopico().get(0).topico() == TopicoEventoEstudio.PDF_MOODLE);
     }
+
+    /** HU-50: el bloqueo de pantalla no es interrupción ni tiempo fuera de la app (RN-30). */
+    @Test
+    public void elBloqueoDePantallaNoCuentaComoInterrupcionNiComoTiempoFuera() {
+        long t0 = 1_794_834_000_000L;
+        SesionEstudio sesion = SesionEstudio.restaurar(
+                1L, 1L, t0, t0 + 60 * MIN, -240, 60, 60,
+                CodigoEstadoSesion.COMPLETADA, "", null, TecnicaEstudio.LIBRE,
+                PreferenciaNoMolestar.HEREDAR_GLOBAL, null, null, null, null);
+        Map<Long, List<EventoEstudio>> eventos = new HashMap<>();
+        eventos.put(1L, Arrays.asList(
+                EventoEstudio.restaurar(1L, 1L, TipoEventoEstudio.INICIO, t0, -240, ""),
+                EventoEstudio.restaurar(2L, 1L, TipoEventoEstudio.BLOQUEO_PANTALLA, t0 + 10 * MIN, -240, ""),
+                EventoEstudio.restaurar(3L, 1L, TipoEventoEstudio.DESBLOQUEO, t0 + 35 * MIN, -240, ""),
+                EventoEstudio.restaurar(4L, 1L, TipoEventoEstudio.FIN, t0 + 60 * MIN, -240, "")));
+
+        EstadisticasPeriodo res = CalculadorEstadisticas.calcular(
+                PeriodoEstadisticas.semanal(Fecha.de(2026, 11, 18).valor()),
+                60,
+                0,
+                Collections.singletonMap(1L, 60),
+                Collections.singletonMap(1L, Materia.restaurar(1L, "Mate", 0xFF1565C0, null, false)),
+                Collections.singletonList(sesion),
+                eventos,
+                t0 + 120 * MIN);
+
+        ConcentracionPeriodo c = res.concentracion();
+        assertEquals(0, c.totalInterrupciones());
+        assertEquals(0, c.tiempoFueraAppMinutos());
+        assertEquals(100.0, c.indiceConcentracionPorcentaje(), 0.05);
+    }
 }
