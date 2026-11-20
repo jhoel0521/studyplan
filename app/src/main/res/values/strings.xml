@@ -258,6 +258,8 @@
     <string name="evento_estudio_app_cerrada">Estudio con la app cerrada</string>
     <string name="evento_cambio_sesion">Cambio a siguiente sesión</string>
     <string name="evento_ajuste_manual">Ajuste manual</string>
+    <string name="evento_bloqueo_pantalla">Pantalla bloqueada</string>
+    <string name="evento_desbloqueo">Pantalla desbloqueada</string>
     <string name="evento_fin">Fin</string>
     <string name="evento_topico_y_nota">%1$s · %2$s</string>
 

@@ -108,6 +108,10 @@ public class EventoEstudioAdapter extends ListAdapter<EventoEstudio, EventoEstud
                     return R.string.evento_estudio_app_cerrada;
                 case CAMBIO_SESION:
                     return R.string.evento_cambio_sesion;
+                case BLOQUEO_PANTALLA:
+                    return R.string.evento_bloqueo_pantalla;
+                case DESBLOQUEO:
+                    return R.string.evento_desbloqueo;
                 case AJUSTE_MANUAL:
                     return R.string.evento_ajuste_manual;
                 case FIN:

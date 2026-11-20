@@ -200,6 +200,12 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
                     sesion, nombreMateria, colorMateria, marcadaInstante, ahoraMs, false, false));
         }
 
+        // Un bloqueo de pantalla sin desbloqueo, o recién desbloqueado, no es una salida: el estudiante
+        // sigue estudiando y no se registra ningún evento ni se pregunta nada (HU-50, RN-22).
+        if (!lista.isEmpty() && esMarcaDeBloqueo(lista.get(lista.size() - 1))) {
+            return Optional.empty();
+        }
+
         if (!CalculadorTiempoReal.estaPausadaActualmente(lista) && ultimaMarca != null) {
             eventos.guardar(EventoEstudio.crear(
                     sesion.id(),
@@ -213,5 +219,10 @@ public final class EvaluarRecuperacionSesionService implements EvaluarRecuperaci
         }
 
         return Optional.empty();
+    }
+
+    private static boolean esMarcaDeBloqueo(EventoEstudio evento) {
+        return evento.tipo() == TipoEventoEstudio.BLOQUEO_PANTALLA
+                || evento.tipo() == TipoEventoEstudio.DESBLOQUEO;
     }
 }

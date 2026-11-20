@@ -14,6 +14,8 @@ public enum TipoEventoEstudio {
     ESTUDIO_APP_CERRADA(false),
     CAMBIO_SESION(true),
     AJUSTE_MANUAL(true),
+    BLOQUEO_PANTALLA(true),
+    DESBLOQUEO(true),
     FIN(true);
 
     private final boolean marcaDentroDeApp;
