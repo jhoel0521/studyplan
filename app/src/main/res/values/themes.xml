@@ -1,17 +1,81 @@
 <resources>
-    <!-- Base application theme. -->
+    <!-- Tema base con la línea gráfica «Índigo Digital». Los colores son roles sp_* (values/colors.xml y
+         values-night/colors.xml); este mapeo sirve para claro y oscuro. Implementa: HU-03, RNF-06, RNF-07. -->
     <style name="Base.Theme.StudyPlan" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Acción principal (índigo) -->
+        <item name="colorPrimary">@color/sp_action</item>
+        <item name="colorOnPrimary">@color/sp_on_action</item>
+        <item name="colorPrimaryContainer">@color/sp_action_container</item>
+        <item name="colorOnPrimaryContainer">@color/sp_on_action_container</item>
+        <item name="colorPrimaryInverse">@color/sp_action</item>
+
+        <!-- Descanso, rachas y completada (verde azulado). Tertiary se iguala para evitar el morado por defecto. -->
+        <item name="colorSecondary">@color/sp_success</item>
+        <item name="colorOnSecondary">@color/sp_on_success</item>
+        <item name="colorSecondaryContainer">@color/sp_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/sp_on_secondary_container</item>
+        <item name="colorTertiary">@color/sp_success</item>
+        <item name="colorOnTertiary">@color/sp_on_success</item>
+        <item name="colorTertiaryContainer">@color/sp_secondary_container</item>
+        <item name="colorOnTertiaryContainer">@color/sp_on_secondary_container</item>
+
+        <!-- Fondos y superficies -->
+        <item name="android:colorBackground">@color/sp_bg</item>
+        <item name="colorOnBackground">@color/sp_text</item>
+        <item name="colorSurface">@color/sp_surface</item>
+        <item name="colorSurfaceContainerLowest">@color/sp_surface</item>
+        <item name="colorSurfaceContainerLow">@color/sp_surface</item>
+        <item name="colorSurfaceContainer">@color/sp_surface_variant</item>
+        <item name="colorSurfaceContainerHigh">@color/sp_surface_variant</item>
+        <item name="colorSurfaceContainerHighest">@color/sp_surface_variant</item>
+        <item name="colorSurfaceVariant">@color/sp_surface_variant</item>
+        <item name="colorOnSurface">@color/sp_text</item>
+        <item name="colorOnSurfaceVariant">@color/sp_text_muted</item>
+        <item name="colorSurfaceInverse">@color/sp_text</item>
+        <item name="colorOnSurfaceInverse">@color/sp_surface</item>
+        <!-- Superficies planas: sin el tinte de elevación tonal de Material 3 (se separan por tono y borde). -->
+        <item name="elevationOverlayEnabled">false</item>
+
+        <!-- Bordes -->
+        <item name="colorOutline">@color/sp_border</item>
+        <item name="colorOutlineVariant">@color/sp_border_subtle</item>
+
+        <!-- Error y advertencia (sesión en pausa). El contenedor de error reutiliza colores ya verificados. -->
+        <item name="colorError">@color/sp_danger</item>
+        <item name="colorOnError">@color/sp_on_danger</item>
+        <item name="colorErrorContainer">@color/sp_surface_variant</item>
+        <item name="colorOnErrorContainer">@color/sp_danger</item>
+        <item name="colorWarning">@color/sp_warning</item>
+        <item name="colorOnWarning">@color/sp_on_warning</item>
+
+        <!-- Componentes (styles.xml). Un style= explícito en un layout no hereda de aquí: se reemplaza. -->
+        <item name="materialButtonStyle">@style/Widget.StudyPlan.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.StudyPlan.Button.Outlined</item>
+        <item name="borderlessButtonStyle">@style/Widget.StudyPlan.Button.Text</item>
+        <item name="materialIconButtonStyle">@style/Widget.StudyPlan.Button.Icon</item>
+        <item name="materialIconButtonOutlinedStyle">@style/Widget.StudyPlan.Button.Icon.Outlined</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.StudyPlan.MaterialAlertDialog</item>
+        <item name="extendedFloatingActionButtonStyle">@style/Widget.StudyPlan.ExtendedFab</item>
+        <item name="bottomNavigationStyle">@style/Widget.StudyPlan.BottomNavigation</item>
+        <item name="materialCardViewStyle">@style/Widget.StudyPlan.Card</item>
+        <item name="materialCardViewOutlinedStyle">@style/Widget.StudyPlan.Card</item>
+        <item name="chipStyle">@style/Widget.StudyPlan.Chip</item>
+
+        <!-- Tipografía (styles.xml) -->
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.StudyPlan.DisplayMedium</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.StudyPlan.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.StudyPlan.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.StudyPlan.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.StudyPlan.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.StudyPlan.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.StudyPlan.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.StudyPlan.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.StudyPlan.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.StudyPlan.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.StudyPlan.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.StudyPlan.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.StudyPlan.LabelSmall</item>
     </style>
 
     <style name="Theme.StudyPlan" parent="Base.Theme.StudyPlan" />
-
-    <!-- Botón de un grupo de botones unidos (como btn-group de Bootstrap): relleno del color primario y una línea fina
-         clara que separa un botón del siguiente. -->
-    <style name="Widget.StudyPlan.BotonGrupo" parent="Widget.Material3.Button">
-        <item name="android:minHeight">48dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">?attr/colorOnPrimary</item>
-    </style>
 </resources>

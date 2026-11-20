@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Medidas de la línea gráfica «Índigo Digital» (.ux/standard/tokens.json). Implementa: HU-03, RNF-06, RNF-07. -->
+<resources>
+    <!-- Altura única de todos los botones (decisión del Product Owner, 2026-11-19). Cambiarla aquí cambia todos.
+         48 dp es el mínimo táctil (AGENTS.md §6.2). -->
+    <dimen name="button_height">48dp</dimen>
+
+    <dimen name="radius_card">20dp</dimen>
+    <dimen name="radius_button">14dp</dimen>
+    <dimen name="radius_chip">8dp</dimen>
+    <!-- Tarjetas compactas: bloques horarios del calendario, proporcionales a la duración. -->
+    <dimen name="radius_card_compact">8dp</dimen>
+
+    <dimen name="spacing_screen">16dp</dimen>
+    <dimen name="spacing_card_gap">12dp</dimen>
+
+    <!-- Opacidad del relleno del chip de color de materia (token opacity.chip-materia). -->
+    <item name="chip_materia_alpha" format="float" type="dimen">0.15</item>
+</resources>

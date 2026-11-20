@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Roles de la línea gráfica «Índigo Digital» (oscuro). Fuente: .ux/standard/tokens.json
+         (semantic.dark.color.*). El tema los asigna a los atributos de Material 3 en themes.xml.
+         Implementa: HU-03, RNF-06, RNF-07. -->
+    <!-- Mismos nombres que values/colors.xml; los colores de materia (materia_*) no se duplican. -->
+    <color name="sp_bg">#0F111A</color>
+    <color name="sp_surface">#1A1D2D</color>
+    <color name="sp_surface_variant">#23273D</color>
+    <color name="sp_text">#F9FAFB</color>
+    <color name="sp_text_muted">#9CA3AF</color>
+    <color name="sp_border">#6B7280</color>
+    <color name="sp_border_subtle">#2D324D</color>
+    <color name="sp_action">#818CF8</color>
+    <color name="sp_on_action">#1E1B4B</color>
+    <color name="sp_action_container">#26294A</color>
+    <color name="sp_on_action_container">#C7D2FE</color>
+    <color name="sp_success">#2DD4BF</color>
+    <color name="sp_on_success">#0F111A</color>
+    <color name="sp_secondary_container">#133835</color>
+    <color name="sp_on_secondary_container">#99F6E4</color>
+    <color name="sp_danger">#F87171</color>
+    <color name="sp_on_danger">#0F111A</color>
+    <color name="sp_warning">#FBBF24</color>
+    <color name="sp_on_warning">#0F111A</color>
+    <color name="sp_ring_track">#23273D</color>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Atributos de tema propios: Material 3 no trae un color de advertencia. Implementa: HU-03 (estado «En pausa»). -->
+<resources>
+    <attr name="colorWarning" format="color" />
+    <attr name="colorOnWarning" format="color" />
+</resources>

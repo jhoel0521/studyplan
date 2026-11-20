@@ -10,4 +10,28 @@
     <color name="materia_turquesa">#00897B</color>
     <color name="materia_rosa">#D81B60</color>
     <color name="materia_gris">#546E7A</color>
+
+    <!-- Roles de la línea gráfica «Índigo Digital» (claro). Fuente: .ux/standard/tokens.json
+         (semantic.light.color.*). El tema los asigna a los atributos de Material 3 en themes.xml.
+         Implementa: HU-03, RNF-06, RNF-07. -->
+    <color name="sp_bg">#F4F5F9</color>
+    <color name="sp_surface">#FFFFFF</color>
+    <color name="sp_surface_variant">#EAECEF</color>
+    <color name="sp_text">#111827</color>
+    <color name="sp_text_muted">#4B5563</color>
+    <color name="sp_border">#6B7280</color>
+    <color name="sp_border_subtle">#E0E7FF</color>
+    <color name="sp_action">#4338CA</color>
+    <color name="sp_on_action">#FFFFFF</color>
+    <color name="sp_action_container">#EEF2FF</color>
+    <color name="sp_on_action_container">#3730A3</color>
+    <color name="sp_success">#0F766E</color>
+    <color name="sp_on_success">#FFFFFF</color>
+    <color name="sp_secondary_container">#F0FDFA</color>
+    <color name="sp_on_secondary_container">#115E59</color>
+    <color name="sp_danger">#B91C1C</color>
+    <color name="sp_on_danger">#FFFFFF</color>
+    <color name="sp_warning">#B45309</color>
+    <color name="sp_on_warning">#FFFFFF</color>
+    <color name="sp_ring_track">#EAECEF</color>
 </resources>

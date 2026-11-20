@@ -1,7 +1,5 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.StudyPlan" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-    </style>
+    <!-- El tema oscuro no redefine Base.Theme.StudyPlan: un estilo con el mismo nombre en values-night reemplazaría
+         por completo al de values/themes.xml. El modo oscuro cambia solo los colores sp_* de values-night/colors.xml,
+         y values/themes.xml los asigna a los atributos de Material 3 en ambos modos. Implementa: HU-03, RNF-07. -->
 </resources>
