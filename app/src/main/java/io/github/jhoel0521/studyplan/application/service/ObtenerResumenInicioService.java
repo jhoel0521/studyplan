@@ -103,6 +103,10 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
         }
 
         DetalleSesionInicio proxima = seleccionarProxima(hoy, ahoraInst, catalogo);
+        // Sesión En curso para el aviso de Inicio y el botón «Volver a la sesión» (HU-02, HU-47).
+        DetalleSesionInicio enCurso = sesiones.buscarEnCurso()
+                .map(s -> mapearDetalle(s, catalogo))
+                .orElse(null);
         double metaSemanaHoras = resolverMetaSemanaActual(lunes, perfil);
         return Optional.of(new ResumenInicio(
                 perfil.nombre(),
@@ -110,7 +114,8 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
                 metaSemanaHoras,
                 hoy,
                 proxima,
-                sesionesDeHoy));
+                sesionesDeHoy,
+                enCurso));
     }
 
     private double resolverMetaSemanaActual(Fecha lunes, Perfil perfil) {
