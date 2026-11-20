@@ -44,7 +44,9 @@ SEGURIDAD_CONFIG = ["DisponibilidadBloqueoBiometrico"]
 # add-gestion-materias
 PRESENTACION_MATERIAS = ["DestinoPrincipal", "MateriasActivity", "MateriaFormularioActivity", "ListaMateriasViewModel",
                          "MateriaFormularioViewModel", "MateriasAdapter", "FilaMateria", "EventoMateria",
-                         "MensajesDeError", "SelectorColorDialogo", "ColorHex", "GrupoBotones"]
+                         "MensajesDeError", "SelectorColorDialogo", "ColorHex", "GrupoBotones",
+                         # aplicar-linea-grafica-indigo (HU-03): color de materia como acento
+                         "ColorMateria", "AcentoMateria"]
 ENTRADA_MATERIAS = ["ArchivarMateria", "ConsultarMateria", "DesarchivarMateria", "EditarMateria", "EliminarMateria",
                     "ListarMaterias", "RegistrarMateria"]
 SERVICIOS_MATERIAS = ["ArchivarMateriaService", "ConsultarMateriaService", "DesarchivarMateriaService",
@@ -57,7 +59,7 @@ PERSISTENCIA_MATERIAS = ["MateriaDao", "MateriaEntity", "MateriaRepositoryRoom",
 # add-sesiones-estudio
 PRESENTACION_SESIONES = ["EstadoSesionVisual", "EventoSesion", "FormatoSesion", "SesionDetalleActivity",
                          "SesionDetalleViewModel", "SesionFormularioActivity", "SesionFormularioViewModel",
-                         "SesionInicioAdapter"]
+                         "SesionInicioAdapter", "RolColorEstado"]
 ENTRADA_SESIONES = ["CompletarSesion", "ConsultarSesion", "EliminarSesion", "PlanificarSesion",
                     "RegistrarSesionPasada", "RegistrarSesionTardia", "ReprogramarSesion", "VencerSesionesPendientes"]
 SERVICIOS_SESIONES = ["CompletarSesionService", "ConsultarSesionService", "EliminarSesionService",
@@ -158,7 +160,7 @@ def alto(cajas):
 # ---------------------------------------------------------------- clases de add-configuracion-inicial
 def clases_configuracion():
     """Presentación con los métodos de cada clase (onCreate y listeners), núcleo e infraestructura por paquete."""
-    W, H = 3240, 3000
+    W, H = 3240, 4200
     img = Image.new("RGB", (W, H), dg.WHITE)
     d = ImageDraw.Draw(img)
     xs, ancho = [40, 840, 1640, 2440], 760
@@ -225,7 +227,7 @@ def clases_configuracion():
 # ---------------------------------------------------------------- clases de add-gestion-materias
 def clases_materias():
     """Clases de la épica E2: presentación con sus métodos, dominio con campos y métodos, puertos y adaptadores."""
-    W, H = 3240, 3400
+    W, H = 3240, 5600
     img = Image.new("RGB", (W, H), dg.WHITE)
     d = ImageDraw.Draw(img)
     xs, ancho = [40, 840, 1640, 2440], 760
@@ -245,17 +247,23 @@ def clases_materias():
              caja_con_metodos("SelectorColorDialogo", xs[1], y3, ancho),
              caja_con_metodos("ColorHex", xs[2], y3, ancho),
              caja_con_metodos("GrupoBotones", xs[3], y3, ancho)]
-    for c in fila1 + fila2 + fila3:
+    y4f = y3 + alto(fila3) + 70
+    fila4 = [caja_con_metodos("AcentoMateria", xs[0], y4f, ancho),
+             caja_con_metodos("ColorMateria", xs[1], y4f, ancho)]
+    for c in fila1 + fila2 + fila3 + fila4:
         c.draw(d)
     dg.assoc(d, fila1[0].right(0.2), fila1[1].left(0.2), "abre", None, None)
     dg.assoc(d, fila1[2].right(0.2), fila1[3].left(0.2), "comparte la fábrica", None, None)
-    ynota = y3 + alto(fila3) + 24
+    dg.assoc(d, fila4[0].right(0.3), fila4[1].left(0.3), "ajusta el color con", None, None)
+    ynota = y4f + alto(fila4) + 24
     d.text((xs[0], ynota), "MateriasActivity y MateriaFormularioActivity extienden ActividadProtegida; cada una pide su",
            font=dg.font(24, italic=True), fill=dg.GRAY)
     d.text((xs[0], ynota + 36), "ViewModel a FabricaViewModels. Los ViewModel usan los casos de uso (application.port.in). La barra de navegación se enlaza con DestinoPrincipal.",
            font=dg.font(24, italic=True), fill=dg.GRAY)
+    d.text((xs[0], ynota + 72), "AcentoMateria pinta el color de materia solo como barra, punto o chip (HU-03); ColorMateria es Java puro y lo ajusta a ≥ 3:1 contra la superficie del tema.",
+           font=dg.font(24, italic=True), fill=dg.GRAY)
 
-    y4 = ynota + 130
+    y4 = ynota + 166
     d.line([40, y4 - 30, W - 40, y4 - 30], fill=dg.MID, width=3)
     d.text((40, y4), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
     y4 += 60
@@ -290,7 +298,7 @@ def clases_materias():
 
 def clases_sesiones():
     """Clases de la épica E3: sesiones de estudio, patrón State GoF en dominio y persistencia Room v3."""
-    W, H = 3760, 5600
+    W, H = 3760, 6400
     img = Image.new("RGB", (W, H), dg.WHITE)
     d = ImageDraw.Draw(img)
     d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
@@ -305,11 +313,15 @@ def clases_sesiones():
              caja_con_metodos("EventoSesion", xs1[1], y2, w1),
              caja_con_metodos("FormatoSesion", xs1[2], y2, w1),
              caja_con_metodos("EstadoSesionVisual", xs1[3], y2, w1, "enumeration")]
-    for c in fila1 + fila2:
+    y3s = y2 + alto(fila2) + 70
+    fila3s = [caja_con_metodos("RolColorEstado", xs1[3], y3s, w1, "enumeration")]
+    for c in fila1 + fila2 + fila3s:
         c.draw(d)
     dg.assoc(d, fila1[0].right(0.18), fila1[1].left(0.18), "observa", None, None)
     dg.assoc(d, fila1[2].right(0.18), fila1[3].left(0.18), "observa", None, None)
-    ynota = y2 + alto(fila2) + 24
+    dg.assoc(d, fila2[3].bottom(0.5), (fila3s[0].x + fila3s[0].w * 0.5, fila3s[0].y), "rol de color", None, None,
+             name_off=(90, 0))
+    ynota = y3s + alto(fila3s) + 24
     d.text((40, ynota),
            "SesionFormularioActivity y SesionDetalleActivity heredan de ActividadProtegida (FLAG_SECURE y bloqueo HU-04); MainActivity abre ambas y enlaza SesionInicioAdapter.",
            font=dg.font(24, italic=True), fill=dg.GRAY)

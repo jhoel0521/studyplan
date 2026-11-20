@@ -136,7 +136,7 @@ Tabla: Pantallas de StudyPlan, lo que se hace en cada una y su trazabilidad {#pa
 |---|---|---|---|
 | Perfil inicial | Pide nombre y meta semanal en el primer uso; el nombre es obligatorio. Permite restaurar una copia. | HU-01, HU-37 | OG |
 | Autenticación | Pide huella o PIN al volver a primer plano, solo si el bloqueo está activo. | HU-04 | OE6 |
-| Inicio | Muestra el saludo, las horas realizadas sobre la meta semanal (editable), el acceso al historial de metas, el botón «Estudiar ahora», la próxima sesión y las sesiones de hoy. | HU-02, HU-25, HU-27, HU-47 | OG |
+| Inicio | Muestra el saludo, el aviso de sesión en curso con «Volver a la sesión», las horas realizadas sobre la meta semanal (editable), el acceso al historial de metas, el botón «Estudiar ahora», la próxima sesión y las sesiones de hoy. | HU-02, HU-25, HU-27, HU-47 | OG |
 | Historial de metas | Lista cronológica inversa de semanas con cumplimiento real, objetivo y marca de estimadas. | HU-27 | OE5 |
 | Calendario | Ofrece las vistas Día, Semana y Mes con el estado de cada sesión; permite crear sesiones. | HU-16 a HU-21 | OE3 |
 | Estadísticas | Muestra horas, comparación semanal, cumplimiento, distribución y concentración. | HU-29 a HU-31, HU-45 | OE5 |
@@ -156,6 +156,33 @@ Tabla: Pantallas de StudyPlan, lo que se hace en cada una y su trazabilidad {#pa
 Nota: Elaboración propia a partir de las especificaciones de OpenSpec.
 
 **Navegación entre pestañas.** Cada pestaña de la barra de navegación es una Activity y la pila de retroceso es siempre `[Inicio, pestaña]`: Atrás desde una pestaña vuelve a Inicio y Atrás desde Inicio sale de la aplicación. En teléfonos la barra va abajo y desde los 600 dp se sustituye por un riel lateral; cada pantalla principal tiene su envoltorio de teléfono y su variante `layout-w600dp`, que comparten el mismo contenido. Solo las pestañas implementadas están habilitadas.
+
+### Línea gráfica
+
+La interfaz sigue la línea gráfica «Índigo Digital», definida por el Product Owner para toda la aplicación en teléfonos (change `aplicar-linea-grafica-indigo`, HU-03, RNF-06 y RNF-07). Sus valores viven en el estándar de diseño del proyecto (`.ux/standard/tokens.json`, versión 0.2.2) y llegan a las pantallas solo a través del tema de Material 3: los layouts nombran atributos del tema (`?attr/colorPrimary`, `?attr/textAppearanceTitleMedium`) y nunca un color o una medida sueltos. Cada rol se declara una vez en `res/values/colors.xml` y se redefine con el mismo nombre en `res/values-night/colors.xml`, de modo que el modo oscuro cambia solo los colores.
+
+Tabla: Roles de color de la línea gráfica en tema claro y oscuro {#linea_grafica_colores anchos=4.2,2.4,2.4,6.5 tam=9}
+
+| Rol (atributo del tema) | Claro | Oscuro | Uso |
+|---|---|---|---|
+| Acción principal (`colorPrimary`) | #4338CA | #818CF8 | Botón principal, anillo de estudio, pestaña activa |
+| Contenedor de acción (`colorPrimaryContainer`) | #EEF2FF | #26294A | Botón tonal, píldora de la barra inferior, opción elegida |
+| Descanso y completada (`colorSecondary`) | #0F766E | #2DD4BF | Descanso Pomodoro, sesión completada |
+| Advertencia (`colorWarning`, propio) | #B45309 | #FBBF24 | Sesión en pausa |
+| Error (`colorError`) | #B91C1C | #F87171 | Sesión no realizada, acciones destructivas |
+| Fondo (`android:colorBackground`) | #F4F5F9 | #0F111A | Fondo de las pantallas |
+| Superficie (`colorSurface`) | #FFFFFF | #1A1D2D | Tarjetas, diálogos y hojas inferiores |
+| Texto (`colorOnSurface`) | #111827 | #F9FAFB | Títulos, cronómetro, nombres de materia |
+| Texto secundario (`colorOnSurfaceVariant`) | #4B5563 | #9CA3AF | Fechas, etiquetas y subtítulos |
+| Borde de tarjeta (`colorOutlineVariant`) | #E0E7FF | #2D324D | Borde de 1 dp de las tarjetas |
+
+Nota: Elaboración propia. Los 42 pares de contraste del estándar (texto ≥ 4,5:1 y bordes ≥ 3:1) se comprueban con `ContrasteTemaTest` y con `node .ux/scripts/tokens.mjs`.
+
+**Tipografía y forma.** Los títulos, los números y los botones usan Plus Jakarta Sans (licencia SIL OFL 1.1, archivos en `res/font/` y licencia en `docs/licencias/`); el texto corrido usa Roboto, que viene con Android. Como el proyecto admite Android 7.0 (minSdk 24), cada peso es un archivo de fuente propio en lugar de `android:textFontWeight`. La escala va de 12 sp (etiquetas) a 56 sp (cronómetro). Las tarjetas no tienen sombra y se separan del fondo por tono y por un borde de 1 dp; los radios son de 20 dp en tarjetas, 14 dp en botones y 8 dp en chips.
+
+**Reglas de uso.** Todos los botones miden 48 dp de alto (un único valor, `@dimen/button_height`) y nunca cambian de altura: su etiqueta va en una sola línea y, si no cabe (por ejemplo con la fuente más grande del sistema), la letra se reduce de 16 a 8 sp; en el formulario de materia, Guardar, Archivar y Eliminar se muestran como iconos con su nombre accesible y un tooltip. Su importancia se marca solo por estilo: relleno para la acción principal, tonal, contorno o texto para las demás, y contorno rojo para lo destructivo. El color libre que el estudiante elige para cada materia aparece solo como acento (barra de 4 dp, punto de 10 dp o chip al 15 %) y nunca como fondo de tarjeta o botón; `ColorMateria` lo ajusta para que contraste al menos 3:1 con la superficie en ambos temas. En la sesión en curso, el anillo y la etiqueta de estado cambian de color con la fase (índigo al estudiar, ámbar en pausa y verde azulado en descanso), siempre acompañados de su etiqueta de texto (RNF-06).
+
+**Revisión en el emulador.** El Product Owner revisó las pantallas en el emulador y pidió cuatro ajustes que se incorporaron al mismo change. El saludo de Inicio ocupa como máximo dos líneas y termina en «…», sin recortar el nombre guardado (HU-02). En «Estudiar ahora», tocar una materia solo la marca y la sesión empieza con el botón «▶ Comenzar» (HU-47). Si hay una sesión En curso, Inicio muestra un aviso con «Volver a la sesión» y el botón flotante abre esa sesión en lugar de pedir otra materia; esto además corrige un incumplimiento del escenario de HU-47 que ya exigía no crear una segunda sesión (HU-02, HU-47). La sesión En curso llega a Inicio por el caso de uso del resumen (`ObtenerResumenInicio`), a través del puerto `SesionRepository`, sin que la interfaz consulte la base de datos.
 
 ### Wireframes y Mockups
 
