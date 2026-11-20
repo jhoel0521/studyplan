@@ -22,7 +22,7 @@ import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
  * Mapeo visual uniforme de cada {@link CodigoEstadoSesion} a su icono, etiqueta textual y color
  * semántico de tema Material 3, cumpliendo RNF-06 (ningún estado depende únicamente del color).
  *
- * <p>Implementa: HU-02, HU-10 a HU-15 y RNF-06.
+ * <p>Implementa: HU-02, HU-03 (colores de la línea gráfica), HU-10 a HU-15 y RNF-06.
  */
 final class EstadoSesionVisual {
 
@@ -45,30 +45,51 @@ final class EstadoSesionVisual {
         DESCRIPTORES.put(CodigoEstadoSesion.PENDIENTE, new Descriptor(
                 R.drawable.ic_estado_pendiente,
                 R.string.estado_sesion_pendiente,
-                com.google.android.material.R.attr.colorPrimary));
+                atributoDe(RolColorEstado.de(CodigoEstadoSesion.PENDIENTE))));
         DESCRIPTORES.put(CodigoEstadoSesion.EN_CURSO, new Descriptor(
                 R.drawable.ic_estado_en_curso,
                 R.string.estado_sesion_en_curso,
-                com.google.android.material.R.attr.colorTertiary));
+                atributoDe(RolColorEstado.de(CodigoEstadoSesion.EN_CURSO))));
         DESCRIPTORES.put(CodigoEstadoSesion.NO_REALIZADA, new Descriptor(
                 R.drawable.ic_estado_no_realizada,
                 R.string.estado_sesion_no_realizada,
-                com.google.android.material.R.attr.colorError));
+                atributoDe(RolColorEstado.de(CodigoEstadoSesion.NO_REALIZADA))));
         DESCRIPTORES.put(CodigoEstadoSesion.COMPLETADA, new Descriptor(
                 R.drawable.ic_estado_completada,
                 R.string.estado_sesion_completada,
-                com.google.android.material.R.attr.colorPrimary));
+                atributoDe(RolColorEstado.de(CodigoEstadoSesion.COMPLETADA))));
         DESCRIPTORES.put(CodigoEstadoSesion.COMPLETADA_TARDIA, new Descriptor(
                 R.drawable.ic_estado_completada_tardia,
                 R.string.estado_sesion_completada_tardia,
-                com.google.android.material.R.attr.colorSecondary));
+                atributoDe(RolColorEstado.de(CodigoEstadoSesion.COMPLETADA_TARDIA))));
         DESCRIPTORES.put(CodigoEstadoSesion.REPROGRAMADA, new Descriptor(
                 R.drawable.ic_estado_reprogramada,
                 R.string.estado_sesion_reprogramada,
-                com.google.android.material.R.attr.colorOnSurfaceVariant));
+                atributoDe(RolColorEstado.de(CodigoEstadoSesion.REPROGRAMADA))));
     }
 
     private EstadoSesionVisual() {
+    }
+
+    /** Rol de color del estado (Java puro; lo prueba EstadoSesionVisualTest). */
+    static RolColorEstado rolDe(CodigoEstadoSesion estado) {
+        return RolColorEstado.de(estado);
+    }
+
+    /** Atributo del tema de cada rol. Ya no se usa colorTertiary (tomaría el morado por defecto de Material). */
+    @AttrRes
+    static int atributoDe(RolColorEstado rol) {
+        switch (rol) {
+            case PRIMARIO:
+                return com.google.android.material.R.attr.colorPrimary;
+            case SECUNDARIO:
+                return com.google.android.material.R.attr.colorSecondary;
+            case ERROR:
+                return com.google.android.material.R.attr.colorError;
+            case VARIANTE:
+            default:
+                return com.google.android.material.R.attr.colorOnSurfaceVariant;
+        }
     }
 
     static void aplicar(
