@@ -191,4 +191,44 @@ public class ObtenerResumenInicioServiceTest {
         ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
         assertEquals(1.0, resumen.horasRealizadas(), 0.001);
     }
+
+    /** HU-02 «Sesión en curso visible» y HU-47 «Ya hay una sesión En curso»: el resumen la expone. */
+    @Test
+    public void exponeLaSesionEnCursoParaVolverAElla() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        SesionEstudio enCurso = sesiones.guardar(SesionEstudio.restaurar(
+                null,
+                algebraId,
+                HOY,
+                Hora.de(10, 30).valor(),
+                Hora.de(11, 30).valor(),
+                60,
+                0,
+                CodigoEstadoSesion.EN_CURSO,
+                null,
+                null));
+
+        ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
+
+        assertEquals((long) enCurso.id(), (long) resumen.sesionEnCurso().sesionId());
+        assertEquals("Álgebra", resumen.sesionEnCurso().nombreMateria());
+    }
+
+    @Test
+    public void sinSesionEnCursoNoHayAviso() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        sesiones.guardar(SesionEstudio.restaurar(
+                null,
+                algebraId,
+                HOY,
+                Hora.de(14, 0).valor(),
+                Hora.de(15, 0).valor(),
+                60,
+                0,
+                CodigoEstadoSesion.PENDIENTE,
+                null,
+                null));
+
+        assertNull(servicio.ejecutar().orElseThrow(AssertionError::new).sesionEnCurso());
+    }
 }

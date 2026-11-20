@@ -4,11 +4,14 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 import android.content.Intent;
 
@@ -28,6 +31,8 @@ import io.github.jhoel0521.studyplan.domain.Fecha;
 import io.github.jhoel0521.studyplan.domain.Hora;
 import io.github.jhoel0521.studyplan.domain.Materia;
 import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
  * Pruebas E2E Espresso de metas semanales, «Estudiar ahora», «Cambiar de materia», felicitación
@@ -60,6 +65,7 @@ public class MetasEspressoTest {
 
             Pruebas.esperarVisible(withText(R.string.materia_general_nombre));
             onView(withText(R.string.materia_general_nombre)).perform(click());
+            onView(withId(R.id.botonComenzarSelector)).perform(click());
 
             Pruebas.esperarVisible(withId(R.id.nombreMateriaEnCurso));
             onView(withId(R.id.nombreMateriaEnCurso))
@@ -68,9 +74,47 @@ public class MetasEspressoTest {
             onView(withId(R.id.botonCambiarMateria)).perform(click());
             Pruebas.esperarVisible(withText("Informática"));
             onView(withText("Informática")).perform(click());
+            onView(withId(R.id.botonComenzarSelector)).perform(click());
 
             Pruebas.esperarVisible(withId(R.id.nombreMateriaEnCurso));
             onView(withId(R.id.nombreMateriaEnCurso)).check(matches(withText("Informática")));
+            onView(withId(R.id.botonDetenerEnCurso)).perform(click());
+        }
+    }
+
+    /** HU-47 «Materia elegida visible»: tocar una fila solo la marca; la sesión empieza con «Comenzar». */
+    @Test
+    public void tocarUnaMateriaNoIniciaHastaComenzar() throws Exception {
+        try (ActivityScenario<MainActivity> escenario = ActivityScenario.launch(MainActivity.class)) {
+            Pruebas.esperarVisible(withId(R.id.botonEstudiarAhora));
+            onView(withId(R.id.botonEstudiarAhora)).perform(click());
+
+            Pruebas.esperarVisible(withId(R.id.botonComenzarSelector));
+            onView(withId(R.id.botonComenzarSelector)).check(matches(not(isEnabled())));
+            onView(withText(R.string.materia_general_nombre)).perform(click());
+            onView(withId(R.id.tituloSelectorEstudio)).check(matches(isDisplayed()));
+            onView(withId(R.id.botonComenzarSelector)).check(matches(isEnabled()));
+
+            onView(withId(R.id.botonComenzarSelector)).perform(click());
+            Pruebas.esperarVisible(withId(R.id.nombreMateriaEnCurso));
+            onView(withId(R.id.botonDetenerEnCurso)).perform(click());
+        }
+    }
+
+    /** HU-02 «Sesión en curso visible» y HU-47 «Ya hay una sesión En curso»: Inicio ofrece volver a ella. */
+    @Test
+    public void conSesionEnCursoInicioOfreceVolverYNoPideMateria() throws Exception {
+        StudyPlanApplication app = Pruebas.app();
+        app.estudiarAhora().ejecutar(null, TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
+        app.contadorActividades().consumirEvaluacionRecuperacion();
+
+        try (ActivityScenario<MainActivity> escenario = ActivityScenario.launch(MainActivity.class)) {
+            Pruebas.esperarVisible(withId(R.id.tarjetaSesionEnCurso));
+            onView(withId(R.id.botonEstudiarAhora)).check(matches(withText(R.string.inicio_volver_sesion)));
+
+            onView(withId(R.id.botonEstudiarAhora)).perform(click());
+            Pruebas.esperarVisible(withId(R.id.nombreMateriaEnCurso));
+            onView(withId(R.id.tituloSelectorEstudio)).check(doesNotExist());
             onView(withId(R.id.botonDetenerEnCurso)).perform(click());
         }
     }
