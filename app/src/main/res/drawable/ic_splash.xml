@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono de la pantalla de inicio de Android 12 o posterior. El sistema dibuja este mapa de bits en un lienzo de
+     288 dp y deja visible un círculo de 192 dp: el anillo ocupa el 58 % del lienzo (173 dp medidos en el
+     emulador), así que cabe. Envolverlo en un layer-list con tamaño fijo lo ampliaba y recortaba el anillo. -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="fill"
+    android:src="@drawable/ic_launcher_foreground" />

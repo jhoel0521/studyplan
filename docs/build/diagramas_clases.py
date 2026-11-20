@@ -84,16 +84,20 @@ DOMINIO_CALENDARIO = ["BloqueHorarioCalendario", "CalculadorRangoHorario", "Celd
                       "VistaCalendario"]
 
 # add-tecnicas-estudio
-PRESENTACION_TECNICAS = ["DialogoRecuperacionSesion", "EventoEstudioAdapter", "NotificadorSesion",
-                         "ReceptorAvisosSesion", "RepartoSesionActivity", "RepartoSesionViewModel",
-                         "SesionEnCursoActivity", "SesionEnCursoViewModel"]
-ENTRADA_TECNICAS = ["ConfigurarAjustesEstudio", "ConsultarEjecucionSesion", "DecidirFinPlanificadoOInvasion",
-                    "DetenerSesion", "EvaluarRecuperacionSesion", "IniciarSesion", "PausarReanudarSesion",
-                    "RegistrarSalidaApp", "RepartirTramoSesion", "ResolverRegresoApp"]
-SERVICIOS_TECNICAS = ["ConfigurarAjustesEstudioService", "ConsultarEjecucionSesionService",
-                      "DecidirFinPlanificadoOInvasionService", "DetenerSesionService", "EjecucionHitos",
-                      "EvaluarRecuperacionSesionService", "IniciarSesionService", "PausarReanudarSesionService",
-                      "RegistrarSalidaAppService", "RepartirTramoSesionService", "ResolverRegresoAppService"]
+PRESENTACION_TECNICAS = ["DialogoRecuperacionSesion", "EventoEstudioAdapter", "FlujoBloqueoPantalla",
+                         "NotificadorSesion", "ReceptorAvisosSesion", "RepartoSesionActivity",
+                         "RepartoSesionViewModel", "ServicioSesionEnCurso", "SesionEnCursoActivity",
+                         "SesionEnCursoViewModel", "TextosSesion"]
+ENTRADA_TECNICAS = ["AlternarNoMolestarSesion", "ConfigurarAjustesEstudio", "ConsultarEjecucionSesion",
+                    "DecidirFinPlanificadoOInvasion", "DetenerSesion", "EvaluarRecuperacionSesion", "IniciarSesion",
+                    "PausarReanudarSesion", "RegistrarBloqueoPantalla", "RegistrarDesbloqueo", "RegistrarSalidaApp",
+                    "RepartirTramoSesion", "ResolverRegresoApp"]
+SERVICIOS_TECNICAS = ["AlternarNoMolestarSesionService", "ConfigurarAjustesEstudioService",
+                      "ConsultarEjecucionSesionService", "DecidirFinPlanificadoOInvasionService",
+                      "DetenerSesionService", "EjecucionHitos", "EvaluarRecuperacionSesionService",
+                      "IniciarSesionService", "PausarReanudarSesionService", "RegistrarBloqueoPantallaService",
+                      "RegistrarDesbloqueoService", "RegistrarSalidaAppService", "RepartirTramoSesionService",
+                      "ResolverRegresoAppService"]
 SALIDA_TECNICAS = ["ControladorNoMolestar", "EventoEstudioRepository", "MarcadorSalidaApp",
                    "ProgramadorAvisosSesion"]
 DOMINIO_TECNICAS = ["CalculadorPomodoro", "CalculadorRepartoTramo", "CalculadorTiempoReal", "CandidataInvasion",
@@ -101,7 +105,9 @@ DOMINIO_TECNICAS = ["CalculadorPomodoro", "CalculadorRepartoTramo", "CalculadorT
                     "FasePomodoro", "IntervaloEfectivo", "PreferenciaNoMolestar", "ResultadoReparto",
                     "ResumenEjecucionSesion", "TecnicaEstudio", "TipoEventoEstudio"]
 PERSISTENCIA_TECNICAS = ["EventoEstudioDao", "EventoEstudioEntity", "EventoEstudioRepositoryRoom"]
-SISTEMA_TECNICAS = ["ControladorNoMolestarSistema", "MarcadorSalidaAppPrefs", "ProgramadorAvisosAlarmManager"]
+SISTEMA_TECNICAS = ["BloqueoPantallaSistema", "ControladorNoMolestarSistema", "MarcadorSalidaAppPrefs",
+                    "NotificacionSesion", "PreferenciasBloqueoPantalla", "ProgramadorAvisosAlarmManager",
+                    "ProgramadorAvisosConNotificacion", "ReceptorAdministradorBloqueo"]
 
 PRESENTACION_METAS = ["FelicitacionMetasActivity", "HistorialMetasActivity", "HistorialMetasAdapter",
                       "HistorialMetasViewModel", "SelectorEstudioBottomSheet"]
@@ -423,7 +429,7 @@ def clases_calendario():
 
 def clases_tecnicas():
     """Clases de la épica E5: técnicas de estudio, ejecución en vivo, recuperación y reparto."""
-    W, H = 3760, 4400
+    W, H = 3760, 6400
     img = Image.new("RGB", (W, H), dg.WHITE)
     d = ImageDraw.Draw(img)
     d.text((40, 20), "1. Presentación · adapter.in.ui", font=dg.font(34, True), fill=dg.BLACK)
@@ -438,12 +444,16 @@ def clases_tecnicas():
               caja_con_metodos("EventoEstudioAdapter", xs1[1], y1b, w1),
               caja_con_metodos("ReceptorAvisosSesion", xs1[2], y1b, w1),
               caja_con_metodos("NotificadorSesion", xs1[3], y1b, w1)]
-    for c in fila1 + fila1b:
+    y1c = y1b + alto(fila1b) + 50
+    fila1c = [caja_con_metodos("ServicioSesionEnCurso", xs1[0], y1c, w1),
+              caja_con_metodos("FlujoBloqueoPantalla", xs1[1], y1c, w1),
+              caja_con_metodos("TextosSesion", xs1[2], y1c, w1)]
+    for c in fila1 + fila1b + fila1c:
         c.draw(d)
     dg.assoc(d, fila1[0].right(0.2), fila1[1].left(0.2), "observa", None, None)
     dg.assoc(d, fila1[2].right(0.2), fila1[3].left(0.2), "observa", None, None)
 
-    y2 = y1b + alto(fila1b) + 90
+    y2 = y1c + alto(fila1c) + 90
     d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
     d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
     y2 += 60

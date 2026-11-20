@@ -33,7 +33,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
  *   <li>ningún botón fija su alto en dp (la altura la da el estilo, para que crezca con la fuente);</li>
  *   <li>ningún layout usa un estilo {@code Widget.Material3.Button*} o {@code Widget.Material3.CardView*}
  *       explícito, que saltaría el tema;</li>
- *   <li>todos los estilos {@code Widget.StudyPlan.Button*} heredan su alto de {@code @dimen/button_height}.</li>
+ *   <li>todos los estilos {@code Widget.StudyPlan.Button*} heredan su alto de {@code @dimen/button_height};</li>
+ *   <li>la única excepción a la altura común es el botón redondo Pausar/Reanudar de la sesión en curso (64 dp):
+ *       ningún otro botón flotante declara un tamaño especial.</li>
  * </ul>
  *
  * <p>Verifica: HU-03 (escenarios «Botones uniformes» y «Texto ampliado»), RNF-07.
@@ -66,6 +68,41 @@ public class ReglasEstiloLayoutTest {
             });
         }
         comprobar("Colores hex en layouts (usa atributos del tema)", fallos);
+    }
+
+    /**
+     * HU-03 «Controles de la sesión en curso»: el único botón de tamaño especial (64 dp) es Pausar/Reanudar,
+     * en la sesión en curso (teléfono y ancho). Cualquier otro botón flotante usa el tamaño estándar.
+     */
+    @Test
+    public void soloPausarReanudarDeLaSesionUsaUnBotonRedondoDe64dp() throws Exception {
+        List<String> fallos = new ArrayList<>();
+        int deLaSesion = 0;
+        for (Path layout : layouts()) {
+            List<Element> botones = new ArrayList<>();
+            recorrer(documento(layout).getDocumentElement(), e -> {
+                if ("com.google.android.material.floatingactionbutton.FloatingActionButton"
+                        .equals(e.getTagName())) {
+                    botones.add(e);
+                }
+            });
+            for (Element e : botones) {
+                String id = e.getAttributeNS(ANDROID, "id");
+                String tamano = e.getAttributeNS("http://schemas.android.com/apk/res-auto", "fabCustomSize");
+                boolean esElDeLaSesion = nombre(layout).endsWith("activity_sesion_en_curso.xml")
+                        && "@+id/botonPausarReanudar".equals(id);
+                if (esElDeLaSesion) {
+                    deLaSesion++;
+                    if (!"64dp".equals(tamano)) {
+                        fallos.add(nombre(layout) + ": " + id + " debe medir 64dp y tiene " + tamano);
+                    }
+                } else if (!tamano.isEmpty()) {
+                    fallos.add(nombre(layout) + ": " + id + " usa fabCustomSize=" + tamano);
+                }
+            }
+        }
+        assertEquals("Debe haber un botón redondo en cada layout de la sesión (teléfono y ancho)", 2, deLaSesion);
+        comprobar("Botones flotantes de tamaño especial fuera de la excepción de la sesión en curso", fallos);
     }
 
     @Test

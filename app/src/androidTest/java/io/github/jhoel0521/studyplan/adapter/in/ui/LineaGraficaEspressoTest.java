@@ -102,13 +102,15 @@ public class LineaGraficaEspressoTest {
                 onView(withId(R.id.textoEstadoEnCurso)).check(matches(withText(R.string.sesion_en_curso_activa)));
                 comprobarColorDelAnillo(escenario, com.google.android.material.R.attr.colorPrimary);
                 capturar("en_curso_pomodoro", tema);
+                onView(withId(R.id.botonDetenerEnCurso)).perform(androidx.test.espresso.action.ViewActions.scrollTo());
+                capturar("en_curso_controles", tema);
 
-                onView(withId(R.id.botonPausarReanudar)).perform(click());
+                tocar(R.id.botonPausarReanudar);
                 Pruebas.esperarVisible(withText(R.string.sesion_en_curso_pausada));
                 comprobarColorDelAnillo(escenario, R.attr.colorWarning);
                 capturar("en_curso_pausa", tema);
 
-                onView(withId(R.id.botonDetenerEnCurso)).perform(click());
+                tocar(R.id.botonDetenerEnCurso);
             }
             Pruebas.reiniciarEstado();
             conPerfilYMaterias();
@@ -243,12 +245,12 @@ public class LineaGraficaEspressoTest {
             Pruebas.esperarVisible(withId(R.id.grupoOpcionesRecuperacion));
             comprobarModoNoche(escenario, modoNocheEsperado);
             capturar("al_volver", tema);
-            onView(withId(R.id.radioHastaHora)).perform(click());
+            tocar(R.id.radioHastaHora);
             capturar("al_volver_hora", tema);
             // Elegir «hasta una hora» muestra el campo de hora y puede abrir el teclado: se cierra para que el
             // siguiente toque encuentre la ventana con foco.
             androidx.test.espresso.Espresso.closeSoftKeyboard();
-            onView(withId(R.id.radioSigoEstudiando)).perform(click());
+            tocar(R.id.radioSigoEstudiando);
             onView(withId(android.R.id.button1)).perform(click());
             Pruebas.esperarVisible(withId(R.id.textoCronometro));
             capturar("en_curso", tema);
@@ -295,6 +297,20 @@ public class LineaGraficaEspressoTest {
      * Capturas opcionales para la revisión visual (tarea 5.4): solo con el argumento de instrumentación
      * {@code capturas=true}. Se guardan en {@code Android/data/<paquete>/files/capturas/}.
      */
+    /**
+     * Pulsa una vista desplazándose antes hasta ella: con la fuente al 200 % y 360 dp los controles quedan
+     * por debajo del borde y Espresso exige que se vea al menos el 90 %. Si la vista no está en un
+     * desplazable y ya es visible, el desplazamiento no hace falta.
+     */
+    private static void tocar(int id) {
+        try {
+            onView(withId(id)).perform(androidx.test.espresso.action.ViewActions.scrollTo());
+        } catch (RuntimeException e) {
+            // no está en un desplazable: se intenta el toque directo
+        }
+        onView(withId(id)).perform(click());
+    }
+
     private static boolean capturasPedidas() {
         return "true".equals(InstrumentationRegistry.getArguments().getString("capturas"));
     }

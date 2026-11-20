@@ -115,63 +115,184 @@
                         android:textAppearance="?attr/textAppearanceLabelMedium"
                         android:textColor="?attr/colorPrimary"
                         tools:text="Estudiando" />
+
+                    <!-- Candado dentro del cronómetro: bloquea la pantalla y cuenta como estudio (HU-50). -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonBloquear"
+                        style="@style/Widget.StudyPlan.Button.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/bloqueo_pantalla_boton"
+                        app:icon="@drawable/ic_candado"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp" />
                 </LinearLayout>
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/textoEstadoNoMolestar"
+            <!-- Aviso: los controles de la notificación están desactivados porque se denegó el permiso (HU-49, RNF-18). -->
+            <LinearLayout
+                android:id="@+id/avisoNotificacionesDesactivadas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:maxWidth="600dp"
-                android:text="@string/sesion_en_curso_no_molestar"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                android:textColor="?attr/colorSecondary"
+                android:layout_marginTop="12dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                tools:visibility="visible">
 
-            <!-- «Pausar»/«Reanudar» en relleno y «Detener» en contorno; bajan de línea con la fuente grande. -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxWidth="600dp"
+                    android:text="@string/sesion_en_curso_notificaciones_desactivadas"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonAjustesNotificacionesSesion"
+                    style="@style/Widget.StudyPlan.Button.Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/ajustes_permiso_notificaciones_ir" />
+            </LinearLayout>
+
+            <!-- Controles estilo reproductor (HU-03, HU-24): Pausar/Reanudar es un botón redondo de 64 dp, la única
+                 excepción a la altura común de los botones; el resto son iconos de 48 dp con su etiqueta. Bajan de
+                 línea con la fuente grande. -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/botonPausarReanudar"
+                <LinearLayout
+                    android:id="@+id/controlDetener"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/button_height"
-                    android:text="@string/sesion_en_curso_pausar" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/botonDetenerEnCurso"
-                    style="@style/Widget.StudyPlan.Button.Outlined"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonDetenerEnCurso"
+                        style="@style/Widget.StudyPlan.Button.Icon.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/sesion_en_curso_detener"
+                        app:icon="@drawable/ic_detener"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp" />
+
+                    <TextView
+                        android:layout_width="72dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/sesion_en_curso_detener"
+                        android:textAppearance="?attr/textAppearanceLabelSmall" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/controlCambiarMateria"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/button_height"
-                    android:text="@string/sesion_en_curso_detener" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonCambiarMateria"
+                        style="@style/Widget.StudyPlan.Button.Icon.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/sesion_cambiar_materia"
+                        app:icon="@drawable/ic_cambiar_materia"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp" />
+
+                    <TextView
+                        android:layout_width="72dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/sesion_cambiar_materia"
+                        android:textAppearance="?attr/textAppearanceLabelSmall" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/controlPausarReanudar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/botonPausarReanudar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/sesion_en_curso_pausar"
+                        app:backgroundTint="?attr/colorPrimary"
+                        app:elevation="0dp"
+                        app:fabCustomSize="64dp"
+                        app:maxImageSize="32dp"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.StudyPlan.BotonCircular"
+                        app:srcCompat="@drawable/ic_pausar"
+                        app:tint="?attr/colorOnPrimary" />
+
+                    <TextView
+                        android:id="@+id/textoEtiquetaPausarReanudar"
+                        android:layout_width="72dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/sesion_en_curso_pausar"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        tools:text="Pausar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/controlNoMolestar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/botonNoMolestar"
+                        style="@style/Widget.StudyPlan.Button.Icon.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/sesion_no_molestar_boton"
+                        app:icon="@drawable/ic_no_molestar_apagado"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp" />
+
+                    <TextView
+                        android:id="@+id/textoEtiquetaNoMolestar"
+                        android:layout_width="72dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="@string/sesion_no_molestar_apagado"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        tools:text="No molestar apagado" />
+                </LinearLayout>
 
                 <androidx.constraintlayout.helper.widget.Flow
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="botonPausarReanudar,botonDetenerEnCurso"
-                    app:flow_horizontalGap="16dp"
+                    app:constraint_referenced_ids="controlDetener,controlCambiarMateria,controlPausarReanudar,controlNoMolestar"
+                    app:flow_horizontalGap="12dp"
                     app:flow_horizontalStyle="packed"
+                    app:flow_verticalAlign="top"
                     app:flow_verticalGap="16dp"
                     app:flow_wrapMode="chain"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/botonCambiarMateria"
-                style="@style/Widget.StudyPlan.Button.Outlined"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:minHeight="@dimen/button_height"
-                android:text="@string/sesion_cambiar_materia" />
 
             <!-- Tarjeta extensión Pomodoro (HU-23) -->
             <com.google.android.material.card.MaterialCardView

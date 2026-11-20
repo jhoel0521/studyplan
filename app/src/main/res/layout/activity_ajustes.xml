@@ -303,6 +303,18 @@
                     android:text="@string/ajustes_permiso_alarmas_ir" />
             </LinearLayout>
 
+            <!-- Visible solo con el permiso de bloquear la pantalla activo (HU-50). -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonQuitarPermisoBloqueo"
+                style="@style/Widget.StudyPlan.Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:minHeight="@dimen/button_height"
+                android:text="@string/ajustes_quitar_permiso_bloqueo"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonPrivacidad"
                 style="@style/Widget.StudyPlan.Button.Outlined"

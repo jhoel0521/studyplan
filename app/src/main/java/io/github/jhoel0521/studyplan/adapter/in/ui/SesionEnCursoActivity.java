@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -65,8 +66,12 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     private TextView textoCronometro;
     private TextView textoEstadoEnCurso;
     private CircularProgressIndicator anilloProgreso;
-    private TextView textoEstadoNoMolestar;
-    private MaterialButton botonPausarReanudar;
+    private View avisoNotificacionesDesactivadas;
+    private FloatingActionButton botonPausarReanudar;
+    private TextView textoEtiquetaPausarReanudar;
+    private MaterialButton botonNoMolestar;
+    private TextView textoEtiquetaNoMolestar;
+    private FlujoBloqueoPantalla flujoBloqueo;
     private MaterialButton botonDetener;
     private MaterialCardView tarjetaExtensionPomodoro;
     private MaterialCardView tarjetaFinPlanificado;
@@ -112,6 +117,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
 
         modelo = viewModel(SesionEnCursoViewModel.class);
         modelo.resumen().observe(this, this::onResumen);
+        modelo.errorNoMolestar().observe(this, this::onErrorNoMolestar);
         modelo.finalizada().observe(this, this::onFinalizada);
         modelo.nuevaSesionActiva().observe(this, this::onCambioASiguiente);
         modelo.metasAlcanzadas().observe(this, this::onMetasAlcanzadas);
@@ -172,6 +178,8 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     @Override
     protected void onStart() {
         super.onStart();
+        avisoNotificacionesDesactivadas.setVisibility(
+                NotificadorSesion.puedeNotificar(this) ? View.GONE : View.VISIBLE);
         handler.removeCallbacks(tareaTick);
         handler.postDelayed(tareaTick, TICK_MS);
     }
@@ -190,8 +198,15 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         textoFasePomodoro = findViewById(R.id.textoFasePomodoro);
         textoCronometro = findViewById(R.id.textoCronometro);
         textoEstadoEnCurso = findViewById(R.id.textoEstadoEnCurso);
-        textoEstadoNoMolestar = findViewById(R.id.textoEstadoNoMolestar);
+        avisoNotificacionesDesactivadas = findViewById(R.id.avisoNotificacionesDesactivadas);
+        findViewById(R.id.botonAjustesNotificacionesSesion)
+                .setOnClickListener(this::onAjustesNotificacionesClick);
         botonPausarReanudar = findViewById(R.id.botonPausarReanudar);
+        textoEtiquetaPausarReanudar = findViewById(R.id.textoEtiquetaPausarReanudar);
+        botonNoMolestar = findViewById(R.id.botonNoMolestar);
+        textoEtiquetaNoMolestar = findViewById(R.id.textoEtiquetaNoMolestar);
+        flujoBloqueo = new FlujoBloqueoPantalla(this);
+        findViewById(R.id.botonBloquear).setOnClickListener(v -> flujoBloqueo.iniciar());
         botonDetener = findViewById(R.id.botonDetenerEnCurso);
         tarjetaExtensionPomodoro = findViewById(R.id.tarjetaExtensionPomodoro);
         tarjetaFinPlanificado = findViewById(R.id.tarjetaFinPlanificado);
@@ -208,6 +223,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
 
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         botonPausarReanudar.setOnClickListener(this::onPausarReanudarClick);
+        botonNoMolestar.setOnClickListener(this::onNoMolestarClick);
         botonDetener.setOnClickListener(this::onDetenerClick);
         botonCambiarMateria.setOnClickListener(this::onCambiarMateriaClick);
         botonMasPomodoro.setOnClickListener(v -> modelo.decidir(
@@ -235,10 +251,21 @@ public class SesionEnCursoActivity extends ActividadProtegida {
         textoEstadoEnCurso.setText(r.pausada()
                 ? R.string.sesion_en_curso_pausada
                 : R.string.sesion_en_curso_activa);
-        botonPausarReanudar.setText(r.pausada()
+        int textoPausar = r.pausada()
                 ? R.string.sesion_en_curso_reanudar
-                : R.string.sesion_en_curso_pausar);
-        textoEstadoNoMolestar.setVisibility(r.noMolestarActivo() ? View.VISIBLE : View.GONE);
+                : R.string.sesion_en_curso_pausar;
+        botonPausarReanudar.setImageResource(r.pausada() ? R.drawable.ic_reproducir : R.drawable.ic_pausar);
+        botonPausarReanudar.setContentDescription(getString(textoPausar));
+        textoEtiquetaPausarReanudar.setText(textoPausar);
+        boolean noMolestar = r.noMolestarActivo();
+        botonNoMolestar.setIconResource(
+                noMolestar ? R.drawable.ic_no_molestar : R.drawable.ic_no_molestar_apagado);
+        botonNoMolestar.setContentDescription(getString(noMolestar
+                ? R.string.sesion_no_molestar_activado
+                : R.string.sesion_no_molestar_apagado));
+        textoEtiquetaNoMolestar.setText(noMolestar
+                ? R.string.sesion_no_molestar_activado
+                : R.string.sesion_no_molestar_apagado);
         aplicarColorDeFase(r);
 
         if (r.sesion().tecnica() == TecnicaEstudio.POMODORO && r.estadoPomodoro() != null) {
@@ -352,25 +379,11 @@ public class SesionEnCursoActivity extends ActividadProtegida {
     }
 
     private String textoDeFase(FasePomodoro fase, int ciclo, int objetivo) {
-        switch (fase) {
-            case DESCANSO_CORTO:
-                return getString(R.string.sesion_en_curso_fase_descanso_corto, ciclo, objetivo);
-            case DESCANSO_LARGO:
-                return getString(R.string.sesion_en_curso_fase_descanso_largo, ciclo, objetivo);
-            case TIEMPO_EXTRA_LIBRE:
-                return getString(R.string.sesion_en_curso_fase_extra);
-            case TRABAJO:
-            default:
-                return getString(R.string.sesion_en_curso_fase_trabajo, ciclo, objetivo);
-        }
+        return TextosSesion.fase(this, fase, ciclo, objetivo);
     }
 
     private static String formatearHms(long milis) {
-        long segTotal = Math.max(0L, milis / 1000L);
-        long h = segTotal / 3600L;
-        long m = (segTotal % 3600L) / 60L;
-        long s = segTotal % 60L;
-        return String.format(Locale.US, "%02d:%02d:%02d", h, m, s);
+        return TextosSesion.hms(milis);
     }
 
     private void onFinalizada(boolean termino) {
@@ -558,6 +571,33 @@ public class SesionEnCursoActivity extends ActividadProtegida {
                     modelo.reanudarConTopico(sesionId, topico, nota);
                 })
                 .show();
+    }
+
+    /** Abre los ajustes del sistema para volver a permitir las notificaciones (HU-49, RNF-18). */
+    private void onAjustesNotificacionesClick(View v) {
+        startActivity(NotificadorSesion.intentAjustesNotificaciones(this));
+    }
+
+    /** Activa o desactiva No molestar solo para esta sesión (HU-24). */
+    private void onNoMolestarClick(View v) {
+        modelo.alternarNoMolestar(sesionId);
+    }
+
+    private void onErrorNoMolestar(@Nullable ErrorValidacion error) {
+        if (error == null) {
+            return;
+        }
+        modelo.consumirErrorNoMolestar();
+        if (error == ErrorValidacion.SIN_PERMISO_NO_MOLESTAR) {
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.ajustes_no_molestar_dialogo_titulo)
+                    .setMessage(R.string.ajustes_no_molestar_dialogo_msg)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.ajustes_no_molestar_ir, (d, w) -> startActivity(
+                            new android.content.Intent(
+                                    android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)))
+                    .show();
+        }
     }
 
     private void onDetenerClick(View v) {

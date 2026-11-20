@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name=".adapter.in.ui.StudyPlanApplication"
@@ -98,6 +100,29 @@
                     android:scheme="studyplan" />
             </intent-filter>
         </receiver>
+
+        <!-- Administrador del dispositivo con la única política «bloquear la pantalla» (HU-50) -->
+        <receiver
+            android:name=".adapter.out.system.ReceptorAdministradorBloqueo"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/politicas_bloqueo" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Sostiene la notificación de la sesión En curso con sus controles (HU-49) -->
+        <service
+            android:name=".adapter.in.ui.ServicioSesionEnCurso"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Cronómetro de la sesión de estudio con controles para pausar y detener" />
+        </service>
 
         <!-- Guarda el idioma elegido en Android 12 o anterior (HU-03) -->
         <service

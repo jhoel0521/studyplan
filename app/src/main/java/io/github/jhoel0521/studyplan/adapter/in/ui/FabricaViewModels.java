@@ -72,7 +72,7 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
                     app.cambiarDeMateria(),
                     app.listarMaterias(),
                     app.iniciarSesion(),
-                    app.ejecutor());
+                    app.ejecutor()).conAlternarNoMolestar(app.alternarNoMolestarSesion());
         }
         if (clase.isAssignableFrom(RepartoSesionViewModel.class)) {
             return (T) new RepartoSesionViewModel(

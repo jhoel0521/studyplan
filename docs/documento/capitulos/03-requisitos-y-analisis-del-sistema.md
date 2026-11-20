@@ -102,7 +102,7 @@ Tabla: Épicas del producto y su especificación en OpenSpec {#tabla6}
 | E2 | Gestión de materias | HU-06, HU-07, HU-08, HU-09, HU-46 | specs/gestion-materias/spec.md |
 | E3 | Sesiones de estudio | HU-10, HU-11, HU-12, HU-13, HU-14, HU-15 | specs/sesiones-estudio/spec.md |
 | E4 | Calendario de estudio | HU-16, HU-17, HU-18, HU-19, HU-20, HU-21 | specs/calendario-estudio/spec.md |
-| E5 | Técnicas y eventos de estudio | HU-22, HU-23, HU-24, HU-39, HU-40, HU-41, HU-42, HU-43, HU-44 | specs/tecnicas-estudio/spec.md |
+| E5 | Técnicas y eventos de estudio | HU-22, HU-23, HU-24, HU-39, HU-40, HU-41, HU-42, HU-43, HU-44, HU-49, HU-50 | specs/tecnicas-estudio/spec.md |
 | E6 | Metas semanales | HU-25, HU-26, HU-27, HU-28, HU-47, HU-48 | specs/metas-semanales/spec.md |
 | E7 | Estadísticas | HU-29, HU-30, HU-31, HU-45 | specs/estadisticas/spec.md |
 | E8 | Reportes | HU-32, HU-33 | specs/reportes/spec.md |
@@ -150,6 +150,8 @@ Tabla: Product Backlog de StudyPlan v0.1.0 {#tabla7}
 | HU-42 | E5 | Continuar con tiempo extra al llegar al fin planificado | Must | 3 |
 | HU-43 | E5 | Decidir al llegar la hora de otra sesión | Should | 3 |
 | HU-44 | E5 | Repartir un tramo continuo entre sesiones | Should | 5 |
+| HU-49 | E5 | Controlar la sesión desde la notificación y la pantalla bloqueada | Should | 5 |
+| HU-50 | E5 | Bloquear la pantalla para estudiar | Should | 3 |
 | HU-25 | E6 | Definir meta semanal total | Must | 3 |
 | HU-26 | E6 | Definir meta semanal por materia | Must | 3 |
 | HU-27 | E6 | Ver progreso de metas | Must | 3 |
@@ -296,7 +298,7 @@ Tabla: Historias de usuario de la épica E5: Técnicas y eventos de estudio {#ta
 | **HU-24** | **Activar modo No molestar durante la sesión** |
 | **Historia** | Como estudiante, quiero que el teléfono silencie notificaciones mientras estudio para evitar distracciones. |
 | **Prioridad / Est.** | Should · 3 puntos |
-| **Criterios de aceptación** | 1. **Global.** *Dado* que No molestar está activado en Ajustes y la app tiene el permiso, *cuando* el estudiante inicia una sesión, *entonces* el sistema activa No molestar y lo restaura al pausar o terminar (RN-18).<br>2. **Forzar por sesión.** *Dado* que No molestar está desactivado globalmente, *cuando* el estudiante lo activa en la pantalla de la sesión antes de iniciar, *entonces* solo esa sesión usa No molestar.<br>3. **Sin permiso.** *Dado* que la app no tiene acceso a No molestar, *cuando* el estudiante activa la opción, *entonces* el sistema explica el permiso y abre la configuración del sistema para concederlo. |
+| **Criterios de aceptación** | 1. **Global.** *Dado* que No molestar está activado en Ajustes y la app tiene el permiso, *cuando* el estudiante inicia una sesión, *entonces* el sistema activa No molestar y lo restaura al pausar o terminar (RN-18).<br>2. **Forzar por sesión.** *Dado* que No molestar está desactivado globalmente, *cuando* el estudiante lo activa en la pantalla de la sesión antes de iniciar, *entonces* solo esa sesión usa No molestar.<br>3. **Sin permiso.** *Dado* que la app no tiene acceso a No molestar, *cuando* el estudiante activa la opción, *entonces* el sistema explica el permiso y abre la configuración del sistema para concederlo.<br>4. **Alternar desde la sesión.** *Dado* que la sesión está En curso, *cuando* el estudiante toca el control «No molestar» de la pantalla de la sesión, *entonces* No molestar se activa o se desactiva solo para esa sesión, con su estado visible en icono y texto (RN-18). |
 | **HU-39** | **Registrar eventos de estudio** |
 | **Historia** | Como estudiante, quiero que la app registre los eventos de mi sesión (inicio, pausas, salidas y regresos, tiempo extra, cambios, fin) para saber qué tan concentrado estuve y cuánto respeté mi tiempo de estudio. |
 | **Prioridad / Est.** | Must · 5 puntos |
@@ -304,7 +306,7 @@ Tabla: Historias de usuario de la épica E5: Técnicas y eventos de estudio {#ta
 | **HU-40** | **Recibir aviso al salir de la app durante una sesión** |
 | **Historia** | Como estudiante, quiero recibir una notificación para volver cuando salgo de la app con una sesión en curso para no perder el hilo ni olvidar la sesión abierta. |
 | **Prioridad / Est.** | Should · 3 puntos |
-| **Criterios de aceptación** | 1. **Salida.** *Dado* que hay una sesión En curso, *cuando* el estudiante sale de la app para atender una llamada, *entonces* se registra el evento «salida», la sesión NO se pausa y aparece la notificación «Tu sesión sigue en curso — volver» (RN-23).<br>2. **Regreso.** *Dado* que el estudiante salió de la app, *cuando* toca la notificación o abre la app, *entonces* se registra el evento «regreso». |
+| **Criterios de aceptación** | 1. **Salida.** *Dado* que hay una sesión En curso, *cuando* el estudiante sale de la app para atender una llamada, *entonces* se registra el evento «salida», la sesión NO se pausa, suena y vibra un aviso una sola vez y la notificación de la sesión pasa a «Tu sesión sigue en curso — volver» con el tiempo detenido (RN-23).<br>2. **Regreso.** *Dado* que el estudiante salió de la app, *cuando* toca la notificación o abre la app, *entonces* se registra el evento «regreso».<br>3. **Pantalla apagada con la app en primer plano.** *Dado* que hay una sesión En curso y una pantalla de StudyPlan está en primer plano, *cuando* la pantalla se apaga sola o con el botón de encendido, *entonces* se registra «bloqueo de pantalla», no hay salida y al volver no se pregunta «¿seguiste estudiando?» (RN-23). |
 | **HU-41** | **Declarar estudio con la app cerrada** |
 | **Historia** | Como estudiante, quiero indicar al volver si seguí estudiando después de salir de la app y hasta qué hora para registrar mi estudio real aunque haya olvidado el celular o estudiado en grupo. |
 | **Prioridad / Est.** | Must · 5 puntos |
@@ -322,6 +324,18 @@ Tabla: Historias de usuario de la épica E5: Técnicas y eventos de estudio {#ta
 | **Prioridad / Est.** | Should · 5 puntos |
 | **Criterios de aceptación** | 1. **Repartir.** *Dado* que Matemáticas (10:00–11:00) estuvo En curso hasta las 12:10 e Inglés estaba planificada de 11:00 a 12:00, *cuando* el estudiante detiene y elige «Repartir»: Matemáticas hasta las 11:05 e Inglés el resto, *entonces* Matemáticas queda Completada con 65 min e Inglés Completada con 65 min (RN-28).<br>2. **Sin sesiones siguientes.** *Dado* que no hay sesiones Pendientes consecutivas, *cuando* el estudiante detiene, *entonces* no se ofrece repartir. |
 | **Criterios de calidad** | RNF-03, RNF-10, RNF-18, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
+| **Spec OpenSpec** | openspec/specs/tecnicas-estudio/spec.md |
+| **HU-49** | **Controlar la sesión desde la notificación y la pantalla bloqueada** |
+| **Historia** | Como estudiante, quiero ver y controlar mi sesión desde la barra de notificaciones y con el teléfono bloqueado, como un reproductor de música, para pausarla o detenerla sin abrir la app ni distraerme. |
+| **Prioridad / Est.** | Should · 5 puntos |
+| **Criterios de aceptación** | 1. **Notificación.** *Dado* que una sesión de Álgebra está En curso, *cuando* el estudiante abre la barra de notificaciones o bloquea el teléfono, *entonces* ve la materia, el tiempo transcurrido que avanza solo y los botones «Pausar» y «Detener».<br>2. **Pomodoro.** *Dado* que la sesión usa Pomodoro, *cuando* mira la notificación, *entonces* ve la fase y una cuenta atrás hasta su fin.<br>3. **Pausar, reanudar y detener.** *Dado* que la app no está en primer plano, *cuando* toca «Pausar», «Reanudar» o «Detener», *entonces* la sesión registra el evento correspondiente y, al detener, la notificación desaparece.<br>4. **Privacidad.** *Dado* que el bloqueo de la app está activo, *cuando* la notificación se ve con el teléfono bloqueado, *entonces* no muestra la materia y, desde Android 12, sus botones piden desbloquear el teléfono (RNF-12).<br>5. **Salida.** *Dado* que el estudiante salió de la app, *cuando* mira la notificación, *entonces* muestra «Tu sesión sigue en curso — volver» con el tiempo detenido.<br>6. **Notificaciones denegadas.** *Dado* que se denegó el permiso, *cuando* inicia una sesión, *entonces* la pantalla de la sesión avisa que los controles de la notificación están desactivados y lleva a la configuración (RNF-18). |
+| **Criterios de calidad** | RNF-03, RNF-06, RNF-12, RNF-18, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
+| **Spec OpenSpec** | openspec/specs/tecnicas-estudio/spec.md |
+| **HU-50** | **Bloquear la pantalla para estudiar** |
+| **Historia** | Como estudiante, quiero bloquear el teléfono desde el cronómetro de la sesión sin que cuente como distracción para estudiar sin la tentación de la pantalla. |
+| **Prioridad / Est.** | Should · 3 puntos |
+| **Criterios de aceptación** | 1. **Candado.** *Dado* que la sesión está En curso, *cuando* el estudiante ve el cronómetro, *entonces* dentro del anillo hay un botón con un candado y el nombre accesible «Bloquear pantalla».<br>2. **Confirmación.** *Dado* que no marcó «No volver a preguntar», *cuando* toca el candado, *entonces* el sistema avisa que la pantalla se apagará y la sesión seguirá contando, con [Bloquear] y [Cancelar].<br>3. **Permiso.** *Dado* que la app no tiene el permiso de bloquear la pantalla, *cuando* confirma por primera vez, *entonces* el sistema explica el permiso, abre la pantalla del sistema para concederlo y, si lo concede, bloquea el teléfono (RNF-18).<br>4. **Cuenta como estudio.** *Dado* que bloquea con el candado y desbloquea 25 minutos después volviendo a StudyPlan, *cuando* mira la sesión, *entonces* se registran «bloqueo de pantalla» y «desbloqueo», esos 25 minutos cuentan como estudio y no aparece la pregunta «¿seguiste estudiando?».<br>5. **Proceso terminado.** *Dado* que el sistema terminó la app con el teléfono bloqueado, *cuando* el estudiante la abre horas después, *entonces* la sesión sigue En curso, el tiempo cuenta como estudio y no se pregunta nada (RN-22).<br>6. **Retirar el permiso.** *Dado* que la app tiene el permiso, *cuando* el estudiante pulsa «Quitar permiso de bloqueo» en Ajustes, *entonces* el sistema lo retira y se puede desinstalar la app sin pasos extra. |
+| **Criterios de calidad** | RNF-03, RNF-06, RNF-18, RNF-09, RNF-16, RNF-17 (ver @tabla:tabla21) |
 | **Spec OpenSpec** | openspec/specs/tecnicas-estudio/spec.md |
 
 Tabla: Historias de usuario de la épica E6: Metas semanales {#tabla13}
@@ -452,7 +466,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-20 | La contraseña del respaldo es opcional; si se define, el archivo se cifra en el teléfono antes de subirlo y, si se olvida, el respaldo no se puede recuperar. | Entrevista |
 | RN-21 | Al borrar información, el estudiante elige: solo datos del teléfono, solo el respaldo en Drive o ambos; la acción requiere doble confirmación y es irreversible. | Entrevista |
 | RN-22 | El tiempo de una sesión se calcula a partir de eventos con marca de tiempo guardados en la BD, no de un proceso que cuente segundos; cerrar o terminar la app no detiene la sesión y el cronómetro solo se dibuja cuando la app está visible. | Entrevista |
-| RN-23 | Salir de la app durante una sesión En curso no la pausa: se registran los eventos «salida» y «regreso» y se envía una notificación para volver a la app (omitida durante descansos Pomodoro legítimos, donde solo se registra salida si excede el fin del descanso). | Entrevista |
+| RN-23 | Salir de la app durante una sesión En curso no la pausa: se registran los eventos «salida» y «regreso», suena un aviso y la notificación de la sesión pasa a «volver» (omitido durante descansos Pomodoro legítimos, donde solo se registra salida si excede el fin del descanso). Apagar la pantalla con una pantalla de StudyPlan en primer plano, con el candado o sin él, no es salida: se registra «bloqueo de pantalla» y la sesión sigue contando como estudio. | Entrevista; Product Owner (2026-11-20) |
 | RN-24 | Al volver tras una salida, o al detener, el estudiante decide hasta qué hora estudió, si sigue estudiando o si «No estudió ese rato, retoma ahora»; el tramo declarado o la pausa puede clasificarse con un tópico canónico (`evento_estudio.topico`, `SIN_CLASIFICAR` por defecto) y nota opcional. | Entrevista |
 | RN-25 | Al llegar la hora de fin planificada se pregunta «¿Sigues estudiando?»; el tiempo posterior se registra como tiempo extra y, sin respuesta, la sesión sigue En curso. | Entrevista |
 | RN-26 | Se registra siempre la duración real, menor o mayor que la planificada; no existen estados parciales. | Entrevista |

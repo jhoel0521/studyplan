@@ -83,14 +83,40 @@
     </style>
 
     <!-- Botones solo de icono: misma altura que los de texto, ancho mínimo igual. -->
+    <!-- Esquinas al 50 %: el botón flotante de Pausar/Reanudar queda circular en vez de cuadrado redondeado. -->
+    <style name="ShapeAppearanceOverlay.StudyPlan.BotonCircular" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Botón de solo icono: 24 dp de icono más 11,5 dp de relleno por lado miden justo la altura común (48 dp, medido
+         en el emulador); con el relleno por defecto de Material medía 52 dp. -->
     <style name="Widget.StudyPlan.Button.Icon" parent="Widget.Material3.Button.IconButton">
         <item name="android:minWidth">@dimen/button_height</item>
         <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingTop">11.5dp</item>
+        <item name="android:paddingBottom">11.5dp</item>
+        <item name="android:paddingStart">11.5dp</item>
+        <item name="android:paddingEnd">11.5dp</item>
+        <!-- Sin texto: la línea del texto vacío no debe crecer con la fuente del sistema (HU-03, «Texto ampliado»). -->
+        <item name="android:textSize">1dp</item>
+        <item name="lineHeight">1dp</item>
     </style>
 
     <style name="Widget.StudyPlan.Button.Icon.Outlined" parent="Widget.Material3.Button.IconButton.Outlined">
         <item name="android:minWidth">@dimen/button_height</item>
         <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingTop">11.5dp</item>
+        <item name="android:paddingBottom">11.5dp</item>
+        <item name="android:paddingStart">11.5dp</item>
+        <item name="android:paddingEnd">11.5dp</item>
+        <!-- Sin texto: la línea del texto vacío no debe crecer con la fuente del sistema (HU-03, «Texto ampliado»). -->
+        <item name="android:textSize">1dp</item>
+        <item name="lineHeight">1dp</item>
     </style>
 
     <!-- Botón de un grupo de botones unidos (como btn-group de Bootstrap): relleno del color primario y una línea fina

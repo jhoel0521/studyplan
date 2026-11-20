@@ -7,24 +7,37 @@ import android.content.Intent;
 import android.os.Build;
 
 import java.util.List;
+import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.domain.AvisoRecordatorioPendiente;
+import io.github.jhoel0521.studyplan.domain.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.Resultado;
 import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
 
 /**
  * Receptor de alarmas de hitos, recordatorios previos, acciones de notificación ([Sigo] / [Terminé]),
- * reinicio del dispositivo ({@code BOOT_COMPLETED}), actualización de paquete y cambio de permiso
- * de alarmas exactas (HU-23, HU-34, HU-42, RN-25).
+ * botones de la notificación de la sesión (Pausar, Reanudar y Detener), reinicio del dispositivo
+ * ({@code BOOT_COMPLETED}), actualización de paquete y cambio de permiso de alarmas exactas (HU-23, HU-34,
+ * HU-42, HU-49, RN-25).
  */
 public class ReceptorAvisosSesion extends BroadcastReceiver {
 
     public static final String ACCION_SIGO = "io.github.jhoel0521.studyplan.ACCION_SIGO";
     public static final String ACCION_TERMINE = "io.github.jhoel0521.studyplan.ACCION_TERMINE";
+    public static final String ACCION_PAUSAR = "io.github.jhoel0521.studyplan.ACCION_PAUSAR";
+    public static final String ACCION_REANUDAR = "io.github.jhoel0521.studyplan.ACCION_REANUDAR";
+    public static final String ACCION_DETENER = "io.github.jhoel0521.studyplan.ACCION_DETENER";
+    /** Botón «No molestar» de la notificación de la sesión (HU-24, HU-49). */
+    public static final String ACCION_NO_MOLESTAR = "io.github.jhoel0521.studyplan.ACCION_NO_MOLESTAR";
+    /** El sistema permitió descartar la notificación de la sesión: se vuelve a mostrar (HU-49). */
+    public static final String ACCION_REPUBLICAR = "io.github.jhoel0521.studyplan.ACCION_REPUBLICAR";
     public static final String EXTRA_SESION_ID = ProgramadorAvisosAlarmManager.EXTRA_SESION_ID;
 
     @Override
@@ -41,6 +54,7 @@ public class ReceptorAvisosSesion extends BroadcastReceiver {
                 try {
                     app.evaluarRecuperacionSesion().ejecutar();
                     reprogramarYNotificarPendientes(context, app);
+                    NotificadorSesion.reconciliar(context);
                 } finally {
                     if (pending != null) {
                         pending.finish();
@@ -56,6 +70,7 @@ public class ReceptorAvisosSesion extends BroadcastReceiver {
             app.ejecutor().execute(() -> {
                 try {
                     reprogramarYNotificarPendientes(context, app);
+                    NotificadorSesion.reconciliar(context);
                 } finally {
                     if (pending != null) {
                         pending.finish();
@@ -93,6 +108,28 @@ public class ReceptorAvisosSesion extends BroadcastReceiver {
             return;
         }
 
+        if (ACCION_PAUSAR.equals(accion)
+                || ACCION_REANUDAR.equals(accion)
+                || ACCION_DETENER.equals(accion)
+                || ACCION_NO_MOLESTAR.equals(accion)
+                || ACCION_REPUBLICAR.equals(accion)) {
+            long sesionId = intent.getLongExtra(EXTRA_SESION_ID, -1L);
+            if (sesionId <= 0) {
+                return;
+            }
+            PendingResult pending = goAsync();
+            app.ejecutor().execute(() -> {
+                try {
+                    procesarAccionSesion(context, app, accion, sesionId);
+                } finally {
+                    if (pending != null) {
+                        pending.finish();
+                    }
+                }
+            });
+            return;
+        }
+
         if (ACCION_SIGO.equals(accion) || ACCION_TERMINE.equals(accion)) {
             long sesionId = intent.getLongExtra(EXTRA_SESION_ID, -1L);
             if (sesionId <= 0) {
@@ -112,6 +149,45 @@ public class ReceptorAvisosSesion extends BroadcastReceiver {
                     }
                 }
             });
+        }
+    }
+
+    /**
+     * Atiende los botones de la notificación de la sesión. Una acción cuya sesión ya no es la que está En
+     * curso (notificación obsoleta) no actúa sobre otra sesión: solo se reconcilia la notificación (HU-49).
+     */
+    static void procesarAccionSesion(
+            Context context, StudyPlanApplication app, String accion, long sesionId) {
+        Optional<SesionEstudio> enCurso = app.sesionRepository().buscarEnCurso();
+        if (!enCurso.isPresent() || enCurso.get().id() == null || enCurso.get().id() != sesionId) {
+            NotificadorSesion.reconciliar(context);
+            return;
+        }
+        if (ACCION_REPUBLICAR.equals(accion)) {
+            NotificadorSesion.refrescar(context, sesionId);
+            return;
+        }
+        if (ACCION_NO_MOLESTAR.equals(accion)) {
+            app.alternarNoMolestarSesion().ejecutar(sesionId);
+            NotificadorSesion.refrescar(context, sesionId);
+            return;
+        }
+        boolean pausada = app.consultarEjecucionSesion().ejecutar(sesionId)
+                .map(ResumenEjecucionSesion::pausada)
+                .orElse(false);
+        if (ACCION_PAUSAR.equals(accion)) {
+            if (!pausada) {
+                app.pausarReanudarSesion().ejecutar(sesionId);
+            }
+        } else if (ACCION_REANUDAR.equals(accion)) {
+            if (pausada) {
+                app.pausarReanudarSesion().ejecutar(sesionId, TopicoEventoEstudio.SIN_CLASIFICAR, "");
+            }
+        } else if (ACCION_DETENER.equals(accion)) {
+            Resultado<CierreSesion> cierre = app.detenerSesion().ejecutarConMetas(sesionId);
+            if (cierre.esValido()) {
+                NotificadorSesion.mostrarMetasAlcanzadas(context, cierre.valor().metasAlcanzadas());
+            }
         }
     }
 

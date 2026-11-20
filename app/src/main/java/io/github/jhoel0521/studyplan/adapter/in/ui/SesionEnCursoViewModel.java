@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
+import io.github.jhoel0521.studyplan.application.port.in.AlternarNoMolestarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.CambiarDeMateria;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEjecucionSesion;
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
@@ -43,6 +44,7 @@ public class SesionEnCursoViewModel extends ViewModel {
     private final ListarMaterias listarMaterias;
     private final IniciarSesion iniciarSesion;
     private final Executor ejecutor;
+    private AlternarNoMolestarSesion alternarNoMolestar;
 
     private final MutableLiveData<ResumenEjecucionSesion> resumen = new MutableLiveData<>();
     private final MutableLiveData<Boolean> finalizada = new MutableLiveData<>(false);
@@ -50,6 +52,7 @@ public class SesionEnCursoViewModel extends ViewModel {
     private final MutableLiveData<List<MetaAlcanzada>> metasAlcanzadas = new MutableLiveData<>();
     private final MutableLiveData<List<Materia>> materiasSelector = new MutableLiveData<>();
     private final MutableLiveData<ErrorValidacion> errorInicioDirecto = new MutableLiveData<>();
+    private final MutableLiveData<ErrorValidacion> errorNoMolestar = new MutableLiveData<>();
 
     public SesionEnCursoViewModel(
             ConsultarEjecucionSesion consultar,
@@ -96,6 +99,34 @@ public class SesionEnCursoViewModel extends ViewModel {
         this.listarMaterias = listarMaterias;
         this.iniciarSesion = iniciarSesion;
         this.ejecutor = Objects.requireNonNull(ejecutor, "ejecutor");
+    }
+
+    /** Conecta el caso de uso que activa o desactiva No molestar en la sesión (HU-24). */
+    public SesionEnCursoViewModel conAlternarNoMolestar(AlternarNoMolestarSesion alternar) {
+        this.alternarNoMolestar = alternar;
+        return this;
+    }
+
+    public LiveData<ErrorValidacion> errorNoMolestar() {
+        return errorNoMolestar;
+    }
+
+    public void consumirErrorNoMolestar() {
+        errorNoMolestar.setValue(null);
+    }
+
+    /** Activa o desactiva No molestar solo para esta sesión (HU-24, RN-18). */
+    public void alternarNoMolestar(long sesionId) {
+        if (alternarNoMolestar == null) {
+            return;
+        }
+        ejecutor.execute(() -> {
+            Resultado<Boolean> resultado = alternarNoMolestar.ejecutar(sesionId);
+            if (!resultado.esValido()) {
+                errorNoMolestar.postValue(resultado.error());
+            }
+            recargar(sesionId);
+        });
     }
 
     public LiveData<ResumenEjecucionSesion> resumen() {

@@ -28,6 +28,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.adapter.out.system.BloqueoPantallaSistema;
 import io.github.jhoel0521.studyplan.domain.Ajustes;
 import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
@@ -47,6 +48,7 @@ public class AjustesActivity extends ActividadProtegida {
     private RadioGroup grupoTema;
     private RadioGroup grupoIdioma;
     private MaterialSwitch interruptorBloqueo;
+    private MaterialButton botonQuitarPermisoBloqueo;
     private MaterialSwitch interruptorNoMolestarGlobal;
     private TextInputEditText campoPomodoroTrabajo;
     private TextInputEditText campoPomodoroCorto;
@@ -98,6 +100,7 @@ public class AjustesActivity extends ActividadProtegida {
                 findViewById(R.id.botonAbrirAjustesNotificaciones);
         MaterialButton botonAbrirAjustesAlarmas = findViewById(R.id.botonAbrirAjustesAlarmas);
         MaterialButton botonPrivacidad = findViewById(R.id.botonPrivacidad);
+        botonQuitarPermisoBloqueo = findViewById(R.id.botonQuitarPermisoBloqueo);
 
         selectorRecordatorioDefecto.setAdapter(new ArrayAdapter<>(
                 this,
@@ -114,12 +117,21 @@ public class AjustesActivity extends ActividadProtegida {
         botonAbrirAjustesNotificaciones.setOnClickListener(this::onAbrirAjustesNotificacionesClick);
         botonAbrirAjustesAlarmas.setOnClickListener(this::onAbrirAjustesAlarmasClick);
         botonPrivacidad.setOnClickListener(this::onPrivacidadClick);
+        botonQuitarPermisoBloqueo.setOnClickListener(this::onQuitarPermisoBloqueoClick);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         actualizarBannersPermisos();
+        botonQuitarPermisoBloqueo.setVisibility(
+                new BloqueoPantallaSistema(this).estaActivo() ? View.VISIBLE : View.GONE);
+    }
+
+    /** Retira el permiso de bloquear la pantalla para poder desinstalar la app sin pasos extra (HU-50). */
+    private void onQuitarPermisoBloqueoClick(View vista) {
+        new BloqueoPantallaSistema(this).quitarPermiso();
+        botonQuitarPermisoBloqueo.setVisibility(View.GONE);
     }
 
     @Override

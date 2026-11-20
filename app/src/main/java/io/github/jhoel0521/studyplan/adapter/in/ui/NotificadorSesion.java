@@ -11,6 +11,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -20,23 +21,57 @@ import android.os.VibratorManager;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 
+import android.support.v4.media.session.MediaSessionCompat;
+
+import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.List;
+import java.util.Optional;
+
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
+import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
+import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
+import io.github.jhoel0521.studyplan.domain.FasePomodoro;
+import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
 
 /**
  * Crea los canales de notificación, emite avisos de retorno, fin planificado, cambio de fase
- * Pomodoro, invasión y recordatorios previos de sesiones respetando {@code POST_NOTIFICATIONS},
- * bloqueo de pantalla y alarmas exactas (HU-23, HU-34, HU-40, HU-42, RNF-18).
+ * Pomodoro, invasión y recordatorios previos de sesiones, y mantiene la notificación de la sesión En
+ * curso con sus controles, respetando {@code POST_NOTIFICATIONS}, bloqueo de pantalla y alarmas
+ * exactas (HU-23, HU-34, HU-40, HU-42, HU-49, RNF-18).
  */
 public final class NotificadorSesion {
 
-    public static final String CANAL_SESION_ACTIVA = "canal_sesion_activa";
+    /**
+     * Canal de la notificación de la sesión. Es la versión 2: el canal original era de importancia baja
+     * («silenciosa») y Android oculta esas notificaciones en la pantalla de bloqueo; la importancia de un canal ya
+     * creado no se puede subir por código, así que se estrena un id nuevo (HU-49).
+     */
+    public static final String CANAL_SESION_ACTIVA = "canal_sesion_activa_v2";
+    private static final String CANAL_SESION_ACTIVA_ANTERIOR = "canal_sesion_activa";
     public static final String CANAL_AVISOS_ESTUDIO = "canal_avisos_estudio";
     public static final int NOTIF_RETORNO_ID = 4001;
     public static final int NOTIF_HITO_ID = 4002;
+    /** Notificación de la sesión En curso, sostenida por {@link ServicioSesionEnCurso} (HU-49). */
+    public static final int NOTIF_SESION_ID = 4003;
+    /** Aviso de metas alcanzadas al detener la sesión desde la notificación (HU-28, HU-49). */
+    public static final int NOTIF_METAS_ID = 4004;
+    private static final int REQ_SESION_CONTENIDO = 4100;
+    private static final int REQ_SESION_PAUSAR = 4101;
+    private static final int REQ_SESION_REANUDAR = 4102;
+    private static final int REQ_SESION_DETENER = 4103;
+    private static final int REQ_SESION_REPUBLICAR = 4104;
+    private static final int REQ_METAS = 4105;
+    private static final int REQ_SESION_NO_MOLESTAR = 4106;
+    private static final int LADO_LOGO_PX = 192;
+    private static Bitmap logoEnCache;
     public static final int NOTIF_RECORDATORIO_BASE =
             ProgramadorAvisosAlarmManager.NOTIF_RECORDATORIO_BASE;
 
@@ -52,10 +87,18 @@ public final class NotificadorSesion {
         if (nm == null) {
             return;
         }
+        // Importancia normal para verse en la pantalla de bloqueo, pero sin sonido, vibración ni luz: es un
+        // control permanente, no un aviso.
         NotificationChannel activa = new NotificationChannel(
                 CANAL_SESION_ACTIVA,
                 contexto.getString(R.string.canal_sesion_activa_nombre),
-                NotificationManager.IMPORTANCE_LOW);
+                NotificationManager.IMPORTANCE_DEFAULT);
+        activa.setSound(null, null);
+        activa.enableVibration(false);
+        activa.enableLights(false);
+        activa.setShowBadge(false);
+        activa.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        nm.deleteNotificationChannel(CANAL_SESION_ACTIVA_ANTERIOR);
         NotificationChannel avisos = new NotificationChannel(
                 CANAL_AVISOS_ESTUDIO,
                 contexto.getString(R.string.canal_avisos_estudio_nombre),
@@ -233,20 +276,20 @@ public final class NotificadorSesion {
         String cuerpo = contexto.getString(
                 R.string.notif_recordatorio_cuerpo, materiaSegura, horarioSeguro);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(contexto, CANAL_AVISOS_ESTUDIO)
-                .setSmallIcon(R.drawable.ic_estado_pendiente)
+                .setSmallIcon(R.drawable.ic_notificacion)
                 .setContentTitle(titulo)
                 .setContentText(cuerpo)
                 .setAutoCancel(true)
                 .setContentIntent(piDetalle)
                 .addAction(
-                        R.drawable.ic_estado_en_curso,
+                        R.drawable.ic_notificacion,
                         contexto.getString(R.string.notif_recordatorio_accion_iniciar),
                         piIniciar);
 
         if (bloqueoActivo) {
             Notification versionPublica = new NotificationCompat.Builder(
                     contexto, CANAL_AVISOS_ESTUDIO)
-                    .setSmallIcon(R.drawable.ic_estado_pendiente)
+                    .setSmallIcon(R.drawable.ic_notificacion)
                     .setContentTitle(titulo)
                     .setContentText(contexto.getString(R.string.notif_recordatorio_privado))
                     .build();
@@ -302,8 +345,9 @@ public final class NotificadorSesion {
                 abrir,
                 flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
 
-        NotificationCompat.Builder b = new NotificationCompat.Builder(contexto, CANAL_SESION_ACTIVA)
-                .setSmallIcon(R.drawable.ic_estado_en_curso)
+        NotificationCompat.Builder b = new NotificationCompat.Builder(contexto, CANAL_AVISOS_ESTUDIO)
+                .setSmallIcon(R.drawable.ic_notificacion)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentTitle(contexto.getString(R.string.notif_volver_titulo))
                 .setContentText(contexto.getString(R.string.notif_volver_cuerpo, nombreMateria))
                 .setAutoCancel(true)
@@ -356,7 +400,7 @@ public final class NotificadorSesion {
         }
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(contexto, CANAL_AVISOS_ESTUDIO)
-                .setSmallIcon(R.drawable.ic_estado_en_curso)
+                .setSmallIcon(R.drawable.ic_notificacion)
                 .setContentTitle(titulo)
                 .setContentText(cuerpo)
                 .setAutoCancel(true)
@@ -364,11 +408,11 @@ public final class NotificadorSesion {
 
         if (conAccionesFin) {
             b.addAction(
-                    R.drawable.ic_estado_en_curso,
+                    R.drawable.ic_notificacion,
                     contexto.getString(R.string.notif_accion_sigo),
                     piAccion(contexto, sesionId, ReceptorAvisosSesion.ACCION_SIGO, 1));
             b.addAction(
-                    R.drawable.ic_estado_completada,
+                    R.drawable.ic_notificacion,
                     contexto.getString(R.string.notif_accion_termine),
                     piAccion(contexto, sesionId, ReceptorAvisosSesion.ACCION_TERMINE, 2));
         }
@@ -377,6 +421,263 @@ public final class NotificadorSesion {
                 Context.NOTIFICATION_SERVICE);
         if (nm != null) {
             nm.notify(NOTIF_HITO_ID, b.build());
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------
+    // Notificación de la sesión En curso (HU-49)
+    // ------------------------------------------------------------------------------------------
+
+    /**
+     * Publica, actualiza o retira la notificación de la sesión En curso leyendo su estado guardado
+     * (HU-49, HU-40). Debe llamarse fuera del hilo principal.
+     */
+    public static void refrescar(Context contexto, long sesionId) {
+        StudyPlanApplication app = StudyPlanApplication.de(contexto);
+        Optional<ResumenEjecucionSesion> resumen = app.consultarEjecucionSesion().ejecutar(sesionId);
+        if (!resumen.isPresent()
+                || resumen.get().sesion().codigoEstado() != CodigoEstadoSesion.EN_CURSO) {
+            Optional<SesionEstudio> otra = app.sesionRepository().buscarEnCurso();
+            if (otra.isPresent() && otra.get().id() != null && otra.get().id() != sesionId) {
+                refrescar(contexto, otra.get().id());
+            } else {
+                retirarNotificacionSesion(contexto);
+            }
+            return;
+        }
+        if (!puedeNotificar(contexto)) {
+            return;
+        }
+        asegurarCanales(contexto);
+        boolean bloqueoApp = app.consultarAjustes().ejecutar().bloqueoActivo();
+        Notification notificacion = construirNotificacionSesion(
+                contexto, sesionId, resumen.get(), bloqueoApp, System.currentTimeMillis());
+        ServicioSesionEnCurso.mostrar(contexto, notificacion);
+    }
+
+    /** Refresca la notificación de la sesión En curso, si la hay, o la retira. Fuera del hilo principal. */
+    public static void reconciliar(Context contexto) {
+        StudyPlanApplication app = StudyPlanApplication.de(contexto);
+        Optional<SesionEstudio> enCurso = app.sesionRepository().buscarEnCurso();
+        if (enCurso.isPresent() && enCurso.get().id() != null) {
+            refrescar(contexto, enCurso.get().id());
+        } else {
+            retirarNotificacionSesion(contexto);
+        }
+    }
+
+    /** Detiene el servicio y quita la notificación de la sesión. */
+    public static void retirarNotificacionSesion(Context contexto) {
+        SesionMultimedia.liberar();
+        ServicioSesionEnCurso.detener(contexto);
+        NotificationManager nm = (NotificationManager) contexto.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+        if (nm != null) {
+            nm.cancel(NOTIF_SESION_ID);
+        }
+    }
+
+    /** Construye la notificación de la sesión; con el bloqueo de la app activo añade su versión pública. */
+    static Notification construirNotificacionSesion(
+            Context contexto,
+            long sesionId,
+            ResumenEjecucionSesion resumen,
+            boolean bloqueoApp,
+            long ahoraMs) {
+        // La sesión multimedia es lo que hace que Android muestre la tarjeta de control en la pantalla de bloqueo.
+        MediaSessionCompat.Token token = SesionMultimedia.actualizar(
+                contexto, sesionId, resumen, logoDeLaApp(contexto), bloqueoApp);
+        NotificationCompat.Builder completa =
+                constructorSesion(contexto, sesionId, resumen, false, ahoraMs, token);
+        if (bloqueoApp) {
+            completa.setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+                    .setPublicVersion(constructorSesion(contexto, sesionId, resumen, true, ahoraMs, token).build());
+        } else {
+            completa.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        }
+        return completa.build();
+    }
+
+    private static NotificationCompat.Builder constructorSesion(
+            Context contexto,
+            long sesionId,
+            ResumenEjecucionSesion resumen,
+            boolean privada,
+            long ahoraMs,
+            MediaSessionCompat.Token token) {
+        boolean pausada = resumen.pausada();
+        boolean salida = resumen.salidaPendienteResolver();
+        boolean corriendo = !pausada && !salida;
+        EstadoPomodoroCalculado pomodoro = resumen.sesion().tecnica() == TecnicaEstudio.POMODORO
+                ? resumen.estadoPomodoro()
+                : null;
+
+        String titulo;
+        if (salida) {
+            titulo = contexto.getString(R.string.notif_volver_titulo);
+        } else if (pausada) {
+            titulo = contexto.getString(R.string.notif_sesion_pausa_titulo);
+        } else if (pomodoro != null) {
+            int objetivo = CalculadorPomodoro.pomodorosQueCabenEnPlan(
+                    resumen.sesion().duracionPlanificadaMinutos(),
+                    resumen.sesion().configuracionPomodoroSnapshot());
+            titulo = TextosSesion.fase(contexto, pomodoro.faseActual(), pomodoro.cicloActual(), objetivo);
+        } else {
+            titulo = contexto.getString(R.string.notif_sesion_titulo);
+        }
+
+        String texto;
+        if (privada) {
+            texto = contexto.getString(R.string.notif_sesion_privada_texto);
+        } else if (corriendo) {
+            texto = resumen.nombreMateria();
+        } else {
+            texto = contexto.getString(
+                    R.string.notif_sesion_texto_con_tiempo,
+                    resumen.nombreMateria(),
+                    TextosSesion.hms(resumen.milisEfectivos()));
+        }
+
+        Intent abrir = new Intent(contexto, SesionEnCursoActivity.class);
+        abrir.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, sesionId);
+        abrir.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent contenido = PendingIntent.getActivity(
+                contexto, REQ_SESION_CONTENIDO, abrir, flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
+        PendingIntent republicar = PendingIntent.getBroadcast(
+                contexto,
+                REQ_SESION_REPUBLICAR,
+                intentReceptor(contexto, ReceptorAvisosSesion.ACCION_REPUBLICAR, sesionId),
+                flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(contexto, CANAL_SESION_ACTIVA)
+                .setSmallIcon(R.drawable.ic_notificacion)
+                .setContentTitle(titulo)
+                .setContentText(texto)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setContentIntent(contenido)
+                .setDeleteIntent(republicar)
+                .setLargeIcon(logoDeLaApp(contexto))
+                .setStyle(estiloReproductor(token));
+
+        if (corriendo) {
+            b.setShowWhen(true).setUsesChronometer(true);
+            if (pomodoro != null && pomodoro.faseActual() != FasePomodoro.TIEMPO_EXTRA_LIBRE) {
+                b.setWhen(ahoraMs + pomodoro.milisRestantesEnFase()).setChronometerCountDown(true);
+            } else {
+                b.setWhen(ahoraMs - resumen.milisEfectivos());
+            }
+        } else {
+            b.setShowWhen(false).setUsesChronometer(false);
+        }
+
+        if (pausada) {
+            b.addAction(accionSesion(contexto, R.drawable.ic_reproducir, R.string.sesion_en_curso_reanudar,
+                    ReceptorAvisosSesion.ACCION_REANUDAR, REQ_SESION_REANUDAR, sesionId, privada));
+        } else {
+            b.addAction(accionSesion(contexto, R.drawable.ic_pausar, R.string.sesion_en_curso_pausar,
+                    ReceptorAvisosSesion.ACCION_PAUSAR, REQ_SESION_PAUSAR, sesionId, privada));
+        }
+        b.addAction(accionSesion(contexto, R.drawable.ic_detener, R.string.sesion_en_curso_detener,
+                ReceptorAvisosSesion.ACCION_DETENER, REQ_SESION_DETENER, sesionId, privada));
+        b.addAction(accionNoMolestar(contexto, sesionId, resumen.noMolestarActivo(), privada));
+        return b;
+    }
+
+    private static androidx.media.app.NotificationCompat.MediaStyle estiloReproductor(
+            MediaSessionCompat.Token token) {
+        androidx.media.app.NotificationCompat.MediaStyle estilo =
+                new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0, 1, 2);
+        if (token != null) {
+            estilo.setMediaSession(token);
+        }
+        return estilo;
+    }
+
+    /** Logo de la app como icono grande de la notificación (el que ve el estudiante en la pantalla de bloqueo). */
+    private static Bitmap logoDeLaApp(Context contexto) {
+        // R.mipmap.ic_launcher es un icono adaptativo (XML): BitmapFactory no lo lee, se dibuja desde su Drawable.
+        if (logoEnCache == null) {
+            android.graphics.drawable.Drawable icono = ContextCompat.getDrawable(contexto, R.mipmap.ic_launcher);
+            Bitmap bitmap = Bitmap.createBitmap(LADO_LOGO_PX, LADO_LOGO_PX, Bitmap.Config.ARGB_8888);
+            if (icono != null) {
+                icono.setBounds(0, 0, LADO_LOGO_PX, LADO_LOGO_PX);
+                icono.draw(new android.graphics.Canvas(bitmap));
+            }
+            logoEnCache = bitmap;
+        }
+        return logoEnCache;
+    }
+
+    /**
+     * Tercer botón: alterna No molestar solo para la sesión y muestra su estado (HU-24, HU-49). Si la app no tiene
+     * acceso a No molestar, el botón lleva a la pantalla del sistema donde se concede.
+     */
+    private static NotificationCompat.Action accionNoMolestar(
+            Context contexto, long sesionId, boolean activo, boolean exigirDesbloqueo) {
+        int icono = activo ? R.drawable.ic_no_molestar : R.drawable.ic_no_molestar_apagado;
+        int texto = activo ? R.string.sesion_no_molestar_activado : R.string.sesion_no_molestar_apagado;
+        if (!StudyPlanApplication.de(contexto).controladorNoMolestar().tienePermiso()) {
+            Intent ajustes = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            PendingIntent abrir = PendingIntent.getActivity(
+                    contexto, REQ_SESION_NO_MOLESTAR, ajustes, flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
+            return new NotificationCompat.Action.Builder(icono, contexto.getString(texto), abrir).build();
+        }
+        return accionSesion(contexto, icono, texto, ReceptorAvisosSesion.ACCION_NO_MOLESTAR,
+                REQ_SESION_NO_MOLESTAR, sesionId, exigirDesbloqueo);
+    }
+
+    private static Intent intentReceptor(Context contexto, String accion, long sesionId) {
+        Intent intento = new Intent(contexto, ReceptorAvisosSesion.class);
+        intento.setAction(accion);
+        intento.putExtra(ReceptorAvisosSesion.EXTRA_SESION_ID, sesionId);
+        return intento;
+    }
+
+    /** Botón de la notificación; con el bloqueo de la app activo exige desbloquear el teléfono (Android 12 o posterior). */
+    private static NotificationCompat.Action accionSesion(
+            Context contexto,
+            int icono,
+            @StringRes int texto,
+            String accion,
+            int codigoPeticion,
+            long sesionId,
+            boolean exigirDesbloqueo) {
+        PendingIntent intento = PendingIntent.getBroadcast(
+                contexto,
+                codigoPeticion,
+                intentReceptor(contexto, accion, sesionId),
+                flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
+        NotificationCompat.Action.Builder b = new NotificationCompat.Action.Builder(
+                icono, contexto.getString(texto), intento);
+        if (exigirDesbloqueo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            b.setAuthenticationRequired(true);
+        }
+        return b.build();
+    }
+
+    /** Aviso que abre la felicitación cuando «Detener» desde la notificación alcanza una meta (HU-28, HU-49). */
+    public static void mostrarMetasAlcanzadas(Context contexto, List<MetaAlcanzada> metas) {
+        if (metas == null || metas.isEmpty() || !puedeNotificar(contexto)) {
+            return;
+        }
+        asegurarCanales(contexto);
+        Intent abrir = FelicitacionMetasActivity.crearIntent(contexto, metas);
+        abrir.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pi = PendingIntent.getActivity(
+                contexto, REQ_METAS, abrir, flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
+        NotificationCompat.Builder b = new NotificationCompat.Builder(contexto, CANAL_AVISOS_ESTUDIO)
+                .setSmallIcon(R.drawable.ic_notificacion)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentTitle(contexto.getString(R.string.felicitacion_titulo))
+                .setContentText(contexto.getString(R.string.felicitacion_subtitulo))
+                .setAutoCancel(true)
+                .setContentIntent(pi);
+        NotificationManager nm = (NotificationManager) contexto.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+        if (nm != null) {
+            nm.notify(NOTIF_METAS_ID, b.build());
         }
     }
 

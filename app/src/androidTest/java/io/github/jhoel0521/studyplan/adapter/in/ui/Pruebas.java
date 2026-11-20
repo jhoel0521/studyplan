@@ -35,6 +35,19 @@ final class Pruebas {
         return StudyPlanApplication.de(InstrumentationRegistry.getInstrumentation().getTargetContext());
     }
 
+    /** Ejecuta un comando de shell con los permisos de la instrumentación y espera a que termine. */
+    static void comando(String linea) throws java.io.IOException {
+        android.app.UiAutomation automatizacion =
+                InstrumentationRegistry.getInstrumentation().getUiAutomation();
+        android.os.ParcelFileDescriptor descriptor = automatizacion.executeShellCommand(linea);
+        try (java.io.InputStream entrada = new android.os.ParcelFileDescriptor.AutoCloseInputStream(descriptor)) {
+            byte[] relleno = new byte[1024];
+            while (entrada.read(relleno) != -1) {
+                // se descarta la salida: solo importa que el comando termine
+            }
+        }
+    }
+
     /** Borra todos los datos y devuelve el tema y el idioma a sus valores por defecto. */
     static void reiniciarEstado() {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
@@ -50,7 +63,10 @@ final class Pruebas {
                 .edit().clear().commit();
         ctx.getSharedPreferences("preferencias_no_molestar_sistema", android.content.Context.MODE_PRIVATE)
                 .edit().clear().commit();
+        ctx.getSharedPreferences("preferencias_bloqueo_pantalla", android.content.Context.MODE_PRIVATE)
+                .edit().clear().commit();
         NotificadorSesion.cancelarAvisoRetorno(ctx);
+        NotificadorSesion.retirarNotificacionSesion(ctx);
         NotificadorSesion.cancelarTodosRecordatorios(ctx);
         if (app().contadorActividades() != null) {
             app().contadorActividades().reiniciarParaPruebas();

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pantalla de inicio de Android 12 o posterior: fondo índigo con el símbolo del logo. Se redefine solo
+         Theme.StudyPlan (vacío en values/themes.xml) para no duplicar Base.Theme.StudyPlan: un estilo con el
+         mismo nombre en un directorio calificado reemplaza al del directorio por defecto, no se combina. -->
+    <style name="Theme.StudyPlan" parent="Base.Theme.StudyPlan">
+        <item name="android:windowSplashScreenBackground">@color/sp_action</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+    </style>
+</resources>
