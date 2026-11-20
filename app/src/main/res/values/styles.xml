@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Estilos de componentes de la línea gráfica «Índigo Digital» (design.md, decisiones 2 a 4).
+     Todos los botones miden lo mismo (@dimen/button_height); la importancia solo cambia por estilo.
+     Implementa: HU-03, RNF-06, RNF-07. -->
+<resources>
+
+    <!-- Botones con texto: relleno (primaria), tonal, contorno, texto y destructivo. -->
+    <style name="Widget.StudyPlan.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <!-- Una sola línea y letra de 16 a 8 sp: el botón nunca cambia de altura (design.md, decisión 17). -->
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <!-- Tonal en índigo claro (colorPrimaryContainer); el TonalButton de Material usaría colorSecondaryContainer. -->
+    <style name="Widget.StudyPlan.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="backgroundTint">@color/sp_tonal_fondo</item>
+        <item name="android:textColor">@color/sp_tonal_texto</item>
+        <item name="iconTint">@color/sp_tonal_texto</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <!-- Una sola línea y letra de 16 a 8 sp: el botón nunca cambia de altura (design.md, decisión 17). -->
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <style name="Widget.StudyPlan.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <!-- Una sola línea y letra de 16 a 8 sp: el botón nunca cambia de altura (design.md, decisión 17). -->
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <style name="Widget.StudyPlan.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">@dimen/radius_button</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <!-- Una sola línea y letra de 16 a 8 sp: el botón nunca cambia de altura (design.md, decisión 17). -->
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <!-- Botón de un MaterialButtonToggleGroup (técnica, período, vista): el elegido en colorPrimaryContainer. -->
+    <style name="Widget.StudyPlan.Button.Toggle" parent="Widget.StudyPlan.Button.Outlined">
+        <item name="backgroundTint">@color/sp_toggle_fondo</item>
+        <item name="android:textColor">@color/sp_toggle_texto</item>
+        <item name="iconTint">@color/sp_toggle_texto</item>
+        <!-- Una sola línea: GrupoBotones.ajustarEnUnaLinea reduce la letra hasta 12 sp si no cabe (altura fija). -->
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
+
+    <!-- Acción destructiva (por ejemplo «Eliminar sesión»): contorno y texto en colorError. -->
+    <style name="Widget.StudyPlan.Button.Destructive" parent="Widget.StudyPlan.Button.Outlined">
+        <item name="strokeColor">?attr/colorError</item>
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="iconTint">?attr/colorError</item>
+    </style>
+
+    <!-- Botones solo de icono: misma altura que los de texto, ancho mínimo igual. -->
+    <style name="Widget.StudyPlan.Button.Icon" parent="Widget.Material3.Button.IconButton">
+        <item name="android:minWidth">@dimen/button_height</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+    </style>
+
+    <style name="Widget.StudyPlan.Button.Icon.Outlined" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="android:minWidth">@dimen/button_height</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+    </style>
+
+    <!-- Botón de un grupo de botones unidos (como btn-group de Bootstrap): relleno del color primario y una línea fina
+         clara que separa un botón del siguiente. Las esquinas las ajusta GrupoBotones.unir(...). -->
+    <style name="Widget.StudyPlan.BotonGrupo" parent="Widget.StudyPlan.Button">
+        <!-- Relleno lateral menor: tres botones comparten el ancho y, con la fuente grande, el texto cabe mejor. -->
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <!-- Botones de los diálogos de Material (MaterialAlertDialogBuilder). -->
+    <style name="Widget.StudyPlan.Button.Text.Dialog" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <!-- Una sola línea y letra de 16 a 8 sp: el botón nunca cambia de altura (design.md, decisión 17). -->
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <style name="ThemeOverlay.StudyPlan.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.StudyPlan.Button.Text.Dialog</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.StudyPlan.Button.Text.Dialog</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.StudyPlan.Button.Text.Dialog</item>
+    </style>
+
+    <!-- Diálogos con una acción destacada (por ejemplo «hay sesión planificada»): positiva en relleno y negativa en
+         contorno, con la misma altura. -->
+    <style name="Widget.StudyPlan.Button.Dialogo.Relleno" parent="Widget.StudyPlan.Button">
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
+    <style name="Widget.StudyPlan.Button.Dialogo.Contorno" parent="Widget.StudyPlan.Button.Outlined">
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
+    <style name="ThemeOverlay.StudyPlan.MaterialAlertDialog.Destacado">
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.StudyPlan.Button.Dialogo.Relleno</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.StudyPlan.Button.Dialogo.Contorno</item>
+    </style>
+
+    <!-- Tarjetas sin sombra: se separan del fondo por tono y por un borde de 1 dp en colorOutlineVariant. -->
+    <style name="Widget.StudyPlan.Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="cardCornerRadius">@dimen/radius_card</item>
+    </style>
+
+    <!-- Bloques horarios del calendario: proporcionales a la duración, radio menor (excepción de AGENTS.md §6.2). -->
+    <style name="Widget.StudyPlan.Card.Compact">
+        <item name="cardCornerRadius">@dimen/radius_card_compact</item>
+    </style>
+
+    <!-- Chips (por ejemplo los motivos de pausa): elegidos en colorPrimaryContainer, radio de 8 dp. -->
+    <style name="Widget.StudyPlan.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/sp_toggle_fondo</item>
+        <item name="android:textColor">@color/sp_toggle_texto</item>
+        <item name="checkedIconTint">@color/sp_toggle_texto</item>
+        <item name="chipCornerRadius">@dimen/radius_chip</item>
+        <item name="chipStrokeColor">?attr/colorOutline</item>
+    </style>
+
+    <!-- Formas -->
+    <style name="ShapeAppearance.StudyPlan.Button" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/radius_button</item>
+    </style>
+
+    <!-- «Estudiar ahora»: FAB extendido tonal (colorPrimaryContainer) con la misma altura que los botones. -->
+    <style name="Widget.StudyPlan.ExtendedFab" parent="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary">
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.StudyPlan.Button</item>
+        <item name="android:textAppearance">?attr/textAppearanceLabelLarge</item>
+        <!-- Una sola línea y letra de 16 a 8 sp: el botón nunca cambia de altura (design.md, decisión 17). -->
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">8sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+    </style>
+
+    <!-- Barra inferior: píldora activa en colorPrimaryContainer (por defecto Material usaría colorSecondaryContainer). -->
+    <style name="Widget.StudyPlan.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemActiveIndicatorStyle">@style/Widget.StudyPlan.BottomNavigation.ActiveIndicator</item>
+        <item name="itemIconTint">@color/sp_barra_inferior_icono</item>
+        <item name="itemTextColor">@color/sp_barra_inferior_texto</item>
+    </style>
+
+    <style name="Widget.StudyPlan.BottomNavigation.ActiveIndicator"
+        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+    </style>
+
+    <!-- Tipografía (design.md, decisión 4): Plus Jakarta Sans para títulos, números y botones; Roboto del sistema
+         para el cuerpo. Un archivo de fuente por peso, porque android:textFontWeight exige API 28 (minSdk 24). -->
+
+    <!-- cronómetro: Jakarta 800 · 56 sp -->
+    <style name="TextAppearance.StudyPlan.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">56sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <!-- horas de la semana en Inicio: Jakarta 800 · 32 sp -->
+    <style name="TextAppearance.StudyPlan.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- título de pantalla y saludo: Jakarta 800 · 24 sp -->
+    <style name="TextAppearance.StudyPlan.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- título de barra y de hoja: Jakarta 800 · 22 sp -->
+    <style name="TextAppearance.StudyPlan.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_extrabold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- título de sección grande: Jakarta 700 · 20 sp -->
+    <style name="TextAppearance.StudyPlan.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- título de tarjeta: Jakarta 700 · 16 sp -->
+    <style name="TextAppearance.StudyPlan.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- subtítulo: Jakarta 700 · 14 sp -->
+    <style name="TextAppearance.StudyPlan.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- texto destacado: Roboto 400 · 16 sp -->
+    <style name="TextAppearance.StudyPlan.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+
+    <!-- cuerpo: Roboto 400 · 14 sp -->
+    <style name="TextAppearance.StudyPlan.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <!-- texto auxiliar: Roboto 400 · 12 sp -->
+    <style name="TextAppearance.StudyPlan.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.03</item>
+    </style>
+
+    <!-- botones: Jakarta 700 · 16 sp -->
+    <style name="TextAppearance.StudyPlan.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_bold</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- etiquetas y chips: Roboto 500 · 12 sp -->
+    <style name="TextAppearance.StudyPlan.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <!-- etiquetas mínimas: Roboto 500 · 12 sp -->
+    <style name="TextAppearance.StudyPlan.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <!-- Filas de la lista del selector rápido: Jakarta 600 · 16 sp (no es un atributo del tema). -->
+    <style name="TextAppearance.StudyPlan.Fila" parent="TextAppearance.StudyPlan.TitleMedium">
+        <item name="android:fontFamily">@font/plus_jakarta_sans_semibold</item>
+        <item name="fontFamily">@font/plus_jakarta_sans_semibold</item>
+    </style>
+</resources>

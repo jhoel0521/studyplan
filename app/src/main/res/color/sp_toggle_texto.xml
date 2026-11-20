@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Texto e icono de un botón alternable: elegido en colorOnPrimaryContainer, el resto en colorOnSurface.
+     Implementa: HU-03, RNF-07. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="?attr/colorOnSurface" android:state_enabled="false" android:alpha="0.38" />
+    <item android:color="?attr/colorOnPrimaryContainer" android:state_checked="true" />
+    <item android:color="?attr/colorOnSurface" />
+</selector>
