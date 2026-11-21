@@ -1,0 +1,31 @@
+package io.github.jhoel0521.studyplan.adapter.out.persistence.repository;
+
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AjustesRepository;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.AjustesDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.AjustesEntity;
+
+/**
+ * Adaptador de salida: guarda los ajustes en Room. Sin fila guardada devuelve los valores por defecto.
+ *
+ * <p>Implementa: HU-03 y HU-04.
+ */
+public class AjustesRepositoryRoom implements AjustesRepository {
+
+    private final AjustesDao dao;
+
+    public AjustesRepositoryRoom(AjustesDao dao) {
+        this.dao = dao;
+    }
+
+    @Override
+    public Ajustes obtener() {
+        AjustesEntity fila = dao.obtener();
+        return fila == null ? Ajustes.porDefecto() : Mapeadores.aDominio(fila);
+    }
+
+    @Override
+    public void guardar(Ajustes ajustes) {
+        dao.guardar(Mapeadores.aEntidad(ajustes));
+    }
+}

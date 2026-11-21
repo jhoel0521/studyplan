@@ -9,6 +9,20 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.AjustesDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.EventoEstudioDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.MateriaDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.MetaSemanalDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.PerfilDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.SesionDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.dao.TramoDiarioDao;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.AjustesEntity;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.EventoEstudioEntity;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.MateriaEntity;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.MetaSemanalEntity;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.PerfilEntity;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.SesionEntity;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.entity.TramoDiarioEntity;
 
 /**
  * Base de datos Room de la aplicación (versión 8: perfil, ajustes con recordatorio por defecto,

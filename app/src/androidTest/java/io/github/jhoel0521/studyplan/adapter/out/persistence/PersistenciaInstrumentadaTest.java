@@ -24,6 +24,11 @@ import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.AjustesRepositoryRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.AlmacenDatosRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.MateriaRepositoryRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.PerfilRepositoryRoom;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.SesionRepositoryRoom;
 
 /**
  * Pruebas instrumentadas de la base Room real, en memoria. Se ejecutan en el hilo de la prueba, que no es el

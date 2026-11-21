@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.MateriaRepositoryRoom;
 
 /**
  * Pruebas instrumentadas de las materias con Room en memoria, fuera del hilo principal (RNF-12).

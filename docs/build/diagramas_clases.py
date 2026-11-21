@@ -70,7 +70,7 @@ DOMINIO_SESIONES = ["CodigoEstadoSesion", "ConflictoHorario", "DetalleSesion", "
                     "EstadoCompletada", "EstadoCompletadaTardia", "EstadoEnCurso", "EstadoNoRealizada",
                     "EstadoPendiente", "EstadoReprogramada", "EstadoSesion", "Fecha", "Hora", "Instante",
                     "RepartidorPorDia", "ResultadoSesion", "SesionEstudio"]
-PERSISTENCIA_SESIONES = ["RelojSistema", "SesionDao", "SesionEntity", "SesionRepositoryRoom",
+PERSISTENCIA_SESIONES = ["SesionDao", "SesionEntity", "SesionRepositoryRoom",
                          "SesionesDeMateriaRoom", "TramoDiarioDao", "TramoDiarioEntity",
                          "TramoDiarioRepositoryRoom"]
 
@@ -108,7 +108,7 @@ DOMINIO_TECNICAS = ["CalculadorPomodoro", "CalculadorRepartoTramo", "CalculadorT
 PERSISTENCIA_TECNICAS = ["EventoEstudioDao", "EventoEstudioEntity", "EventoEstudioRepositoryRoom"]
 SISTEMA_TECNICAS = ["BloqueoPantallaSistema", "ControladorNoMolestarSistema", "MarcadorSalidaAppPrefs",
                     "NotificacionSesion", "PreferenciasBloqueoPantalla", "ProgramadorAvisosAlarmManager",
-                    "ProgramadorAvisosConNotificacion", "ReceptorAdministradorBloqueo"]
+                    "ProgramadorAvisosConNotificacion", "ReceptorAdministradorBloqueo", "RelojSistema"]
 
 PRESENTACION_METAS = ["FelicitacionMetasActivity", "HistorialMetasActivity", "HistorialMetasAdapter",
                       "HistorialMetasViewModel", "SelectorEstudioBottomSheet"]
@@ -366,7 +366,7 @@ def clases_sesiones():
              caja_con_metodos("SesionDao", xs1[1], y5, w1, "Dao"),
              caja_con_metodos("SesionRepositoryRoom", xs1[2], y5, w1),
              caja_de_paquete("Adaptadores y migración v3",
-                             ["SesionesDeMateriaRoom", "RelojSistema", "Migraciones (MIGRATION_2_3)"],
+                             ["SesionesDeMateriaRoom", "Migraciones (MIGRATION_2_3)"],
                              xs1[3], y5, w1)]
     for c in infra:
         c.draw(d)
