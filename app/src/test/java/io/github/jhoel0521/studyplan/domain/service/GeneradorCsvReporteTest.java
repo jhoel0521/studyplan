@@ -63,7 +63,7 @@ public final class GeneradorCsvReporteTest {
                         filaTab,
                         filaGeneral));
 
-        Locale.setDefault(new Locale("es", "BO"));
+        Locale.setDefault(Locale.forLanguageTag("es-BO"));
         byte[] bytesEs = GeneradorCsvReporte.generar(reporte, Locale.forLanguageTag("es"));
 
         assertTrue(bytesEs.length > 3);

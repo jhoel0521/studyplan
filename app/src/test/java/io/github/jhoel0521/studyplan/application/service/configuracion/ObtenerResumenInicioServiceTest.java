@@ -211,7 +211,7 @@ public class ObtenerResumenInicioServiceTest {
 
         ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
 
-        assertEquals((long) enCurso.id(), (long) resumen.sesionEnCurso().sesionId());
+        assertEquals((long) enCurso.id(), resumen.sesionEnCurso().sesionId());
         assertEquals("Álgebra", resumen.sesionEnCurso().nombreMateria());
     }
 
