@@ -96,7 +96,10 @@ public final class NotificadorSesion {
         activa.enableLights(false);
         activa.setShowBadge(false);
         activa.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        nm.deleteNotificationChannel(CANAL_SESION_ACTIVA_ANTERIOR);
+        // El canal de una versión anterior se borra solo si existe: no en cada refresco de la notificación.
+        if (nm.getNotificationChannel(CANAL_SESION_ACTIVA_ANTERIOR) != null) {
+            nm.deleteNotificationChannel(CANAL_SESION_ACTIVA_ANTERIOR);
+        }
         NotificationChannel avisos = new NotificationChannel(
                 CANAL_AVISOS_ESTUDIO,
                 contexto.getString(R.string.canal_avisos_estudio_nombre),

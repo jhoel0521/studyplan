@@ -175,6 +175,23 @@ public class NotificacionSesionEspressoTest {
         assertTrue("Debe mostrar el tiempo detenido: " + texto, texto.matches(".*[0-9]{2}:[0-9]{2}.*"));
     }
 
+    /** HU-49: el canal de una versión anterior se elimina una vez y el canal vigente se conserva. */
+    @Test
+    public void elCanalAntiguoSeEliminaYElCanalVigenteSeConserva() {
+        org.junit.Assume.assumeTrue(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
+        nm.createNotificationChannel(new android.app.NotificationChannel(
+                "canal_sesion_activa", "Antiguo", NotificationManager.IMPORTANCE_LOW));
+        assertNotNull(nm.getNotificationChannel("canal_sesion_activa"));
+
+        NotificadorSesion.asegurarCanales(contexto);
+        NotificadorSesion.asegurarCanales(contexto);
+
+        assertNull("El canal antiguo debe eliminarse", nm.getNotificationChannel("canal_sesion_activa"));
+        assertNotNull("El canal vigente debe existir",
+                nm.getNotificationChannel(NotificadorSesion.CANAL_SESION_ACTIVA));
+        assertNotNull(nm.getNotificationChannel(NotificadorSesion.CANAL_AVISOS_ESTUDIO));
+    }
+
     @Test
     public void unaSesionQueYaNoEstaEnCursoNoDejaNotificacion() throws Exception {
         long id = iniciar(TecnicaEstudio.LIBRE);
