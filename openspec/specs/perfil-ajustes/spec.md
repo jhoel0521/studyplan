@@ -82,12 +82,17 @@ Como estudiante, quiero elegir tema claro, oscuro o del sistema e idioma españo
 #### Scenario: Botones uniformes
 - **GIVEN** cualquier pantalla con botones de acción
 - **WHEN** se muestran en la misma pantalla
-- **THEN** todos tienen la misma altura y el mismo radio, y la importancia de cada acción se indica solo por su estilo (relleno, tonal, contorno o texto)
+- **THEN** todos tienen la misma altura y el mismo radio, salvo el control principal de la sesión en curso, y la importancia de cada acción se indica solo por su estilo (relleno, tonal, contorno o texto)
 
 #### Scenario: Texto ampliado
 - **GIVEN** que el estudiante usa el tamaño de fuente más grande del sistema
 - **WHEN** ve una pantalla con cronómetro, segmentos o botones de acción
 - **THEN** el cronómetro y las etiquetas se ven completas sin recortes ni solapamientos, todos los botones conservan la misma altura, y una etiqueta que no cabe reduce su tamaño de letra o, en las acciones repetitivas, se muestra como icono con su nombre accesible
+
+#### Scenario: Controles de la sesión en curso
+- **GIVEN** que el estudiante está en la pantalla de la sesión en curso
+- **WHEN** ve los controles de la sesión
+- **THEN** Pausar/Reanudar es un botón redondo de 64 dp, la única excepción a la altura común; Detener, Cambiar de materia y No molestar son botones de icono de 48 dp con su nombre accesible y su etiqueta visible; y el candado de bloqueo (HU-50) está dentro del anillo del cronómetro
 
 ### Requirement: HU-04 Bloquear la app con huella o PIN
 Como estudiante, quiero proteger el acceso a la aplicación con mi huella o el PIN del teléfono para que nadie más vea mis datos de estudio. El sistema SHALL cumplir los escenarios siguientes (prioridad Should, 3 pts).
