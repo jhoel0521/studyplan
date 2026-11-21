@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.biometric)
     implementation(libs.colorpickerview)
     implementation(libs.mpandroidchart)
-    implementation(libs.androidx.media)
     testImplementation(libs.junit)
     testImplementation(libs.arch.core.testing)
     androidTestImplementation(libs.espresso.core)

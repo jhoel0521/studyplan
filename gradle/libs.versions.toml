@@ -13,7 +13,6 @@ biometric = "1.1.0"
 archCoreTesting = "2.2.0"
 colorpickerview = "2.5.0"
 mpandroidchart = "v3.1.0"
-androidxMedia = "1.7.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -31,7 +30,6 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata"
 biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 colorpickerview = { group = "com.github.skydoves", name = "colorpickerview", version.ref = "colorpickerview" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
-androidx-media = { group = "androidx.media", name = "media", version.ref = "androidxMedia" }
 arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTesting" }
 
 [plugins]
