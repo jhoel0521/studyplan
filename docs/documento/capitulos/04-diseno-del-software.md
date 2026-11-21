@@ -196,6 +196,54 @@ Nota: Elaboración propia. Los 42 pares de contraste del estándar (texto ≥ 4,
 
 ## Diseño de Componentes y Módulos
 
+### Estructura de paquetes y tipos de clase
+
+El código está dividido en tres capas (presentación, núcleo e infraestructura) y, dentro de cada capa, en carpetas que dicen qué es cada clase. Antes todas las clases de una capa vivían sueltas en una sola carpeta (el dominio tenía 71 archivos juntos), de modo que no se podía distinguir una entidad de un value object, un enum o una clase de lectura. La reorganización se hace por etapas, capa por capa, sin cambiar el comportamiento de la aplicación: cada etapa compila, mantiene las mismas pruebas y actualiza esta sección. Esta versión documenta el dominio; las capas de aplicación y de adaptadores se agregan al terminar sus etapas.
+
+El dominio (`domain`) se divide por tipo de clase. Una clase se asigna a su carpeta con estas preguntas, en este orden, y la primera que se cumple decide:
+
+1. ¿Es un enum, una lista cerrada de valores? Va a `enumeration`.
+2. ¿Forma parte de la máquina de estados de la sesión? Va a `state`.
+3. ¿Tiene identidad y cambia en el tiempo? Va a `entity`.
+4. ¿Es una regla o un cálculo sin estado? Va a `service`.
+5. ¿Es un dato que se arma para devolverlo a la pantalla? Va a `readmodel`.
+6. Si no, es inmutable y se define por su valor: va a `valueobject`.
+
+Dos enums quedan fuera de `enumeration` por pertenecer a un grupo mayor: `ErrorValidacion` está en `result`, junto a `Resultado`, y `CodigoEstadoSesion` está en `state`, junto a los estados de la sesión.
+
+```text
+domain/
+  entity/        Materia, SesionEstudio, EventoEstudio, Perfil, MetaSemanal, Ajustes
+  valueobject/   Fecha, Hora, Instante, ConfiguracionPomodoro, IntervaloEfectivo,
+                 FiltroCalendario, PeriodoCalendario, PeriodoEstadisticas
+  enumeration/   TecnicaEstudio, FasePomodoro, TipoEventoEstudio, Tema, Idioma, ... (12 enums)
+  state/         EstadoSesion (contrato), EstadoPendiente, EstadoEnCurso, EstadoCompletada, ...
+  service/       CalculadorPomodoro, CalculadorTiempoReal, RepartidorPorDia, ... (8 reglas)
+  result/        Resultado, ErrorValidacion
+  readmodel/     ResumenInicio, DetalleSesion, DatosCalendario, ... (los datos que ve la pantalla)
+```
+
+Nota: Elaboración propia. Cada carpeta existe en el código; la prueba `EstructuraPaquetesTest` falla si se deja una clase suelta en la raíz de `domain` o en una carpeta que no sea un tipo.
+
+La @tabla:tipos_de_clase define cada tipo de clase del proyecto, con un ejemplo real. Los contratos (puertos) y los servicios de aplicación viven en la capa de aplicación, y los adaptadores en la de infraestructura y presentación; se incluyen aquí para tener todas las definiciones juntas.
+
+Tabla: Tipos de clase del proyecto y un ejemplo de cada uno {#tipos_de_clase anchos=3,6.2,4.6 tam=10}
+
+| Tipo | Qué es | Ejemplo en StudyPlan |
+|---|---|---|
+| Enum | Una lista cerrada de valores posibles. | `TecnicaEstudio` (Libre, Pomodoro) |
+| Entidad | Un objeto con identidad propia que cambia en el tiempo. | `SesionEstudio` |
+| Value object | Un valor inmutable que se define por lo que contiene, sin identidad. | `Fecha`, `Hora` |
+| Estado | Una clase que representa un estado de la sesión y qué transiciones admite (patrón State). | `EstadoEnCurso` |
+| Servicio de dominio | Una regla o un cálculo sin estado que no pertenece a una sola entidad. | `CalculadorPomodoro` |
+| Resultado | Lo que devuelve una validación: un valor correcto o un error. | `Resultado`, `ErrorValidacion` |
+| Clase de lectura | Datos armados para mostrarlos en una pantalla; no es una entidad. | `ResumenInicio` |
+| Contrato (puerto) | Una interfaz que el núcleo expone (de entrada, un caso de uso) o exige (de salida, lo que necesita de afuera). | `RegistrarMateria` (entrada), `MateriaRepository` (salida) |
+| Servicio de aplicación | La clase que implementa un contrato de entrada y orquesta un caso de uso. | `RegistrarMateriaService` |
+| Adaptador | Una clase de infraestructura o de presentación que conecta el núcleo con Android, Room u otro sistema. | `MateriaRepositoryRoom`, `MateriasActivity` |
+
+Nota: Elaboración propia. Los ejemplos son clases reales del código.
+
 ### Épica Configuración inicial
 
 La primera épica implementada reúne el perfil inicial (HU-01), el Inicio parcial (HU-02), el tema y el idioma (HU-03), el bloqueo con huella o PIN (HU-04) y el borrado de datos del teléfono (HU-38). La @figura:clases_configuracion muestra sus 58 clases agrupadas por paquete. En la capa de presentación se detallan los métodos del ciclo de vida (onCreate, onStart) y de los listeners (onGuardarClick, onMenuBarraSuperiorClick y los demás), que se escriben como métodos con nombre para que se vean en la revisión de código. Las Activities protegidas heredan de ActividadProtegida, que consulta al núcleo si falta el perfil o si hay que autenticar antes de mostrar datos; PerfilInicialActivity y AutenticacionActivity heredan de ActividadBase porque no muestran datos del estudiante.

@@ -27,7 +27,7 @@ IMAGENES = ["diagrama_clases_configuracion", "diagrama_clases_materias", "diagra
 def cotejar_clases(errores):
     total = 0
     for paquete, del_diagrama in dc.CLASES_POR_PAQUETE.items():
-        en_codigo = {f.stem for f in (RAIZ / paquete).glob("*.java")}
+        en_codigo = {f.stem for f in (RAIZ / paquete).rglob("*.java")}
         total += len(en_codigo)
         for falta in sorted(set(del_diagrama) - en_codigo):
             errores.append(f"{paquete}: «{falta}» está en el diagrama y no existe en el código")
