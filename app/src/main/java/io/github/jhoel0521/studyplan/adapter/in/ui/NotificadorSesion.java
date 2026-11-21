@@ -28,14 +28,14 @@ import java.util.function.Predicate;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
-import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
-import io.github.jhoel0521.studyplan.domain.FasePomodoro;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
-import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorPomodoro;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadoPomodoroCalculado;
+import io.github.jhoel0521.studyplan.domain.enumeration.FasePomodoro;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Crea los canales de notificación, emite avisos de retorno, fin planificado, cambio de fase
@@ -228,7 +228,7 @@ public final class NotificadorSesion {
         }
     }
 
-    static Notification construirNotificacionRecordatorio(
+    public static Notification construirNotificacionRecordatorio(
             Context contexto,
             long sesionId,
             String nombreMateria,
@@ -240,7 +240,7 @@ public final class NotificadorSesion {
                 contexto, sesionId, nombreMateria, horario, bloqueoActivo);
     }
 
-    static Notification construirNotificacionRecordatorio(
+    public static Notification construirNotificacionRecordatorio(
             Context contexto,
             long sesionId,
             String nombreMateria,
@@ -381,7 +381,7 @@ public final class NotificadorSesion {
     }
 
     /** Sustituye la detección de música en las pruebas; {@code null} restablece la real. */
-    static void fijarDetectorMusicaParaPruebas(Predicate<Context> detector) {
+    public static void fijarDetectorMusicaParaPruebas(Predicate<Context> detector) {
         detectorMusica = detector == null ? NotificadorSesion::hayMusicaSonando : detector;
     }
 
@@ -503,7 +503,7 @@ public final class NotificadorSesion {
     }
 
     /** Construye la notificación de la sesión; con el bloqueo de la app activo añade su versión pública. */
-    static Notification construirNotificacionSesion(
+    public static Notification construirNotificacionSesion(
             Context contexto,
             long sesionId,
             ResumenEjecucionSesion resumen,

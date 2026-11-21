@@ -34,11 +34,11 @@ import java.util.Objects;
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
-import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
-import io.github.jhoel0521.studyplan.domain.FormatoExportacionReporte;
-import io.github.jhoel0521.studyplan.domain.GeneradorCsvReporte;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
+import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
+import io.github.jhoel0521.studyplan.domain.service.GeneradorCsvReporte;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
 
 /**
  * Adaptador de salida en infraestructura Android que materializa reportes PDF nativos A4

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarPerfil;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 
 /**
  * Implementa el caso de uso {@link ConsultarPerfil} leyendo el perfil del repositorio.

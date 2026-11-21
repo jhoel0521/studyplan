@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Selector de materia compartido entre «Estudiar ahora» ({@code HU-47}) y «Cambiar de materia»

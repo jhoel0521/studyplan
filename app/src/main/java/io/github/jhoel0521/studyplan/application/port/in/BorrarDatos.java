@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
+import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 
 /**
  * Puerto de entrada (caso de uso): borrar los datos del estudiante. La doble confirmación es responsabilidad de la

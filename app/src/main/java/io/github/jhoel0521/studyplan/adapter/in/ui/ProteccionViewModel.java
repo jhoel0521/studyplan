@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadoArranque;
-import io.github.jhoel0521.studyplan.domain.EstadoArranque;
+import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
 
 /**
  * Pregunta qué debe mostrar la app al arrancar o volver a primer plano: primer uso, pantalla de bloqueo o la

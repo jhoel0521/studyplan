@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
-import io.github.jhoel0521.studyplan.domain.ResumenTopico;
+import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenTopico;
 
 /**
  * Adaptadores de listas accesibles para la pantalla de Estadísticas ({@code HU-30}, {@code HU-45},
@@ -88,7 +88,7 @@ public final class EstadisticasAdapter {
         }
     }
 
-    static String nombreVisible(Context ctx, DesgloseMateriaPeriodo item) {
+    public static String nombreVisible(Context ctx, DesgloseMateriaPeriodo item) {
         String etiquetaNombre = item.esGeneral()
                 ? ctx.getString(R.string.materia_general_nombre)
                 : item.nombreMateria();

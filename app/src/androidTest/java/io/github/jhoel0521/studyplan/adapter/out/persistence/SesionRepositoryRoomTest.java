@@ -14,13 +14,13 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

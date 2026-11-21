@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.EstadoArranque;
-import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 import io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository;
 import io.github.jhoel0521.studyplan.fakes.FakePerfilRepository;
 

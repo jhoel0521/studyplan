@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
 
 /**
  * Adaptador Room de {@link EventoEstudioRepository} (HU-39, RN-22, RNF-12).

@@ -16,8 +16,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
-import io.github.jhoel0521.studyplan.domain.EstadoArranque;
+import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
+import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
 
 /**
  * Base de las Activities que muestran datos del estudiante. Al iniciarse pregunta qué corresponde: sin perfil abre

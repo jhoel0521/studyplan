@@ -12,14 +12,14 @@ import java.util.Optional;
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
-import io.github.jhoel0521.studyplan.domain.AvisoRecordatorioPendiente;
-import io.github.jhoel0521.studyplan.domain.CierreSesion;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.AvisoRecordatorioPendiente;
+import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio;
 
 /**
  * Receptor de alarmas de hitos, recordatorios previos, acciones de notificación ([Sigo] / [Terminé]),

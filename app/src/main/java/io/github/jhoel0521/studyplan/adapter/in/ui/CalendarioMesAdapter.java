@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.CeldaDiaMes;
-import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.readmodel.CeldaDiaMes;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 
 /**
  * Adaptador de la cuadrícula mensual de 7 columnas (lunes a domingo) con indicadores de color de

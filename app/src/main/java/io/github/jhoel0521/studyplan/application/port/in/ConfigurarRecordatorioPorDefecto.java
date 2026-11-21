@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 
 /**
  * Puerto de entrada para definir la antelación predeterminada de los recordatorios de sesiones

@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Puerto de entrada: configurar el modo No molestar global y los parámetros de Pomodoro

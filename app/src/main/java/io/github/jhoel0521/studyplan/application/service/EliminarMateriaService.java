@@ -3,9 +3,9 @@ package io.github.jhoel0521.studyplan.application.service;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarMateria;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.SesionesDeMateria;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Implementa {@link EliminarMateria}: una materia con sesiones no se elimina (RN-03), solo se archiva.

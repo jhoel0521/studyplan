@@ -6,7 +6,7 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
+import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 import io.github.jhoel0521.studyplan.fakes.FakeAlmacenDatos;
 import io.github.jhoel0521.studyplan.fakes.FakeExportadorReporte;
 import io.github.jhoel0521.studyplan.fakes.FakeProgramadorRecordatorios;

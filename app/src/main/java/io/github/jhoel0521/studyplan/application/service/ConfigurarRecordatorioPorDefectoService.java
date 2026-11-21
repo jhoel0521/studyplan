@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarRecordatorioPorDefecto;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 
 /**
  * Persiste la antelación predeterminada en {@link Ajustes} sin alterar sesiones ya planificadas

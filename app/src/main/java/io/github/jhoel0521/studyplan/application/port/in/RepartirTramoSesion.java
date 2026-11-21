@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResultadoReparto;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoReparto;
 
 /**
  * Puerto de entrada: repartir un tramo continuo entre la sesión en curso y la siguiente sesión

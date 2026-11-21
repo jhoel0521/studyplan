@@ -3,8 +3,8 @@ package io.github.jhoel0521.studyplan.application.port.out;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
 
 /**
  * Puerto de salida para persistir y consultar snapshots semanales de metas ({@code HU-25} a

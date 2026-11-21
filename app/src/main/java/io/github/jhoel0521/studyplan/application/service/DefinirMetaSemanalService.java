@@ -5,9 +5,9 @@ import java.util.Objects;
 import io.github.jhoel0521.studyplan.application.port.in.DefinirMetaSemanal;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Implementa {@link DefinirMetaSemanal}: fija la meta semanal total para la semana actual

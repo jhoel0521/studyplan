@@ -14,7 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Pestaña Materias: lista alfabética de las materias activas con color, nombre, docente y horas, sección plegable de

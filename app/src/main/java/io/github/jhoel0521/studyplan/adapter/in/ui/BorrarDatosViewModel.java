@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.BorrarDatos;
-import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
+import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 
 /**
  * Estado del borrado de datos, con doble confirmación modelada como dos pasos. Solo borra al confirmar el segundo.

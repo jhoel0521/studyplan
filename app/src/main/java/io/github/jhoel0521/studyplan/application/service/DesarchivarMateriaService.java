@@ -2,9 +2,9 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import io.github.jhoel0521.studyplan.application.port.in.DesarchivarMateria;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Implementa {@link DesarchivarMateria}: la materia vuelve a las activas solo si ninguna otra activa usa ya su nombre.

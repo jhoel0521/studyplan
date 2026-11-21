@@ -17,7 +17,7 @@
 
 ## 2. Etapa 1: dominio por tipo (RNF-15)
 
-- [ ] 2.1 Mover `domain` a `entity`, `valueobject`, `enumeration`, `state`, `service`, `result` y `readmodel` con el script (`git mv`, `package`, imports añadidos y reescritos), incluidas las pruebas espejo de `test` y `androidTest`. Modifica: main `domain/**` y los imports en `application/**`, `adapter/**`, `test/**`, `androidTest/**`. Verificación: compuerta de tarea y `python docs/build/comparar_pruebas.py` sin diferencias.
+- [x] 2.1 Mover `domain` a `entity`, `valueobject`, `enumeration`, `state`, `service`, `result` y `readmodel` con el script (`git mv`, `package`, imports añadidos y reescritos), incluidas las pruebas espejo de `test` y `androidTest`. Modifica: main `domain/**` y los imports en `application/**`, `adapter/**`, `test/**`, `androidTest/**`. Verificación: compuerta de tarea y `python docs/build/comparar_pruebas.py` sin diferencias.
 - [ ] 2.2 Añadir `test/EstructuraPaquetesTest.java` con la regla de `domain`: ningún `.java` en la raíz, cada subcarpeta es una de las siete permitidas, `EstadoSesion` y sus implementaciones están en `state`, y los enums solo en `enumeration`, `state` o `result`. Verificación: la prueba pasa y, al poner una clase suelta de prueba en `domain`, falla (se revierte).
 - [ ] 2.3 Documentar la etapa: `docs/build/cotejo_clases.py` y `docs/build/diagramas_clases.py` leen `domain` por subcarpeta, y el capítulo 4 gana la sección «Estructura de paquetes y tipos de clase» con el árbol de `domain`, la lista de tipos con una frase y un ejemplo real de cada uno, y la nota sobre los nombres homónimos. Modifica: `docs/documento/capitulos/04-diseno-del-software.md`, `docs/build/cotejo_clases.py`, `docs/build/diagramas_clases.py`. Verificación: compuerta de etapa 1.
 

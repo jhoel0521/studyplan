@@ -42,17 +42,17 @@ import java.util.Map;
 import java.util.Set;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.BloqueHorarioCalendario;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.DatosCalendario;
-import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.FiltroCalendario;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.ItemSesionCalendario;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PeriodoCalendario;
-import io.github.jhoel0521.studyplan.domain.VistaCalendario;
+import io.github.jhoel0521.studyplan.domain.readmodel.BloqueHorarioCalendario;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.DatosCalendario;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.FiltroCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.readmodel.ItemSesionCalendario;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoCalendario;
+import io.github.jhoel0521.studyplan.domain.enumeration.VistaCalendario;
 
 /**
  * Pantalla del calendario de estudio con vistas {@code Día}, {@code Semana} y {@code Mes},

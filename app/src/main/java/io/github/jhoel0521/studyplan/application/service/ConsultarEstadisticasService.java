@@ -13,13 +13,13 @@ import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.CalculadorEstadisticas;
-import io.github.jhoel0521.studyplan.domain.EstadisticasPeriodo;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Implementa {@link ConsultarEstadisticas}: vence pendientes vencidas ({@code RN-08}), suma tramos

@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Instante;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /** Pruebas unitarias de {@link FormatoSesion} para estabilidad ante cambios de zona ({@code HU-10}, {@code HU-39}). */
 public class FormatoSesionTest {

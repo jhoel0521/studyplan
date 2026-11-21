@@ -2,9 +2,9 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import androidx.annotation.Nullable;
 
-import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.ResultadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.ConflictoHorario;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoSesion;
 
 /**
  * Evento único resultante de una acción sobre una sesión de estudio (formulario o detalle).

@@ -22,11 +22,11 @@ import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.FormatoExportacionReporte;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Pantalla de Reportes por periodo semanal o mensual con exportación y compartición en PDF/CSV

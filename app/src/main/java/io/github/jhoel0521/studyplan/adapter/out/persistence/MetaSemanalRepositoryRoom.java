@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
 
 /**
  * Adaptador de salida Room para {@link MetaSemanalRepository} ({@code HU-25} a {@code HU-28},

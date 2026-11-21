@@ -14,15 +14,15 @@ import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesio
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /**
  * Inicia una sesión {@code PENDIENTE} garantizando la invariante de única sesión {@code EN_CURSO}

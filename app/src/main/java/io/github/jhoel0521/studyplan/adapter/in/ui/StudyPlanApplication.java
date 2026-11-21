@@ -126,7 +126,7 @@ import io.github.jhoel0521.studyplan.application.service.ReprogramarSesionServic
 import io.github.jhoel0521.studyplan.application.service.ResolverRegresoAppService;
 import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
 import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 
 /**
  * Raíz de composición: crea la base, los adaptadores y los servicios a mano y los expone a las Activities y a los
@@ -494,7 +494,7 @@ public class StudyPlanApplication extends Application {
         return reprogramarRecordatoriosPendientes;
     }
 
-    ProgramadorRecordatorios programadorRecordatorios() {
+    public ProgramadorRecordatorios programadorRecordatorios() {
         return programadorRecordatorios;
     }
 
@@ -567,19 +567,19 @@ public class StudyPlanApplication extends Application {
     }
 
     /** Acceso interno al repositorio de sesiones para sembrar escenarios de prueba instrumentados. */
-    SesionRepository sesionRepository() {
+    public SesionRepository sesionRepository() {
         return sesionRepository;
     }
 
-    AjustesRepository ajustesRepository() {
+    public AjustesRepository ajustesRepository() {
         return ajustesRepository;
     }
 
-    MateriaRepository materiaRepository() {
+    public MateriaRepository materiaRepository() {
         return materiaRepository;
     }
 
-    TramoDiarioRepository tramoDiarioRepository() {
+    public TramoDiarioRepository tramoDiarioRepository() {
         return tramoDiarioRepository;
     }
 }

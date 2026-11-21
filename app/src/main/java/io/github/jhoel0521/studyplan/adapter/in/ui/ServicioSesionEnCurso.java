@@ -25,7 +25,7 @@ public final class ServicioSesionEnCurso extends Service {
     private static volatile boolean activo;
 
     /** Publica la notificación: actualiza si el servicio ya corre; si no, lo inicia con ella. */
-    static void mostrar(Context contexto, Notification notificacion) {
+    public static void mostrar(Context contexto, Notification notificacion) {
         NotificationManager nm = (NotificationManager) contexto.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         if (activo) {
@@ -48,11 +48,11 @@ public final class ServicioSesionEnCurso extends Service {
     }
 
     /** Detiene el servicio si corre; no toca la notificación. */
-    static void detener(Context contexto) {
+    public static void detener(Context contexto) {
         contexto.stopService(new Intent(contexto, ServicioSesionEnCurso.class));
     }
 
-    static boolean estaActivo() {
+    public static boolean estaActivo() {
         return activo;
     }
 

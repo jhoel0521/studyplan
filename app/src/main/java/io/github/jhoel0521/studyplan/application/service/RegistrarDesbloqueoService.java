@@ -8,9 +8,9 @@ import io.github.jhoel0521.studyplan.application.port.in.RegistrarDesbloqueo;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /**
  * Registra {@code DESBLOQUEO} solo si el último evento de la sesión {@code EN_CURSO} es un

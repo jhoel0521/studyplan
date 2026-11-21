@@ -8,8 +8,8 @@ import java.util.Set;
 
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Repositorio falso en memoria de {@link EventoEstudioRepository} para pruebas unitarias (HU-39).

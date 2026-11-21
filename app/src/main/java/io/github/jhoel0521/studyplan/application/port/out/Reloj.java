@@ -1,8 +1,8 @@
 package io.github.jhoel0521.studyplan.application.port.out;
 
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Instante;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
 
 /**
  * Puerto de salida para obtener la fecha y hora actuales sin acoplar el núcleo de negocio al

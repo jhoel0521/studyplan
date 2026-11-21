@@ -26,12 +26,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.DetalleSesion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Pantalla de detalle completo de una sesión de estudio y punto de transición de estados

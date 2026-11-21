@@ -18,12 +18,12 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
-import io.github.jhoel0521.studyplan.domain.CierreSesion;
-import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio;
 
 /**
  * Diálogo {@code W13} presentado después de superar {@link ActividadProtegida} cuando existe una

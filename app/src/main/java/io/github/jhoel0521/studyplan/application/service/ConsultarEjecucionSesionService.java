@@ -11,18 +11,18 @@ import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepositor
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
-import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
-import io.github.jhoel0521.studyplan.domain.CandidataInvasion;
-import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
-import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorPomodoro;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.readmodel.CandidataInvasion;
+import io.github.jhoel0521.studyplan.domain.valueobject.ConfiguracionPomodoro;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadoPomodoroCalculado;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /**
  * Calcula en vivo la proyección {@link ResumenEjecucionSesion} para la UI de ejecución

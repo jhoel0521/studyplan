@@ -15,13 +15,13 @@ import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.CalculadorProgresoMetas;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorProgresoMetas;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Implementa {@link ConsultarProgresoMetas}: calcula progreso de la semana actual (creando el

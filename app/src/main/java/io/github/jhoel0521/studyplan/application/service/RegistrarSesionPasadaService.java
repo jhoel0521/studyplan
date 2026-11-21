@@ -10,15 +10,15 @@ import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
-import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResultadoSesion;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.ConflictoHorario;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.service.RepartidorPorDia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoSesion;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Implementa {@link RegistrarSesionPasada}: valida materia activa, ventana de 1 a 3 días (RN-06),

@@ -35,12 +35,12 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
-import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.FormatoExportacionReporte;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
 
 /**
  * Pruebas instrumentadas de {@link ExportadorReporteSistema} y {@code FileProvider}: CSV con BOM

@@ -9,11 +9,11 @@ import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarCalendario;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.DatosCalendario;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.FiltroCalendario;
-import io.github.jhoel0521.studyplan.domain.PeriodoCalendario;
-import io.github.jhoel0521.studyplan.domain.VistaCalendario;
+import io.github.jhoel0521.studyplan.domain.readmodel.DatosCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.FiltroCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoCalendario;
+import io.github.jhoel0521.studyplan.domain.enumeration.VistaCalendario;
 
 /**
  * ViewModel del calendario de estudio (MVVM, HU-16 a HU-21, RNF-02, RNF-10).

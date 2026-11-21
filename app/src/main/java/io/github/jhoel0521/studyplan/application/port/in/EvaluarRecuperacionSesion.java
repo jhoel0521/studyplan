@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
+import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
 
 /**
  * Puerto de entrada: evaluar si existe una sesión {@code EN_CURSO} pendiente de recuperación o

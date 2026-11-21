@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 
 /**
  * Con el bloqueo activo, volver a primer plano muestra la pantalla de autenticación y no deja ver los datos de

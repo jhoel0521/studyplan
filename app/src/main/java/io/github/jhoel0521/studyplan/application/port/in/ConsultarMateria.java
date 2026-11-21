@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Puerto de entrada (caso de uso): obtener una materia por su id, por ejemplo para abrir el formulario de edición.

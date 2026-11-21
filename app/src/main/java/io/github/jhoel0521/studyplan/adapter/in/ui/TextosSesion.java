@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.FasePomodoro;
+import io.github.jhoel0521.studyplan.domain.enumeration.FasePomodoro;
 
 /**
  * Textos de la sesión En curso que comparten la pantalla y la notificación (HU-23, HU-49).

@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.port.out;
 
-import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 
 /**
  * Puerto de salida: almacén de los ajustes. Si todavía no hay ajustes guardados, la implementación devuelve

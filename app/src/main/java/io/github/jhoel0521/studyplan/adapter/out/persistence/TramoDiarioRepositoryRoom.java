@@ -7,8 +7,8 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Adaptador de salida Room para {@link TramoDiarioRepository} ({@code RN-31}, {@code RNF-02}).

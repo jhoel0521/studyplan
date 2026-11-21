@@ -15,15 +15,15 @@ import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesio
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
-import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
-import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.service.RepartidorPorDia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /**
  * Evalúa al volver a la app si existe una sesión {@code EN_CURSO} con salida sin resolver, cierre

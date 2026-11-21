@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.TimeZone;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
-import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Instante;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Formatea rangos horarios, fechas y duraciones de sesión para la interfaz sin duplicar plantillas.

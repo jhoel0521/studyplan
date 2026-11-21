@@ -61,7 +61,7 @@ public abstract class ActividadBase extends AppCompatActivity {
         return insets;
     }
 
-    protected StudyPlanApplication app() {
+    public StudyPlanApplication app() {
         return StudyPlanApplication.de(this);
     }
 

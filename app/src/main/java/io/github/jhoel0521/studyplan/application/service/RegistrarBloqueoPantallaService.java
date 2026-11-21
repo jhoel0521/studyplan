@@ -8,10 +8,10 @@ import io.github.jhoel0521.studyplan.application.port.in.RegistrarBloqueoPantall
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /**
  * Registra {@code BLOQUEO_PANTALLA} cuando la pantalla se apaga con la app en primer plano y hay

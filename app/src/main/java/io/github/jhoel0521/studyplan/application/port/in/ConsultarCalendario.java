@@ -1,8 +1,8 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.DatosCalendario;
-import io.github.jhoel0521.studyplan.domain.FiltroCalendario;
-import io.github.jhoel0521.studyplan.domain.PeriodoCalendario;
+import io.github.jhoel0521.studyplan.domain.readmodel.DatosCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.FiltroCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoCalendario;
 
 /**
  * Puerto de entrada (caso de uso): consultar las sesiones, celdas o bloques horarios y resumen

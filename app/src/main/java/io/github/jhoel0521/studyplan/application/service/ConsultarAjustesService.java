@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 
 /**
  * Implementa {@link ConsultarAjustes} leyendo del repositorio.

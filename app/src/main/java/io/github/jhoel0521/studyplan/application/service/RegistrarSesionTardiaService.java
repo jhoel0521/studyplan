@@ -10,12 +10,12 @@ import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.CierreSesion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
-import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.service.RepartidorPorDia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Implementa {@link RegistrarSesionTardia}: convierte una sesión {@code NO_REALIZADA} de hace

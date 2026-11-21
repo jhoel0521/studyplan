@@ -16,7 +16,7 @@ import io.github.jhoel0521.studyplan.application.port.in.ControlarSesionBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarBloqueoPantalla;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarDesbloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSalidaApp;
-import io.github.jhoel0521.studyplan.domain.SalidaRegistrada;
+import io.github.jhoel0521.studyplan.domain.readmodel.SalidaRegistrada;
 
 /**
  * Cuenta las Activities iniciadas para saber cuándo la app pasa a segundo plano y vuelve a primer plano. Un cambio

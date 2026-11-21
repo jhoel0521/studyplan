@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.SalidaRegistrada;
+import io.github.jhoel0521.studyplan.domain.readmodel.SalidaRegistrada;
 
 /**
  * Puerto de entrada: registrar la salida de la app cuando hay una sesión {@code EN_CURSO} fuera

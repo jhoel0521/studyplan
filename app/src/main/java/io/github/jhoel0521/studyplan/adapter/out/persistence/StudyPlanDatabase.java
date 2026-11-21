@@ -8,7 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Base de datos Room de la aplicación (versión 8: perfil, ajustes con recordatorio por defecto,
@@ -70,7 +70,7 @@ public abstract class StudyPlanDatabase extends RoomDatabase {
                 .build();
     }
 
-    static void asegurarMateriaGeneral(@NonNull SupportSQLiteDatabase db) {
+    public static void asegurarMateriaGeneral(@NonNull SupportSQLiteDatabase db) {
         db.execSQL(
                 "INSERT INTO `materia` (`nombre`, `nombre_clave`, `color`, `docente`, `archivada`, `meta_semanal_horas`, `es_general`) "
                         + "SELECT ?, ?, ?, NULL, 0, NULL, 1 "

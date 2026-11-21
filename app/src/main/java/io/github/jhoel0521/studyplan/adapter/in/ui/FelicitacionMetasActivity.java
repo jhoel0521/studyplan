@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
 
 /**
  * Pantalla única de felicitación cuando al cerrar una sesión se alcanzan una o más metas

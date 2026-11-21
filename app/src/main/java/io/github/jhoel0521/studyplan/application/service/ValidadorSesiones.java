@@ -4,13 +4,13 @@ import java.util.List;
 
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
-import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Instante;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.ConflictoHorario;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Utilidad interna compartida por los servicios de sesiones para validar materia activa, detectar

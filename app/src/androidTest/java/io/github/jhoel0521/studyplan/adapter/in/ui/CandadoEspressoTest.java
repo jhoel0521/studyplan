@@ -30,10 +30,10 @@ import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.BloqueoPantallaSistema;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 
 /**
  * Pruebas E2E del candado de la sesión: confirmación, primer uso con permiso, «No volver a preguntar» y

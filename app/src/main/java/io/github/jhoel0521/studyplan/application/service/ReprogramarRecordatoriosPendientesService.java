@@ -11,10 +11,10 @@ import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.AvisoRecordatorioPendiente;
-import io.github.jhoel0521.studyplan.domain.Instante;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.AvisoRecordatorioPendiente;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Reprograma los avisos futuros de sesiones {@code PENDIENTE} vigentes y devuelve aquellos cuyo

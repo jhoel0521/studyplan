@@ -1,9 +1,9 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.CierreSesion;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio;
 
 /**
  * Puerto de entrada: resolver la recuperación al volver a la app con una sesión {@code EN_CURSO}

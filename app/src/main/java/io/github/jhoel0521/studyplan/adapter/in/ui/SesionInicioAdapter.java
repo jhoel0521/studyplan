@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.DetalleSesionInicio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
 
 /**
  * Adaptador de la lista de sesiones del día en la pantalla de Inicio, mostrando color de materia, horario,

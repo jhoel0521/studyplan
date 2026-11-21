@@ -8,13 +8,13 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeEventoEstudioRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;

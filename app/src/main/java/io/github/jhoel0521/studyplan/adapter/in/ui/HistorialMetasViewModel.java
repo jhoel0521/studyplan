@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarProgresoMetas;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 
 /**
  * Estado de la pantalla de historial semanal de metas ({@code HU-27}, {@code RN-31}, {@code RN-33}).

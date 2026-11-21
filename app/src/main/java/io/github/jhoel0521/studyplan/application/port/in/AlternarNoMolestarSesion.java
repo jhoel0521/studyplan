@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Puerto de entrada: activar o desactivar No molestar solo para la sesión {@code EN_CURSO}, sin

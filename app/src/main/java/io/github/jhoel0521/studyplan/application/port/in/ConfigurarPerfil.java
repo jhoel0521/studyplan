@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Puerto de entrada (caso de uso): guardar el perfil del estudiante en el primer uso.

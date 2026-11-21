@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
 
 /**
  * Puerto de entrada: registrar que el estudiante volvió a StudyPlan después de un bloqueo de

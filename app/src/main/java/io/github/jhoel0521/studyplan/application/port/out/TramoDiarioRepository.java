@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.out;
 
 import java.util.Map;
 
-import io.github.jhoel0521.studyplan.domain.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 
 /**
  * Puerto de salida para persistir y consultar los minutos reales materializados por día local

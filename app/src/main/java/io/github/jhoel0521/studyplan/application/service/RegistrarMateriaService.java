@@ -4,11 +4,11 @@ import io.github.jhoel0521.studyplan.application.port.in.RegistrarMateria;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Implementa {@link RegistrarMateria}: valida con el dominio, rechaza el nombre repetido entre las activas y solo

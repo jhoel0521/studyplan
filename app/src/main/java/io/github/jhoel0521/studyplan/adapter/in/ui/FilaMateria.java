@@ -2,9 +2,9 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
-import io.github.jhoel0521.studyplan.domain.ResumenMateria;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;
 
 /**
  * Una fila de la lista de materias: una materia activa, el encabezado plegable de las archivadas o una archivada.

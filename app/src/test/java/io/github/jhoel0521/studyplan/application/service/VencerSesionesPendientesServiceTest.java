@@ -3,10 +3,10 @@ package io.github.jhoel0521.studyplan.application.service;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
 

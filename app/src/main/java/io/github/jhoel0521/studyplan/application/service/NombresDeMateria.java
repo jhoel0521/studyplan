@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.service;
 
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Regla de unicidad del nombre entre las materias activas, compartida por los servicios.

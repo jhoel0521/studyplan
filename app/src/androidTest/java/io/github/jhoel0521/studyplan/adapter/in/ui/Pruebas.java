@@ -15,9 +15,9 @@ import android.view.View;
 
 import java.util.concurrent.TimeUnit;
 
-import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Ayudas comunes de las pruebas de pantalla: estado limpio y espera de vistas que dependen del hilo en segundo plano.

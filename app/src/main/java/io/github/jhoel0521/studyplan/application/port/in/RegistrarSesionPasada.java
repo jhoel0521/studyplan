@@ -1,8 +1,8 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.ResultadoSesion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoSesion;
 
 /**
  * Puerto de entrada (caso de uso): registrar una sesión estudiada dentro de los últimos 3 días

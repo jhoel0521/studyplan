@@ -7,16 +7,16 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.BloqueHorarioCalendario;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.DatosCalendario;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.FiltroCalendario;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PeriodoCalendario;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.VistaCalendario;
+import io.github.jhoel0521.studyplan.domain.readmodel.BloqueHorarioCalendario;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.DatosCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.FiltroCalendario;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoCalendario;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.VistaCalendario;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
@@ -159,7 +159,7 @@ public class ConsultarCalendarioServiceTest {
         SesionEstudio domLun = sesiones.guardar(SesionEstudio.planificar(
                 calculo.id(), domingo, domingo,
                 Hora.de(23, 30).valor(), Hora.de(0, 30).valor(), 0, "", null)
-                .valor().iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .valor().iniciar(io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio.LIBRE, null)
                 .valor().detener(60).valor());
         java.util.Map<Fecha, Integer> mapa = new java.util.TreeMap<>();
         mapa.put(domingo, 30);

@@ -16,8 +16,8 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 
 /**
  * Adaptador para la lista cronológica inversa de metas semanales ({@code HU-27}, {@code RN-33}).

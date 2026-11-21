@@ -1,9 +1,9 @@
 package io.github.jhoel0521.studyplan.fakes;
 
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Instante;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
 
 /**
  * Reloj determinista configurable en memoria para pruebas unitarias (HU-02, HU-10 a HU-14,

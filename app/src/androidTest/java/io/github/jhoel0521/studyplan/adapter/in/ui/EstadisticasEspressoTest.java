@@ -20,13 +20,13 @@ import org.junit.runner.RunWith;
 import java.util.Collections;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TipoEventoEstudio;
-import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio;
 
 /**
  * Pruebas E2E Espresso de Estadísticas ({@code HU-29}, {@code HU-30}, {@code HU-31},
@@ -52,7 +52,7 @@ public class EstadisticasEspressoTest {
                 calculo.id(), hoy, hoy, Hora.de(8, 0).valor(), Hora.de(9, 0).valor(),
                 desfase, null, null)
                 .valor()
-                .iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .iniciar(io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio.LIBRE, null)
                 .valor()
                 .detener(60)
                 .valor());
@@ -78,7 +78,7 @@ public class EstadisticasEspressoTest {
                 archivada.id(), hoy, hoy, Hora.de(9, 30).valor(), Hora.de(10, 0).valor(),
                 desfase, null, null)
                 .valor()
-                .iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .iniciar(io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio.LIBRE, null)
                 .valor()
                 .detener(30)
                 .valor());
@@ -90,7 +90,7 @@ public class EstadisticasEspressoTest {
                 general.id(), hoy, hoy, Hora.de(10, 30).valor(), Hora.de(11, 0).valor(),
                 desfase, null, null)
                 .valor()
-                .iniciar(io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE, null)
+                .iniciar(io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio.LIBRE, null)
                 .valor()
                 .detener(30)
                 .valor());

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio;
 
 /**
  * Mapeo compartido de {@link TopicoEventoEstudio} a etiquetas localizadas y construcción de chips

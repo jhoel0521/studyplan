@@ -9,15 +9,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeControladorNoMolestar;
 import io.github.jhoel0521.studyplan.fakes.FakeEventoEstudioRepository;
@@ -93,7 +93,7 @@ public class RecuperacionSalidaServiceTest {
         assertEquals(inicio + 15 * MIN, diag.instanteSalidaMilis());
         assertFalse("No es un cierre abrupto", diag.esRecuperacionCierreAbrupto());
         assertEquals("Un solo evento de salida", 1, eventos.listarPorSesion(s.id()).stream()
-                .filter(e -> e.tipo() == io.github.jhoel0521.studyplan.domain.TipoEventoEstudio.SALIDA_APP)
+                .filter(e -> e.tipo() == io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio.SALIDA_APP)
                 .count());
     }
 
@@ -192,10 +192,10 @@ public class RecuperacionSalidaServiceTest {
                 ResolverRegresoApp.OpcionRegreso.RETOMAR_SIN_SUMAR,
                 null,
                 "",
-                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.LLAMADA_MENSAJE).esValido());
+                io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio.LLAMADA_MENSAJE).esValido());
 
         // Solo los 10 min previos deben contar como tiempo efectivo
-        long milis = io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal.calcularMilisEfectivos(
+        long milis = io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal.calcularMilisEfectivos(
                 TecnicaEstudio.LIBRE, null, 60, eventos.listarPorSesion(s.id()), reloj.ahoraMilis());
         assertEquals(10 * MIN, milis);
     }

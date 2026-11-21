@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Puerto de salida falso en memoria para las pruebas del núcleo: asigna ids como lo haría la base.

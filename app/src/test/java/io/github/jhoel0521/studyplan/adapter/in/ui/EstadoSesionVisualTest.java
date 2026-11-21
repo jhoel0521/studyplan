@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 
 /**
  * Mapeo de cada {@link CodigoEstadoSesion} a su rol de color de la línea gráfica (design.md, decisión 5a): ningún

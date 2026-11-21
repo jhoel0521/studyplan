@@ -9,12 +9,12 @@ import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Alterna No molestar solo para la sesión {@code EN_CURSO} cambiando su preferencia a

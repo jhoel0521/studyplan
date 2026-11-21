@@ -14,14 +14,14 @@ import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.CalculadorProgresoMetas;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.ListadoMaterias;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResumenMateria;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorProgresoMetas;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.readmodel.ListadoMaterias;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;
 
 /**
  * Implementa {@link ListarMaterias}: orden alfabético en español, dejando al final la materia

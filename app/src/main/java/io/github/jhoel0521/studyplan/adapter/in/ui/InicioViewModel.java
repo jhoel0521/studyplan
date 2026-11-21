@@ -13,15 +13,15 @@ import io.github.jhoel0521.studyplan.application.port.in.EstudiarAhora;
 import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaSemanal;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResumenInicio;
-import io.github.jhoel0521.studyplan.domain.ResumenMateria;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenInicio;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Estado de la pantalla de Inicio: saludo, progreso semanal real, próxima sesión pendiente,

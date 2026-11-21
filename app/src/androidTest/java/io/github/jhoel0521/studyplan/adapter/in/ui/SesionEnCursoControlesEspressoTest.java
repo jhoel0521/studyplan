@@ -27,8 +27,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Pruebas E2E de los controles de la sesión en curso: Pausar/Reanudar de 64 dp, iconos de 48 dp, candado

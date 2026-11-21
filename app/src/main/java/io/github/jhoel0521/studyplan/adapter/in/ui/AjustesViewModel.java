@@ -11,12 +11,12 @@ import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarRecordatorioPorDefecto;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Estado de la pantalla de ajustes: tema, idioma, bloqueo, No molestar, Pomodoro y recordatorios.

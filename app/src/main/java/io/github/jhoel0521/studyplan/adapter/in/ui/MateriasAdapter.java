@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 
 /**
  * Adaptador de la lista de materias: filas de materias activas, encabezado plegable de archivadas y filas de

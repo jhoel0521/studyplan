@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.fakes;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 
 /**
  * Puerto de salida falso en memoria para las pruebas del núcleo.

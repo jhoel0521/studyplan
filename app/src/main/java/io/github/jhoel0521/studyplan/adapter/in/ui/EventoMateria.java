@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 
 /**
  * Resultado de una acción del formulario de materia: qué se hizo o el código de error que lo impidió.

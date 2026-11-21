@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.EstadisticasPeriodo;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
 
 /**
  * Puerto de entrada: consultar las estadísticas agregadas de estudio de un periodo semanal o

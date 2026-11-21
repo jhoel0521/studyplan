@@ -16,10 +16,10 @@ import org.junit.runner.RunWith;
 import java.util.Map;
 import java.util.TreeMap;
 
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Prueba instrumentada de {@link TramoDiarioRepositoryRoom} ({@code RN-31}, {@code RNF-02}).

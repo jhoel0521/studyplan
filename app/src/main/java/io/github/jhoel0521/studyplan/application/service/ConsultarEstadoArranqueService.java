@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.application.service;
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadoArranque;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.domain.EstadoArranque;
+import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
 
 /**
  * Implementa {@link ConsultarEstadoArranque}: lee los ajustes (lo que desbloquea la sesión si el bloqueo está

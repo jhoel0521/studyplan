@@ -12,9 +12,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.ResultadoReparto;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoReparto;
 
 /**
  * Pantalla de reparto proporcional de un tramo continuo ({@code W14}) entre la sesión actual y

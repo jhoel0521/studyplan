@@ -9,8 +9,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.ConflictoHorario;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.readmodel.ConflictoHorario;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 
 /**
  * Traduce los códigos de error del dominio al texto de {@code strings.xml} (RNF-08: el dominio no

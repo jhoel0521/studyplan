@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel;
 import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarPerfil;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Estado de la pantalla de perfil inicial. Llama al caso de uso fuera del hilo principal y publica el resultado:

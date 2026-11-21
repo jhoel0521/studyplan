@@ -11,9 +11,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Pantalla del primer uso: pide el nombre y la meta semanal. No pide autenticación, porque sin perfil no hay datos

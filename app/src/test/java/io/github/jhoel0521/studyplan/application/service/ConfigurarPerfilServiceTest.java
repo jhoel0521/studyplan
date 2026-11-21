@@ -7,9 +7,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 import io.github.jhoel0521.studyplan.fakes.FakePerfilRepository;
 
 /**

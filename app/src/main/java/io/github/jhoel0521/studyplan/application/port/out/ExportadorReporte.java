@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.application.port.out;
 
-import io.github.jhoel0521.studyplan.domain.FormatoExportacionReporte;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
 
 /**
  * Puerto de salida para generar archivos exportables de un reporte en caché privada y limpiar los

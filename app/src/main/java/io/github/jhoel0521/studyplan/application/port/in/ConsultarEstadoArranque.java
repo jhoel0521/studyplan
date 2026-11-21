@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.EstadoArranque;
+import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
 
 /**
  * Puerto de entrada (caso de uso): decidir qué pantalla corresponde al abrir la app.

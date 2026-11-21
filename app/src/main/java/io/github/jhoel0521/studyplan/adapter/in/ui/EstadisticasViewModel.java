@@ -8,8 +8,8 @@ import java.util.concurrent.Executor;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadisticas;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.EstadisticasPeriodo;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
 
 /**
  * ViewModel para la pantalla de Estadísticas ({@code HU-29}, {@code HU-30}, {@code HU-31},

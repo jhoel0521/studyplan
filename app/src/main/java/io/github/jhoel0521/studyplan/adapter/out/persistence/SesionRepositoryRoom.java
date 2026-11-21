@@ -6,11 +6,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Instante;
-import io.github.jhoel0521.studyplan.domain.RepartidorPorDia;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
+import io.github.jhoel0521.studyplan.domain.service.RepartidorPorDia;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Adaptador de salida Room que implementa {@link SesionRepository} sobre {@link SesionDao}

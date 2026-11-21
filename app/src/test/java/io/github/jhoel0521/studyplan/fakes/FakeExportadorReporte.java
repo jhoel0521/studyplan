@@ -2,8 +2,8 @@ package io.github.jhoel0521.studyplan.fakes;
 
 import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
-import io.github.jhoel0521.studyplan.domain.FormatoExportacionReporte;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
 
 /**
  * Doble de prueba en memoria para {@link ExportadorReporte} ({@code HU-33}, {@code HU-38}).

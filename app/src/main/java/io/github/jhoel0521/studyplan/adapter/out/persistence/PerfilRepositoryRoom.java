@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.adapter.out.persistence;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 
 /**
  * Adaptador de salida: guarda el perfil en Room.

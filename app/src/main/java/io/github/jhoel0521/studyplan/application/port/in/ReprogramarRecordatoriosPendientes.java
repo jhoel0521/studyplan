@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.List;
 
-import io.github.jhoel0521.studyplan.domain.AvisoRecordatorioPendiente;
+import io.github.jhoel0521.studyplan.domain.readmodel.AvisoRecordatorioPendiente;
 
 /**
  * Puerto de entrada para restaurar alarmas de sesiones {@code PENDIENTE} tras un reinicio del

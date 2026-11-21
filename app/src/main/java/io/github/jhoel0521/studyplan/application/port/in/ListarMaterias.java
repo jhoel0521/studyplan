@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.port.in;
 
-import io.github.jhoel0521.studyplan.domain.ListadoMaterias;
+import io.github.jhoel0521.studyplan.domain.readmodel.ListadoMaterias;
 
 /**
  * Puerto de entrada (caso de uso): listar las materias activas con sus horas y las archivadas, en orden alfabético.

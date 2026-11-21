@@ -13,8 +13,8 @@ import io.github.jhoel0521.studyplan.application.port.in.DesarchivarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.EditarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarMateria;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarMateria;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Estado del formulario de materia: cargar una existente, registrar o editar, archivar, desarchivar y eliminar (esta
@@ -81,7 +81,7 @@ public class MateriaFormularioViewModel extends ViewModel {
                 metaHoras = Double.parseDouble(limpio.replace(',', '.'));
             } catch (NumberFormatException e) {
                 evento.setValue(EventoMateria.error(
-                        io.github.jhoel0521.studyplan.domain.ErrorValidacion.META_FUERA_DE_RANGO));
+                        io.github.jhoel0521.studyplan.domain.result.ErrorValidacion.META_FUERA_DE_RANGO));
                 return;
             }
         }

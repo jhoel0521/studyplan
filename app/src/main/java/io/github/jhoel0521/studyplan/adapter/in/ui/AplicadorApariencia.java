@@ -11,8 +11,8 @@ import androidx.core.os.LocaleListCompat;
 
 import java.util.Locale;
 
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Aplica el tema y el idioma elegidos. Debe llamarse en el hilo principal.

@@ -13,15 +13,15 @@ import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.RepartirTramoSesion;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.CalculadorRepartoTramo;
-import io.github.jhoel0521.studyplan.domain.CalculadorTiempoReal;
-import io.github.jhoel0521.studyplan.domain.DetalleSesion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.EventoEstudio;
-import io.github.jhoel0521.studyplan.domain.IntervaloEfectivo;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResultadoReparto;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorRepartoTramo;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.IntervaloEfectivo;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoReparto;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * ViewModel de {@link RepartoSesionActivity} ({@code W14}, HU-44, RN-28).

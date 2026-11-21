@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.ResumenInicio;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenInicio;
 
 /**
  * Puerto de entrada (caso de uso): los datos que muestra la pantalla de Inicio.

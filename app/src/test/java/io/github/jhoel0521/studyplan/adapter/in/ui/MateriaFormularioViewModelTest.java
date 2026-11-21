@@ -19,8 +19,8 @@ import io.github.jhoel0521.studyplan.application.service.DesarchivarMateriaServi
 import io.github.jhoel0521.studyplan.application.service.EditarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.EliminarMateriaService;
 import io.github.jhoel0521.studyplan.application.service.RegistrarMateriaService;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionesDeMateria;
 

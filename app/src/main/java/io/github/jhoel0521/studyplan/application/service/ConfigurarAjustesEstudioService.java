@@ -4,9 +4,9 @@ import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarAjustesEstudio;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
-import io.github.jhoel0521.studyplan.domain.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.valueobject.ConfiguracionPomodoro;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
 /**
  * Configura el modo No molestar global y los parámetros de Pomodoro en {@link Ajustes}

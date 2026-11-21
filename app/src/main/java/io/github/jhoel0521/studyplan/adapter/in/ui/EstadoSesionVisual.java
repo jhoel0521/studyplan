@@ -16,7 +16,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 
 /**
  * Mapeo visual uniforme de cada {@link CodigoEstadoSesion} a su icono, etiqueta textual y color

@@ -17,9 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Borrar los datos del teléfono con la doble confirmación: la base queda vacía, tema e idioma vuelven a sus valores

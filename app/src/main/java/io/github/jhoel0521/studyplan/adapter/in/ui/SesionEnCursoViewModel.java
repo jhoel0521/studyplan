@@ -18,17 +18,17 @@ import io.github.jhoel0521.studyplan.application.port.in.DetenerSesion;
 import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
 import io.github.jhoel0521.studyplan.application.port.in.PausarReanudarSesion;
-import io.github.jhoel0521.studyplan.domain.CierreSesion;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
-import io.github.jhoel0521.studyplan.domain.ResumenMateria;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * ViewModel de la pantalla {@link SesionEnCursoActivity} (HU-22 a HU-24, HU-28, HU-34, HU-42,
@@ -245,7 +245,7 @@ public class SesionEnCursoViewModel extends ViewModel {
 
     public void reanudarConTopico(
             long sesionId,
-            io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio topico,
+            io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio topico,
             String nota) {
         ejecutor.execute(() -> {
             pausarReanudar.ejecutar(sesionId, topico, nota);

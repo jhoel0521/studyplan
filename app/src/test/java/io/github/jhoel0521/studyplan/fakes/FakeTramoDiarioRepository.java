@@ -6,8 +6,8 @@ import java.util.TreeMap;
 
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Repositorio falso en memoria para {@link TramoDiarioRepository} ({@code RN-31}).

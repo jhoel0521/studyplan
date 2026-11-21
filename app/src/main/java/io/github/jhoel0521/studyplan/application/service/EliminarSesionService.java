@@ -5,9 +5,9 @@ import java.util.Objects;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 
 /**
  * Implementa {@link EliminarSesion}: permite borrar únicamente sesiones en estado

@@ -11,10 +11,10 @@ import org.junit.Test;
 import java.util.List;
 
 import io.github.jhoel0521.studyplan.application.service.ConsultarProgresoMetasService;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeMetaSemanalRepository;
 import io.github.jhoel0521.studyplan.fakes.FakePerfilRepository;

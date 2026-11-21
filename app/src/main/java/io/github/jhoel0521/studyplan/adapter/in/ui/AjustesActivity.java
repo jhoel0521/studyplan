@@ -29,12 +29,12 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.BloqueoPantallaSistema;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
-import io.github.jhoel0521.studyplan.domain.ConfiguracionPomodoro;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.valueobject.ConfiguracionPomodoro;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Pantalla de ajustes: tema, idioma, bloqueo con huella o PIN, técnicas de estudio (Pomodoro y

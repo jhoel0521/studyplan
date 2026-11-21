@@ -12,10 +12,10 @@ import io.github.jhoel0521.studyplan.application.port.in.GenerarReporteEstudio;
 import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.FormatoExportacionReporte;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
-import io.github.jhoel0521.studyplan.domain.ReporteEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;
 
 /**
  * ViewModel de la pantalla de Reportes ({@code HU-32}, {@code HU-33}, {@code RNF-10}): gestiona el

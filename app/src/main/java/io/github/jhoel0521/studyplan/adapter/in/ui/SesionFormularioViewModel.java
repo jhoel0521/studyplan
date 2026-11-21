@@ -15,15 +15,15 @@ import io.github.jhoel0521.studyplan.application.port.in.PlanificarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionPasada;
 import io.github.jhoel0521.studyplan.application.port.in.ReprogramarSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
-import io.github.jhoel0521.studyplan.domain.DetalleSesion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Instante;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.ResultadoSesion;
-import io.github.jhoel0521.studyplan.domain.ResumenMateria;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResultadoSesion;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;
 
 /**
  * Estado y lógica de presentación del formulario de sesión en sus tres flujos: planificar una sesión

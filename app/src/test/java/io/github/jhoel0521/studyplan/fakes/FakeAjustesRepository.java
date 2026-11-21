@@ -1,7 +1,7 @@
 package io.github.jhoel0521.studyplan.fakes;
 
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.domain.Ajustes;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 
 /**
  * Puerto de salida falso en memoria para las pruebas del núcleo. Parte de los ajustes por defecto, como el adaptador real.

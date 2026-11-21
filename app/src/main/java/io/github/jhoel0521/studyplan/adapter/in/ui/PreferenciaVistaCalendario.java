@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.domain.VistaCalendario;
+import io.github.jhoel0521.studyplan.domain.enumeration.VistaCalendario;
 
 /**
  * Persiste localmente la última {@link VistaCalendario} elegida por el estudiante en preferencias

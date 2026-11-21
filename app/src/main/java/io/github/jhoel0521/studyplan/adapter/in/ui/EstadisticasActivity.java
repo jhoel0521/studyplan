@@ -26,10 +26,10 @@ import androidx.core.widget.TextViewCompat;
 import com.google.android.material.color.MaterialColors;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.ConcentracionPeriodo;
-import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
-import io.github.jhoel0521.studyplan.domain.EstadisticasPeriodo;
-import io.github.jhoel0521.studyplan.domain.PeriodoEstadisticas;
+import io.github.jhoel0521.studyplan.domain.readmodel.ConcentracionPeriodo;
+import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo;
+import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;
 
 /**
  * Pantalla de Estadísticas ({@code HU-29}, {@code HU-30}, {@code HU-31}, {@code HU-45}).

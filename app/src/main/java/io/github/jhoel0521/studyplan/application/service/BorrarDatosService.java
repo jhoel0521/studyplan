@@ -8,7 +8,7 @@ import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
 import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
-import io.github.jhoel0521.studyplan.domain.AlcanceBorrado;
+import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 
 /**
  * Implementa {@link BorrarDatos}: vacía el almacén local y deja la sesión sin bloqueo, porque tras el borrado los

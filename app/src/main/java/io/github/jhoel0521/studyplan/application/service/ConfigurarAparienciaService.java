@@ -2,8 +2,8 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Implementa {@link ConfigurarApariencia}: guarda el tema o el idioma elegido sin tocar los demás ajustes.

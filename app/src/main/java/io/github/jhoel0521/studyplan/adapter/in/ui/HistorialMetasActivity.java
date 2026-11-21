@@ -13,7 +13,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import java.util.List;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 
 /**
  * Pantalla de historial semanal de metas ({@code HU-27}, {@code RN-31}, {@code RN-33}).

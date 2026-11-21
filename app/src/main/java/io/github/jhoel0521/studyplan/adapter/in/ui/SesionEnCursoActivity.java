@@ -27,16 +27,16 @@ import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
-import io.github.jhoel0521.studyplan.domain.CalculadorPomodoro;
-import io.github.jhoel0521.studyplan.domain.CandidataInvasion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.EstadoPomodoroCalculado;
-import io.github.jhoel0521.studyplan.domain.FasePomodoro;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.MetaAlcanzada;
-import io.github.jhoel0521.studyplan.domain.ResumenEjecucionSesion;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.service.CalculadorPomodoro;
+import io.github.jhoel0521.studyplan.domain.readmodel.CandidataInvasion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.readmodel.EstadoPomodoroCalculado;
+import io.github.jhoel0521.studyplan.domain.enumeration.FasePomodoro;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Pantalla protegida de ejecución en vivo ({@code W7}): cronómetro Libre o Pomodoro con
@@ -415,7 +415,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
             return;
         }
         app().ejecutor().execute(() -> {
-            java.util.Optional<io.github.jhoel0521.studyplan.domain.DiagnosticoRegresoApp> diagOpt =
+            java.util.Optional<io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp> diagOpt =
                     app().evaluarRecuperacionSesion().ejecutar();
             if (diagOpt.isPresent()) {
                 runOnUiThread(() -> {
@@ -548,7 +548,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
                 this,
                 grupo,
                 TopicosUi.topicosParaInterrupcion(),
-                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.SIN_CLASIFICAR);
+                io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio.SIN_CLASIFICAR);
         contenedor.addView(grupo);
 
         com.google.android.material.textfield.TextInputLayout campoLayout =
@@ -565,7 +565,7 @@ public class SesionEnCursoActivity extends ActividadProtegida {
                 .setView(contenedor)
                 .setNegativeButton(R.string.cancelar, null)
                 .setPositiveButton(R.string.topico_reanudar_confirmar, (d, w) -> {
-                    io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio topico =
+                    io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio topico =
                             TopicosUi.obtenerSeleccionado(grupo);
                     String nota = campoNota.getText() == null ? "" : campoNota.getText().toString();
                     modelo.reanudarConTopico(sesionId, topico, nota);

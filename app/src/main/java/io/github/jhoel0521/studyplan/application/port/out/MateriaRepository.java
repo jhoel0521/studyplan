@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.application.port.out;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Puerto de salida: almacén de las materias. Lo implementa un adaptador (Room); el núcleo solo conoce esta interfaz.

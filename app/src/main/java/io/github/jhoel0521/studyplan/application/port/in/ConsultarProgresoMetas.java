@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.in;
 
 import java.util.List;
 
-import io.github.jhoel0521.studyplan.domain.ProgresoMeta;
+import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 
 /**
  * Caso de uso: consultar el progreso actual y el historial semanal de metas ({@code HU-27},

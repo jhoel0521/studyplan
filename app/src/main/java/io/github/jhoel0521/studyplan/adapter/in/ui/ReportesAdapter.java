@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.domain.DesgloseMateriaPeriodo;
+import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
 
 /**
  * Adaptador de filas por materia del reporte tabular de estudio ({@code HU-32}, {@code RNF-06}).

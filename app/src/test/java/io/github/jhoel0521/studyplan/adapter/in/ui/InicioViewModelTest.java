@@ -16,12 +16,12 @@ import org.junit.Test;
 import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
 import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
 import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.ResumenInicio;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.readmodel.ResumenInicio;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakePerfilRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeReloj;
@@ -137,7 +137,7 @@ public class InicioViewModelTest {
         assertEquals(Boolean.TRUE, vm.metaActualizada().getValue());
         assertEquals(16.0, vm.resumen().getValue().metaSemanalHoras(), 1e-6);
 
-        vm.iniciarEstudiarAhora(null, io.github.jhoel0521.studyplan.domain.TecnicaEstudio.LIBRE);
+        vm.iniciarEstudiarAhora(null, io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio.LIBRE);
         assertTrue(vm.sesionIniciadaId().getValue() != null);
     }
 

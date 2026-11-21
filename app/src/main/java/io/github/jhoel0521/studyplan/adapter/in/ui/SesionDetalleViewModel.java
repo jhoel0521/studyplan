@@ -13,11 +13,11 @@ import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionTardia;
-import io.github.jhoel0521.studyplan.domain.DetalleSesion;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.Resultado;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 
 /**
  * Estado de la pantalla de detalle de una sesión: lectura enriquecida, inicio en vivo, acciones

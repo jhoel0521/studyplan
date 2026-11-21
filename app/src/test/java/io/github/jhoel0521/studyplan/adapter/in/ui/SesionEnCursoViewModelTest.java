@@ -17,14 +17,14 @@ import io.github.jhoel0521.studyplan.application.service.DecidirFinPlanificadoOI
 import io.github.jhoel0521.studyplan.application.service.DetenerSesionService;
 import io.github.jhoel0521.studyplan.application.service.IniciarSesionService;
 import io.github.jhoel0521.studyplan.application.service.PausarReanudarSesionService;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.ErrorValidacion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Materia;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
 import io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeControladorNoMolestar;
 import io.github.jhoel0521.studyplan.fakes.FakeEventoEstudioRepository;
@@ -113,7 +113,7 @@ public class SesionEnCursoViewModelTest {
                 new io.github.jhoel0521.studyplan.fakes.FakeMetaSemanalRepository();
         io.github.jhoel0521.studyplan.fakes.FakePerfilRepository perfiles =
                 new io.github.jhoel0521.studyplan.fakes.FakePerfilRepository();
-        perfiles.guardar(io.github.jhoel0521.studyplan.domain.Perfil.crear("Ana", 1.0).valor());
+        perfiles.guardar(io.github.jhoel0521.studyplan.domain.entity.Perfil.crear("Ana", 1.0).valor());
 
         Materia m1 = mats.guardar(Materia.crear("Matemáticas", 0xFF1E88E5, null).valor());
         Materia m2 = mats.guardar(Materia.crear("Informática", 0xFF43A047, null, 1.0).valor());
@@ -180,11 +180,11 @@ public class SesionEnCursoViewModelTest {
         reloj.avanzarMilis(5 * 60_000L);
         vm.reanudarConTopico(
                 s1.id(),
-                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA,
+                io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio.DESCANSO_COMIDA,
                 "Almuerzo");
         assertFalse(vm.resumen().getValue().pausada());
         assertEquals(
-                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA,
+                io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio.DESCANSO_COMIDA,
                 evs.listarPorSesion(s1.id()).get(evs.listarPorSesion(s1.id()).size() - 1)
                         .topico()
                         .orElse(null));

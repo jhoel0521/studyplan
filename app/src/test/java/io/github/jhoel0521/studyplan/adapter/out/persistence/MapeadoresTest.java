@@ -5,17 +5,17 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.domain.Ajustes;
-import io.github.jhoel0521.studyplan.domain.AntelacionRecordatorio;
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
-import io.github.jhoel0521.studyplan.domain.Fecha;
-import io.github.jhoel0521.studyplan.domain.Hora;
-import io.github.jhoel0521.studyplan.domain.Idioma;
-import io.github.jhoel0521.studyplan.domain.Perfil;
-import io.github.jhoel0521.studyplan.domain.PreferenciaNoMolestar;
-import io.github.jhoel0521.studyplan.domain.SesionEstudio;
-import io.github.jhoel0521.studyplan.domain.TecnicaEstudio;
-import io.github.jhoel0521.studyplan.domain.Tema;
+import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
+import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
+import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
+import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
+import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 
 /**
  * Pruebas de los mapeadores entre filas de Room y objetos del dominio.
@@ -121,19 +121,19 @@ public class MapeadoresTest {
 
     @Test
     public void eventoEstudioMapeaTopicoCanonicoYNuloHistorico() {
-        io.github.jhoel0521.studyplan.domain.EventoEstudio ev =
-                io.github.jhoel0521.studyplan.domain.EventoEstudio.crear(
+        io.github.jhoel0521.studyplan.domain.entity.EventoEstudio ev =
+                io.github.jhoel0521.studyplan.domain.entity.EventoEstudio.crear(
                         5L,
-                        io.github.jhoel0521.studyplan.domain.TipoEventoEstudio.REANUDACION,
+                        io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio.REANUDACION,
                         1_700_000_000_000L,
                         -240,
                         "",
-                        io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA)
+                        io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio.DESCANSO_COMIDA)
                         .valor();
         EventoEstudioEntity entidad = Mapeadores.aEntidad(ev);
         assertEquals("DESCANSO_COMIDA", entidad.topico);
         assertEquals(
-                io.github.jhoel0521.studyplan.domain.TopicoEventoEstudio.DESCANSO_COMIDA,
+                io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio.DESCANSO_COMIDA,
                 Mapeadores.aDominio(entidad).topico().orElse(null));
 
         entidad.topico = null;

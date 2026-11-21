@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui;
 
-import io.github.jhoel0521.studyplan.domain.CodigoEstadoSesion;
+import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 
 /**
  * Rol de color de cada estado de sesión (design.md, decisión 5a). Java puro, sin {@code android.*}, para probar el

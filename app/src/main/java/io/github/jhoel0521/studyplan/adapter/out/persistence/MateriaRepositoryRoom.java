@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.domain.Materia;
+import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**
  * Adaptador de salida: guarda las materias en Room.

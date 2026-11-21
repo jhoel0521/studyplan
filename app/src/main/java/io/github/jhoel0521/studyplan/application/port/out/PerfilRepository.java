@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.port.out;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.domain.Perfil;
+import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 
 /**
  * Puerto de salida: almacén del perfil del estudiante. Lo implementa un adaptador (Room); el núcleo solo
