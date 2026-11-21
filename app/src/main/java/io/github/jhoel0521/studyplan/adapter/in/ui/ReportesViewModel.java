@@ -9,9 +9,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.github.jhoel0521.studyplan.application.port.in.reportes.GenerarReporteEstudio;
-import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ExportadorReporte;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.system.ResultadoExportacion;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
 import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;

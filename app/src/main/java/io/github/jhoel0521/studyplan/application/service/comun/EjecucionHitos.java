@@ -3,10 +3,10 @@ package io.github.jhoel0521.studyplan.application.service.comun;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorPomodoro;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorTiempoReal;
 import io.github.jhoel0521.studyplan.domain.readmodel.CandidataInvasion;

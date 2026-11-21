@@ -14,7 +14,7 @@ import io.github.jhoel0521.studyplan.application.port.in.materias.ListarMaterias
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.PlanificarSesion;
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.RegistrarSesionPasada;
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.ReprogramarSesion;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
 import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

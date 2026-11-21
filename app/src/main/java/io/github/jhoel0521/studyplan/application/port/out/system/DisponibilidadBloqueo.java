@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.system;
 
 /**
  * Puerto de salida: ¿el teléfono tiene un método de bloqueo (huella, PIN, patrón o contraseña)? Lo implementa un

@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.EventoEstudioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 

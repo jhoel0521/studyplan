@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
+import io.github.jhoel0521.studyplan.application.port.out.system.MarcadorSalidaApp;
 
 /**
  * Persiste de forma ligera en {@link SharedPreferences} la salida de una sesión en curso para

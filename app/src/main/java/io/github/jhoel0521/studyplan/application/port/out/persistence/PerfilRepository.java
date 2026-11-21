@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.persistence;
 
 import java.util.Optional;
 

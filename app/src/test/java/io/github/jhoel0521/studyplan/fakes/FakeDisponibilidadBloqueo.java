@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import io.github.jhoel0521.studyplan.application.port.out.DisponibilidadBloqueo;
+import io.github.jhoel0521.studyplan.application.port.out.system.DisponibilidadBloqueo;
 
 /**
  * Puerto de salida falso: el teléfono tiene o no un método de bloqueo, según lo fije la prueba.

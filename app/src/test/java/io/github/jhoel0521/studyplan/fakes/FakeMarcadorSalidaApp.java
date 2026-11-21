@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
+import io.github.jhoel0521.studyplan.application.port.out.system.MarcadorSalidaApp;
 
 /**
  * Falso de {@link MarcadorSalidaApp} para pruebas unitarias (HU-40, HU-41).

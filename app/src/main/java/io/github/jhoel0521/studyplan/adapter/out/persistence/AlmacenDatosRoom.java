@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
-import io.github.jhoel0521.studyplan.application.port.out.AlmacenDatos;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AlmacenDatos;
 
 /**
  * Adaptador de salida: vacía todas las tablas de la base. Incluye las tablas de épicas futuras porque usa

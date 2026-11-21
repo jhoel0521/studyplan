@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;

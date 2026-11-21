@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.system;
 
 import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
 import io.github.jhoel0521.studyplan.domain.readmodel.ReporteEstudio;

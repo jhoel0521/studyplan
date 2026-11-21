@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
 
 /**
  * Falso de {@link ProgramadorAvisosSesion} para pruebas unitarias (HU-23, HU-42, HU-43).

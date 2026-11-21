@@ -32,8 +32,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
-import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ExportadorReporte;
+import io.github.jhoel0521.studyplan.application.port.out.system.ResultadoExportacion;
 import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
 import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
 import io.github.jhoel0521.studyplan.domain.service.GeneradorCsvReporte;

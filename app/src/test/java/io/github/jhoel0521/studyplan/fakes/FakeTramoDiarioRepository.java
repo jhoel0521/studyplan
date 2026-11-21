@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 

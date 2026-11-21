@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
+import io.github.jhoel0521.studyplan.application.port.out.system.ControladorNoMolestar;
 
 /**
  * Falso de {@link ControladorNoMolestar} para pruebas unitarias (HU-24, RN-18).

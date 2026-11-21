@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.fakes;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.jhoel0521.studyplan.application.port.out.SesionesDeMateria;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionesDeMateria;
 
 /**
  * Puerto de salida falso: permite declarar cuántas sesiones tiene cada materia.

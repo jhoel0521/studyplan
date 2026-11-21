@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.system;
 
 /**
  * Puerto de salida para aplicar y restaurar de forma segura el modo No molestar del dispositivo

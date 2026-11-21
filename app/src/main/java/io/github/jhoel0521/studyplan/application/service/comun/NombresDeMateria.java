@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service.comun;
 
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 
 /**

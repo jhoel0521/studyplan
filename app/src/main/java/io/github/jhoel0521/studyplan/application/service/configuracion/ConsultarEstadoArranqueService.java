@@ -1,8 +1,8 @@
 package io.github.jhoel0521.studyplan.application.service.configuracion;
 
 import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConsultarEstadoArranque;
-import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AjustesRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.PerfilRepository;
 import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
 
 /**

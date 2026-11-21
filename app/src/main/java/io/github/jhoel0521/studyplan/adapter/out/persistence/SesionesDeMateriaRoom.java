@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.out.SesionesDeMateria;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionesDeMateria;
 
 /**
  * Adaptador real de {@link SesionesDeMateria} respaldado por Room que sustituye al adaptador

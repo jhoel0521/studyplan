@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
 import io.github.jhoel0521.studyplan.fakes.FakeProgramadorAvisosSesion;
 
 /**

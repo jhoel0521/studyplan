@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import io.github.jhoel0521.studyplan.application.port.out.AlmacenDatos;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AlmacenDatos;
 
 /**
  * Puerto de salida falso que solo cuenta cuántas veces se pidió borrar.

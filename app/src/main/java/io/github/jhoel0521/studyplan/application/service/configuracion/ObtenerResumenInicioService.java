@@ -9,12 +9,12 @@ import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.in.configuracion.ObtenerResumenInicio;
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
-import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MetaSemanalRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.PerfilRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;

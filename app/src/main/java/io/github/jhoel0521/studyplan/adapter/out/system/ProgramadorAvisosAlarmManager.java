@@ -14,8 +14,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorRecordatorios;
 
 /**
  * Programa hitos de sesiones {@code EN_CURSO} ({@link AlarmManager#setAlarmClock}) y recordatorios

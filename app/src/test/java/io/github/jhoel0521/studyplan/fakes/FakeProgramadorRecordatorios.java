@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorRecordatorios;
 
 /**
  * Falso en memoria de {@link ProgramadorRecordatorios} para pruebas unitarias ({@code HU-34}).

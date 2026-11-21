@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.fakes;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.PerfilRepository;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 
 /**

@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.system;
 
 /**
  * Puerto de salida ligero para persistir la marca de salida de la app de una sesión en curso

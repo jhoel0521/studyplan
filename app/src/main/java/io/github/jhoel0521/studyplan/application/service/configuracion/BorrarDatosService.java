@@ -3,11 +3,11 @@ package io.github.jhoel0521.studyplan.application.service.configuracion;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.configuracion.BorrarDatos;
-import io.github.jhoel0521.studyplan.application.port.out.AlmacenDatos;
-import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
-import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
-import io.github.jhoel0521.studyplan.application.port.out.MarcadorSalidaApp;
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AlmacenDatos;
+import io.github.jhoel0521.studyplan.application.port.out.system.ControladorNoMolestar;
+import io.github.jhoel0521.studyplan.application.port.out.system.ExportadorReporte;
+import io.github.jhoel0521.studyplan.application.port.out.system.MarcadorSalidaApp;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 
 /**

@@ -7,7 +7,7 @@ import android.os.Build;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
+import io.github.jhoel0521.studyplan.application.port.out.system.ControladorNoMolestar;
 
 /**
  * Adaptador de sistema para controlar el modo No molestar del dispositivo de forma segura

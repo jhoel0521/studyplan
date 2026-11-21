@@ -11,10 +11,10 @@ import java.util.Set;
 
 import io.github.jhoel0521.studyplan.application.port.in.calendario.ConsultarCalendario;
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.readmodel.BloqueHorarioCalendario;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorRangoHorario;
 import io.github.jhoel0521.studyplan.domain.readmodel.CeldaDiaMes;

@@ -1,9 +1,9 @@
 package io.github.jhoel0521.studyplan.application.service.materias;
 
 import io.github.jhoel0521.studyplan.application.port.in.materias.RegistrarMateria;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MetaSemanalRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;

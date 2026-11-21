@@ -3,9 +3,9 @@ package io.github.jhoel0521.studyplan.application.service.sesiones;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.CompletarSesion;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.service.RepartidorPorDia;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;

@@ -7,10 +7,10 @@ import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.reportes.GenerarReporteEstudio;
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorEstadisticas;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;

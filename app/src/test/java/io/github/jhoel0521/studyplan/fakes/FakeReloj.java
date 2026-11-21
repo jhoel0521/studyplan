@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.fakes;
 
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
 import io.github.jhoel0521.studyplan.domain.valueobject.Instante;

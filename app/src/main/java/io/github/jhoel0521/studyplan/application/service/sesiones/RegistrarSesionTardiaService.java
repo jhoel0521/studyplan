@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.sesiones.RegistrarSesionTardia;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
-import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MetaSemanalRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.PerfilRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;

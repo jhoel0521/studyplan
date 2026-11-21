@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ResultadoExportacion;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.enumeration.FormatoExportacionReporte;
 import io.github.jhoel0521.studyplan.domain.valueobject.PeriodoEstadisticas;

@@ -10,11 +10,11 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import io.github.jhoel0521.studyplan.application.port.in.metas.ConsultarProgresoMetas;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
-import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.TramoDiarioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MetaSemanalRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.PerfilRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorProgresoMetas;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;

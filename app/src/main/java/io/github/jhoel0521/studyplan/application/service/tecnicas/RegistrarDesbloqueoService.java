@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.in.tecnicas.RegistrarDesbloqueo;
-import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.EventoEstudioRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;

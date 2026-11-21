@@ -1,8 +1,8 @@
 package io.github.jhoel0521.studyplan.application.service.configuracion;
 
 import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarBloqueo;
-import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
-import io.github.jhoel0521.studyplan.application.port.out.DisponibilidadBloqueo;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AjustesRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.DisponibilidadBloqueo;
 
 /**
  * Implementa {@link ConfigurarBloqueo}: solo activa el bloqueo si el teléfono tiene un método de bloqueo.

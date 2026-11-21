@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricManager.Authenticators;
 
-import io.github.jhoel0521.studyplan.application.port.out.DisponibilidadBloqueo;
+import io.github.jhoel0521.studyplan.application.port.out.system.DisponibilidadBloqueo;
 
 /**
  * Adaptador de salida: pregunta al sistema si el teléfono tiene huella, PIN, patrón o contraseña configurados.

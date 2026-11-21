@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
-import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.AjustesRepository;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 
 /**

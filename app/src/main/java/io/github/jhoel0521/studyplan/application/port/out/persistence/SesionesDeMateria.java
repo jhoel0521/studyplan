@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.persistence;
 
 /**
  * Puerto de salida: ¿cuántas sesiones tiene registradas una materia? Lo usa la regla de que una materia con

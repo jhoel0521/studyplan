@@ -1,4 +1,4 @@
-package io.github.jhoel0521.studyplan.application.port.out;
+package io.github.jhoel0521.studyplan.application.port.out.system;
 
 /**
  * Puerto de salida segregado para programar y cancelar avisos previos de sesiones en estado

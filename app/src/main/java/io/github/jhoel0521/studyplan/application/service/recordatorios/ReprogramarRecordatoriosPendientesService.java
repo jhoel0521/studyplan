@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.github.jhoel0521.studyplan.application.port.in.recordatorios.ReprogramarRecordatoriosPendientes;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
-import io.github.jhoel0521.studyplan.application.port.out.Reloj;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorRecordatorios;
+import io.github.jhoel0521.studyplan.application.port.out.system.Reloj;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.readmodel.AvisoRecordatorioPendiente;
 import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;

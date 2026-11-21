@@ -2,8 +2,8 @@ package io.github.jhoel0521.studyplan.application.service.comun;
 
 import java.util.List;
 
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.readmodel.ConflictoHorario;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

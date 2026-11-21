@@ -1,8 +1,8 @@
 package io.github.jhoel0521.studyplan.application.service.materias;
 
 import io.github.jhoel0521.studyplan.application.port.in.materias.EliminarMateria;
-import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
-import io.github.jhoel0521.studyplan.application.port.out.SesionesDeMateria;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
+import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionesDeMateria;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;

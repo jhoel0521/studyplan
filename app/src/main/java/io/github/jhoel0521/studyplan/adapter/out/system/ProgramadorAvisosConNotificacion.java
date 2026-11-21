@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.adapter.out.system;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;
+import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
 
 /**
  * Decorador de {@link ProgramadorAvisosSesion}: además de programar o cancelar los hitos, refresca la
