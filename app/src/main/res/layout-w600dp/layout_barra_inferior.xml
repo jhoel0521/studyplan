@@ -10,5 +10,5 @@
     app:paddingStartSystemWindowInsets="false"
     app:paddingTopSystemWindowInsets="false"
     app:menu="@menu/menu_barra_inferior"
-    tools:context=".adapter.in.ui.MainActivity"
+    tools:context=".adapter.in.ui.configuracion.MainActivity"
     tools:fitsSystemWindows="true" />

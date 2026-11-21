@@ -3,6 +3,21 @@ package io.github.jhoel0521.studyplan.adapter.in.ui;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import io.github.jhoel0521.studyplan.adapter.in.ui.calendario.CalendarioViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.AjustesViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.BorrarDatosViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.InicioViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.PerfilInicialViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.ProteccionViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.estadisticas.EstadisticasViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.materias.ListaMateriasViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.materias.MateriaFormularioViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.metas.HistorialMetasViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.reportes.ReportesViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.sesiones.SesionDetalleViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.sesiones.SesionFormularioViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.RepartoSesionViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.SesionEnCursoViewModel;
 
 /**
  * Crea los ViewModel con los casos de uso que expone {@link StudyPlanApplication} (inyección manual).

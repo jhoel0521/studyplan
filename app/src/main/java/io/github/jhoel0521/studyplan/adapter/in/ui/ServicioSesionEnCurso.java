@@ -11,6 +11,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.NotificadorSesion;
 
 /**
  * Servicio en primer plano que sostiene la notificación de la sesión mientras esté {@code EN_CURSO}

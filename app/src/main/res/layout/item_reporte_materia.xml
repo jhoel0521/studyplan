@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:minHeight="48dp"
     android:paddingVertical="8dp"
-    tools:context=".adapter.in.ui.ReportesActivity">
+    tools:context=".adapter.in.ui.reportes.ReportesActivity">
 
     <ImageView
         android:id="@+id/indicadorColorMateriaReporte"

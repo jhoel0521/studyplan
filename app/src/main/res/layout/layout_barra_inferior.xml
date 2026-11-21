@@ -8,5 +8,5 @@
     android:layout_height="wrap_content"
     app:labelVisibilityMode="labeled"
     app:menu="@menu/menu_barra_inferior"
-    tools:context=".adapter.in.ui.MainActivity"
+    tools:context=".adapter.in.ui.configuracion.MainActivity"
     tools:fitsSystemWindows="true" />

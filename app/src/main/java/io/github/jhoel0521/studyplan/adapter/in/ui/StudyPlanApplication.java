@@ -127,6 +127,11 @@ import io.github.jhoel0521.studyplan.application.service.tecnicas.ResolverRegres
 import io.github.jhoel0521.studyplan.application.service.configuracion.SesionBloqueo;
 import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
+import io.github.jhoel0521.studyplan.adapter.in.ui.calendario.PreferenciaVistaCalendario;
+import io.github.jhoel0521.studyplan.adapter.in.ui.comun.AplicadorApariencia;
+import io.github.jhoel0521.studyplan.adapter.in.ui.comun.ContadorActividades;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.NotificadorSesion;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.SesionEnCursoActivity;
 
 /**
  * Raíz de composición: crea la base, los adaptadores y los servicios a mano y los expone a las Activities y a los

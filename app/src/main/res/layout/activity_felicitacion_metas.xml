@@ -8,7 +8,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="24dp"
-    tools:context=".adapter.in.ui.FelicitacionMetasActivity"
+    tools:context=".adapter.in.ui.metas.FelicitacionMetasActivity"
     tools:fitsSystemWindows="true">
 
     <Space

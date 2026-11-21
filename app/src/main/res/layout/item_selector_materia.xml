@@ -14,7 +14,7 @@
     android:paddingTop="10dp"
     android:paddingEnd="16dp"
     android:paddingBottom="10dp"
-    tools:context=".adapter.in.ui.MainActivity"
+    tools:context=".adapter.in.ui.configuracion.MainActivity"
     tools:fitsSystemWindows="true">
 
     <!-- Indicador de la fila elegida; la fila entera es el objetivo táctil y TalkBack la anuncia como opción. -->

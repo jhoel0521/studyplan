@@ -37,6 +37,8 @@ import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.adapter.in.ui.comun.Pruebas;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.NotificadorSesion;
 
 /**
  * Pruebas instrumentadas de {@link ReceptorAvisosSesion}, registro de acciones en el manifiesto y

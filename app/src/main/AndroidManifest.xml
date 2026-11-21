@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudyPlan">
         <activity
-            android:name=".adapter.in.ui.MainActivity"
+            android:name=".adapter.in.ui.configuracion.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -33,55 +33,55 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".adapter.in.ui.PerfilInicialActivity"
+            android:name=".adapter.in.ui.configuracion.PerfilInicialActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".adapter.in.ui.AutenticacionActivity"
+            android:name=".adapter.in.ui.configuracion.AutenticacionActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".adapter.in.ui.AjustesActivity"
+            android:name=".adapter.in.ui.configuracion.AjustesActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.BorrarDatosActivity"
+            android:name=".adapter.in.ui.configuracion.BorrarDatosActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.MateriasActivity"
+            android:name=".adapter.in.ui.materias.MateriasActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.MateriaFormularioActivity"
+            android:name=".adapter.in.ui.materias.MateriaFormularioActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".adapter.in.ui.SesionFormularioActivity"
+            android:name=".adapter.in.ui.sesiones.SesionFormularioActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".adapter.in.ui.SesionDetalleActivity"
+            android:name=".adapter.in.ui.sesiones.SesionDetalleActivity"
             android:exported="false"
-            android:parentActivityName=".adapter.in.ui.MainActivity"
+            android:parentActivityName=".adapter.in.ui.configuracion.MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name=".adapter.in.ui.CalendarioActivity"
+            android:name=".adapter.in.ui.calendario.CalendarioActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.EstadisticasActivity"
+            android:name=".adapter.in.ui.estadisticas.EstadisticasActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.ReportesActivity"
+            android:name=".adapter.in.ui.reportes.ReportesActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.SesionEnCursoActivity"
+            android:name=".adapter.in.ui.tecnicas.SesionEnCursoActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.RepartoSesionActivity"
+            android:name=".adapter.in.ui.tecnicas.RepartoSesionActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.HistorialMetasActivity"
+            android:name=".adapter.in.ui.metas.HistorialMetasActivity"
             android:exported="false" />
         <activity
-            android:name=".adapter.in.ui.FelicitacionMetasActivity"
+            android:name=".adapter.in.ui.metas.FelicitacionMetasActivity"
             android:exported="false" />
 
         <receiver

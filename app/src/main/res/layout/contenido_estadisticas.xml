@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".adapter.in.ui.EstadisticasActivity"
+    tools:context=".adapter.in.ui.estadisticas.EstadisticasActivity"
     tools:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar

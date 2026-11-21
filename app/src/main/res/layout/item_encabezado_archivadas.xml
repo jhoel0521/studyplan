@@ -11,7 +11,7 @@
     android:orientation="horizontal"
     android:paddingStart="24dp"
     android:paddingEnd="24dp"
-    tools:context=".adapter.in.ui.MateriasActivity"
+    tools:context=".adapter.in.ui.materias.MateriasActivity"
     tools:fitsSystemWindows="true">
 
     <TextView

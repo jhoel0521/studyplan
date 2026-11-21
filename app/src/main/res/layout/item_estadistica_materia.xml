@@ -8,7 +8,7 @@
     android:minHeight="48dp"
     android:orientation="horizontal"
     android:paddingVertical="6dp"
-    tools:context=".adapter.in.ui.EstadisticasActivity">
+    tools:context=".adapter.in.ui.estadisticas.EstadisticasActivity">
 
     <ImageView
         android:id="@+id/indicadorColorMateriaEstadistica"

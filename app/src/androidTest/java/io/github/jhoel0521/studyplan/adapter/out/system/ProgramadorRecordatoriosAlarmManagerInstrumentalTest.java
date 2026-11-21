@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.in.ui.ReceptorAvisosSesion;
-import io.github.jhoel0521.studyplan.adapter.in.ui.SesionEnCursoActivity;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.SesionEnCursoActivity;
 import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
 
 /**

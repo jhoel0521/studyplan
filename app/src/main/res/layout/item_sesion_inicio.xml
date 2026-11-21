@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:minHeight="72dp"
-    tools:context=".adapter.in.ui.MainActivity"
+    tools:context=".adapter.in.ui.configuracion.MainActivity"
     tools:fitsSystemWindows="true">
 
     <LinearLayout

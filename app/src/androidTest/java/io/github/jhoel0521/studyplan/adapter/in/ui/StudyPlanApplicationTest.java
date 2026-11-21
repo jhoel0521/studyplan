@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import io.github.jhoel0521.studyplan.adapter.in.ui.comun.Pruebas;
 
 /**
  * La raíz de composición expone todos los servicios sin nulos.

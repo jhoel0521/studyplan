@@ -20,6 +20,8 @@ import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.enumeration.TopicoEventoEstudio;
+import io.github.jhoel0521.studyplan.adapter.in.ui.comun.FormatoSesion;
+import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.NotificadorSesion;
 
 /**
  * Receptor de alarmas de hitos, recordatorios previos, acciones de notificación ([Sigo] / [Terminé]),

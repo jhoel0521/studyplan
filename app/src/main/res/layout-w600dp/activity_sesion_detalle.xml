@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".adapter.in.ui.SesionDetalleActivity"
+    tools:context=".adapter.in.ui.sesiones.SesionDetalleActivity"
     tools:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
