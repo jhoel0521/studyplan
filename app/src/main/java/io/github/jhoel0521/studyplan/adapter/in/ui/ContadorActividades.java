@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.PowerManager;
 
 import androidx.annotation.NonNull;
@@ -28,6 +26,9 @@ import io.github.jhoel0521.studyplan.domain.SalidaRegistrada;
  * {@code false}) no es una salida: se registra el bloqueo de pantalla; al volver a primer plano se registra el
  * desbloqueo.
  *
+ * <p>Una salida de la app no se registra al instante: tiene una ventana de gracia de 1 minuto. Si el estudiante
+ * vuelve antes no pasa nada; si no, se registra con la hora real en que salió ({@link SalidaConGracia}).
+ *
  * <p>Implementa: HU-04 (pedir autenticación al volver a primer plano), HU-40 (registrar salida de
  * la app si existe una sesión {@code EN_CURSO}) y HU-50 (bloqueo y desbloqueo de pantalla).
  */
@@ -46,9 +47,11 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
      */
     static final long ESPERA_DECISION_MS = 1_200L;
 
-    private final Handler manejador = new Handler(Looper.getMainLooper());
-    private Runnable decisionPendiente;
-    private int iniciadas;
+    /** Ventana de gracia: salir y volver antes de este tiempo no cuenta como salida (HU-40, RN-23). */
+    static final long GRACIA_SALIDA_MS = 60_000L;
+
+    private final SalidaConGracia salidaConGracia;
+    private volatile int iniciadas;
     private boolean salioDeLaApp;
     private volatile boolean pendienteEvaluarRecuperacion = true;
 
@@ -77,6 +80,23 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
         this.registrarDesbloqueo = registrarDesbloqueo;
         this.ejecutor = ejecutor;
         this.appContext = appContext == null ? null : appContext.getApplicationContext();
+        this.salidaConGracia = new SalidaConGracia(
+                System::currentTimeMillis,
+                new ProgramadorRetardadoHandler(),
+                this::pantallaApagada,
+                new SalidaConGracia.Destino() {
+                    @Override
+                    public void registrarBloqueo() {
+                        alRegistrarBloqueo();
+                    }
+
+                    @Override
+                    public void confirmarSalida(long instanteSalidaMs, boolean avisar) {
+                        alConfirmarSalida(instanteSalidaMs, avisar);
+                    }
+                },
+                ESPERA_DECISION_MS,
+                GRACIA_SALIDA_MS);
     }
 
     public boolean consumirEvaluacionRecuperacion() {
@@ -91,18 +111,26 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
 
     /** Restablece el estado de primer plano entre pruebas instrumentadas. */
     public void reiniciarParaPruebas() {
-        cancelarDecisionPendiente();
+        salidaConGracia.reiniciar();
         salioDeLaApp = false;
         pendienteEvaluarRecuperacion = false;
     }
 
+    /** Acorta la ventana de gracia para las pruebas instrumentadas; {@link #reiniciarParaPruebas()} la restablece. */
+    public void fijarGraciaParaPruebas(long graciaMs) {
+        salidaConGracia.fijarGraciaMs(graciaMs);
+    }
+
     @Override
     public void onActivityStarted(@NonNull Activity actividad) {
-        cancelarDecisionPendiente();
         if (iniciadas == 0 && salioDeLaApp) {
             sesion.alVolverAPrimerPlano();
             salioDeLaApp = false;
-            pendienteEvaluarRecuperacion = true;
+            SalidaConGracia.Retorno retorno = salidaConGracia.actividadIniciada();
+            // Volver dentro de la gracia no escribió ningún evento: pedir la recuperación abriría una pregunta falsa.
+            if (retorno != SalidaConGracia.Retorno.DENTRO_DE_GRACIA) {
+                pendienteEvaluarRecuperacion = true;
+            }
             if (registrarDesbloqueo != null && ejecutor != null && appContext != null) {
                 ejecutor.execute(() -> {
                     registrarDesbloqueo.ejecutar();
@@ -119,45 +147,33 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
         iniciadas--;
         if (iniciadas == 0 && !actividad.isChangingConfigurations()) {
             salioDeLaApp = true;
-            programarDecision();
+            salidaConGracia.ultimaActividadDetenida();
         }
     }
 
-    /** Espera {@link #ESPERA_DECISION_MS} y decide entonces entre bloqueo de pantalla y salida de la app. */
-    private void programarDecision() {
-        cancelarDecisionPendiente();
-        decisionPendiente = this::decidirBloqueoOSalida;
-        manejador.postDelayed(decisionPendiente, ESPERA_DECISION_MS);
-    }
-
-    private void cancelarDecisionPendiente() {
-        if (decisionPendiente != null) {
-            manejador.removeCallbacks(decisionPendiente);
-            decisionPendiente = null;
+    /** La pantalla se apagó con una pantalla de StudyPlan en primer plano: es un bloqueo (HU-50). */
+    private void alRegistrarBloqueo() {
+        if (registrarBloqueo != null && ejecutor != null) {
+            ejecutor.execute(registrarBloqueo::ejecutar);
         }
     }
 
-    /**
-     * Si ninguna Activity volvió a iniciarse: con la pantalla apagada es un bloqueo (HU-50); con la pantalla
-     * encendida es una salida de la app (HU-40).
-     */
-    private void decidirBloqueoOSalida() {
-        decisionPendiente = null;
-        if (iniciadas > 0) {
+    /** Pasó la ventana de gracia fuera de la app: se registra la salida con la hora real (HU-40). */
+    private void alConfirmarSalida(long instanteSalidaMs, boolean avisar) {
+        if (registrarSalida == null || ejecutor == null || appContext == null) {
             return;
         }
-        if (pantallaApagada() && registrarBloqueo != null && ejecutor != null) {
-            ejecutor.execute(registrarBloqueo::ejecutar);
-        } else if (registrarSalida != null && ejecutor != null && appContext != null) {
-            ejecutor.execute(() -> {
-                Optional<SalidaRegistrada> salida = registrarSalida.ejecutar(System.currentTimeMillis());
-                if (salida.isPresent()) {
-                    NotificadorSesion.mostrarAvisoRetorno(
-                            appContext, salida.get().sesionId(), salida.get().nombreMateria());
-                    NotificadorSesion.refrescar(appContext, salida.get().sesionId());
-                }
-            });
-        }
+        ejecutor.execute(() -> {
+            Optional<SalidaRegistrada> salida = registrarSalida.ejecutar(instanteSalidaMs);
+            // Si el estudiante ya volvió mientras se escribía el evento, no se le avisa.
+            if (salida.isPresent() && avisar && iniciadas == 0) {
+                NotificadorSesion.mostrarAvisoRetorno(
+                        appContext, salida.get().sesionId(), salida.get().nombreMateria());
+            }
+            if (salida.isPresent()) {
+                NotificadorSesion.refrescar(appContext, salida.get().sesionId());
+            }
+        });
     }
 
     /** Indica si la pantalla está apagada: la app estaba en primer plano y el sistema la bloqueó (HU-50). */
