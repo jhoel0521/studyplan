@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.ResolverRegresoApp;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

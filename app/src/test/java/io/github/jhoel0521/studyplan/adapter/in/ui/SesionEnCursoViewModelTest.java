@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.application.service.ConsultarEjecucionSesionService;
 import io.github.jhoel0521.studyplan.application.service.DecidirFinPlanificadoOInvasionService;
 import io.github.jhoel0521.studyplan.application.service.DetenerSesionService;

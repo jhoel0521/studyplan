@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarAjustesEstudio;
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo;
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarRecordatorioPorDefecto;
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.ConfigurarAjustesEstudio;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarApariencia;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarBloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.recordatorios.ConfigurarRecordatorioPorDefecto;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.DefinirMetaSemanal;
-import io.github.jhoel0521.studyplan.application.port.in.EstudiarAhora;
-import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
-import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
+import io.github.jhoel0521.studyplan.application.port.in.metas.DefinirMetaSemanal;
+import io.github.jhoel0521.studyplan.application.port.in.metas.EstudiarAhora;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.IniciarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.materias.ListarMaterias;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ObtenerResumenInicio;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;

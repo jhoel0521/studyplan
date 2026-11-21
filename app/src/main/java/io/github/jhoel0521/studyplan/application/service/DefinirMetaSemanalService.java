@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.DefinirMetaSemanal;
+import io.github.jhoel0521.studyplan.application.port.in.metas.DefinirMetaSemanal;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;

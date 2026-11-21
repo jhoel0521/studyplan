@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.RepartirTramoSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.ConsultarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.RepartirTramoSesion;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorRepartoTramo;

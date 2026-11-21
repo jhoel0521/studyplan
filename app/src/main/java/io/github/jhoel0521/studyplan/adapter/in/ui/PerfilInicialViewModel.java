@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarPerfil;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarPerfil;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;
 

@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarAjustesEstudio;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.ConfigurarAjustesEstudio;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 import io.github.jhoel0521.studyplan.domain.valueobject.ConfiguracionPomodoro;

@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarPerfil;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConsultarPerfil;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 

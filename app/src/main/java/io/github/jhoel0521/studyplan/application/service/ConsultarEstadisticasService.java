@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarEstadisticas;
-import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.in.estadisticas.ConsultarEstadisticas;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;

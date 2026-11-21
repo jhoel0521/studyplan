@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarApariencia;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarApariencia;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
 import io.github.jhoel0521.studyplan.domain.enumeration.Tema;

@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
 
-import io.github.jhoel0521.studyplan.application.port.in.GenerarReporteEstudio;
+import io.github.jhoel0521.studyplan.application.port.in.reportes.GenerarReporteEstudio;
 import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;

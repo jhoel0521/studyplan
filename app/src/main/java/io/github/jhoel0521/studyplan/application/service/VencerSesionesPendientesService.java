@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.application.service;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorAvisosSesion;

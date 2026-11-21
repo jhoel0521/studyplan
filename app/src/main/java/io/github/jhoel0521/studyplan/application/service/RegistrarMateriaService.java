@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service;
 
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.RegistrarMateria;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;

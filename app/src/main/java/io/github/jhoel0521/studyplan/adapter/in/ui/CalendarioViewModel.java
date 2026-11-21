@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarCalendario;
+import io.github.jhoel0521.studyplan.application.port.in.calendario.ConsultarCalendario;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.domain.readmodel.DatosCalendario;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;

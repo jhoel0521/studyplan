@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
+import io.github.jhoel0521.studyplan.application.port.in.materias.ListarMaterias;
 import io.github.jhoel0521.studyplan.domain.readmodel.ListadoMaterias;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;

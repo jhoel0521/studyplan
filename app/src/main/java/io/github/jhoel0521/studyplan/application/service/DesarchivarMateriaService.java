@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service;
 
-import io.github.jhoel0521.studyplan.application.port.in.DesarchivarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.DesarchivarMateria;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;

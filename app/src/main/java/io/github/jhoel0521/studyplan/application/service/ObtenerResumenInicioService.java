@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.in.ObtenerResumenInicio;
-import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ObtenerResumenInicio;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;

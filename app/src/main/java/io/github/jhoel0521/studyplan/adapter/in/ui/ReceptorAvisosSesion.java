@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
-import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.domain.readmodel.AvisoRecordatorioPendiente;
 import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;

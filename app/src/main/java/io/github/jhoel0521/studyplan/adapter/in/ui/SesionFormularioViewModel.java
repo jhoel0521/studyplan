@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.ListarMaterias;
-import io.github.jhoel0521.studyplan.application.port.in.PlanificarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionPasada;
-import io.github.jhoel0521.studyplan.application.port.in.ReprogramarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConsultarAjustes;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.ConsultarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.materias.ListarMaterias;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.PlanificarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.RegistrarSesionPasada;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.ReprogramarSesion;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;

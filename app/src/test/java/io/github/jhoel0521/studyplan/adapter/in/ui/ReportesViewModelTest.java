@@ -15,7 +15,7 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Queue;
 
-import io.github.jhoel0521.studyplan.application.port.in.GenerarReporteEstudio;
+import io.github.jhoel0521.studyplan.application.port.in.reportes.GenerarReporteEstudio;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
 import io.github.jhoel0521.studyplan.application.service.GenerarReporteEstudioService;
 import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;

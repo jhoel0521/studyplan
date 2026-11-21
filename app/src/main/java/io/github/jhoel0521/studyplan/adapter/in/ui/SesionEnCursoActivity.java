@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.application.port.in.DecidirFinPlanificadoOInvasion;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.DecidirFinPlanificadoOInvasion;
 import io.github.jhoel0521.studyplan.domain.service.CalculadorPomodoro;
 import io.github.jhoel0521.studyplan.domain.readmodel.CandidataInvasion;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

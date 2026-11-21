@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarAjustes;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConsultarAjustes;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 

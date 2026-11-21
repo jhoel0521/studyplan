@@ -3,7 +3,7 @@ package io.github.jhoel0521.studyplan.application.service;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionPasada;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.RegistrarSesionPasada;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;

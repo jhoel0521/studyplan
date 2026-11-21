@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.BorrarDatos;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.BorrarDatos;
 import io.github.jhoel0521.studyplan.application.port.out.AlmacenDatos;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.ExportadorReporte;

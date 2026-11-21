@@ -12,10 +12,10 @@ import androidx.annotation.Nullable;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.ControlarSesionBloqueo;
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarBloqueoPantalla;
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarDesbloqueo;
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarSalidaApp;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ControlarSesionBloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.RegistrarBloqueoPantalla;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.RegistrarDesbloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.RegistrarSalidaApp;
 import io.github.jhoel0521.studyplan.domain.readmodel.SalidaRegistrada;
 
 /**

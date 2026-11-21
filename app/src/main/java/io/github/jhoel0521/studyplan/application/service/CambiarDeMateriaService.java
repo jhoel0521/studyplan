@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.in.CambiarDeMateria;
+import io.github.jhoel0521.studyplan.application.port.in.metas.CambiarDeMateria;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;

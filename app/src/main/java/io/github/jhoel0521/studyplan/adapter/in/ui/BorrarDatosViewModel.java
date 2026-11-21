@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.BorrarDatos;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.BorrarDatos;
 import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 
 /**

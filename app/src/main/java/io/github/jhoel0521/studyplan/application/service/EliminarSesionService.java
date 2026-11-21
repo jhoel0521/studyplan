@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.EliminarSesion;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

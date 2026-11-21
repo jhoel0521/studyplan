@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarProgresoMetas;
+import io.github.jhoel0521.studyplan.application.port.in.metas.ConsultarProgresoMetas;
 import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 
 /**

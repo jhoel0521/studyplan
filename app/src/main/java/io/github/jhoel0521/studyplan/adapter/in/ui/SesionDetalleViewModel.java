@@ -8,11 +8,11 @@ import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.jhoel0521.studyplan.application.port.in.CompletarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.EliminarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.IniciarSesion;
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarSesionTardia;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.CompletarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.ConsultarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.EliminarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.IniciarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.RegistrarSesionTardia;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;

@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.github.jhoel0521.studyplan.R;
-import io.github.jhoel0521.studyplan.application.port.in.ResolverRegresoApp;
+import io.github.jhoel0521.studyplan.application.port.in.tecnicas.ResolverRegresoApp;
 import io.github.jhoel0521.studyplan.domain.readmodel.CierreSesion;
 import io.github.jhoel0521.studyplan.domain.readmodel.DiagnosticoRegresoApp;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;

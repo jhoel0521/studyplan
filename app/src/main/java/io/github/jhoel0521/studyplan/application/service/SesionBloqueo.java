@@ -1,6 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service;
 
-import io.github.jhoel0521.studyplan.application.port.in.ControlarSesionBloqueo;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ControlarSesionBloqueo;
 
 /**
  * Estado «bloqueada» de la sesión, en memoria. <b>Nace bloqueado</b> hasta que se leen los ajustes: si Android

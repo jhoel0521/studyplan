@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarCalendario;
-import io.github.jhoel0521.studyplan.application.port.in.VencerSesionesPendientes;
+import io.github.jhoel0521.studyplan.application.port.in.calendario.ConsultarCalendario;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.VencerSesionesPendientes;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;
 import io.github.jhoel0521.studyplan.application.port.out.SesionRepository;

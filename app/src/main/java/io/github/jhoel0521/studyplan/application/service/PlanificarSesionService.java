@@ -2,7 +2,7 @@ package io.github.jhoel0521.studyplan.application.service;
 
 import java.util.Objects;
 
-import io.github.jhoel0521.studyplan.application.port.in.PlanificarSesion;
+import io.github.jhoel0521.studyplan.application.port.in.sesiones.PlanificarSesion;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ProgramadorRecordatorios;
 import io.github.jhoel0521.studyplan.application.port.out.Reloj;

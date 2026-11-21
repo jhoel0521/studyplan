@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConfigurarBloqueo.ResultadoActivacion;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarBloqueo.ResultadoActivacion;
 import io.github.jhoel0521.studyplan.fakes.FakeAjustesRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeDisponibilidadBloqueo;
 

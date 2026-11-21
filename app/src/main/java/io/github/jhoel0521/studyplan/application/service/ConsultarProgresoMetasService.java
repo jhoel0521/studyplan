@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarProgresoMetas;
+import io.github.jhoel0521.studyplan.application.port.in.metas.ConsultarProgresoMetas;
 import io.github.jhoel0521.studyplan.application.port.out.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.MetaSemanalRepository;
 import io.github.jhoel0521.studyplan.application.port.out.PerfilRepository;

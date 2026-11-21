@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.github.jhoel0521.studyplan.application.port.in.EstudiarAhora;
+import io.github.jhoel0521.studyplan.application.port.in.metas.EstudiarAhora;
 import io.github.jhoel0521.studyplan.application.port.out.AjustesRepository;
 import io.github.jhoel0521.studyplan.application.port.out.ControladorNoMolestar;
 import io.github.jhoel0521.studyplan.application.port.out.EventoEstudioRepository;

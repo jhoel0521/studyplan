@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import io.github.jhoel0521.studyplan.application.port.in.ArchivarMateria;
-import io.github.jhoel0521.studyplan.application.port.in.ConsultarMateria;
-import io.github.jhoel0521.studyplan.application.port.in.DesarchivarMateria;
-import io.github.jhoel0521.studyplan.application.port.in.EditarMateria;
-import io.github.jhoel0521.studyplan.application.port.in.EliminarMateria;
-import io.github.jhoel0521.studyplan.application.port.in.RegistrarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.ArchivarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.ConsultarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.DesarchivarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.EditarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.EliminarMateria;
+import io.github.jhoel0521.studyplan.application.port.in.materias.RegistrarMateria;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;
 
