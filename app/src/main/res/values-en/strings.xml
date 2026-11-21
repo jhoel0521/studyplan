@@ -231,6 +231,7 @@
     <string name="notif_sesion_pausa_titulo">Paused</string>
     <string name="notif_sesion_privada_texto">Tap to go back to the session</string>
     <string name="notif_sesion_texto_con_tiempo">%1$s · %2$s</string>
+    <string name="notif_sesion_privada_texto_con_tiempo">Tap to go back to the session · %1$s</string>
     <string name="notif_sesion_descarta">Session controls</string>
     <string name="notif_fin_plan_titulo">Still studying?</string>
     <string name="notif_fin_plan_cuerpo">Planned end time reached for %1$s</string>

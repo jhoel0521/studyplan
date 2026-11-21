@@ -76,9 +76,9 @@ public class NotificacionSesionEspressoTest {
         assertEquals(contexto.getString(R.string.sesion_en_curso_detener), n.actions[1].title.toString());
         assertEquals(contexto.getString(R.string.sesion_no_molestar_apagado), n.actions[2].title.toString());
         assertNotNull("Debe llevar el logo de la app como icono grande", n.getLargeIcon());
-        assertTrue("Debe llevar la sesión multimedia que activa la tarjeta de la pantalla de bloqueo",
+        assertFalse("No debe ser un reproductor: sin sesión multimedia",
                 n.extras.containsKey(Notification.EXTRA_MEDIA_SESSION));
-        assertTrue(SesionMultimedia.estaActiva());
+        assertEquals("Categoría de estado, no de transporte", Notification.CATEGORY_STATUS, n.category);
         assertNotNull(n.deleteIntent);
         assertTrue("El servicio debe estar corriendo", esperarServicio(true));
         assertTrue(id > 0);
@@ -135,7 +135,6 @@ public class NotificacionSesionEspressoTest {
 
         assertTrue("La notificación debe desaparecer", esperarSinNotificacion());
         assertTrue("El servicio debe detenerse", esperarServicio(false));
-        assertFalse("La sesión multimedia debe liberarse", SesionMultimedia.estaActiva());
     }
 
     @Test
@@ -158,6 +157,22 @@ public class NotificacionSesionEspressoTest {
             assertTrue(n.publicVersion.actions[1].isAuthenticationRequired());
             assertFalse(n.actions[0].isAuthenticationRequired());
         }
+    }
+
+    /** RNF-12, HU-49: con el bloqueo de la app y la sesión en pausa se muestra el tiempo, sin la materia. */
+    @Test
+    public void conElBloqueoDeLaAppYEnPausaSeMuestraElTiempoSinLaMateria() throws Exception {
+        long id = iniciar(TecnicaEstudio.LIBRE);
+        Pruebas.app().pausarReanudarSesion().ejecutar(id);
+        ResumenEjecucionSesion resumen =
+                Pruebas.app().consultarEjecucionSesion().ejecutar(id).get();
+
+        Notification n = NotificadorSesion.construirNotificacionSesion(
+                contexto, id, resumen, true, System.currentTimeMillis());
+
+        String texto = n.publicVersion.extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+        assertFalse("No debe mostrar la materia", texto.contains(contexto.getString(R.string.materia_general_nombre)));
+        assertTrue("Debe mostrar el tiempo detenido: " + texto, texto.matches(".*[0-9]{2}:[0-9]{2}.*"));
     }
 
     @Test

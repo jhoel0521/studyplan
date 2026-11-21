@@ -21,8 +21,6 @@ import android.os.VibratorManager;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 
-import android.support.v4.media.session.MediaSessionCompat;
-
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -468,7 +466,6 @@ public final class NotificadorSesion {
 
     /** Detiene el servicio y quita la notificación de la sesión. */
     public static void retirarNotificacionSesion(Context contexto) {
-        SesionMultimedia.liberar();
         ServicioSesionEnCurso.detener(contexto);
         NotificationManager nm = (NotificationManager) contexto.getSystemService(
                 Context.NOTIFICATION_SERVICE);
@@ -484,14 +481,11 @@ public final class NotificadorSesion {
             ResumenEjecucionSesion resumen,
             boolean bloqueoApp,
             long ahoraMs) {
-        // La sesión multimedia es lo que hace que Android muestre la tarjeta de control en la pantalla de bloqueo.
-        MediaSessionCompat.Token token = SesionMultimedia.actualizar(
-                contexto, sesionId, resumen, logoDeLaApp(contexto), bloqueoApp);
         NotificationCompat.Builder completa =
-                constructorSesion(contexto, sesionId, resumen, false, ahoraMs, token);
+                constructorSesion(contexto, sesionId, resumen, false, ahoraMs);
         if (bloqueoApp) {
             completa.setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                    .setPublicVersion(constructorSesion(contexto, sesionId, resumen, true, ahoraMs, token).build());
+                    .setPublicVersion(constructorSesion(contexto, sesionId, resumen, true, ahoraMs).build());
         } else {
             completa.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
@@ -503,8 +497,7 @@ public final class NotificadorSesion {
             long sesionId,
             ResumenEjecucionSesion resumen,
             boolean privada,
-            long ahoraMs,
-            MediaSessionCompat.Token token) {
+            long ahoraMs) {
         boolean pausada = resumen.pausada();
         boolean salida = resumen.salidaPendienteResolver();
         boolean corriendo = !pausada && !salida;
@@ -527,8 +520,12 @@ public final class NotificadorSesion {
         }
 
         String texto;
-        if (privada) {
+        if (privada && corriendo) {
             texto = contexto.getString(R.string.notif_sesion_privada_texto);
+        } else if (privada) {
+            // Detenida no hay cronómetro que avance: el tiempo va en el texto, sin el nombre de la materia (RNF-12).
+            texto = contexto.getString(
+                    R.string.notif_sesion_privada_texto_con_tiempo, TextosSesion.hms(resumen.milisEfectivos()));
         } else if (corriendo) {
             texto = resumen.nombreMateria();
         } else {
@@ -555,11 +552,12 @@ public final class NotificadorSesion {
                 .setContentText(texto)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                // Sin MediaStyle, Android 12 o posterior retrasa hasta 10 s la notificación de un servicio.
+                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
                 .setContentIntent(contenido)
                 .setDeleteIntent(republicar)
-                .setLargeIcon(logoDeLaApp(contexto))
-                .setStyle(estiloReproductor(token));
+                .setLargeIcon(logoDeLaApp(contexto));
 
         if (corriendo) {
             b.setShowWhen(true).setUsesChronometer(true);
@@ -583,16 +581,6 @@ public final class NotificadorSesion {
                 ReceptorAvisosSesion.ACCION_DETENER, REQ_SESION_DETENER, sesionId, privada));
         b.addAction(accionNoMolestar(contexto, sesionId, resumen.noMolestarActivo(), privada));
         return b;
-    }
-
-    private static androidx.media.app.NotificationCompat.MediaStyle estiloReproductor(
-            MediaSessionCompat.Token token) {
-        androidx.media.app.NotificationCompat.MediaStyle estilo =
-                new androidx.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0, 1, 2);
-        if (token != null) {
-            estilo.setMediaSession(token);
-        }
-        return estilo;
     }
 
     /** Logo de la app como icono grande de la notificación (el que ve el estudiante en la pantalla de bloqueo). */

@@ -231,6 +231,7 @@
     <string name="notif_sesion_pausa_titulo">En pausa</string>
     <string name="notif_sesion_privada_texto">Toca para volver a la sesión</string>
     <string name="notif_sesion_texto_con_tiempo">%1$s · %2$s</string>
+    <string name="notif_sesion_privada_texto_con_tiempo">Toca para volver a la sesión · %1$s</string>
     <string name="notif_sesion_descarta">Controles de la sesión</string>
     <string name="notif_fin_plan_titulo">¿Sigues estudiando?</string>
     <string name="notif_fin_plan_cuerpo">Llegó la hora planificada de fin para %1$s</string>
