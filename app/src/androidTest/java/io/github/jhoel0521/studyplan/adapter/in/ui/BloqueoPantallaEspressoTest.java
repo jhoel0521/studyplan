@@ -50,6 +50,9 @@ public class BloqueoPantallaEspressoTest {
 
     private static final long ESPERA_MS = 10_000L;
 
+    /** Ventana de gracia corta para no esperar 1 minuto real (HU-40); {@code reiniciarEstado} la restablece. */
+    private static final long GRACIA_PRUEBA_MS = 4_000L;
+
     @Before
     public void preparar() throws Exception {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -97,6 +100,7 @@ public class BloqueoPantallaEspressoTest {
 
     @Test
     public void apagarLaPantallaDespuesDeSalirSigueSiendoSalidaYNoRegistraBloqueo() throws Exception {
+        Pruebas.app().contadorActividades().fijarGraciaParaPruebas(GRACIA_PRUEBA_MS);
         long sesionId = iniciarSesionEnCurso();
 
         try (ActivityScenario<SesionEnCursoActivity> escenario = lanzar(sesionId)) {
@@ -115,6 +119,7 @@ public class BloqueoPantallaEspressoTest {
     /** HU-40, HU-49: al salir suena un aviso de importancia alta y la notificación de la sesión pasa a «volver». */
     @Test
     public void alSalirSePublicaElAvisoDeImportanciaAltaYLaNotificacionPasaAVolver() throws Exception {
+        Pruebas.app().contadorActividades().fijarGraciaParaPruebas(GRACIA_PRUEBA_MS);
         long sesionId = iniciarSesionEnCurso();
         Context contexto = ApplicationProvider.getApplicationContext();
         NotificationManager nm = (NotificationManager) contexto.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -134,6 +139,68 @@ public class BloqueoPantallaEspressoTest {
             assertEquals(contexto.getString(R.string.notif_volver_titulo),
                     sesionNotif.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE).toString());
         }
+    }
+
+    /** HU-40, RN-23: salir y volver dentro de la ventana de gracia no registra salida ni abre la pregunta. */
+    @Test
+    public void salirYVolverDentroDeLaGraciaNoRegistraSalidaNiPregunta() throws Exception {
+        Pruebas.app().contadorActividades().fijarGraciaParaPruebas(GRACIA_PRUEBA_MS);
+        long sesionId = iniciarSesionEnCurso();
+
+        try (ActivityScenario<SesionEnCursoActivity> escenario = lanzar(sesionId)) {
+            Pruebas.esperarVisible(withId(R.id.textoCronometro));
+            comando("input keyevent 3");
+            Thread.sleep(2_000); // dentro de la gracia
+            volverALaSesion(sesionId);
+            Pruebas.esperarVisible(withId(R.id.textoCronometro));
+
+            Thread.sleep(GRACIA_PRUEBA_MS + 2_000); // pasa el tiempo que habría vencido la gracia
+            assertFalse("Volver dentro de la gracia no registra salida",
+                    tipos(sesionId).contains(TipoEventoEstudio.SALIDA_APP));
+            onView(withText(org.hamcrest.Matchers.containsString("Saliste a las")))
+                    .check(androidx.test.espresso.assertion.ViewAssertions.doesNotExist());
+        }
+    }
+
+    /** HU-40, HU-41, RN-23: pasada la gracia se registra la salida y al volver aparece la pregunta. */
+    @Test
+    public void salirMasAllaDeLaGraciaRegistraLaSalidaYPreguntaAlVolver() throws Exception {
+        Pruebas.app().contadorActividades().fijarGraciaParaPruebas(GRACIA_PRUEBA_MS);
+        long sesionId = iniciarSesionEnCurso();
+
+        try (ActivityScenario<SesionEnCursoActivity> escenario = lanzar(sesionId)) {
+            Pruebas.esperarVisible(withId(R.id.textoCronometro));
+            comando("input keyevent 3");
+            assertTrue("Pasada la gracia se registra la salida", esperarTipo(sesionId, TipoEventoEstudio.SALIDA_APP));
+
+            volverALaSesion(sesionId);
+            assertTrue("Debe aparecer la pregunta «Saliste a las…»", esperarDialogoDeSalida());
+        }
+    }
+
+    /** Sondea el diálogo de recuperación: su ventana es la que tiene el foco, no la de la Activity. */
+    @SuppressWarnings("BusyWait") // sondeo con tope
+    private static boolean esperarDialogoDeSalida() throws InterruptedException {
+        long limite = System.currentTimeMillis() + ESPERA_MS;
+        while (System.currentTimeMillis() < limite) {
+            try {
+                onView(withText(org.hamcrest.Matchers.containsString("Saliste a las")))
+                        .inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog())
+                        .check(matches(isDisplayed()));
+                return true;
+            } catch (RuntimeException | AssertionError e) {
+                Thread.sleep(300);
+            }
+        }
+        return false;
+    }
+
+    private void volverALaSesion(long sesionId) {
+        Context contexto = ApplicationProvider.getApplicationContext();
+        Intent intento = new Intent(contexto, SesionEnCursoActivity.class);
+        intento.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, sesionId);
+        intento.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        contexto.startActivity(intento);
     }
 
     @SuppressWarnings("BusyWait") // sondeo con tope
