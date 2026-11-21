@@ -1,0 +1,382 @@
+Tabla clase -> carpeta destino (solo main). Generada por docs/build/mover_paquetes.py; es temporal.
+Columnas: carpeta destino | clase | carpeta de origen (— si no se mueve)
+
+
+[adapter.in.ui]
+  FabricaViewModels                        —
+  ReceptorAvisosSesion                     —
+  ServicioSesionEnCurso                    —
+  StudyPlanApplication                     —
+
+[adapter.in.ui.calendario]
+  CalendarioActivity                       adapter.in.ui
+  CalendarioMesAdapter                     adapter.in.ui
+  CalendarioViewModel                      adapter.in.ui
+  PreferenciaVistaCalendario               adapter.in.ui
+
+[adapter.in.ui.comun]
+  AcentoMateria                            adapter.in.ui
+  ActividadBase                            adapter.in.ui
+  ActividadProtegida                       adapter.in.ui
+  AplicadorApariencia                      adapter.in.ui
+  ContadorActividades                      adapter.in.ui
+  DestinoPrincipal                         adapter.in.ui
+  EstadoSesionVisual                       adapter.in.ui
+  FormatoHoras                             adapter.in.ui
+  FormatoSesion                            adapter.in.ui
+  GrupoBotones                             adapter.in.ui
+  MensajesDeError                          adapter.in.ui
+  ProgramadorRetardado                     adapter.in.ui
+  ProgramadorRetardadoHandler              adapter.in.ui
+  RolColorEstado                           adapter.in.ui
+  SalidaConGracia                          adapter.in.ui
+  SelectorEstudioBottomSheet               adapter.in.ui
+
+[adapter.in.ui.configuracion]
+  AjustesActivity                          adapter.in.ui
+  AjustesViewModel                         adapter.in.ui
+  AutenticacionActivity                    adapter.in.ui
+  BorrarDatosActivity                      adapter.in.ui
+  BorrarDatosViewModel                     adapter.in.ui
+  InicioViewModel                          adapter.in.ui
+  MainActivity                             adapter.in.ui
+  PerfilInicialActivity                    adapter.in.ui
+  PerfilInicialViewModel                   adapter.in.ui
+  ProteccionViewModel                      adapter.in.ui
+
+[adapter.in.ui.estadisticas]
+  EstadisticasActivity                     adapter.in.ui
+  EstadisticasAdapter                      adapter.in.ui
+  EstadisticasViewModel                    adapter.in.ui
+  TopicosUi                                adapter.in.ui
+
+[adapter.in.ui.materias]
+  ColorHex                                 adapter.in.ui
+  ColorMateria                             adapter.in.ui
+  EventoMateria                            adapter.in.ui
+  FilaMateria                              adapter.in.ui
+  ListaMateriasViewModel                   adapter.in.ui
+  MateriaFormularioActivity                adapter.in.ui
+  MateriaFormularioViewModel               adapter.in.ui
+  MateriasActivity                         adapter.in.ui
+  MateriasAdapter                          adapter.in.ui
+  SelectorColorDialogo                     adapter.in.ui
+
+[adapter.in.ui.metas]
+  FelicitacionMetasActivity                adapter.in.ui
+  HistorialMetasActivity                   adapter.in.ui
+  HistorialMetasAdapter                    adapter.in.ui
+  HistorialMetasViewModel                  adapter.in.ui
+
+[adapter.in.ui.reportes]
+  ReportesActivity                         adapter.in.ui
+  ReportesAdapter                          adapter.in.ui
+  ReportesViewModel                        adapter.in.ui
+
+[adapter.in.ui.sesiones]
+  EventoSesion                             adapter.in.ui
+  SesionDetalleActivity                    adapter.in.ui
+  SesionDetalleViewModel                   adapter.in.ui
+  SesionFormularioActivity                 adapter.in.ui
+  SesionFormularioViewModel                adapter.in.ui
+  SesionInicioAdapter                      adapter.in.ui
+
+[adapter.in.ui.tecnicas]
+  DialogoRecuperacionSesion                adapter.in.ui
+  EventoEstudioAdapter                     adapter.in.ui
+  FlujoBloqueoPantalla                     adapter.in.ui
+  NotificadorSesion                        adapter.in.ui
+  RepartoSesionActivity                    adapter.in.ui
+  RepartoSesionViewModel                   adapter.in.ui
+  SesionEnCursoActivity                    adapter.in.ui
+  SesionEnCursoViewModel                   adapter.in.ui
+  TextosSesion                             adapter.in.ui
+
+[adapter.out.persistence]
+  Migraciones                              —
+  StudyPlanDatabase                        —
+
+[adapter.out.persistence.dao]
+  AjustesDao                               adapter.out.persistence
+  EventoEstudioDao                         adapter.out.persistence
+  MateriaDao                               adapter.out.persistence
+  MetaSemanalDao                           adapter.out.persistence
+  PerfilDao                                adapter.out.persistence
+  SesionDao                                adapter.out.persistence
+  TramoDiarioDao                           adapter.out.persistence
+
+[adapter.out.persistence.entity]
+  AjustesEntity                            adapter.out.persistence
+  EventoEstudioEntity                      adapter.out.persistence
+  MateriaEntity                            adapter.out.persistence
+  MetaSemanalEntity                        adapter.out.persistence
+  PerfilEntity                             adapter.out.persistence
+  SesionEntity                             adapter.out.persistence
+  TramoDiarioEntity                        adapter.out.persistence
+
+[adapter.out.persistence.repository]
+  AjustesRepositoryRoom                    adapter.out.persistence
+  AlmacenDatosRoom                         adapter.out.persistence
+  EventoEstudioRepositoryRoom              adapter.out.persistence
+  Mapeadores                               adapter.out.persistence
+  MateriaRepositoryRoom                    adapter.out.persistence
+  MetaSemanalRepositoryRoom                adapter.out.persistence
+  PerfilRepositoryRoom                     adapter.out.persistence
+  SesionRepositoryRoom                     adapter.out.persistence
+  SesionesDeMateriaRoom                    adapter.out.persistence
+  TramoDiarioRepositoryRoom                adapter.out.persistence
+
+[adapter.out.security]
+  DisponibilidadBloqueoBiometrico          —
+
+[adapter.out.system]
+  BloqueoPantallaSistema                   —
+  ControladorNoMolestarSistema             —
+  ExportadorReporteSistema                 —
+  MarcadorSalidaAppPrefs                   —
+  NotificacionSesion                       —
+  PreferenciasBloqueoPantalla              —
+  ProgramadorAvisosAlarmManager            —
+  ProgramadorAvisosConNotificacion         —
+  ReceptorAdministradorBloqueo             —
+  RelojSistema                             adapter.out.persistence
+
+[application.port.in.calendario]
+  ConsultarCalendario                      application.port.in
+
+[application.port.in.configuracion]
+  BorrarDatos                              application.port.in
+  ConfigurarApariencia                     application.port.in
+  ConfigurarBloqueo                        application.port.in
+  ConfigurarPerfil                         application.port.in
+  ConsultarAjustes                         application.port.in
+  ConsultarEstadoArranque                  application.port.in
+  ConsultarPerfil                          application.port.in
+  ControlarSesionBloqueo                   application.port.in
+  ObtenerResumenInicio                     application.port.in
+
+[application.port.in.estadisticas]
+  ConsultarEstadisticas                    application.port.in
+
+[application.port.in.materias]
+  ArchivarMateria                          application.port.in
+  ConsultarMateria                         application.port.in
+  DesarchivarMateria                       application.port.in
+  EditarMateria                            application.port.in
+  EliminarMateria                          application.port.in
+  ListarMaterias                           application.port.in
+  RegistrarMateria                         application.port.in
+
+[application.port.in.metas]
+  CambiarDeMateria                         application.port.in
+  ConsultarProgresoMetas                   application.port.in
+  DefinirMetaSemanal                       application.port.in
+  EstudiarAhora                            application.port.in
+
+[application.port.in.recordatorios]
+  ConfigurarRecordatorioPorDefecto         application.port.in
+  ReprogramarRecordatoriosPendientes       application.port.in
+
+[application.port.in.reportes]
+  GenerarReporteEstudio                    application.port.in
+
+[application.port.in.sesiones]
+  CompletarSesion                          application.port.in
+  ConsultarSesion                          application.port.in
+  EliminarSesion                           application.port.in
+  PlanificarSesion                         application.port.in
+  RegistrarSesionPasada                    application.port.in
+  RegistrarSesionTardia                    application.port.in
+  ReprogramarSesion                        application.port.in
+  VencerSesionesPendientes                 application.port.in
+
+[application.port.in.tecnicas]
+  AlternarNoMolestarSesion                 application.port.in
+  ConfigurarAjustesEstudio                 application.port.in
+  ConsultarEjecucionSesion                 application.port.in
+  DecidirFinPlanificadoOInvasion           application.port.in
+  DetenerSesion                            application.port.in
+  EvaluarRecuperacionSesion                application.port.in
+  IniciarSesion                            application.port.in
+  PausarReanudarSesion                     application.port.in
+  RegistrarBloqueoPantalla                 application.port.in
+  RegistrarDesbloqueo                      application.port.in
+  RegistrarSalidaApp                       application.port.in
+  RepartirTramoSesion                      application.port.in
+  ResolverRegresoApp                       application.port.in
+
+[application.port.out.persistence]
+  AjustesRepository                        application.port.out
+  AlmacenDatos                             application.port.out
+  EventoEstudioRepository                  application.port.out
+  MateriaRepository                        application.port.out
+  MetaSemanalRepository                    application.port.out
+  PerfilRepository                         application.port.out
+  SesionRepository                         application.port.out
+  SesionesDeMateria                        application.port.out
+  TramoDiarioRepository                    application.port.out
+
+[application.port.out.system]
+  ControladorNoMolestar                    application.port.out
+  DisponibilidadBloqueo                    application.port.out
+  ExportadorReporte                        application.port.out
+  MarcadorSalidaApp                        application.port.out
+  ProgramadorAvisosSesion                  application.port.out
+  ProgramadorRecordatorios                 application.port.out
+  Reloj                                    application.port.out
+  ResultadoExportacion                     application.port.out
+
+[application.service.calendario]
+  ConsultarCalendarioService               application.service
+
+[application.service.comun]
+  DetectorFelicitacionMetas                application.service
+  EjecucionHitos                           application.service
+  NombresDeMateria                         application.service
+  ValidadorSesiones                        application.service
+
+[application.service.configuracion]
+  BorrarDatosService                       application.service
+  ConfigurarAparienciaService              application.service
+  ConfigurarBloqueoService                 application.service
+  ConfigurarPerfilService                  application.service
+  ConsultarAjustesService                  application.service
+  ConsultarEstadoArranqueService           application.service
+  ConsultarPerfilService                   application.service
+  ObtenerResumenInicioService              application.service
+  SesionBloqueo                            application.service
+
+[application.service.estadisticas]
+  ConsultarEstadisticasService             application.service
+
+[application.service.materias]
+  ArchivarMateriaService                   application.service
+  ConsultarMateriaService                  application.service
+  DesarchivarMateriaService                application.service
+  EditarMateriaService                     application.service
+  EliminarMateriaService                   application.service
+  ListarMateriasService                    application.service
+  RegistrarMateriaService                  application.service
+
+[application.service.metas]
+  CambiarDeMateriaService                  application.service
+  ConsultarProgresoMetasService            application.service
+  DefinirMetaSemanalService                application.service
+  EstudiarAhoraService                     application.service
+
+[application.service.recordatorios]
+  ConfigurarRecordatorioPorDefectoService  application.service
+  ReprogramarRecordatoriosPendientesService application.service
+
+[application.service.reportes]
+  GenerarReporteEstudioService             application.service
+
+[application.service.sesiones]
+  CompletarSesionService                   application.service
+  ConsultarSesionService                   application.service
+  EliminarSesionService                    application.service
+  PlanificarSesionService                  application.service
+  RegistrarSesionPasadaService             application.service
+  RegistrarSesionTardiaService             application.service
+  ReprogramarSesionService                 application.service
+  VencerSesionesPendientesService          application.service
+
+[application.service.tecnicas]
+  AlternarNoMolestarSesionService          application.service
+  ConfigurarAjustesEstudioService          application.service
+  ConsultarEjecucionSesionService          application.service
+  DecidirFinPlanificadoOInvasionService    application.service
+  DetenerSesionService                     application.service
+  EvaluarRecuperacionSesionService         application.service
+  IniciarSesionService                     application.service
+  PausarReanudarSesionService              application.service
+  RegistrarBloqueoPantallaService          application.service
+  RegistrarDesbloqueoService               application.service
+  RegistrarSalidaAppService                application.service
+  RepartirTramoSesionService               application.service
+  ResolverRegresoAppService                application.service
+
+[domain.entity]
+  Ajustes                                  domain
+  EventoEstudio                            domain
+  Materia                                  domain
+  MetaSemanal                              domain
+  Perfil                                   domain
+  SesionEstudio                            domain
+
+[domain.enumeration]
+  AlcanceBorrado                           domain
+  AntelacionRecordatorio                   domain
+  EstadoArranque                           domain
+  FasePomodoro                             domain
+  FormatoExportacionReporte                domain
+  Idioma                                   domain
+  PreferenciaNoMolestar                    domain
+  TecnicaEstudio                           domain
+  Tema                                     domain
+  TipoEventoEstudio                        domain
+  TopicoEventoEstudio                      domain
+  VistaCalendario                          domain
+
+[domain.readmodel]
+  AvisoRecordatorioPendiente               domain
+  BloqueHorarioCalendario                  domain
+  CandidataInvasion                        domain
+  CeldaDiaMes                              domain
+  CierreSesion                             domain
+  ConcentracionPeriodo                     domain
+  ConflictoHorario                         domain
+  DatosCalendario                          domain
+  DesgloseMateriaPeriodo                   domain
+  DetalleSesion                            domain
+  DetalleSesionInicio                      domain
+  DiagnosticoRegresoApp                    domain
+  EstadisticasPeriodo                      domain
+  EstadoPomodoroCalculado                  domain
+  ItemSesionCalendario                     domain
+  ListadoMaterias                          domain
+  MetaAlcanzada                            domain
+  ProgresoMeta                             domain
+  ReporteEstudio                           domain
+  ResultadoReparto                         domain
+  ResultadoSesion                          domain
+  ResumenEjecucionSesion                   domain
+  ResumenInicio                            domain
+  ResumenMateria                           domain
+  ResumenPeriodoCalendario                 domain
+  ResumenTopico                            domain
+  SalidaRegistrada                         domain
+
+[domain.result]
+  ErrorValidacion                          domain
+  Resultado                                domain
+
+[domain.service]
+  CalculadorEstadisticas                   domain
+  CalculadorPomodoro                       domain
+  CalculadorProgresoMetas                  domain
+  CalculadorRangoHorario                   domain
+  CalculadorRepartoTramo                   domain
+  CalculadorTiempoReal                     domain
+  GeneradorCsvReporte                      domain
+  RepartidorPorDia                         domain
+
+[domain.state]
+  CodigoEstadoSesion                       domain
+  EstadoCompletada                         domain
+  EstadoCompletadaTardia                   domain
+  EstadoEnCurso                            domain
+  EstadoNoRealizada                        domain
+  EstadoPendiente                          domain
+  EstadoReprogramada                       domain
+  EstadoSesion                             domain
+
+[domain.valueobject]
+  ConfiguracionPomodoro                    domain
+  Fecha                                    domain
+  FiltroCalendario                         domain
+  Hora                                     domain
+  Instante                                 domain
+  IntervaloEfectivo                        domain
+  PeriodoCalendario                        domain
+  PeriodoEstadisticas                      domain
