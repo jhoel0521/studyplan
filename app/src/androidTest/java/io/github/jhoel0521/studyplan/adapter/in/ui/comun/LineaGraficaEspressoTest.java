@@ -314,10 +314,9 @@ public class LineaGraficaEspressoTest {
         }
     }
 
-    /**
-     * Capturas opcionales para la revisión visual (tarea 5.4): solo con el argumento de instrumentación
-     * {@code capturas=true}. Se guardan en {@code Android/data/<paquete>/files/capturas/}.
-     */
+    // Capturas opcionales para la revisión visual (tarea 5.4): solo con el argumento de instrumentación
+    // capturas=true. Se guardan en Android/data/<paquete>/files/capturas/.
+
     /**
      * Pulsa una vista desplazándose antes hasta ella: con la fuente al 200 % y 360 dp los controles quedan
      * por debajo del borde y Espresso exige que se vea al menos el 90 %. Si la vista no está en un
