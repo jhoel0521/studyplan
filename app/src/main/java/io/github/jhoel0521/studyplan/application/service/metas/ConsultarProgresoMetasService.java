@@ -22,6 +22,7 @@ import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;
+import io.github.jhoel0521.studyplan.domain.service.Mapas;
 
 /**
  * Implementa {@link ConsultarProgresoMetas}: calcula progreso de la semana actual (creando el
@@ -107,7 +108,7 @@ public final class ConsultarProgresoMetasService implements ConsultarProgresoMet
                 Map<Long, Integer> minutosPorMateria = tramos.sumarPorMateriaEnRango(cursor, finSemana);
                 for (MetaSemanal mm : metasMaterias) {
                     long mId = mm.materiaId();
-                    int minMateria = minutosPorMateria.getOrDefault(mId, 0);
+                    int minMateria = Mapas.entero(minutosPorMateria, mId);
                     String nombre = nombresMateria.getOrDefault(mId, "");
                     resultado.add(CalculadorProgresoMetas.calcularProgreso(
                             cursor, mId, nombre, minMateria, mm.horasObjetivo(), false));

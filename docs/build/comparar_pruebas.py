@@ -19,7 +19,7 @@ RAIZ = Path(__file__).resolve().parents[2]
 RESULTADOS = RAIZ / "app" / "build" / "test-results" / "testDebugUnitTest"
 LINEA_BASE = Path(__file__).resolve().parent / "linea_base_pruebas.txt"
 # Clases de prueba que el propio change añade (no existen en la línea base y no cuentan como diferencia).
-AGREGADAS_POR_EL_CHANGE = {"EstructuraPaquetesTest"}
+AGREGADAS_POR_EL_CHANGE = {"EstructuraPaquetesTest", "MapasTest"}
 
 
 def pruebas_actuales():

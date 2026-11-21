@@ -122,7 +122,7 @@ PERSISTENCIA_METAS = ["MetaSemanalDao", "MetaSemanalEntity", "MetaSemanalReposit
 PRESENTACION_ESTADISTICAS = ["EstadisticasActivity", "EstadisticasAdapter", "EstadisticasViewModel", "TopicosUi"]
 ENTRADA_ESTADISTICAS = ["ConsultarEstadisticas"]
 SERVICIOS_ESTADISTICAS = ["ConsultarEstadisticasService"]
-DOMINIO_ESTADISTICAS = ["CalculadorEstadisticas", "ConcentracionPeriodo", "DesgloseMateriaPeriodo", "EstadisticasPeriodo", "PeriodoEstadisticas", "ResumenTopico", "SalidaRegistrada", "TopicoEventoEstudio"]
+DOMINIO_ESTADISTICAS = ["CalculadorEstadisticas", "ConcentracionPeriodo", "DesgloseMateriaPeriodo", "EstadisticasPeriodo", "Mapas", "PeriodoEstadisticas", "ResumenTopico", "SalidaRegistrada", "TopicoEventoEstudio"]
 
 PRESENTACION_REPORTES = ["ReportesActivity", "ReportesAdapter", "ReportesViewModel"]
 ENTRADA_REPORTES = ["GenerarReporteEstudio"]

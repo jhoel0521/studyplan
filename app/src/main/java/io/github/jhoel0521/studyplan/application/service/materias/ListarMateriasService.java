@@ -22,6 +22,7 @@ import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;
 import io.github.jhoel0521.studyplan.domain.readmodel.ProgresoMeta;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;
 import io.github.jhoel0521.studyplan.domain.readmodel.ResumenMateria;
+import io.github.jhoel0521.studyplan.domain.service.Mapas;
 
 /**
  * Implementa {@link ListarMaterias}: orden alfabético en español, dejando al final la materia
@@ -103,7 +104,7 @@ public final class ListarMateriasService implements ListarMaterias {
         if (objetivo == null) {
             return null;
         }
-        int minutos = minutosSemanaPorMateria.getOrDefault(materia.id(), 0);
+        int minutos = Mapas.entero(minutosSemanaPorMateria, materia.id());
         return CalculadorProgresoMetas.calcularProgreso(
                 lunes, materia.id(), materia.nombre(), minutos, objetivo, false);
     }

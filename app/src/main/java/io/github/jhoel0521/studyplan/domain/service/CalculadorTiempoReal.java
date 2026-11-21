@@ -283,7 +283,7 @@ public final class CalculadorTiempoReal {
                         long dur = t - salidaAbiertaMs;
                         TopicoEventoEstudio top = e.topico().orElse(TopicoEventoEstudio.SIN_CLASIFICAR);
                         estudioExternoPorTopicoMs.put(
-                                top, estudioExternoPorTopicoMs.getOrDefault(top, 0L) + dur);
+                                top, Mapas.largo(estudioExternoPorTopicoMs, top) + dur);
                         huboEstudioAppCerradaEnSalida = true;
                     }
                     break;
@@ -363,8 +363,8 @@ public final class CalculadorTiempoReal {
             Map<TopicoEventoEstudio, Integer> conteos,
             TopicoEventoEstudio topico,
             long duracionMs) {
-        duraciones.put(topico, duraciones.getOrDefault(topico, 0L) + duracionMs);
-        conteos.put(topico, conteos.getOrDefault(topico, 0) + 1);
+        duraciones.put(topico, Mapas.largo(duraciones, topico) + duracionMs);
+        conteos.put(topico, Mapas.entero(conteos, topico) + 1);
     }
 
     /** Resultado agregado del análisis cronológico de eventos de una sesión ({@code HU-45}). */
