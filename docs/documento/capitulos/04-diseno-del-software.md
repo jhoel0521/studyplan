@@ -198,7 +198,7 @@ Nota: Elaboración propia. Los 42 pares de contraste del estándar (texto ≥ 4,
 
 ### Estructura de paquetes y tipos de clase
 
-El código está dividido en tres capas (presentación, núcleo e infraestructura) y, dentro de cada capa, en carpetas que dicen qué es cada clase. Antes todas las clases de una capa vivían sueltas en una sola carpeta (el dominio tenía 71 archivos juntos), de modo que no se podía distinguir una entidad de un value object, un enum o una clase de lectura. La reorganización se hace por etapas, capa por capa, sin cambiar el comportamiento de la aplicación: cada etapa compila, mantiene las mismas pruebas y actualiza esta sección. Esta versión documenta el dominio; las capas de aplicación y de adaptadores se agregan al terminar sus etapas.
+El código está dividido en tres capas (presentación, núcleo e infraestructura) y, dentro de cada capa, en carpetas que dicen qué es cada clase. Antes todas las clases de una capa vivían sueltas en una sola carpeta (el dominio tenía 71 archivos juntos), de modo que no se podía distinguir una entidad de un value object, un enum o una clase de lectura. La reorganización se hace por etapas, capa por capa, sin cambiar el comportamiento de la aplicación: cada etapa compila, mantiene las mismas pruebas y actualiza esta sección. Esta versión documenta el dominio y la capa de aplicación; la capa de adaptadores se agrega al terminar su etapa.
 
 El dominio (`domain`) se divide por tipo de clase. Una clase se asigna a su carpeta con estas preguntas, en este orden, y la primera que se cumple decide:
 
@@ -224,6 +224,19 @@ domain/
 ```
 
 Nota: Elaboración propia. Cada carpeta existe en el código; la prueba `EstructuraPaquetesTest` falla si se deja una clase suelta en la raíz de `domain` o en una carpeta que no sea un tipo.
+
+La capa de aplicación (`application`) se divide por épica, es decir, por grupo de casos de uso: `configuracion`, `materias`, `sesiones`, `calendario`, `tecnicas`, `metas`, `estadisticas`, `reportes` y `recordatorios`, más `comun` para lo que sirve a varias épicas. Cada caso de uso tiene su contrato de entrada en `port/in/<épica>` y su servicio en `service/<épica>`, en la misma épica; `EstructuraPaquetesTest` comprueba que cada servicio esté junto a su contrato. Los contratos de salida, lo que el núcleo exige a Room, al reloj o a las notificaciones, se dividen en `port/out/persistence` (repositorios) y `port/out/system` (el resto). Cuatro clases ayudantes que usan servicios de varias épicas (`NombresDeMateria`, `ValidadorSesiones`, `EjecucionHitos` y `DetectorFelicitacionMetas`) están en `service/comun` y son públicas; es el único cambio de código de esta reorganización, pensado para que la carpeta no oculte una dependencia.
+
+```text
+application/
+  port/in/<épica>/      RegistrarMateria, IniciarSesion, ConsultarCalendario, ...  (un contrato por caso de uso)
+  port/out/persistence/ MateriaRepository, SesionRepository, AlmacenDatos, ...
+  port/out/system/      Reloj, MarcadorSalidaApp, ControladorNoMolestar, ProgramadorAvisosSesion, ...
+  service/<épica>/      RegistrarMateriaService, IniciarSesionService, ...
+  service/comun/        NombresDeMateria, ValidadorSesiones, EjecucionHitos, DetectorFelicitacionMetas
+```
+
+Nota: Elaboración propia. `<épica>` es una de las nueve carpetas de épica o `comun`.
 
 La @tabla:tipos_de_clase define cada tipo de clase del proyecto, con un ejemplo real. Los contratos (puertos) y los servicios de aplicación viven en la capa de aplicación, y los adaptadores en la de infraestructura y presentación; se incluyen aquí para tener todas las definiciones juntas.
 

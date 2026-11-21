@@ -9,9 +9,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -29,6 +33,10 @@ import org.junit.rules.TemporaryFolder;
  * enums solo están en {@code enumeration}, {@code state} o {@code result}, y {@code EstadoSesion} con sus
  * implementaciones en {@code state}.
  *
+ * <p>Regla de {@code application}: nada suelto en {@code port.in}, {@code port.out} ni {@code service}; las carpetas de
+ * {@code port.in} y {@code service} son una épica (o {@code comun}); las de {@code port.out} son {@code persistence} o
+ * {@code system}; y cada {@code *Service} está en la misma épica que su puerto de entrada.
+ *
  * <p>Las reglas se escriben como métodos estáticos que devuelven los incumplimientos, para poder probar que fallan
  * ante una clase mal puesta (ver las pruebas con {@link TemporaryFolder}).
  */
@@ -37,7 +45,11 @@ public class EstructuraPaquetesTest {
     private static final String BASE = "io/github/jhoel0521/studyplan";
     static final Set<String> CARPETAS_DOMINIO = new HashSet<>(Arrays.asList(
             "entity", "valueobject", "enumeration", "state", "service", "result", "readmodel"));
-    private static final Set<String> CARPETAS_CON_ENUMS = new HashSet<>(Arrays.asList(
+    static final Set<String> EPICAS = new HashSet<>(Arrays.asList(
+            "configuracion", "materias", "sesiones", "calendario", "tecnicas", "metas", "estadisticas", "reportes",
+            "recordatorios", "comun"));
+    static final Set<String> CARPETAS_PUERTOS_DE_SALIDA = new HashSet<>(Arrays.asList("persistence", "system"));
+    private static final Set<String> CARPETAS_CON_ENUMS =new HashSet<>(Arrays.asList(
             "enumeration", "state", "result"));
     private static final Pattern DECLARA_ENUM = Pattern.compile("^public\\s+enum\\s+\\w+", Pattern.MULTILINE);
     private static final Pattern IMPLEMENTA_ESTADO = Pattern.compile("\\bimplements\\s+EstadoSesion\\b");
@@ -93,6 +105,36 @@ public class EstructuraPaquetesTest {
         }
     }
 
+    /**
+     * Servicios cuyo puerto de entrada (mismo nombre sin el sufijo {@code Service}) está en otra épica. Los servicios
+     * sin un puerto con su nombre (ayudantes) no se comprueban.
+     */
+    static List<String> serviciosFueraDeLaEpicaDeSuPuerto(Path puertosDeEntrada, Path servicios) throws IOException {
+        Map<String, String> epicaDelPuerto = new HashMap<>();
+        try (Stream<Path> puertos = Files.walk(puertosDeEntrada)) {
+            puertos.filter(p -> p.toString().endsWith(".java") && puertosDeEntrada.relativize(p).getNameCount() > 1)
+                    .forEach(p -> epicaDelPuerto.put(nombreSinExtension(p), carpetaDe(puertosDeEntrada, p)));
+        }
+        List<String> fuera = new ArrayList<>();
+        try (Stream<Path> recorrido = Files.walk(servicios)) {
+            recorrido.filter(p -> p.toString().endsWith("Service.java")).forEach(p -> {
+                String nombre = nombreSinExtension(p);
+                String puerto = nombre.substring(0, nombre.length() - "Service".length());
+                String epicaPuerto = epicaDelPuerto.get(puerto);
+                if (epicaPuerto != null && !epicaPuerto.equals(carpetaDe(servicios, p))) {
+                    fuera.add(nombre + " (" + carpetaDe(servicios, p) + ") con su puerto en " + epicaPuerto);
+                }
+            });
+        }
+        Collections.sort(fuera);
+        return fuera;
+    }
+
+    private static String nombreSinExtension(Path archivo) {
+        String nombre = archivo.getFileName().toString();
+        return nombre.substring(0, nombre.length() - ".java".length());
+    }
+
     private static String carpetaDe(Path dominio, Path archivo) {
         Path relativa = dominio.relativize(archivo);
         return relativa.getNameCount() > 1 ? relativa.getName(0).toString() : "";
@@ -144,7 +186,48 @@ public class EstructuraPaquetesTest {
                 implementacionesFueraDeState(dominio));
     }
 
+    @Test
+    public void laAplicacionNoTieneClasesSueltasNiCarpetasQueNoSeanUnaEpica() throws IOException {
+        Path aplicacion = raizDeFuentes().resolve("application");
+        Path puertosDeEntrada = aplicacion.resolve("port/in");
+        Path servicios = aplicacion.resolve("service");
+        Path puertosDeSalida = aplicacion.resolve("port/out");
+        assertEquals("Clases sueltas en port.in", Arrays.asList(), clasesSueltas(puertosDeEntrada));
+        assertEquals("Clases sueltas en port.out", Arrays.asList(), clasesSueltas(puertosDeSalida));
+        assertEquals("Clases sueltas en service", Arrays.asList(), clasesSueltas(servicios));
+        assertEquals("Carpetas no permitidas en port.in", Arrays.asList(),
+                carpetasNoPermitidas(puertosDeEntrada, EPICAS));
+        assertEquals("Carpetas no permitidas en service", Arrays.asList(), carpetasNoPermitidas(servicios, EPICAS));
+        assertEquals("Carpetas no permitidas en port.out", Arrays.asList(),
+                carpetasNoPermitidas(puertosDeSalida, CARPETAS_PUERTOS_DE_SALIDA));
+    }
+
+    @Test
+    public void cadaServicioEstaEnLaMismaEpicaQueSuPuertoDeEntrada() throws IOException {
+        Path aplicacion = raizDeFuentes().resolve("application");
+        assertEquals("Servicios fuera de la épica de su puerto", Arrays.asList(),
+                serviciosFueraDeLaEpicaDeSuPuerto(aplicacion.resolve("port/in"), aplicacion.resolve("service")));
+    }
+
     // ------------------------------------------- las reglas fallan cuando la estructura se rompe
+
+    @Test
+    public void laReglaDetectaUnServicioEnOtraEpicaQueSuPuerto() throws IOException {
+        Path puertos = temporal.newFolder("port").toPath();
+        Path servicios = temporal.newFolder("service").toPath();
+        Files.createDirectories(puertos.resolve("materias"));
+        Files.createDirectories(servicios.resolve("sesiones"));
+        Files.createDirectories(servicios.resolve("materias"));
+        Files.write(puertos.resolve("materias/RegistrarMateria.java"), "public interface RegistrarMateria {}"
+                .getBytes(StandardCharsets.UTF_8));
+        Files.write(servicios.resolve("sesiones/RegistrarMateriaService.java"),
+                "public class RegistrarMateriaService {}".getBytes(StandardCharsets.UTF_8));
+        Files.write(servicios.resolve("materias/AyudanteService.java"), "public class AyudanteService {}"
+                .getBytes(StandardCharsets.UTF_8));
+
+        assertEquals(Arrays.asList("RegistrarMateriaService (sesiones) con su puerto en materias"),
+                serviciosFueraDeLaEpicaDeSuPuerto(puertos, servicios));
+    }
 
     @Test
     public void laReglaDetectaUnaClaseSueltaEnLaRaiz() throws IOException {

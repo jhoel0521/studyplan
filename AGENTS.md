@@ -64,14 +64,14 @@ Ningún código entra sin una spec aprobada.
 - No accedas a la base de datos desde el hilo principal.
 - Cada layout XML abre en el editor de diseño de Android Studio y declara `tools:context` de su Activity o Fragment; la clase enlaza sus vistas por id.
 - Los eventos del ciclo de vida y los listeners (`onCreate`, `onClick`…) van en métodos con nombre, para que se vean en la revisión de código.
-- Paquetes bajo `io.github.jhoel0521.studyplan`: `domain`, `application.port.in`, `application.port.out`, `application.service`, `adapter.in.ui`, `adapter.out.persistence`, `adapter.out.drive`, `adapter.out.security`, `adapter.out.system`.
+- Paquetes bajo `io.github.jhoel0521.studyplan`: `domain` (con las carpetas `entity`, `valueobject`, `enumeration`, `state`, `service`, `result` y `readmodel`), `application.port.in.<épica>`, `application.port.out.persistence` y `application.port.out.system`, `application.service.<épica>`, `adapter.in.ui`, `adapter.out.persistence`, `adapter.out.drive` (aún no existe: el respaldo en Drive no está implementado), `adapter.out.security`, `adapter.out.system`. Las épicas son `configuracion`, `materias`, `sesiones`, `calendario`, `tecnicas`, `metas`, `estadisticas`, `reportes` y `recordatorios`, más `comun` para lo compartido. Cada clase va en la carpeta que dice qué es; `EstructuraPaquetesTest` falla si no es así.
 - Toda entrada de usuario se valida (por ejemplo, hora fin > hora inicio).
 
 ### 6.1 Principios SOLID y Arquitectura Hexagonal en Java
-- **SRP (Responsabilidad Única):** Cada caso de uso tiene su puerto de entrada (`application.port.in.<CasoDeUso>`) y su servicio (`application.service.<CasoDeUso>Service`). Las `Activity` solo enlazan vistas, observan `LiveData` y delegan al `ViewModel`.
-- **OCP / LSP (Patrón State GoF):** El ciclo de vida de entidades con máquina de estados (por ejemplo `EstadoSesion` para `RN-07`) se implementa mediante polimorfismo de clases de estado en `domain`, evitando `switch`/`if` dispersos.
+- **SRP (Responsabilidad Única):** Cada caso de uso tiene su puerto de entrada (`application.port.in.<épica>.<CasoDeUso>`) y su servicio, en la misma épica (`application.service.<épica>.<CasoDeUso>Service`). Las `Activity` solo enlazan vistas, observan `LiveData` y delegan al `ViewModel`.
+- **OCP / LSP (Patrón State GoF):** El ciclo de vida de entidades con máquina de estados (por ejemplo `EstadoSesion` para `RN-07`) se implementa mediante polimorfismo de clases de estado en `domain.state`, evitando `switch`/`if` dispersos.
 - **ISP (Segregación de Interfaces):** Los puertos de salida se segregan por responsabilidad (`MateriaRepository`, `SesionRepository`, `SesionesDeMateria`, `PreferenciasRepository`, `Reloj`).
-- **DIP (Inversión de Dependencias):** `domain` y `application` son Java 100 % puro (cero imports de `android.*` o `androidx.*`, verificado por `ArquitecturaTest`). La obtención de fecha/hora actual u otras dependencias de sistema entran por puertos en `application.port.out` (como `Reloj`).
+- **DIP (Inversión de Dependencias):** `domain` y `application` son Java 100 % puro (cero imports de `android.*` o `androidx.*`, verificado por `ArquitecturaTest`). La obtención de fecha/hora actual u otras dependencias de sistema entran por puertos en `application.port.out.system` (como `Reloj`).
 
 ### 6.2 Checklist obligatorio de atributos XML (Layout Validation, Visual Lint y Accesibilidad)
 Ningún layout nuevo o modificado (`activity_*.xml`, `contenido_*.xml`, `dialog_*.xml`, `item_*.xml`, `view_*.xml`) se da por válido sin cumplir todos estos puntos:
