@@ -48,7 +48,12 @@ public class EstructuraPaquetesTest {
     static final Set<String> EPICAS = new HashSet<>(Arrays.asList(
             "configuracion", "materias", "sesiones", "calendario", "tecnicas", "metas", "estadisticas", "reportes",
             "recordatorios", "comun"));
-    static final Set<String> CARPETAS_PUERTOS_DE_SALIDA = new HashSet<>(Arrays.asList("persistence", "system"));
+    /** Lo que el manifiesto nombra y el sistema recuerda por su nombre de clase no se mueve de la raíz. */
+    static final Set<String> RAIZ_DE_LA_INTERFAZ = new HashSet<>(Arrays.asList(
+            "StudyPlanApplication", "FabricaViewModels", "ReceptorAvisosSesion", "ServicioSesionEnCurso"));
+    static final Set<String> RAIZ_DE_LA_PERSISTENCIA = new HashSet<>(Arrays.asList("StudyPlanDatabase", "Migraciones"));
+    static final Set<String> CARPETAS_DE_LA_PERSISTENCIA = new HashSet<>(Arrays.asList("entity", "dao", "repository"));
+    static final Set<String> CARPETAS_PUERTOS_DE_SALIDA =new HashSet<>(Arrays.asList("persistence", "system"));
     private static final Set<String> CARPETAS_CON_ENUMS =new HashSet<>(Arrays.asList(
             "enumeration", "state", "result"));
     private static final Pattern DECLARA_ENUM = Pattern.compile("^public\\s+enum\\s+\\w+", Pattern.MULTILINE);
@@ -130,6 +135,51 @@ public class EstructuraPaquetesTest {
         return fuera;
     }
 
+    /** Clases en la raíz de {@code carpeta} que no están entre las permitidas (nombres sin extensión). */
+    static List<String> clasesSueltasNoPermitidas(Path carpeta, Set<String> permitidas) throws IOException {
+        List<String> sobran = new ArrayList<>();
+        for (String archivo : clasesSueltas(carpeta)) {
+            String nombre = archivo.substring(0, archivo.length() - ".java".length());
+            if (!permitidas.contains(nombre)) {
+                sobran.add(nombre);
+            }
+        }
+        return sobran;
+    }
+
+    /**
+     * Layouts cuyo {@code tools:context} apunta a una clase que no existe. El valor es el nombre relativo con punto
+     * ({@code .adapter.in.ui.materias.MateriasActivity}) y se resuelve contra las carpetas de fuentes.
+     */
+    static List<String> contextosRotos(Path recursos, Path fuentes) throws IOException {
+        Pattern contexto = Pattern.compile("tools:context=\"\\.([\\w.]+)\"");
+        List<String> rotos = new ArrayList<>();
+        try (Stream<Path> recorrido = Files.walk(recursos)) {
+            for (Path layout : recorrido.filter(p -> p.toString().endsWith(".xml")
+                    && p.getParent().getFileName().toString().startsWith("layout")).collect(Collectors.toList())) {
+                java.util.regex.Matcher m = contexto.matcher(leer(layout));
+                while (m.find()) {
+                    Path clase = fuentes.resolve(m.group(1).replace('.', '/') + ".java");
+                    if (!Files.isRegularFile(clase)) {
+                        rotos.add(layout.getParent().getFileName() + "/" + layout.getFileName() + " -> ." + m.group(1));
+                    }
+                }
+            }
+        }
+        Collections.sort(rotos);
+        return rotos;
+    }
+
+    private static Path raizDeRecursos() {
+        Path[] candidatas = {Paths.get("src/main/res"), Paths.get("app/src/main/res")};
+        for (Path candidata : candidatas) {
+            if (Files.isDirectory(candidata)) {
+                return candidata;
+            }
+        }
+        throw new AssertionError("No se encontró la carpeta de recursos; la prueba no puede comprobar nada");
+    }
+
     private static String nombreSinExtension(Path archivo) {
         String nombre = archivo.getFileName().toString();
         return nombre.substring(0, nombre.length() - ".java".length());
@@ -209,7 +259,55 @@ public class EstructuraPaquetesTest {
                 serviciosFueraDeLaEpicaDeSuPuerto(aplicacion.resolve("port/in"), aplicacion.resolve("service")));
     }
 
+    @Test
+    public void laInterfazDeUsuarioEstaPorEpicaYSoloLaRaizTieneLoQueNombraElManifiesto() throws IOException {
+        Path ui = raizDeFuentes().resolve("adapter/in/ui");
+        assertEquals("Clases en la raíz de adapter.in.ui que no son las permitidas", Arrays.asList(),
+                clasesSueltasNoPermitidas(ui, RAIZ_DE_LA_INTERFAZ));
+        assertEquals("Carpetas no permitidas en adapter.in.ui", Arrays.asList(), carpetasNoPermitidas(ui, EPICAS));
+    }
+
+    @Test
+    public void laPersistenciaEstaPorTipoYSoloLaRaizTieneLaBaseDeDatos() throws IOException {
+        Path persistencia = raizDeFuentes().resolve("adapter/out/persistence");
+        assertEquals("Clases en la raíz de adapter.out.persistence que no son las permitidas", Arrays.asList(),
+                clasesSueltasNoPermitidas(persistencia, RAIZ_DE_LA_PERSISTENCIA));
+        assertEquals("Carpetas no permitidas en adapter.out.persistence", Arrays.asList(),
+                carpetasNoPermitidas(persistencia, CARPETAS_DE_LA_PERSISTENCIA));
+    }
+
+    @Test
+    public void cadaToolsContextDeLosLayoutsApuntaAUnaClaseQueExiste() throws IOException {
+        assertEquals("Layouts con tools:context a una clase inexistente", Arrays.asList(),
+                contextosRotos(raizDeRecursos(), raizDeFuentes()));
+    }
+
     // ------------------------------------------- las reglas fallan cuando la estructura se rompe
+
+    @Test
+    public void laReglaDetectaUnToolsContextQueApuntaAUnaClaseInexistente() throws IOException {
+        Path recursos = temporal.newFolder("res").toPath();
+        Path layout = Files.createDirectories(recursos.resolve("layout"));
+        Path fuentes = temporal.newFolder("java").toPath();
+        Files.createDirectories(fuentes.resolve("adapter/in/ui/materias"));
+        Files.write(fuentes.resolve("adapter/in/ui/materias/Existe.java"), "class Existe {}"
+                .getBytes(StandardCharsets.UTF_8));
+        Files.write(layout.resolve("bien.xml"), "<x tools:context=\".adapter.in.ui.materias.Existe\"/>"
+                .getBytes(StandardCharsets.UTF_8));
+        Files.write(layout.resolve("mal.xml"), "<x tools:context=\".adapter.in.ui.NoExiste\"/>"
+                .getBytes(StandardCharsets.UTF_8));
+
+        assertEquals(Arrays.asList("layout/mal.xml -> .adapter.in.ui.NoExiste"), contextosRotos(recursos, fuentes));
+    }
+
+    @Test
+    public void laReglaDetectaUnaClaseSueltaQueNoEstaPermitidaEnLaRaiz() throws IOException {
+        Path carpeta = temporal.newFolder("ui").toPath();
+        Files.write(carpeta.resolve("StudyPlanApplication.java"), "class A {}".getBytes(StandardCharsets.UTF_8));
+        Files.write(carpeta.resolve("Rara.java"), "class Rara {}".getBytes(StandardCharsets.UTF_8));
+
+        assertEquals(Arrays.asList("Rara"), clasesSueltasNoPermitidas(carpeta, RAIZ_DE_LA_INTERFAZ));
+    }
 
     @Test
     public void laReglaDetectaUnServicioEnOtraEpicaQueSuPuerto() throws IOException {

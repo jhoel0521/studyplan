@@ -198,7 +198,7 @@ Nota: Elaboración propia. Los 42 pares de contraste del estándar (texto ≥ 4,
 
 ### Estructura de paquetes y tipos de clase
 
-El código está dividido en tres capas (presentación, núcleo e infraestructura) y, dentro de cada capa, en carpetas que dicen qué es cada clase. Antes todas las clases de una capa vivían sueltas en una sola carpeta (el dominio tenía 71 archivos juntos), de modo que no se podía distinguir una entidad de un value object, un enum o una clase de lectura. La reorganización se hace por etapas, capa por capa, sin cambiar el comportamiento de la aplicación: cada etapa compila, mantiene las mismas pruebas y actualiza esta sección. Esta versión documenta el dominio y la capa de aplicación; la capa de adaptadores se agrega al terminar su etapa.
+El código está dividido en tres capas (presentación, núcleo e infraestructura) y, dentro de cada capa, en carpetas que dicen qué es cada clase. Antes todas las clases de una capa vivían sueltas en una sola carpeta (el dominio tenía 71 archivos juntos), de modo que no se podía distinguir una entidad de un value object, un enum o una clase de lectura. La reorganización se hace por etapas, capa por capa, sin cambiar el comportamiento de la aplicación: cada etapa compila, mantiene las mismas pruebas y actualiza esta sección. Esta sección documenta las tres capas: el dominio, la aplicación y los adaptadores.
 
 El dominio (`domain`) se divide por tipo de clase. Una clase se asigna a su carpeta con estas preguntas, en este orden, y la primera que se cumple decide:
 
@@ -237,6 +237,22 @@ application/
 ```
 
 Nota: Elaboración propia. `<épica>` es una de las nueve carpetas de épica o `comun`.
+
+Los adaptadores se dividen según su dirección. Los de entrada, la interfaz de usuario (`adapter/in/ui`), se agrupan por épica igual que la aplicación: cada carpeta reúne las Activities, los ViewModels, los adaptadores de lista y los diálogos de esa épica, y `comun` guarda lo compartido (las clases base `ActividadBase` y `ActividadProtegida`, los formatos y el aplicador de apariencia). Los de salida se dividen por tecnología: `adapter/out/persistence` tiene `entity` (las tablas de Room), `dao` (las consultas) y `repository` (las clases que implementan los contratos de salida de persistencia), y `adapter/out/system` y `adapter/out/security` quedan planos porque tienen pocos archivos.
+
+Algunas clases no se movieron a propósito. `StudyPlanDatabase` y `Migraciones` se quedan en la raíz de `adapter/out/persistence` porque Room guarda el esquema exportado en una carpeta con el nombre completo de la base de datos. `StudyPlanApplication`, `FabricaViewModels`, `ReceptorAvisosSesion` y `ServicioSesionEnCurso` se quedan en la raíz de `adapter/in/ui` porque el manifiesto las nombra y el sistema operativo las recuerda por su nombre de clase, y `ReceptorAdministradorBloqueo` se queda en `adapter/out/system` por la misma razón. Ocho clases de la interfaz que antes solo se veían dentro de su carpeta (por ejemplo `FormatoHoras` o `MensajesDeError`) pasaron a ser públicas porque ahora las usan varias épicas, igual que los métodos de acceso de `StudyPlanApplication` y de `NotificadorSesion` que usan las pruebas.
+
+```text
+adapter/
+  in/ui/<épica>/        Activity, ViewModel, adaptador de lista y diálogo de la épica
+  in/ui/comun/          ActividadBase, ActividadProtegida, AplicadorApariencia, FormatoHoras, ...
+  in/ui/                StudyPlanApplication, FabricaViewModels, ReceptorAvisosSesion, ServicioSesionEnCurso
+  out/persistence/      entity/ (tablas Room), dao/, repository/ (con Mapeadores); StudyPlanDatabase, Migraciones
+  out/system/           BloqueoPantallaSistema, RelojSistema, ProgramadorAvisosAlarmManager, ...
+  out/security/         DisponibilidadBloqueoBiometrico
+```
+
+Nota: Elaboración propia. Dos nombres se repiten a propósito en capas distintas y no se confunden por el paquete: `domain/entity` es el modelo del negocio y `adapter/out/persistence/entity` son las tablas de Room; `domain/service` son reglas sin estado y `application/service` son los casos de uso.
 
 La @tabla:tipos_de_clase define cada tipo de clase del proyecto, con un ejemplo real. Los contratos (puertos) y los servicios de aplicación viven en la capa de aplicación, y los adaptadores en la de infraestructura y presentación; se incluyen aquí para tener todas las definiciones juntas.
 
