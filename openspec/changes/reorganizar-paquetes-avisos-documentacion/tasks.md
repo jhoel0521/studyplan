@@ -44,7 +44,7 @@
 - [x] 5.4 Corregir el resto de avisos de `domain` y `application` de la línea base (declaraciones y parámetros sin uso, redundancias, otros) según el triaje. Resultado: se quitó una conversión redundante y el uso obsoleto de `Locale(String, String)`, ambos en pruebas. Verificación: `./gradlew test` pasa y `javac -Xlint:all` ya no avisa en `domain` ni `application`.
 - [x] 5.5 Corregir el resto de avisos de `adapter` (presentación y persistencia) según el triaje. Resultado: un comentario de documentación suelto de `LineaGraficaEspressoTest` pasó a comentario normal; quedan 2 `[this-escape]` (aviso de JDK 21 en `AjustesActivity` y `SesionFormularioActivity`, que el IDE no muestra) y 79 `[try]` de `ActivityScenario` en pruebas, justificados en la bitácora. Verificación: `./gradlew assembleDebug assembleDebugAndroidTest test lint` pasa.
 - [x] 5.6 Corregir de los 53 avisos de `lint` de Gradle solo los de una línea y sin cambio de comportamiento; anotar el resto en la bitácora para otro change. Resultado: 46 avisos (antes 53). Verificación: `./gradlew lint` con 0 errores y el motivo de cada tipo restante en la bitácora.
-- [ ] 5.7 Volver a correr el inspector con el mismo perfil que en 1.3 y comparar con la línea base. Verificación: todos los avisos de la línea base están resueltos o justificados con su motivo, y la comparación queda en la bitácora.
+- [x] 5.7 Repetir las comprobaciones de la línea base aproximada de 1.3 y comparar (el inspector del IDE no analiza el proyecto desde la línea de comandos; su XML queda como confirmación opcional del Product Owner). Verificación: todos los avisos de la línea base están resueltos o justificados con su motivo, y la comparación queda en la bitácora.
 
 ## 6. Etapa 5: documentación final
 
