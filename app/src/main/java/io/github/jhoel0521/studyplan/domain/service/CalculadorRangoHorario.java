@@ -56,23 +56,6 @@ public final class CalculadorRangoHorario {
     }
 
     /**
-     * Calcula el límite superior del rango activo ({@code min(1440, max(horaFin) + 120)}).
-     */
-    public static int calcularMinutoFinRangoActivo(List<ItemSesionCalendario> sesiones) {
-        if (sesiones == null || sesiones.isEmpty()) {
-            return MINUTOS_POR_DIA;
-        }
-        int maxFin = 0;
-        for (ItemSesionCalendario s : sesiones) {
-            int fin = s.minutoFinEnDia();
-            if (fin > maxFin) {
-                maxFin = fin;
-            }
-        }
-        return Math.min(MINUTOS_POR_DIA, maxFin + MARGEN_SCROLL_MINUTOS);
-    }
-
-    /**
      * Construye los bloques posicionados para {@code Semana} o {@code Día}, repartiendo en columnas
      * paralelas las sesiones que coincidan visualmente en el mismo día (p. ej. una sesión
      * {@code REPROGRAMADA} junto con la nueva sesión activa en ese horario).

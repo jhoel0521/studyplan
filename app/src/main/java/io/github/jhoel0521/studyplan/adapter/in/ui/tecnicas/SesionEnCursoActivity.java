@@ -23,7 +23,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
-import java.util.Locale;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.application.port.in.tecnicas.DecidirFinPlanificadoOInvasion;

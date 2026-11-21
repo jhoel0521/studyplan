@@ -40,7 +40,6 @@ import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
-import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.enumeration.PreferenciaNoMolestar;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;

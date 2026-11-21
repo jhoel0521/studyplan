@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo;
 import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;

@@ -686,27 +686,6 @@ public final class SesionEstudio {
                 antelacionRecordatorio);
     }
 
-    public SesionEstudio conTecnica(TecnicaEstudio nuevaTecnica) {
-        return new SesionEstudio(
-                id,
-                materiaId,
-                planInicioUtcMilis,
-                planFinUtcMilis,
-                desfaseMinutos,
-                duracionPlanificadaMinutos,
-                duracionRealMinutos,
-                estado,
-                notas,
-                sesionOrigenId,
-                nuevaTecnica == null ? TecnicaEstudio.LIBRE : nuevaTecnica,
-                preferenciaNoMolestar,
-                pomodoroTrabajoMinutos,
-                pomodoroDescansoCortoMinutos,
-                pomodoroDescansoLargoMinutos,
-                pomodoroCiclosHastaLargo,
-                antelacionRecordatorio);
-    }
-
     /**
      * Comprueba si esta sesión se cruza con otra franja horaria en {@code otraFecha} (RN-05).
      * Las sesiones reprogramadas no ocupan horario y los extremos contiguos no se consideran cruce.

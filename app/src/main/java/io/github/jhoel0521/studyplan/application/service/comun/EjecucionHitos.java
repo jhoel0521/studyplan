@@ -1,7 +1,6 @@
 package io.github.jhoel0521.studyplan.application.service.comun;
 
 import java.util.List;
-import java.util.Optional;
 
 import io.github.jhoel0521.studyplan.application.port.out.persistence.MateriaRepository;
 import io.github.jhoel0521.studyplan.application.port.out.system.ProgramadorAvisosSesion;
@@ -26,19 +25,6 @@ import io.github.jhoel0521.studyplan.domain.enumeration.TipoEventoEstudio;
 public final class EjecucionHitos {
 
     private EjecucionHitos() {
-    }
-
-    public static Optional<SesionEstudio> buscarSiguientePendiente(
-            SesionEstudio activa, SesionRepository sesiones) {
-        List<SesionEstudio> delDia = sesiones.listarPorFecha(activa.fecha());
-        for (SesionEstudio candidata : delDia) {
-            if (candidata.codigoEstado() == CodigoEstadoSesion.PENDIENTE
-                    && !candidata.id().equals(activa.id())
-                    && candidata.horaInicio().compareTo(activa.horaInicio()) >= 0) {
-                return Optional.of(candidata);
-            }
-        }
-        return Optional.empty();
     }
 
     public static CandidataInvasion detectarInvasion(

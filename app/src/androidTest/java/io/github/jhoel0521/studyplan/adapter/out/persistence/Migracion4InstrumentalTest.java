@@ -1,7 +1,6 @@
 package io.github.jhoel0521.studyplan.adapter.out.persistence;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import android.database.Cursor;

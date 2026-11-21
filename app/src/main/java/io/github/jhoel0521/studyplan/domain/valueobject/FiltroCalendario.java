@@ -69,10 +69,6 @@ public final class FiltroCalendario {
         return new FiltroCalendario(nuevaMateria, nuevoIncluirArchivadas, estadosVisibles);
     }
 
-    public FiltroCalendario conEstadosVisibles(Set<CodigoEstadoSesion> nuevosEstados) {
-        return new FiltroCalendario(materiaId, incluirArchivadas, nuevosEstados);
-    }
-
     /** Evalúa si una sesión con su materia archivada cumple el filtro actual. */
     public boolean acepta(long sesionMateriaId, boolean materiaArchivada, CodigoEstadoSesion estado) {
         if (materiaId != null && sesionMateriaId != materiaId) {

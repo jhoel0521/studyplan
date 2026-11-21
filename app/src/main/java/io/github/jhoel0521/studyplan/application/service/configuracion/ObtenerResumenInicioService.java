@@ -17,7 +17,6 @@ import io.github.jhoel0521.studyplan.application.port.out.persistence.SesionRepo
 import io.github.jhoel0521.studyplan.application.port.out.persistence.TramoDiarioRepository;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesionInicio;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
-import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
 import io.github.jhoel0521.studyplan.domain.valueobject.Instante;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.domain.entity.MetaSemanal;

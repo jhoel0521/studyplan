@@ -55,7 +55,6 @@ public final class ExportadorReporteSistema implements ExportadorReporte {
     private static final float MARGEN_X = 40f;
     private static final float MARGEN_SUPERIOR = 44f;
     private static final float MARGEN_INFERIOR = 42f;
-    private static final float ANCHO_CONTENIDO = ANCHO_A4 - (2f * MARGEN_X);
     private static final float ALTURA_PIE = 22f;
     private static final float LIMITE_TABLA_Y = ALTO_A4 - MARGEN_INFERIOR - ALTURA_PIE;
     private static final float ALTURA_CABECERA_TABLA = 26f;
