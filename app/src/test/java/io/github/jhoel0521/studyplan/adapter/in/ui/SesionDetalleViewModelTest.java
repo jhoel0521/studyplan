@@ -12,11 +12,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.CompletarSesionService;
-import io.github.jhoel0521.studyplan.application.service.ConsultarSesionService;
-import io.github.jhoel0521.studyplan.application.service.EliminarSesionService;
-import io.github.jhoel0521.studyplan.application.service.RegistrarSesionTardiaService;
-import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.CompletarSesionService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.ConsultarSesionService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.EliminarSesionService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.RegistrarSesionTardiaService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.readmodel.DetalleSesion;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;

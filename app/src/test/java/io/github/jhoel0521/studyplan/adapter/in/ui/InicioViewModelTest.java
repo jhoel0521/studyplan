@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
-import io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService;
-import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.application.service.materias.ListarMateriasService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ObtenerResumenInicioService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
@@ -106,10 +106,10 @@ public class InicioViewModelTest {
         io.github.jhoel0521.studyplan.fakes.FakeReloj reloj =
                 new io.github.jhoel0521.studyplan.fakes.FakeReloj(
                         Fecha.de(2026, 11, 14).valor(), Hora.de(10, 0).valor());
-        io.github.jhoel0521.studyplan.application.service.DefinirMetaSemanalService defMeta =
-                new io.github.jhoel0521.studyplan.application.service.DefinirMetaSemanalService(metas, reloj);
-        io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService estAhora =
-                new io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService(
+        io.github.jhoel0521.studyplan.application.service.metas.DefinirMetaSemanalService defMeta =
+                new io.github.jhoel0521.studyplan.application.service.metas.DefinirMetaSemanalService(metas, reloj);
+        io.github.jhoel0521.studyplan.application.service.metas.EstudiarAhoraService estAhora =
+                new io.github.jhoel0521.studyplan.application.service.metas.EstudiarAhoraService(
                         sesiones,
                         new io.github.jhoel0521.studyplan.fakes.FakeEventoEstudioRepository(),
                         materias,
@@ -119,7 +119,7 @@ public class InicioViewModelTest {
                         new io.github.jhoel0521.studyplan.fakes.FakeMarcadorSalidaApp(),
                         reloj);
         InicioViewModel vm = new InicioViewModel(
-                new io.github.jhoel0521.studyplan.application.service.ObtenerResumenInicioService(
+                new io.github.jhoel0521.studyplan.application.service.configuracion.ObtenerResumenInicioService(
                         perfiles,
                         sesiones,
                         materias,
@@ -127,7 +127,7 @@ public class InicioViewModelTest {
                         metas,
                         reloj,
                         () -> 0),
-                new io.github.jhoel0521.studyplan.application.service.ListarMateriasService(materias, sesiones),
+                new io.github.jhoel0521.studyplan.application.service.materias.ListarMateriasService(materias, sesiones),
                 defMeta,
                 estAhora,
                 null,

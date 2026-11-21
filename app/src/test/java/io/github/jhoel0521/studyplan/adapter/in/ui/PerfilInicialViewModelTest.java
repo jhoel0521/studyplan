@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ConfigurarPerfilService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ConfigurarPerfilService;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;
 import io.github.jhoel0521.studyplan.domain.result.Resultado;

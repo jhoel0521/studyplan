@@ -13,12 +13,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
-import io.github.jhoel0521.studyplan.application.service.ConsultarMateriaService;
-import io.github.jhoel0521.studyplan.application.service.DesarchivarMateriaService;
-import io.github.jhoel0521.studyplan.application.service.EditarMateriaService;
-import io.github.jhoel0521.studyplan.application.service.EliminarMateriaService;
-import io.github.jhoel0521.studyplan.application.service.RegistrarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.ArchivarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.ConsultarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.DesarchivarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.EditarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.EliminarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.RegistrarMateriaService;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;

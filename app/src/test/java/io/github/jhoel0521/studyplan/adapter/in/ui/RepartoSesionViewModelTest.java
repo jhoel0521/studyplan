@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ConsultarSesionService;
-import io.github.jhoel0521.studyplan.application.service.IniciarSesionService;
-import io.github.jhoel0521.studyplan.application.service.RepartirTramoSesionService;
-import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.ConsultarSesionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.IniciarSesionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.RepartirTramoSesionService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
 import io.github.jhoel0521.studyplan.domain.entity.Materia;

@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import io.github.jhoel0521.studyplan.application.service.ConsultarProgresoMetasService;
+import io.github.jhoel0521.studyplan.application.service.metas.ConsultarProgresoMetasService;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;

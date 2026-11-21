@@ -12,11 +12,11 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import io.github.jhoel0521.studyplan.application.port.in.tecnicas.DecidirFinPlanificadoOInvasion;
-import io.github.jhoel0521.studyplan.application.service.ConsultarEjecucionSesionService;
-import io.github.jhoel0521.studyplan.application.service.DecidirFinPlanificadoOInvasionService;
-import io.github.jhoel0521.studyplan.application.service.DetenerSesionService;
-import io.github.jhoel0521.studyplan.application.service.IniciarSesionService;
-import io.github.jhoel0521.studyplan.application.service.PausarReanudarSesionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.ConsultarEjecucionSesionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.DecidirFinPlanificadoOInvasionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.DetenerSesionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.IniciarSesionService;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.PausarReanudarSesionService;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.result.ErrorValidacion;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
@@ -118,8 +118,8 @@ public class SesionEnCursoViewModelTest {
         Materia m1 = mats.guardar(Materia.crear("Matemáticas", 0xFF1E88E5, null).valor());
         Materia m2 = mats.guardar(Materia.crear("Informática", 0xFF43A047, null, 1.0).valor());
 
-        io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService estudiarAhora =
-                new io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService(
+        io.github.jhoel0521.studyplan.application.service.metas.EstudiarAhoraService estudiarAhora =
+                new io.github.jhoel0521.studyplan.application.service.metas.EstudiarAhoraService(
                         sesiones, evs, mats, aj, dnd, prog, marc, reloj);
         SesionEstudio s1 = estudiarAhora.ejecutar(
                 m1.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).valor();
@@ -132,9 +132,9 @@ public class SesionEnCursoViewModelTest {
                         sesiones, evs, mats, aj, dnd, prog, marc,
                         new DetenerSesionService(sesiones, evs, dnd, prog, marc, tramos, metas, perfiles, mats, reloj),
                         tramos, reloj),
-                new io.github.jhoel0521.studyplan.application.service.CambiarDeMateriaService(
+                new io.github.jhoel0521.studyplan.application.service.metas.CambiarDeMateriaService(
                         sesiones, evs, mats, aj, dnd, prog, marc, tramos, reloj),
-                new io.github.jhoel0521.studyplan.application.service.ListarMateriasService(mats, sesiones),
+                new io.github.jhoel0521.studyplan.application.service.materias.ListarMateriasService(mats, sesiones),
                 Runnable::run);
 
         reloj.avanzarMilis(15 * 60_000L);
@@ -157,7 +157,7 @@ public class SesionEnCursoViewModelTest {
         FakeProgramadorAvisosSesion prog = new FakeProgramadorAvisosSesion();
         FakeMarcadorSalidaApp marc = new FakeMarcadorSalidaApp();
         Materia m1 = mats.guardar(Materia.crear("Física", 0xFF1E88E5, null).valor());
-        SesionEstudio s1 = new io.github.jhoel0521.studyplan.application.service.EstudiarAhoraService(
+        SesionEstudio s1 = new io.github.jhoel0521.studyplan.application.service.metas.EstudiarAhoraService(
                 sesiones, evs, mats, aj, dnd, prog, marc, reloj)
                 .ejecutar(m1.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL)
                 .valor();
@@ -190,7 +190,7 @@ public class SesionEnCursoViewModelTest {
                         .orElse(null));
 
         reloj.avanzarMilis(3 * 60_000L);
-        new io.github.jhoel0521.studyplan.application.service.RegistrarSalidaAppService(
+        new io.github.jhoel0521.studyplan.application.service.tecnicas.RegistrarSalidaAppService(
                 sesiones, evs, mats, marc, reloj).ejecutar(reloj.ahoraMilis());
         vm.cargar(s1.id());
         assertTrue(vm.resumen().getValue().salidaPendienteResolver());

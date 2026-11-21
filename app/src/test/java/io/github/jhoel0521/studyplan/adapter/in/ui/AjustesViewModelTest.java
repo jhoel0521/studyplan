@@ -13,12 +13,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ConfigurarAjustesEstudioService;
-import io.github.jhoel0521.studyplan.application.service.ConfigurarAparienciaService;
-import io.github.jhoel0521.studyplan.application.service.ConfigurarBloqueoService;
-import io.github.jhoel0521.studyplan.application.service.ConfigurarRecordatorioPorDefectoService;
-import io.github.jhoel0521.studyplan.application.service.ConsultarAjustesService;
-import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
+import io.github.jhoel0521.studyplan.application.service.tecnicas.ConfigurarAjustesEstudioService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ConfigurarAparienciaService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ConfigurarBloqueoService;
+import io.github.jhoel0521.studyplan.application.service.recordatorios.ConfigurarRecordatorioPorDefectoService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ConsultarAjustesService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.SesionBloqueo;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 import io.github.jhoel0521.studyplan.domain.enumeration.AntelacionRecordatorio;
 import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;

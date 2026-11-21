@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ConsultarCalendarioService;
-import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.application.service.calendario.ConsultarCalendarioService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.readmodel.DatosCalendario;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.FiltroCalendario;

@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ArchivarMateriaService;
-import io.github.jhoel0521.studyplan.application.service.ListarMateriasService;
-import io.github.jhoel0521.studyplan.application.service.RegistrarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.ArchivarMateriaService;
+import io.github.jhoel0521.studyplan.application.service.materias.ListarMateriasService;
+import io.github.jhoel0521.studyplan.application.service.materias.RegistrarMateriaService;
 import io.github.jhoel0521.studyplan.fakes.FakeMateriaRepository;
 import io.github.jhoel0521.studyplan.fakes.FakeSesionRepository;
 

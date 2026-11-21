@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import io.github.jhoel0521.studyplan.application.service.ConsultarEstadoArranqueService;
-import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ConsultarEstadoArranqueService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.SesionBloqueo;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 import io.github.jhoel0521.studyplan.domain.enumeration.EstadoArranque;
 import io.github.jhoel0521.studyplan.domain.entity.Perfil;

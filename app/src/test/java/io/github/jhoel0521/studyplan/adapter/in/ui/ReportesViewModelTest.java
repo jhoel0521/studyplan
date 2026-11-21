@@ -17,8 +17,8 @@ import java.util.Queue;
 
 import io.github.jhoel0521.studyplan.application.port.in.reportes.GenerarReporteEstudio;
 import io.github.jhoel0521.studyplan.application.port.out.ResultadoExportacion;
-import io.github.jhoel0521.studyplan.application.service.GenerarReporteEstudioService;
-import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.application.service.reportes.GenerarReporteEstudioService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
 import io.github.jhoel0521.studyplan.domain.readmodel.DesgloseMateriaPeriodo;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;

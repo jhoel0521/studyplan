@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.github.jhoel0521.studyplan.application.service.SesionBloqueo;
+import io.github.jhoel0521.studyplan.application.service.configuracion.SesionBloqueo;
 
 /**
  * Girar la pantalla no bloquea la app, pero mandarla a segundo plano y volver sí (con el bloqueo activo).

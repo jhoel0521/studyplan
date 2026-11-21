@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import io.github.jhoel0521.studyplan.application.service.ConsultarEstadisticasService;
-import io.github.jhoel0521.studyplan.application.service.VencerSesionesPendientesService;
+import io.github.jhoel0521.studyplan.application.service.estadisticas.ConsultarEstadisticasService;
+import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.entity.EventoEstudio;
 import io.github.jhoel0521.studyplan.domain.valueobject.Fecha;
 import io.github.jhoel0521.studyplan.domain.valueobject.Hora;
