@@ -18,6 +18,8 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]
 RESULTADOS = RAIZ / "app" / "build" / "test-results" / "testDebugUnitTest"
 LINEA_BASE = Path(__file__).resolve().parent / "linea_base_pruebas.txt"
+# Clases de prueba que el propio change añade (no existen en la línea base y no cuentan como diferencia).
+AGREGADAS_POR_EL_CHANGE = {"EstructuraPaquetesTest"}
 
 
 def pruebas_actuales():
@@ -28,6 +30,8 @@ def pruebas_actuales():
     for archivo in sorted(RESULTADOS.glob("TEST-*.xml")):
         for caso in ET.parse(archivo).getroot().iter("testcase"):
             clase = caso.get("classname", "").rsplit(".", 1)[-1]
+            if clase in AGREGADAS_POR_EL_CHANGE:
+                continue
             nombres.append("%s.%s" % (clase, caso.get("name")))
     return sorted(nombres)
 
