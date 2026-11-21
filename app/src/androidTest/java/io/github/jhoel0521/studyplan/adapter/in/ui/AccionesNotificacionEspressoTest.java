@@ -169,6 +169,59 @@ public class AccionesNotificacionEspressoTest {
         assertNotNull(aviso.getNotification().contentIntent);
     }
 
+    /** HU-49, HU-34: con música sonando los avisos salen en silencio y sin música no se silencian. */
+    @Test
+    public void conMusicaSonandoLosAvisosSalenEnSilencio() throws Exception {
+        NotificadorSesion.fijarDetectorMusicaParaPruebas(c -> true);
+
+        NotificadorSesion.mostrarAvisoRetorno(contexto, 1L, "Álgebra");
+        NotificadorSesion.mostrarHito(contexto, 1L, "CAMBIO_FASE_POMODORO", "Álgebra");
+        NotificadorSesion.mostrarMetasAlcanzadas(
+                contexto, Collections.singletonList(new MetaAlcanzada(null, "", 10.0, 10.5)));
+
+        assertTrue("Aviso de volver en silencio",
+                silenciosa(esperarId(NotificadorSesion.NOTIF_RETORNO_ID)));
+        assertTrue("Hito en silencio",
+                silenciosa(esperarId(NotificadorSesion.NOTIF_HITO_ID)));
+        assertTrue("Meta alcanzada en silencio",
+                silenciosa(esperarId(NotificadorSesion.NOTIF_METAS_ID)));
+        assertTrue("Recordatorio previo en silencio", silenciosa(
+                NotificadorSesion.construirNotificacionRecordatorio(contexto, 1L, "Álgebra", "08:00", "09:00", false)));
+    }
+
+    @Test
+    public void sinMusicaLosAvisosNoSeSilencian() throws Exception {
+        NotificadorSesion.fijarDetectorMusicaParaPruebas(c -> false);
+
+        NotificadorSesion.mostrarAvisoRetorno(contexto, 1L, "Álgebra");
+        NotificadorSesion.mostrarHito(contexto, 1L, "CAMBIO_FASE_POMODORO", "Álgebra");
+
+        assertFalse(silenciosa(esperarId(NotificadorSesion.NOTIF_RETORNO_ID)));
+        assertFalse(silenciosa(esperarId(NotificadorSesion.NOTIF_HITO_ID)));
+        assertFalse(silenciosa(
+                NotificadorSesion.construirNotificacionRecordatorio(contexto, 1L, "Álgebra", "08:00", "09:00", false)));
+    }
+
+    /** {@code setSilent(true)} de AndroidX publica el aviso sin sonido ni vibración con alerta de grupo «resumen». */
+    private static boolean silenciosa(Notification n) {
+        return androidx.core.app.NotificationCompat.getGroupAlertBehavior(n)
+                == androidx.core.app.NotificationCompat.GROUP_ALERT_SUMMARY;
+    }
+
+    @SuppressWarnings("BusyWait") // sondeo con tope
+    private Notification esperarId(int id) throws InterruptedException {
+        long limite = System.currentTimeMillis() + ESPERA_MS;
+        while (System.currentTimeMillis() < limite) {
+            for (StatusBarNotification sbn : nm.getActiveNotifications()) {
+                if (sbn.getId() == id) {
+                    return sbn.getNotification();
+                }
+            }
+            Thread.sleep(200);
+        }
+        throw new AssertionError("No apareció la notificación con id " + id);
+    }
+
     private long iniciar() {
         StudyPlanApplication app = Pruebas.app();
         long id = app.estudiarAhora()

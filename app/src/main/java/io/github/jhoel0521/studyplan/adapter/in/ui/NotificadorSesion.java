@@ -12,12 +12,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.RingtoneManager;
 import android.net.Uri;
+import android.media.AudioManager;
 import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.os.VibratorManager;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 
@@ -27,6 +24,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import io.github.jhoel0521.studyplan.R;
 import io.github.jhoel0521.studyplan.adapter.out.system.ProgramadorAvisosAlarmManager;
@@ -72,6 +70,8 @@ public final class NotificadorSesion {
     private static Bitmap logoEnCache;
     public static final int NOTIF_RECORDATORIO_BASE =
             ProgramadorAvisosAlarmManager.NOTIF_RECORDATORIO_BASE;
+
+    private static volatile Predicate<Context> detectorMusica = NotificadorSesion::hayMusicaSonando;
 
     private NotificadorSesion() {
     }
@@ -192,7 +192,7 @@ public final class NotificadorSesion {
 
     /**
      * Emite la notificación local previa de recordatorio usando {@code R.string.sesion_rango_horario}
-     * sin activar {@code vibrarYSonar()} y protegiendo la pantalla bloqueada si {@code bloqueoActivo}.
+     * y protegiendo la pantalla bloqueada si {@code bloqueoActivo}.
      */
     public static void mostrarRecordatorio(
             Context contexto,
@@ -299,6 +299,7 @@ public final class NotificadorSesion {
         } else {
             builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
+        aplicarSonidoDeAviso(contexto, builder, false);
         return builder.build();
     }
 
@@ -356,8 +357,32 @@ public final class NotificadorSesion {
         NotificationManager nm = (NotificationManager) contexto.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         if (nm != null) {
+            aplicarSonidoDeAviso(contexto, b, false);
             nm.notify(NOTIF_RETORNO_ID, b.build());
         }
+    }
+
+    /**
+     * Los avisos no cortan la música (HU-49): con música sonando salen en silencio; sin ella suenan y vibran una sola
+     * vez por el canal (Android 8 o posterior) o, en Android 7, por los valores predeterminados si el aviso sonaba antes.
+     */
+    private static void aplicarSonidoDeAviso(
+            Context contexto, NotificationCompat.Builder b, boolean sonidoEnAndroid7) {
+        if (detectorMusica.test(contexto)) {
+            b.setSilent(true);
+        } else if (sonidoEnAndroid7 && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            b.setDefaults(NotificationCompat.DEFAULT_ALL);
+        }
+    }
+
+    private static boolean hayMusicaSonando(Context contexto) {
+        AudioManager audio = (AudioManager) contexto.getSystemService(Context.AUDIO_SERVICE);
+        return audio != null && audio.isMusicActive();
+    }
+
+    /** Sustituye la detección de música en las pruebas; {@code null} restablece la real. */
+    static void fijarDetectorMusicaParaPruebas(Predicate<Context> detector) {
+        detectorMusica = detector == null ? NotificadorSesion::hayMusicaSonando : detector;
     }
 
     public static void cancelarAvisoRetorno(Context contexto) {
@@ -371,7 +396,6 @@ public final class NotificadorSesion {
 
     public static void mostrarHito(
             Context contexto, long sesionId, String tipoHito, String nombreMateria) {
-        vibrarYSonar(contexto);
         if (!puedeNotificar(contexto)) {
             return;
         }
@@ -421,6 +445,7 @@ public final class NotificadorSesion {
         NotificationManager nm = (NotificationManager) contexto.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         if (nm != null) {
+            aplicarSonidoDeAviso(contexto, b, true);
             nm.notify(NOTIF_HITO_ID, b.build());
         }
     }
@@ -668,6 +693,7 @@ public final class NotificadorSesion {
         NotificationManager nm = (NotificationManager) contexto.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         if (nm != null) {
+            aplicarSonidoDeAviso(contexto, b, false);
             nm.notify(NOTIF_METAS_ID, b.build());
         }
     }
@@ -682,38 +708,6 @@ public final class NotificadorSesion {
                 NOTIF_HITO_ID + reqOffset,
                 i,
                 flagsCompat(PendingIntent.FLAG_UPDATE_CURRENT));
-    }
-
-    private static void vibrarYSonar(Context contexto) {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                VibratorManager vm = (VibratorManager) contexto.getSystemService(
-                        Context.VIBRATOR_MANAGER_SERVICE);
-                if (vm != null) {
-                    vm.getDefaultVibrator().vibrate(
-                            VibrationEffect.createOneShot(300L, VibrationEffect.DEFAULT_AMPLITUDE));
-                }
-            } else {
-                Vibrator v = (Vibrator) contexto.getSystemService(Context.VIBRATOR_SERVICE);
-                if (v != null && v.hasVibrator()) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        v.vibrate(VibrationEffect.createOneShot(
-                                300L, VibrationEffect.DEFAULT_AMPLITUDE));
-                    } else {
-                        v.vibrate(300L);
-                    }
-                }
-            }
-            android.net.Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            if (uri != null) {
-                android.media.Ringtone r = RingtoneManager.getRingtone(contexto, uri);
-                if (r != null) {
-                    r.play();
-                }
-            }
-        } catch (RuntimeException ignored) {
-            // En emuladores sin hardware de vibración/audio o permisos restringidos no abortar
-        }
     }
 
     private static int flagsCompat(int base) {

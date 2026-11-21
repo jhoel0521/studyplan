@@ -65,6 +65,7 @@ final class Pruebas {
                 .edit().clear().commit();
         ctx.getSharedPreferences("preferencias_bloqueo_pantalla", android.content.Context.MODE_PRIVATE)
                 .edit().clear().commit();
+        NotificadorSesion.fijarDetectorMusicaParaPruebas(null);
         NotificadorSesion.cancelarAvisoRetorno(ctx);
         NotificadorSesion.retirarNotificacionSesion(ctx);
         NotificadorSesion.cancelarTodosRecordatorios(ctx);
