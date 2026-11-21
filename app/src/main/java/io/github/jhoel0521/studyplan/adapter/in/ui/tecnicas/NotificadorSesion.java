@@ -716,9 +716,6 @@ public final class NotificadorSesion {
     }
 
     private static int flagsCompat(int base) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return base | PendingIntent.FLAG_IMMUTABLE;
-        }
-        return base;
+        return base | PendingIntent.FLAG_IMMUTABLE;
     }
 }

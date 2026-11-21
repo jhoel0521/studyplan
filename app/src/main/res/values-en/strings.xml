@@ -141,7 +141,6 @@
     <string name="sesion_detalle_notas">Notes</string>
     <string name="sesion_detalle_sin_notas">No notes recorded</string>
     <string name="sesion_detalle_enlace_destino">View rescheduled session (%1$s · %2$s – %3$s)</string>
-    <string name="sesion_detalle_completar">Complete session</string>
     <string name="sesion_detalle_registrar_tardio">Log late</string>
     <string name="sesion_detalle_plazo_vencido">The 3-day late-log window has expired. You can still reschedule it.</string>
     <string name="sesion_detalle_reprogramar">Reschedule</string>
@@ -232,7 +231,6 @@
     <string name="notif_sesion_privada_texto">Tap to go back to the session</string>
     <string name="notif_sesion_texto_con_tiempo">%1$s · %2$s</string>
     <string name="notif_sesion_privada_texto_con_tiempo">Tap to go back to the session · %1$s</string>
-    <string name="notif_sesion_descarta">Session controls</string>
     <string name="notif_fin_plan_titulo">Still studying?</string>
     <string name="notif_fin_plan_cuerpo">Planned end time reached for %1$s</string>
     <string name="notif_pomodoro_titulo">Pomodoro phase change</string>
@@ -276,7 +274,6 @@
     <string name="sesion_en_curso_pausar">Pause</string>
     <string name="sesion_en_curso_reanudar">Resume</string>
     <string name="sesion_en_curso_detener">Stop</string>
-    <string name="sesion_en_curso_no_molestar">Do Not Disturb</string>
     <string name="sesion_en_curso_notificaciones_desactivadas">The notification controls are turned off</string>
     <string name="bloqueo_pantalla_explicacion">StudyPlan uses this permission only to turn off and lock the screen when you tap the padlock. It cannot see your password, erase data or change other settings. You can remove it in Settings.</string>
     <string name="bloqueo_pantalla_boton">Lock screen</string>
@@ -345,7 +342,6 @@
     <string name="materia_meta_progreso_cd">Weekly progress for %1$s: %2$s of %3$s hours</string>
     <string name="error_materia_general_protegida">Miscellaneous study cannot be edited, archived, or deleted</string>
 
-    <string name="inicio_definir_meta">Set weekly goal</string>
     <string name="inicio_editar_meta">Edit goal</string>
     <string name="inicio_ver_historial_metas">Goal history</string>
     <string name="dialogo_meta_semanal_titulo">Weekly goal (hours)</string>

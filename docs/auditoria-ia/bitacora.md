@@ -465,5 +465,19 @@ Decisiones posibles: Aceptado · Modificado · Rechazado · Decidido por el huma
 
 Triaje: **corregir** el comentario suelto, la conversión redundante, el `Locale` obsoleto y los retornos `null` que resulten reales; **eliminar** los 4 métodos sin uso; **justificar** los 79 `[try]` (en `ActivityScenario` la variable no se usa por diseño: abre y cierra la pantalla), los 2 `[this-escape]` (aviso de JDK 21 que el inspector del IDE no muestra) y los métodos que solo usan las pruebas (los ganchos `fijarGraciaParaPruebas`, `solicitarEvaluacionRecuperacion` y `fijarDetectorMusicaParaPruebas` existen para las pruebas; el resto cuenta como usado porque el inspector considera las pruebas del proyecto).
 
+**`lint` de Gradle tras la etapa 4 (tarea 5.6): 0 errores y 46 avisos (antes 53).** Se corrigieron los de una línea sin cambio de comportamiento: 4 cadenas sin uso (`sesion_detalle_completar`, `notif_sesion_descarta`, `sesion_en_curso_no_molestar`, `inicio_definir_meta`, en español e inglés) y 3 comprobaciones de versión de Android innecesarias (`SDK_INT >= M` con `minSdk` 24). Los 46 restantes se justifican así:
+
+| Aviso | Cantidad | Motivo por el que no se corrige aquí |
+|---|---|---|
+| `UseCompoundDrawables` | 9 | Cambiar un `LinearLayout` con imagen y texto por un `TextView` con icono rehace vistas y puede alterar el diseño; es un cambio de interfaz para otro change |
+| `GradleDependency`, `AndroidGradlePluginVersion` | 7 y 1 | Subir versiones es una decisión del Product Owner (política de dependencias de `AGENTS.md` §2) |
+| `SetTextI18n` | 6 | Exigen pasar textos con números a recursos con formato; cambia cadenas visibles y se hace con RNF-08 |
+| `ApplySharedPref` | 5 | `commit()` es deliberado: la marca de salida y los recordatorios deben quedar escritos antes de que el proceso pueda morir (RN-23, HU-34) |
+| `PluralsCandidate` | 5 | Pasar a plurales cambia cadenas en español e inglés |
+| `ObsoleteSdkInt` | 5 | Son guardas de varias líneas (`SDK_INT >= M`) que se pueden desenvolver sin cambiar el comportamiento; se dejan para otro change por tocar cuatro archivos más |
+| `NotifyDataSetChanged` | 3 | Reemplazarlo por `DiffUtil` es una mejora de rendimiento, no un defecto |
+| `SpUsage`, `AppBundleLocaleChanges`, `InflateParams` | 2, 1 y 1 | Dependen de decisiones de diseño de la interfaz |
+| `Typos` | 1 | «momento» es correcto en español; el aviso viene del diccionario en inglés |
+
 **Errores o riesgos registrados en esta sesión:** (1) El plan decía «363 pruebas»: la cifra era anterior a las pruebas de la gracia de salida; la línea base real es 372. (2) La IA afirmó en el primer diseño que `domain` y el resto de capas se podían dividir sin tocar visibilidad: solo era cierto para `domain`; lo detectó la revisión EGM. (3) La IA se detuvo a pedir la aprobación de RN-23 y RN-24 y la de un paso técnico cuando el Product Owner ya había pedido no frenarse; se corrigió y se siguió. (4) Los primeros intentos del script de movimiento fallaron por errores de la IA (expresión de sangría, escapes de expresiones regulares, rutas escritas como texto); el ensayo en una copia los detectó antes de tocar el repositorio.
 

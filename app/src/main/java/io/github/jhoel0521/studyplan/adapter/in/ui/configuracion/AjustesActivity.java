@@ -213,8 +213,7 @@ public class AjustesActivity extends ActividadProtegida {
         if (actualizando) {
             return;
         }
-        if (activado && !app().controladorNoMolestar().tienePermiso()
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (activado && !app().controladorNoMolestar().tienePermiso()) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.ajustes_no_molestar_dialogo_titulo)
                     .setMessage(R.string.ajustes_no_molestar_dialogo_msg)
