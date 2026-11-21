@@ -55,4 +55,30 @@ public class SesionEstudioSinPlanTest {
         assertEquals(50, completada.minutosRealesContabilizables());
         assertEquals(0, completada.duracionPlanificadaMinutos());
     }
+
+    /** Sin horario no hay instante de fin: la fecha y la hora de fin caen en el inicio y no se desreferencia nulo. */
+    @Test
+    public void sinHorarioPlanificadoNoHayInstanteDeFinYLaFechaYHoraDeFinSonLasDelInicio() {
+        Fecha hoy = Fecha.de(2026, 11, 16).valor();
+        Instante inicio = Instante.desdeFechaYHoraLocal(hoy, Hora.de(10, 40).valor(), -240);
+        SesionEstudio s = SesionEstudio.estudiarAhora(
+                1L, inicio, TecnicaEstudio.LIBRE, null, PreferenciaNoMolestar.HEREDAR_GLOBAL).valor().conId(51L);
+
+        assertNull(s.finInstante());
+        assertEquals(s.fecha(), s.fechaFinLocal());
+        assertEquals(s.horaInicio(), s.horaFin());
+        assertFalse(s.seSolapaCon(s));
+    }
+
+    /** Con horario planificado el instante de fin existe y la fecha y la hora de fin salen de él. */
+    @Test
+    public void conHorarioPlanificadoElInstanteDeFinExisteYDefineLaFechaYHoraDeFin() {
+        Fecha hoy = Fecha.de(2026, 11, 16).valor();
+        SesionEstudio s = SesionEstudio.planificar(
+                1L, hoy, hoy, Hora.de(9, 0).valor(), Hora.de(10, 30).valor(), "", null).valor();
+
+        assertEquals(hoy, s.fechaFinLocal());
+        assertEquals(Hora.de(10, 30).valor(), s.horaFin());
+        assertTrue(s.finInstante() != null);
+    }
 }

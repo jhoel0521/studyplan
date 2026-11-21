@@ -469,8 +469,14 @@ public final class SesionEstudio {
         return Instante.de(planInicioUtcMilis, desfaseMinutos);
     }
 
+    /** Instante de fin del horario planificado, o {@code null} si la sesión no tiene horario planificado. */
     public Instante finInstante() {
-        return planFinUtcMilis == null ? null : Instante.de(planFinUtcMilis, desfaseMinutos);
+        return planFinUtcMilis == null ? null : finDelPlan();
+    }
+
+    /** Instante de fin del horario planificado; solo se llama cuando {@code planFinUtcMilis} no es nulo. */
+    private Instante finDelPlan() {
+        return Instante.de(planFinUtcMilis, desfaseMinutos);
     }
 
     /** Fecha local de inicio derivada del instante de inicio y su desfase guardado. */
@@ -480,7 +486,7 @@ public final class SesionEstudio {
 
     /** Fecha local de fin derivada del instante de fin y su desfase guardado. */
     public Fecha fechaFinLocal() {
-        return planFinUtcMilis == null ? fecha() : finInstante().fechaLocal();
+        return planFinUtcMilis == null ? fecha() : finDelPlan().fechaLocal();
     }
 
     /** Indica si la sesión planificada cruza la medianoche local. */
@@ -495,7 +501,7 @@ public final class SesionEstudio {
 
     /** Hora local de fin derivada del instante de fin y su desfase guardado. */
     public Hora horaFin() {
-        return planFinUtcMilis == null ? horaInicio() : finInstante().horaLocal();
+        return planFinUtcMilis == null ? horaInicio() : finDelPlan().horaLocal();
     }
 
     public int duracionPlanificadaMinutos() {
@@ -737,7 +743,7 @@ public final class SesionEstudio {
     /** Comprueba si esta sesión se cruza en tiempo absoluto con {@code otra} (RN-05). */
     public boolean seSolapaCon(SesionEstudio otra) {
         return otra != null && otra.planFinUtcMilis != null
-                && seSolapaCon(otra.inicioInstante(), otra.finInstante());
+                && seSolapaCon(otra.inicioInstante(), otra.finDelPlan());
     }
 
     /** Minutos reales contabilizables en progreso semanal y acumulado por materia (RN-11). */

@@ -37,6 +37,7 @@ import io.github.jhoel0521.studyplan.domain.readmodel.MetaAlcanzada;
 import io.github.jhoel0521.studyplan.domain.readmodel.ResumenEjecucionSesion;
 import io.github.jhoel0521.studyplan.domain.entity.SesionEstudio;
 import io.github.jhoel0521.studyplan.domain.enumeration.TecnicaEstudio;
+import io.github.jhoel0521.studyplan.domain.valueobject.ConfiguracionPomodoro;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.AcentoMateria;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.ActividadProtegida;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.MensajesDeError;
@@ -356,20 +357,23 @@ public class SesionEnCursoActivity extends ActividadProtegida {
 
     /** Duración configurada de la fase Pomodoro actual (RN-17), o 0 si no aplica (Libre o tiempo extra). */
     private static long duracionFaseMs(ResumenEjecucionSesion r) {
-        if (r.sesion().tecnica() != TecnicaEstudio.POMODORO || r.estadoPomodoro() == null
-                || r.sesion().configuracionPomodoroSnapshot() == null) {
+        if (r.sesion().tecnica() != TecnicaEstudio.POMODORO || r.estadoPomodoro() == null) {
+            return 0L;
+        }
+        ConfiguracionPomodoro configuracion = r.sesion().configuracionPomodoroSnapshot();
+        if (configuracion == null) {
             return 0L;
         }
         int minutos;
         switch (r.estadoPomodoro().faseActual()) {
             case TRABAJO:
-                minutos = r.sesion().configuracionPomodoroSnapshot().trabajoMinutos();
+                minutos = configuracion.trabajoMinutos();
                 break;
             case DESCANSO_CORTO:
-                minutos = r.sesion().configuracionPomodoroSnapshot().descansoCortoMinutos();
+                minutos = configuracion.descansoCortoMinutos();
                 break;
             case DESCANSO_LARGO:
-                minutos = r.sesion().configuracionPomodoroSnapshot().descansoLargoMinutos();
+                minutos = configuracion.descansoLargoMinutos();
                 break;
             default:
                 minutos = 0;

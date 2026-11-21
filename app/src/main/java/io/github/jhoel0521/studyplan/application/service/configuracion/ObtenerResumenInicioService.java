@@ -141,7 +141,8 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             return null;
         }
         for (SesionEstudio candidata : pendientes) {
-            if (candidata.finInstante().esPosteriorA(ahoraInst)) {
+            Instante fin = candidata.finInstante();
+            if (fin != null && fin.esPosteriorA(ahoraInst)) {
                 return mapearDetalle(candidata, catalogo);
             }
         }
