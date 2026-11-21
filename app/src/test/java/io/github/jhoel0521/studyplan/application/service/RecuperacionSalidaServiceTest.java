@@ -85,7 +85,7 @@ public class RecuperacionSalidaServiceTest {
         iniciar.ejecutar(s.id(), TecnicaEstudio.POMODORO, PreferenciaNoMolestar.FORZAR_ACTIVAR);
 
         reloj.avanzarMilis(45 * MIN); // 08:45
-        assertTrue(registrarSalida.ejecutar().isPresent());
+        assertTrue(registrarSalida.ejecutar(reloj.ahoraMilis()).isPresent());
 
         reloj.avanzarMilis(120 * MIN); // 10:45
         DiagnosticoRegresoApp diag = evaluar.ejecutar().get();
@@ -139,14 +139,14 @@ public class RecuperacionSalidaServiceTest {
 
         // Avanzamos 27 min (descanso corto de 5 min: faltan 3 min)
         reloj.avanzarMilis(27 * MIN);
-        assertFalse(registrarSalida.ejecutar().isPresent());
+        assertFalse(registrarSalida.ejecutar(reloj.ahoraMilis()).isPresent());
 
         // Volvemos 2 min después (aún en descanso) -> no abre W13
         reloj.avanzarMilis(2 * MIN);
         assertFalse(evaluar.ejecutar().isPresent());
 
         // Salimos de nuevo en el último minuto del descanso y volvemos 6 min después (5 min de exceso)
-        assertFalse(registrarSalida.ejecutar().isPresent());
+        assertFalse(registrarSalida.ejecutar(reloj.ahoraMilis()).isPresent());
         long finDescansoEsperado = reloj.ahoraMilis() + 1 * MIN;
         reloj.avanzarMilis(6 * MIN);
         Optional<DiagnosticoRegresoApp> diag = evaluar.ejecutar();
@@ -163,7 +163,7 @@ public class RecuperacionSalidaServiceTest {
         assertTrue(iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL).esValido());
 
         reloj.avanzarMilis(10 * MIN);
-        assertTrue(registrarSalida.ejecutar().isPresent());
+        assertTrue(registrarSalida.ejecutar(reloj.ahoraMilis()).isPresent());
         reloj.avanzarMilis(4 * MIN);
 
         assertTrue(resolver.ejecutarConMetas(

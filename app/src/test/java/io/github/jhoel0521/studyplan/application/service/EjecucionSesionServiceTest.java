@@ -157,7 +157,7 @@ public class EjecucionSesionServiceTest {
 
         RegistrarSalidaAppService salida = new RegistrarSalidaAppService(
                 sesiones, eventos, materias, marcador, reloj);
-        assertEquals("Cálculo", salida.ejecutar().get().nombreMateria());
+        assertEquals("Cálculo", salida.ejecutar(reloj.ahoraMilis()).get().nombreMateria());
         assertTrue(consultar.ejecutar(s.id()).get().salidaPendienteResolver());
     }
 }

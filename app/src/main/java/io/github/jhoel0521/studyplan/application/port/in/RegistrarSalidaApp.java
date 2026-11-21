@@ -10,6 +10,12 @@ import io.github.jhoel0521.studyplan.domain.SalidaRegistrada;
  */
 public interface RegistrarSalidaApp {
 
-    /** @return datos de la sesión y materia si se registró salida, o vacío si no aplica */
-    Optional<SalidaRegistrada> ejecutar();
+    /**
+     * Registra la salida con la hora en que ocurrió, que puede ser anterior a la actual porque la salida se
+     * confirma tras la ventana de gracia de 1 minuto (HU-40, RN-23).
+     *
+     * @param instanteSalidaMs instante real de la salida, en milisegundos
+     * @return datos de la sesión y materia si se registró salida, o vacío si no aplica
+     */
+    Optional<SalidaRegistrada> ejecutar(long instanteSalidaMs);
 }

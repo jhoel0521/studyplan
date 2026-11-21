@@ -150,7 +150,7 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
             ejecutor.execute(registrarBloqueo::ejecutar);
         } else if (registrarSalida != null && ejecutor != null && appContext != null) {
             ejecutor.execute(() -> {
-                Optional<SalidaRegistrada> salida = registrarSalida.ejecutar();
+                Optional<SalidaRegistrada> salida = registrarSalida.ejecutar(System.currentTimeMillis());
                 if (salida.isPresent()) {
                     NotificadorSesion.mostrarAvisoRetorno(
                             appContext, salida.get().sesionId(), salida.get().nombreMateria());

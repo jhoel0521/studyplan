@@ -191,7 +191,7 @@ public class SesionEnCursoViewModelTest {
 
         reloj.avanzarMilis(3 * 60_000L);
         new io.github.jhoel0521.studyplan.application.service.RegistrarSalidaAppService(
-                sesiones, evs, mats, marc, reloj).ejecutar();
+                sesiones, evs, mats, marc, reloj).ejecutar(reloj.ahoraMilis());
         vm.cargar(s1.id());
         assertTrue(vm.resumen().getValue().salidaPendienteResolver());
     }

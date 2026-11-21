@@ -55,7 +55,7 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
     }
 
     @Override
-    public Optional<SalidaRegistrada> ejecutar() {
+    public Optional<SalidaRegistrada> ejecutar(long instanteSalidaMs) {
         Optional<SesionEstudio> activaOpt = sesiones.buscarEnCurso();
         if (!activaOpt.isPresent()) {
             return Optional.empty();
@@ -67,11 +67,16 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
             return Optional.empty();
         }
 
-        long ahoraMs = reloj.ahoraMilis();
+        // Si ya hay un evento posterior a la salida (por ejemplo pausar y reanudar durante la gracia), registrar
+        // la salida en el pasado rompería el orden cronológico de los eventos.
+        if (!lista.isEmpty() && lista.get(lista.size() - 1).instanteMilis() > instanteSalidaMs) {
+            return Optional.empty();
+        }
+
         if (activa.tecnica() == TecnicaEstudio.POMODORO) {
             ConfiguracionPomodoro cfg = activa.configuracionPomodoroSnapshot();
             if (cfg != null) {
-                long dentroApp = CalculadorTiempoReal.calcularMilisDentroDeApp(lista, ahoraMs);
+                long dentroApp = CalculadorTiempoReal.calcularMilisDentroDeApp(lista, instanteSalidaMs);
                 int objetivo = CalculadorPomodoro.pomodorosQueCabenEnPlan(
                         activa.duracionPlanificadaMinutos(), cfg);
                 boolean extra = EjecucionHitos.contieneTipo(lista, TipoEventoEstudio.TIEMPO_EXTRA);
@@ -79,7 +84,7 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
                         CalculadorPomodoro.calcularEstado(dentroApp, cfg, objetivo, extra);
                 if (CalculadorPomodoro.estaEnDescanso(estadoPom.faseActual())) {
                     long finDescansoMs = CalculadorPomodoro.calcularFinDescansoProyectado(
-                            ahoraMs, estadoPom);
+                            instanteSalidaMs, estadoPom);
                     marcadorSalida.marcarFinDescansoPomodoro(activa.id(), finDescansoMs);
                     return Optional.empty();
                 }
@@ -89,11 +94,11 @@ public final class RegistrarSalidaAppService implements RegistrarSalidaApp {
         eventos.guardar(EventoEstudio.crear(
                 activa.id(),
                 TipoEventoEstudio.SALIDA_APP,
-                ahoraMs,
-                reloj.fechaDe(ahoraMs),
-                reloj.horaDe(ahoraMs),
+                instanteSalidaMs,
+                reloj.fechaDe(instanteSalidaMs),
+                reloj.horaDe(instanteSalidaMs),
                 "").valor());
-        marcadorSalida.marcarSalida(activa.id(), ahoraMs);
+        marcadorSalida.marcarSalida(activa.id(), instanteSalidaMs);
         String nombreMateria = materias == null
                 ? ""
                 : materias.obtener(activa.materiaId()).map(Materia::nombre).orElse("");

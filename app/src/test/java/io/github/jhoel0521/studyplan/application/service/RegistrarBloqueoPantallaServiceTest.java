@@ -122,7 +122,7 @@ public class RegistrarBloqueoPantallaServiceTest {
     public void conUnaSalidaPendienteNoRegistraElBloqueo() {
         iniciarSesion(TecnicaEstudio.LIBRE);
         reloj.avanzarMilis(10 * MIN);
-        assertTrue(registrarSalida.ejecutar().isPresent());
+        assertTrue(registrarSalida.ejecutar(reloj.ahoraMilis()).isPresent());
         RegistrarBloqueoPantallaService servicio =
                 new RegistrarBloqueoPantallaService(sesiones, eventos, reloj);
 
