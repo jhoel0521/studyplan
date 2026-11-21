@@ -443,3 +443,14 @@ Decisiones posibles: Aceptado · Modificado · Rechazado · Decidido por el huma
 
 **Pendiente de revisión humana:** aprobar la redacción de RN-23 y RN-24 (tarea 1.1); decidir el destino de `ServicioSesionEnCurso`; la tarea 7.2 del change archivado sigue abierta (medición de batería y ux-check).
 
+## Sesión 22 — 2026-11-21 · Claude Code (Sonnet 5.5) (`/opsx:propose`, `/egm:egm-review`, `/openspec-update-change` y `/opsx:apply` de `reorganizar-paquetes-avisos-documentacion`)
+
+**Entradas del estudiante:** quejas sobre la arquitectura hexagonal mal aplicada (carpetas planas, sin distinguir enum, entidad, value object o contrato) y sobre avisos del inspector de Android Studio que `lint` no cuenta; pidió un solo change por etapas con tres objetivos (reorganizar paquetes por tipo y por caso de uso, eliminar avisos del IDE y finalizar la documentación) y aclaró que mover carpetas no necesita nuevos permisos. Ejecutó la revisión EGM y pidió aplicar sus hallazgos.
+
+| # | Solicitud / tema | Qué hizo la IA | Decisión humana | Justificación | Verificación |
+|---|---|---|---|---|---|
+| 153 | `/opsx:propose` y `/openspec-update-change` tras la revisión EGM | Propuesta, diseño y 28 tareas; tras la revisión EGM reescribió el diseño con la regla de visibilidad de paquete (21 clases sin `public` fuera de `domain`), el orden de decisión de tipos, lo que no se mueve y las frases de `AGENTS.md` que cambian | **Aceptado** (D-1 a D-5 aprobadas al ejecutar el comando) | La revisión EGM encontró que «solo cambian paquetes» era falso y que faltaba el mapa de clases | `openspec validate --strict` |
+| 154 | `/opsx:apply` tarea 1.2: línea base de compilación y pruebas | Creó `docs/build/comparar_pruebas.py` y `docs/build/linea_base_pruebas.txt` (nombres de las pruebas JVM sin paquete) | **Aceptado** | Permite demostrar que mover clases no cambia qué pruebas existen | `./gradlew assembleDebug assembleDebugAndroidTest test lint` sin errores: **372 pruebas JVM**, **0 errores y 53 avisos de `lint`**; el comparador da «iguales» contra sí mismo |
+
+**Errores o riesgos registrados en esta sesión:** (1) El plan decía «363 pruebas»: la cifra era anterior a las pruebas de la gracia de salida; la línea base real es 372. (2) La IA afirmó en el primer diseño que `domain` y el resto de capas se podían dividir sin tocar visibilidad: solo era cierto para `domain`; lo detectó la revisión EGM.
+
