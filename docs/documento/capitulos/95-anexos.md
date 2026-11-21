@@ -1,34 +1,14 @@
 # Anexos {.sin-numero}
 
-## Anexo A: Modelo de Dominio y Prototipo de Baja Fidelidad
+## Anexo A: Modelo de Dominio
 
-Este anexo adelanta los productos de la consigna *Modelado de requerimientos*: el modelo de dominio (diagrama de clases conceptual) y el prototipo de baja fidelidad. Su análisis detallado corresponde a la sección 3.3.3 de la siguiente entrega.
+Este anexo adelanta el modelo de dominio (diagrama de clases conceptual), un producto de la consigna *Modelado de requerimientos*. Su análisis detallado corresponde a la sección 3.3.3 de la siguiente entrega. El prototipo de baja fidelidad, que antes estaba aquí, está en la sección «Wireframes y Mockups» del capítulo 4.
 
 ![Modelo de dominio conceptual de StudyPlan](../recursos/diagramas/modelo_dominio.png){#figura3}
 
 Nota: Reporte y DistribucionMateria son conceptos calculados a partir de las sesiones y no se almacenan. Una MetaSemanal sin materia es la meta total. Elaboración propia.
 
 Las clases principales son: **Estudiante**, el único usuario local, con sus **Ajustes** (tema, idioma, bloqueo, No molestar y Pomodoro) y su **ConfiguracionRespaldo**; **Materia**, que agrupa por composición las **SesionEstudio**, cada una con fecha, horario, técnica, un **EstadoSesion** gobernado por la máquina de estados (@figura:figura2) y un **Recordatorio** opcional. La autoasociación *reprograma en* enlaza una sesión reprogramada con la nueva. **MetaSemanal** representa la meta total (sin materia) o una meta por materia, y su progreso se calcula sumando las horas de las sesiones completadas. **Reporte** contiene una **DistribucionMateria** por cada materia del periodo.
-
-![Prototipo de baja fidelidad: Inicio, Materias y Registrar sesión](../recursos/diagramas/wireframes_1.png){#figura4}
-
-Nota: Debajo de cada pantalla se indican las historias de usuario que representa. Elaboración propia a partir del mockup de referencia del proyecto.
-
-![Prototipo de baja fidelidad del calendario de estudio: vistas de mes, semana y día](../recursos/diagramas/wireframes_2.png){#figura5}
-
-Nota: Íconos de estado: ✓ completada, ○ pendiente, ✕ no realizada, ↻ reprogramada, ◷ registro tardío. Elaboración propia.
-
-![Prototipo de baja fidelidad: Sesión en curso (Pomodoro), Estadísticas y Reporte](../recursos/diagramas/wireframes_3.png){#figura6}
-
-Nota: Elaboración propia.
-
-![Prototipo de baja fidelidad: Ajustes, Copia de seguridad y Borrar mis datos](../recursos/diagramas/wireframes_4.png){#figura7}
-
-Nota: Elaboración propia.
-
-![Prototipo de baja fidelidad: Al volver a la app, Detener y repartir, Detalle y eventos](../recursos/diagramas/wireframes_5.png){#figura8}
-
-Nota: W13 implementa la declaración de estudio con la app cerrada; W15 muestra la línea de tiempo de eventos y las métricas de concentración. Elaboración propia.
 
 ## Anexo C: Matriz de Trazabilidad
 

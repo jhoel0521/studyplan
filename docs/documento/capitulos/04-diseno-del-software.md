@@ -192,7 +192,29 @@ Nota: Elaboración propia. Los 42 pares de contraste del estándar (texto ≥ 4,
 
 ### Wireframes y Mockups
 
-[[pendiente: trasladar aquí los wireframes de baja fidelidad W1 a W15 (hoy en el Anexo A) y los mockups de las pantallas ya diseñadas]]
+Los wireframes de baja fidelidad W1 a W15 se dibujaron antes de implementar las pantallas y representan las historias de usuario de cada una; debajo de cada pantalla se indican las historias que cubre. Se agrupan en cinco láminas (@figura:figura4 a @figura:figura8).
+
+![Prototipo de baja fidelidad: Inicio, Materias y Registrar sesión](../recursos/diagramas/wireframes_1.png){#figura4}
+
+Nota: Debajo de cada pantalla se indican las historias de usuario que representa. Elaboración propia a partir del mockup de referencia del proyecto.
+
+![Prototipo de baja fidelidad del calendario de estudio: vistas de mes, semana y día](../recursos/diagramas/wireframes_2.png){#figura5}
+
+Nota: Íconos de estado: ✓ completada, ○ pendiente, ✕ no realizada, ↻ reprogramada, ◷ registro tardío. Elaboración propia.
+
+![Prototipo de baja fidelidad: Sesión en curso (Pomodoro), Estadísticas y Reporte](../recursos/diagramas/wireframes_3.png){#figura6}
+
+Nota: Elaboración propia.
+
+![Prototipo de baja fidelidad: Ajustes, Copia de seguridad y Borrar mis datos](../recursos/diagramas/wireframes_4.png){#figura7}
+
+Nota: Elaboración propia.
+
+![Prototipo de baja fidelidad: Al volver a la app, Detener y repartir, Detalle y eventos](../recursos/diagramas/wireframes_5.png){#figura8}
+
+Nota: W13 implementa la declaración de estudio con la app cerrada; W15 muestra la línea de tiempo de eventos y las métricas de concentración. Elaboración propia.
+
+[[pendiente: mockups de las pantallas ya implementadas (capturas de la app en el emulador); hoy solo hay capturas locales sin versionar]]
 
 ## Diseño de Componentes y Módulos
 

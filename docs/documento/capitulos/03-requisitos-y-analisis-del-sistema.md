@@ -549,4 +549,4 @@ Tabla: Requisitos no funcionales (criterios de calidad) {#tabla21}
 
 Nota: SUS = System Usability Scale (Brooke, 1996). Los valores objetivo son metas del proyecto y se verificarán en el Capítulo 5 (Pruebas y Validación).
 
-Como adelanto de la consigna *Modelado de requerimientos*, el Anexo A presenta el modelo de dominio conceptual y el prototipo de baja fidelidad asociado a las historias de usuario. El análisis completo (sección 3.3) corresponde a la siguiente entrega.
+Como adelanto de la consigna *Modelado de requerimientos*, el Anexo A presenta el modelo de dominio conceptual y la sección «Wireframes y Mockups» del capítulo 4 presenta el prototipo de baja fidelidad asociado a las historias de usuario. El análisis completo (sección 3.3) corresponde a la siguiente entrega.
