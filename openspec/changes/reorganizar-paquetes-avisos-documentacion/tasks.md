@@ -48,10 +48,10 @@
 
 ## 6. Etapa 5: documentación final
 
-- [ ] 6.1 Ordenar el capítulo 4: la sección de estructura primero, las épicas en el orden de `openspec list --specs`, sin títulos duplicados ni secciones con nombres antiguos. Modifica: `docs/documento/capitulos/04-diseno-del-software.md`. Verificación: `python .apa/scripts/revisar.py --doc docs/documento` sin marcas nuevas y `python .apa/scripts/generar_docx.py --doc docs/documento` termina sin errores.
+- [x] 6.1 Ordenar el capítulo 4: la sección de estructura primero, las épicas en el orden en que se implementaron (el mismo de la lista de épicas de esa sección), sin títulos duplicados ni secciones con nombres antiguos. Resultado: el capítulo ya tenía ese orden y no había títulos duplicados; se corrigió la tabla de capas (listaba `adapter.out.drive` como existente y omitía `adapter.out.system`). Modifica: `docs/documento/capitulos/04-diseno-del-software.md`. Verificación: `python .apa/scripts/revisar.py --doc docs/documento` sin marcas nuevas y `python .apa/scripts/generar_docx.py --doc docs/documento` termina sin errores.
 - [ ] 6.2 Trasladar los wireframes de baja fidelidad W1 a W15 del Anexo A a «Wireframes y Mockups» del capítulo 4 y resolver esa marca `[[pendiente]]`. Modifica: `docs/documento/capitulos/04-diseno-del-software.md`, `docs/documento/capitulos/95-anexos.md`. Verificación: `revisar.py` muestra una sola marca pendiente (la de diagramas de épicas futuras, que depende del respaldo en Drive).
 - [ ] 6.3 Anotar para el autor, sin corregirlas, las inconsistencias de citas y referencias (la cita «ISO (2023)» sin referencia y las referencias «Android (s.f.)» y «Google (s.f.)» sin cita). Verificación: aparecen en la bitácora con su ubicación.
-- [ ] 6.4 Regenerar los diagramas y cotejar: `python docs/build/diagramas.py` y `python docs/build/cotejo_clases.py`. Verificación: «Cotejo correcto» y diagramas al día.
+- [x] 6.4 Regenerar los diagramas y cotejar: `python docs/build/diagramas.py` y `python docs/build/cotejo_clases.py`. Verificación: «Cotejo correcto» y diagramas al día.
 - [ ] 6.5 Añadir a `docs/auditoria-ia/bitacora.md` las filas de esta sesión (solicitud, resultado, decisión humana, verificación) con los errores de la IA, y correr la verificación integral: `./gradlew assembleDebug assembleDebugAndroidTest test lint`, `openspec validate reorganizar-paquetes-avisos-documentacion --strict` y las clases instrumentadas con `docs/build/correr_instrumentadas.sh`. Verificación: resultados anotados.
 
 ## Workflow follow-up

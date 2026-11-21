@@ -14,9 +14,9 @@ Tabla: Capas de la arquitectura de StudyPlan y su correspondencia con los paquet
 
 | Capa | Paquetes | Responsabilidad |
 |---|---|---|
-| 1. Presentación (entrada) | adapter.in.ui | Activity o Fragment, ViewModel y layouts XML. Muestran datos y reciben los eventos del usuario (onCreate, onClick y demás listeners) y los delegan en los casos de uso. No contienen lógica de negocio. |
-| 2. Núcleo de la aplicación | application.port.in, application.service, domain, application.port.out | Casos de uso, reglas de negocio (RN-xx), entidades y máquina de estados de la sesión. Java puro, sin android.*. |
-| 3. Infraestructura (salida) | adapter.out.persistence, adapter.out.drive, adapter.out.security | Room, copia de seguridad en Google Drive con cifrado, disponibilidad del bloqueo del teléfono (huella o PIN), notificaciones y alarmas. Implementan los puertos de salida. |
+| 1. Presentación (entrada) | adapter.in.ui (una carpeta por épica y comun) | Activity o Fragment, ViewModel y layouts XML. Muestran datos y reciben los eventos del usuario (onCreate, onClick y demás listeners) y los delegan en los casos de uso. No contienen lógica de negocio. |
+| 2. Núcleo de la aplicación | application.port.in, application.service (una carpeta por épica y comun), domain (por tipo de clase), application.port.out (persistence y system) | Casos de uso, reglas de negocio (RN-xx), entidades y máquina de estados de la sesión. Java puro, sin android.*. |
+| 3. Infraestructura (salida) | adapter.out.persistence, adapter.out.security, adapter.out.system (y adapter.out.drive, que aún no existe) | Room, disponibilidad del bloqueo del teléfono (huella o PIN), reloj, notificaciones y alarmas, y la copia de seguridad en Google Drive con cifrado cuando se implemente. Implementan los puertos de salida. |
 
 Nota: Elaboración propia. Los paquetes cuelgan de io.github.jhoel0521.studyplan.
 
