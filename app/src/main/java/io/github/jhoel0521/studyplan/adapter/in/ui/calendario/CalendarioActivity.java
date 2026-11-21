@@ -178,8 +178,11 @@ public class CalendarioActivity extends ActividadProtegida
         detectorSwipe = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(
-                    MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                if (e1 == null || e2 == null) {
+                    @androidx.annotation.Nullable MotionEvent e1,
+                    @androidx.annotation.NonNull MotionEvent e2,
+                    float velocityX,
+                    float velocityY) {
+                if (e1 == null) {
                     return false;
                 }
                 float dx = e2.getX() - e1.getX();
@@ -357,7 +360,8 @@ public class CalendarioActivity extends ActividadProtegida
             etiqueta.setLayoutParams(lp);
             etiqueta.setGravity(Gravity.CENTER);
             int diaSemana = dia.diaDeSemanaIso() - 1;
-            etiqueta.setText(getString(nombresDias[diaSemana]) + "\n" + dia.dia());
+            etiqueta.setText(String.format(
+                    Locale.getDefault(), "%s\n%d", getString(nombresDias[diaSemana]), dia.dia()));
             etiqueta.setTextColor(dia.equals(hoy) ? colorHoy : colorNormal);
             etiqueta.setTextSize(12f);
             cabeceraDiasHorario.addView(etiqueta);

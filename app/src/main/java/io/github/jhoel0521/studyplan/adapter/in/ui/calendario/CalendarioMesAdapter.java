@@ -77,7 +77,7 @@ public class CalendarioMesAdapter extends ListAdapter<CeldaDiaMes, CalendarioMes
         holder.enlazar(getItem(posicion), acciones);
     }
 
-    static final class CeldaHolder extends RecyclerView.ViewHolder {
+    public static final class CeldaHolder extends RecyclerView.ViewHolder {
 
         private final MaterialCardView tarjeta;
         private final TextView textoNumero;

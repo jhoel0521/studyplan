@@ -59,7 +59,7 @@ public final class EstadisticasAdapter {
             return elementos.size();
         }
 
-        static final class Vista extends RecyclerView.ViewHolder {
+        public static final class Vista extends RecyclerView.ViewHolder {
             private final ImageView indicadorColor;
             private final TextView nombre;
             private final TextView detalle;
@@ -131,7 +131,7 @@ public final class EstadisticasAdapter {
             return elementos.size();
         }
 
-        static final class Vista extends RecyclerView.ViewHolder {
+        public static final class Vista extends RecyclerView.ViewHolder {
             private final TextView nombre;
             private final TextView detalle;
 

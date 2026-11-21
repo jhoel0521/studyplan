@@ -34,7 +34,6 @@ import io.github.jhoel0521.studyplan.adapter.in.ui.comun.AcentoMateria;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.ActividadProtegida;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.DestinoPrincipal;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.GrupoBotones;
-import io.github.jhoel0521.studyplan.adapter.in.ui.materias.MateriasAdapter;
 import io.github.jhoel0521.studyplan.adapter.in.ui.reportes.ReportesActivity;
 
 /**
@@ -303,23 +302,30 @@ public class EstadisticasActivity extends ActividadProtegida {
                 : String.format(Locale.getDefault(), "%d %%",
                 Math.round(c.indiceConcentracionPorcentaje())));
         String interrHora = String.format(Locale.getDefault(), "%.1f", c.interrupcionesPorHora());
-        textoInterrupciones.setText(getString(R.string.estadisticas_interrupciones)
-                + ": " + getString(
-                R.string.estadisticas_interrupciones_valor,
-                interrHora,
-                c.totalInterrupciones()));
+        textoInterrupciones.setText(getString(
+                R.string.estadisticas_metrica_etiqueta,
+                getString(R.string.estadisticas_interrupciones),
+                getString(R.string.estadisticas_interrupciones_valor, interrHora, c.totalInterrupciones())));
         String puntTxt = c.puntualidadPromedioMinutos() == null
                 ? sinDatos
                 : getString(R.string.estadisticas_puntualidad_valor,
                 String.format(Locale.getDefault(), "%.1f", c.puntualidadPromedioMinutos()));
-        textoPuntualidad.setText(getString(R.string.estadisticas_puntualidad) + ": " + puntTxt);
+        textoPuntualidad.setText(getString(
+                R.string.estadisticas_metrica_etiqueta,
+                getString(R.string.estadisticas_puntualidad),
+                puntTxt));
         String respTxt = c.respetoDelTiempoPorcentaje() == null
                 ? sinDatos
                 : String.format(Locale.getDefault(), "%d %%",
                 Math.round(c.respetoDelTiempoPorcentaje()));
-        textoRespetoTiempo.setText(getString(R.string.estadisticas_respeto_tiempo) + ": " + respTxt);
-        textoTiempoFuera.setText(getString(R.string.estadisticas_tiempo_fuera)
-                + ": " + c.tiempoFueraAppMinutos() + " min");
+        textoRespetoTiempo.setText(getString(
+                R.string.estadisticas_metrica_etiqueta,
+                getString(R.string.estadisticas_respeto_tiempo),
+                respTxt));
+        textoTiempoFuera.setText(getString(
+                R.string.estadisticas_metrica_etiqueta,
+                getString(R.string.estadisticas_tiempo_fuera),
+                getString(R.string.estadisticas_tiempo_fuera_valor, c.tiempoFueraAppMinutos())));
 
         textoEstudioExternoResumen.setText(getString(
                 R.string.estadisticas_estudio_externo_resumen,

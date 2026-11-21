@@ -50,8 +50,10 @@ public final class SelectorEstudioBottomSheet {
             Listener listener) {
         Objects.requireNonNull(listener, "listener");
         BottomSheetDialog dialogo = new BottomSheetDialog(contexto);
-        View vista = LayoutInflater.from(contexto)
-                .inflate(R.layout.bottom_sheet_selector_estudio, null, false);
+        View vista = LayoutInflater.from(contexto).inflate(
+                R.layout.bottom_sheet_selector_estudio,
+                new android.widget.FrameLayout(contexto),
+                false);
         dialogo.setContentView(vista);
 
         TextView titulo = vista.findViewById(R.id.tituloSelectorEstudio);

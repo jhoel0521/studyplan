@@ -26,7 +26,7 @@ import io.github.jhoel0521.studyplan.adapter.in.ui.comun.FormatoHoras;
 public class HistorialMetasAdapter extends ListAdapter<ProgresoMeta, HistorialMetasAdapter.Holder> {
 
     private static final DiffUtil.ItemCallback<ProgresoMeta> COMPARADOR =
-            new DiffUtil.ItemCallback<ProgresoMeta>() {
+            new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull ProgresoMeta a, @NonNull ProgresoMeta b) {
                     return a.semanaInicio().equals(b.semanaInicio())
@@ -58,7 +58,7 @@ public class HistorialMetasAdapter extends ListAdapter<ProgresoMeta, HistorialMe
         holder.enlazar(getItem(position));
     }
 
-    static final class Holder extends RecyclerView.ViewHolder {
+    public static final class Holder extends RecyclerView.ViewHolder {
 
         private final TextView tituloSemana;
         private final TextView subtituloMeta;

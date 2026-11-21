@@ -363,8 +363,16 @@ public class StudyPlanApplication extends Application {
         });
     }
 
-    public ExecutorService ejecutor() {
+    public java.util.concurrent.Executor ejecutor() {
         return ejecutor;
+    }
+
+    public <T> java.util.concurrent.Future<T> enviarTarea(java.util.concurrent.Callable<T> tarea) {
+        return ejecutor.submit(tarea);
+    }
+
+    public java.util.concurrent.Future<?> enviarTarea(Runnable tarea) {
+        return ejecutor.submit(tarea);
     }
 
     public FabricaViewModels fabrica() {

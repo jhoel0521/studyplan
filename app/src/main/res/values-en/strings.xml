@@ -487,4 +487,6 @@
     <string name="detalle_recordatorio">Reminder: %1$s</string>
     <string name="sesion_en_curso_otra_activa_msg">Cannot start this session because your %1$s session is already in progress.</string>
     <string name="sesion_en_curso_ir_a_activa">Go to running session</string>
+    <string name="estadisticas_metrica_etiqueta">%1$s: %2$s</string>
+    <string name="estadisticas_tiempo_fuera_valor">%1$d min</string>
 </resources>

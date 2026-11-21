@@ -327,14 +327,10 @@ public final class NotificadorSesion {
         if (nm == null) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (StatusBarNotification activa : nm.getActiveNotifications()) {
-                if (activa.getId() >= NOTIF_RECORDATORIO_BASE) {
-                    nm.cancel(activa.getTag(), activa.getId());
-                }
+        for (StatusBarNotification activa : nm.getActiveNotifications()) {
+            if (activa.getId() >= NOTIF_RECORDATORIO_BASE) {
+                nm.cancel(activa.getTag(), activa.getId());
             }
-        } else {
-            nm.cancelAll();
         }
     }
 

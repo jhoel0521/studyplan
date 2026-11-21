@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Celda de cuadrícula 7 columnas (excepción explícita de AGENTS.md §6.2 para 5" RNF-19). -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tarjetaCeldaMes"
     style="@style/Widget.StudyPlan.Card.Compact"

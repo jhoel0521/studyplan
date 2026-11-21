@@ -132,17 +132,15 @@ public class RepartoSesionActivity extends ActividadProtegida {
 
         long totalMin = Math.max(10L, (rep.finTramoMilis() - rep.inicioTramoMilis()) / 60_000L);
         long pasoMax = (totalMin / 5L) * 5L;
-        if (pasoMax >= 10L) {
-            actualizandoSlider = true;
-            sliderCorte.setValueFrom(5f);
-            sliderCorte.setValueTo(pasoMax - 5f > 5f ? pasoMax : 10f);
-            sliderCorte.setStepSize(5f);
-            float actualMin = ((rep.corteMilis() - rep.inicioTramoMilis()) / 60_000L / 5L) * 5f;
-            float clamped = Math.max(sliderCorte.getValueFrom(),
-                    Math.min(sliderCorte.getValueTo(), actualMin));
-            sliderCorte.setValue(clamped);
-            actualizandoSlider = false;
-        }
+        actualizandoSlider = true;
+        sliderCorte.setValueFrom(5f);
+        sliderCorte.setValueTo(pasoMax - 5f > 5f ? pasoMax : 10f);
+        sliderCorte.setStepSize(5f);
+        float actualMin = ((rep.corteMilis() - rep.inicioTramoMilis()) / 300_000L) * 5f;
+        float clamped = Math.max(sliderCorte.getValueFrom(),
+                Math.min(sliderCorte.getValueTo(), actualMin));
+        sliderCorte.setValue(clamped);
+        actualizandoSlider = false;
     }
 
     private void onError(@Nullable ErrorValidacion err) {

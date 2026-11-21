@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.jhoel0521.studyplan.application.port.in.configuracion.ControlarSesionBloqueo;
 import io.github.jhoel0521.studyplan.application.port.in.tecnicas.RegistrarBloqueoPantalla;
@@ -52,7 +53,7 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
     static final long GRACIA_SALIDA_MS = 60_000L;
 
     private final SalidaConGracia salidaConGracia;
-    private volatile int iniciadas;
+    private final AtomicInteger iniciadas = new AtomicInteger(0);
     private boolean salioDeLaApp;
     private volatile boolean pendienteEvaluarRecuperacion = true;
 
@@ -124,7 +125,7 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
 
     @Override
     public void onActivityStarted(@NonNull Activity actividad) {
-        if (iniciadas == 0 && salioDeLaApp) {
+        if (iniciadas.get() == 0 && salioDeLaApp) {
             sesion.alVolverAPrimerPlano();
             salioDeLaApp = false;
             SalidaConGracia.Retorno retorno = salidaConGracia.actividadIniciada();
@@ -140,13 +141,12 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
                 });
             }
         }
-        iniciadas++;
+        iniciadas.incrementAndGet();
     }
 
     @Override
     public void onActivityStopped(@NonNull Activity actividad) {
-        iniciadas--;
-        if (iniciadas == 0 && !actividad.isChangingConfigurations()) {
+        if (iniciadas.decrementAndGet() == 0 && !actividad.isChangingConfigurations()) {
             salioDeLaApp = true;
             salidaConGracia.ultimaActividadDetenida();
         }
@@ -167,13 +167,11 @@ public class ContadorActividades implements Application.ActivityLifecycleCallbac
         ejecutor.execute(() -> {
             Optional<SalidaRegistrada> salida = registrarSalida.ejecutar(instanteSalidaMs);
             // Si el estudiante ya volvió mientras se escribía el evento, no se le avisa.
-            if (salida.isPresent() && avisar && iniciadas == 0) {
+            if (salida.isPresent() && avisar && iniciadas.get() == 0) {
                 NotificadorSesion.mostrarAvisoRetorno(
                         appContext, salida.get().sesionId(), salida.get().nombreMateria());
             }
-            if (salida.isPresent()) {
-                NotificadorSesion.refrescar(appContext, salida.get().sesionId());
-            }
+            salida.ifPresent(s -> NotificadorSesion.refrescar(appContext, s.sesionId()));
         });
     }
 

@@ -487,4 +487,6 @@
     <string name="detalle_recordatorio">Recordatorio: %1$s</string>
     <string name="sesion_en_curso_otra_activa_msg">No se puede iniciar esta sesión porque ya tienes otra sesión de %1$s en curso.</string>
     <string name="sesion_en_curso_ir_a_activa">Ir a la sesión en curso</string>
+    <string name="estadisticas_metrica_etiqueta">%1$s: %2$s</string>
+    <string name="estadisticas_tiempo_fuera_valor">%1$d min</string>
 </resources>

@@ -9,7 +9,7 @@ import io.github.jhoel0521.studyplan.domain.state.CodigoEstadoSesion;
  *
  * <p>Implementa: HU-03 (escenario «Estado sin depender del color»), RNF-06, RNF-07.
  */
-enum RolColorEstado {
+public enum RolColorEstado {
     /** {@code colorPrimary} (índigo). */
     PRIMARIO,
     /** {@code colorSecondary} (verde azulado). */

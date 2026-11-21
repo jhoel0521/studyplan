@@ -64,7 +64,7 @@ public class SesionInicioAdapter extends ListAdapter<DetalleSesionInicio, Sesion
     }
 
     /** Fila de sesión en Inicio. */
-    final class SesionHolder extends RecyclerView.ViewHolder {
+    public final class SesionHolder extends RecyclerView.ViewHolder {
         private final View colorMateria;
         private final TextView nombreMateria;
         private final TextView horarioSesion;

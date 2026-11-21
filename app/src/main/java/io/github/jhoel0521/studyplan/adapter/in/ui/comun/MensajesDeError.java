@@ -126,9 +126,7 @@ public final class MensajesDeError {
                     conflicto.horaFin().texto());
         }
         Integer recurso = MENSAJES_SESION.get(error);
-        if (recurso != null) {
-            return contexto.getString(recurso);
-        }
-        return contexto.getString(R.string.error_sesion_transicion_no_permitida);
+        return contexto.getString(
+                recurso != null ? recurso : R.string.error_sesion_transicion_no_permitida);
     }
 }

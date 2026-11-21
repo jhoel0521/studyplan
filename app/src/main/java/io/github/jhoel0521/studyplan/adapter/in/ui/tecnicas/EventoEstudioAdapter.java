@@ -54,7 +54,7 @@ public class EventoEstudioAdapter extends ListAdapter<EventoEstudio, EventoEstud
         holder.enlazar(getItem(posicion));
     }
 
-    static final class EventoHolder extends RecyclerView.ViewHolder {
+    public static final class EventoHolder extends RecyclerView.ViewHolder {
 
         private final TextView textoHora;
         private final TextView textoTipo;

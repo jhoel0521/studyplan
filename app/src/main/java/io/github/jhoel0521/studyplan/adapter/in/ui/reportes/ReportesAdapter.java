@@ -52,7 +52,7 @@ final class ReportesAdapter extends RecyclerView.Adapter<ReportesAdapter.Vista> 
         return elementos.size();
     }
 
-    static final class Vista extends RecyclerView.ViewHolder {
+    public static final class Vista extends RecyclerView.ViewHolder {
         private final ImageView indicadorColor;
         private final TextView nombre;
         private final TextView resumen;
