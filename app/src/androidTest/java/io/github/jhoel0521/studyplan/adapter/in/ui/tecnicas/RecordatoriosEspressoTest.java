@@ -202,8 +202,7 @@ public final class RecordatoriosEspressoTest {
                 null,
                 antelacion);
         return Pruebas.app()
-                .ejecutor()
-                .submit(() -> Pruebas.app().sesionRepository().guardar(nueva))
+                .enviarTarea(() -> Pruebas.app().sesionRepository().guardar(nueva))
                 .get(5, TimeUnit.SECONDS);
     }
 

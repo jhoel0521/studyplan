@@ -116,12 +116,14 @@ public final class CalculadorReporteTest {
         assertEquals(285, reporte.minutosRealesTotales());
         assertEquals(150, reporte.minutosPlanificadosTotales()); // 60 + 60 + 30 (reprogramada no)
         assertEquals(1, reporte.sesionesNoRealizadasTotales());
+        org.junit.Assert.assertNotNull(reporte.cumplimientoTotal());
         assertEquals(190.0, reporte.cumplimientoTotal(), 1e-4);
 
         List<DesgloseMateriaPeriodo> filas = reporte.materias();
         assertEquals(5, filas.size());
         // Orden esperado: reales DESC -> Calc(120), Álgebra(90), General(45), Latín(30), Historia(0)
         assertEquals(1L, filas.get(0).materiaId());
+        org.junit.Assert.assertNotNull(filas.get(0).cumplimientoPlanificado());
         assertEquals(200.0, filas.get(0).cumplimientoPlanificado(), 1e-4);
 
         assertEquals(5L, filas.get(1).materiaId());
@@ -171,9 +173,9 @@ public final class CalculadorReporteTest {
                 sesion(6L, 99L, hoy, 11, 0, 60, CodigoEstadoSesion.PENDIENTE)); // fuera catálogo
 
         ReporteEstudio ordenado = CalculadorEstadisticas.calcularReporte(
-                semana, 500L, null, null, empate);
+                semana, 500L, Collections.emptyMap(), Collections.emptyMap(), empate);
         assertEquals(4, ordenado.materias().size());
-        // Con catálogo null, nombres son "" y plan: 99(60), 5(30), 10(30), 20(30)
+        // Con el catálogo vacío (materias que no están en él), nombres son "" y plan: 99(60), 5(30), 10(30), 20(30)
         assertEquals(99L, ordenado.materias().get(0).materiaId());
         assertEquals("", ordenado.materias().get(0).nombreMateria());
         assertEquals(0xFF607D8B, ordenado.materias().get(0).colorMateria());

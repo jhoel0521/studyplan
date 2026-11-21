@@ -89,8 +89,12 @@ public class IniciarSesionServiceTest {
                 AntelacionRecordatorio.MINUTOS_30)
                 .valor());
 
-        recordatorios.programar(primera.id(), primera.instanteRecordatorioUtcMilis());
-        recordatorios.programar(segunda.id(), segunda.instanteRecordatorioUtcMilis());
+        recordatorios.programar(
+                java.util.Objects.requireNonNull(primera.id()),
+                java.util.Objects.requireNonNull(primera.instanteRecordatorioUtcMilis()));
+        recordatorios.programar(
+                java.util.Objects.requireNonNull(segunda.id()),
+                java.util.Objects.requireNonNull(segunda.instanteRecordatorioUtcMilis()));
 
         assertTrue(iniciar.ejecutar(
                         primera.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.HEREDAR_GLOBAL)

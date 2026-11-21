@@ -179,8 +179,7 @@ public final class ReceptorAvisosSesionRecordatorioInstrumentalTest {
     }
 
     private Materia crearMateria(String nombre) throws Exception {
-        return app.ejecutor()
-                .submit(() -> app.materiaRepository()
+        return app.enviarTarea(() -> app.materiaRepository()
                         .guardar(Materia.crear(nombre, 0xFF1565C0, null).valor()))
                 .get(5, TimeUnit.SECONDS);
     }
@@ -211,13 +210,12 @@ public final class ReceptorAvisosSesionRecordatorioInstrumentalTest {
                 null,
                 null,
                 antelacion);
-        return app.ejecutor()
-                .submit(() -> app.sesionRepository().guardar(sesion))
+        return app.enviarTarea(() -> app.sesionRepository().guardar(sesion))
                 .get(5, TimeUnit.SECONDS);
     }
 
     private void esperarEjecutor() throws Exception {
-        app.ejecutor().submit(() -> {}).get(5, TimeUnit.SECONDS);
+        app.enviarTarea(() -> {}).get(5, TimeUnit.SECONDS);
     }
 
     private PendingIntent buscarPendingIntentRecordatorio(long sesionId) {

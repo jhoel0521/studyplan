@@ -56,28 +56,35 @@ public final class ReportesViewModelTest {
 
         ReportesViewModel modelo = new ReportesViewModel(caso, exportador, reloj, Runnable::run);
         modelo.inicializarSiFalta(PeriodoEstadisticas.Tipo.MES, focoInicial);
-        assertEquals(PeriodoEstadisticas.Tipo.MES, modelo.periodo().getValue().tipo());
-        assertEquals(Fecha.de(2026, 10, 1).valor(), modelo.periodo().getValue().inicio());
+        PeriodoEstadisticas per1 = java.util.Objects.requireNonNull(modelo.periodo().getValue());
+        assertEquals(PeriodoEstadisticas.Tipo.MES, per1.tipo());
+        assertEquals(Fecha.de(2026, 10, 1).valor(), per1.inicio());
 
         // Simula rotación: nuevo intento con otra configuración no debe sobreescribir
         modelo.inicializarSiFalta(PeriodoEstadisticas.Tipo.SEMANA, hoy);
-        assertEquals(PeriodoEstadisticas.Tipo.MES, modelo.periodo().getValue().tipo());
-        assertEquals(Fecha.de(2026, 10, 1).valor(), modelo.periodo().getValue().inicio());
+        PeriodoEstadisticas per2 = java.util.Objects.requireNonNull(modelo.periodo().getValue());
+        assertEquals(PeriodoEstadisticas.Tipo.MES, per2.tipo());
+        assertEquals(Fecha.de(2026, 10, 1).valor(), per2.inicio());
 
         modelo.cargar();
-        assertNotNull(modelo.reporte().getValue());
-        assertFalse(modelo.reporte().getValue().esSinDatos());
+        ReporteEstudio rep1 = java.util.Objects.requireNonNull(modelo.reporte().getValue());
+        assertFalse(rep1.esSinDatos());
 
         modelo.periodoAnterior();
-        assertEquals(Fecha.de(2026, 9, 1).valor(), modelo.periodo().getValue().inicio());
-        assertTrue(modelo.reporte().getValue().esSinDatos());
+        PeriodoEstadisticas perAnt = java.util.Objects.requireNonNull(modelo.periodo().getValue());
+        ReporteEstudio repAnt = java.util.Objects.requireNonNull(modelo.reporte().getValue());
+        assertEquals(Fecha.de(2026, 9, 1).valor(), perAnt.inicio());
+        assertTrue(repAnt.esSinDatos());
 
         modelo.periodoSiguiente();
-        assertEquals(Fecha.de(2026, 10, 1).valor(), modelo.periodo().getValue().inicio());
-        assertFalse(modelo.reporte().getValue().esSinDatos());
+        PeriodoEstadisticas perSig = java.util.Objects.requireNonNull(modelo.periodo().getValue());
+        ReporteEstudio repSig = java.util.Objects.requireNonNull(modelo.reporte().getValue());
+        assertEquals(Fecha.de(2026, 10, 1).valor(), perSig.inicio());
+        assertFalse(repSig.esSinDatos());
 
         modelo.cambiarTipo(PeriodoEstadisticas.Tipo.SEMANA);
-        assertEquals(PeriodoEstadisticas.Tipo.SEMANA, modelo.periodo().getValue().tipo());
+        PeriodoEstadisticas perSem = java.util.Objects.requireNonNull(modelo.periodo().getValue());
+        assertEquals(PeriodoEstadisticas.Tipo.SEMANA, perSem.tipo());
     }
 
     @Test
@@ -102,8 +109,8 @@ public final class ReportesViewModelTest {
         modelo.periodoAnterior(); // versión 2 (semana anterior: vacía)
 
         assertEquals(2, cola.size());
-        Runnable tareaObsoleta = cola.poll();
-        Runnable tareaVigente = cola.poll();
+        Runnable tareaObsoleta = java.util.Objects.requireNonNull(cola.poll());
+        Runnable tareaVigente = java.util.Objects.requireNonNull(cola.poll());
 
         // Ejecuta primero la respuesta vieja (si llega desordenada o tras avanzar de versión)
         tareaObsoleta.run();
@@ -111,21 +118,22 @@ public final class ReportesViewModelTest {
         assertTrue(Boolean.TRUE.equals(modelo.cargando().getValue()));
 
         tareaVigente.run();
-        assertNotNull(modelo.reporte().getValue());
-        assertTrue(modelo.reporte().getValue().esSinDatos());
+        ReporteEstudio repVigente = java.util.Objects.requireNonNull(modelo.reporte().getValue());
+        assertTrue(repVigente.esSinDatos());
         assertFalse(Boolean.TRUE.equals(modelo.cargando().getValue()));
 
         // Navega a la semana actual con datos para probar bloqueo de doble exportación
         modelo.periodoSiguiente();
-        cola.poll().run();
-        assertFalse(modelo.reporte().getValue().esSinDatos());
+        java.util.Objects.requireNonNull(cola.poll()).run();
+        ReporteEstudio repActual = java.util.Objects.requireNonNull(modelo.reporte().getValue());
+        assertFalse(repActual.esSinDatos());
 
         modelo.exportarPdf();
         assertTrue(Boolean.TRUE.equals(modelo.exportando().getValue()));
         modelo.exportarCsv(); // Debe ignorarse mientras exporta
         assertEquals(1, cola.size());
 
-        cola.poll().run();
+        java.util.Objects.requireNonNull(cola.poll()).run();
         assertEquals(1, exportador.exportaciones);
         assertEquals(FormatoExportacionReporte.PDF, exportador.ultimoFormato);
         assertFalse(Boolean.TRUE.equals(modelo.exportando().getValue()));

@@ -74,19 +74,28 @@ public class EstadisticasViewModelTest {
 
         EstadisticasViewModel vm = new EstadisticasViewModel(service, reloj, Runnable::run);
         vm.cargar();
-        assertNotNull(vm.estadisticas().getValue());
-        assertEquals(60, vm.estadisticas().getValue().minutosRealesTotales());
-        assertEquals(PeriodoEstadisticas.Tipo.SEMANA, vm.periodo().getValue().tipo());
+        io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo est1 =
+                java.util.Objects.requireNonNull(vm.estadisticas().getValue());
+        PeriodoEstadisticas per1 = java.util.Objects.requireNonNull(vm.periodo().getValue());
+        assertEquals(60, est1.minutosRealesTotales());
+        assertEquals(PeriodoEstadisticas.Tipo.SEMANA, per1.tipo());
 
         vm.cambiarTipo(PeriodoEstadisticas.Tipo.MES);
-        assertEquals(PeriodoEstadisticas.Tipo.MES, vm.periodo().getValue().tipo());
-        assertEquals(60, vm.estadisticas().getValue().minutosRealesTotales());
+        PeriodoEstadisticas per2 = java.util.Objects.requireNonNull(vm.periodo().getValue());
+        io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo est2 =
+                java.util.Objects.requireNonNull(vm.estadisticas().getValue());
+        assertEquals(PeriodoEstadisticas.Tipo.MES, per2.tipo());
+        assertEquals(60, est2.minutosRealesTotales());
 
         vm.periodoAnterior();
-        assertEquals(0, vm.estadisticas().getValue().minutosRealesTotales());
+        io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo est3 =
+                java.util.Objects.requireNonNull(vm.estadisticas().getValue());
+        assertEquals(0, est3.minutosRealesTotales());
 
         vm.periodoSiguiente();
-        assertEquals(60, vm.estadisticas().getValue().minutosRealesTotales());
+        io.github.jhoel0521.studyplan.domain.readmodel.EstadisticasPeriodo est4 =
+                java.util.Objects.requireNonNull(vm.estadisticas().getValue());
+        assertEquals(60, est4.minutosRealesTotales());
 
         vm.cambiarSubvista(EstadisticasViewModel.Subvista.CONCENTRACION);
         assertEquals(EstadisticasViewModel.Subvista.CONCENTRACION, vm.subvista().getValue());

@@ -24,6 +24,12 @@ public class MapasTest {
     }
 
     @Test
+    public void conUnMapaNuloDevuelveCero() {
+        assertEquals(0, Mapas.entero(null, "a"));
+        assertEquals(0L, Mapas.largo(null, 1L));
+    }
+
+    @Test
     public void largoDevuelveElValorOCeroSiFaltaOEsNulo() {
         Map<Long, Long> mapa = new HashMap<>();
         mapa.put(1L, 90_000L);

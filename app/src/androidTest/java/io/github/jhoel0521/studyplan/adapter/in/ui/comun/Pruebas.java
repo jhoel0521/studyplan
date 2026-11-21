@@ -54,7 +54,7 @@ public final class Pruebas {
     public static void reiniciarEstado() {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         try {
-            app().ejecutor().submit(() ->
+            app().enviarTarea(() ->
                     app().borrarDatos().ejecutar(AlcanceBorrado.TELEFONO))
                     .get(ESPERA_MAXIMA_MS, TimeUnit.MILLISECONDS);
         } catch (Exception e) {

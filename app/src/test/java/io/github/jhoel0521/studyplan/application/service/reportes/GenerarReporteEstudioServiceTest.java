@@ -65,6 +65,7 @@ public final class GenerarReporteEstudioServiceTest {
         assertEquals(120, reporte.minutosPlanificadosTotales());
         assertEquals(60, reporte.minutosRealesTotales());
         assertEquals(1, reporte.sesionesNoRealizadasTotales());
+        org.junit.Assert.assertNotNull(reporte.cumplimientoTotal());
         assertEquals(50.0, reporte.cumplimientoTotal(), 1e-4);
 
         assertEquals(2, reporte.materias().size());

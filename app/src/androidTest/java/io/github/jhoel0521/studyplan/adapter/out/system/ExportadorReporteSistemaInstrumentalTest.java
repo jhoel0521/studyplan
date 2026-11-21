@@ -177,7 +177,7 @@ public final class ExportadorReporteSistemaInstrumentalTest {
             assertFalse(falloIo.esExitoso());
             assertEquals(ResultadoExportacion.Error.ERROR_ESCRITURA, falloIo.error());
         } finally {
-            archivoQueBloqueaCarpeta.delete();
+            assertTrue(!archivoQueBloqueaCarpeta.exists() || archivoQueBloqueaCarpeta.delete());
         }
     }
 
