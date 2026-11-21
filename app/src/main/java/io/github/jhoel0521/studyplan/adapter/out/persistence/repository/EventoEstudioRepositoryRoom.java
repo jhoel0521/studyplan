@@ -39,10 +39,7 @@ public final class EventoEstudioRepositoryRoom implements EventoEstudioRepositor
     private static List<EventoEstudio> mapear(List<EventoEstudioEntity> entidades) {
         List<EventoEstudio> res = new ArrayList<>(entidades.size());
         for (EventoEstudioEntity e : entidades) {
-            EventoEstudio dominio = Mapeadores.aDominio(e);
-            if (dominio != null) {
-                res.add(dominio);
-            }
+            res.add(Mapeadores.aDominio(e));
         }
         return res;
     }

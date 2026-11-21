@@ -164,14 +164,10 @@ public final class ProgramadorAvisosAlarmManager
         NotificationManager nm = (NotificationManager) contexto.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         if (nm != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                for (StatusBarNotification activa : nm.getActiveNotifications()) {
-                    if (activa.getId() >= NOTIF_RECORDATORIO_BASE) {
-                        nm.cancel(activa.getTag(), activa.getId());
-                    }
+            for (StatusBarNotification activa : nm.getActiveNotifications()) {
+                if (activa.getId() >= NOTIF_RECORDATORIO_BASE) {
+                    nm.cancel(activa.getTag(), activa.getId());
                 }
-            } else {
-                nm.cancelAll();
             }
         }
     }
@@ -240,7 +236,7 @@ public final class ProgramadorAvisosAlarmManager
     }
 
     static int codigoSolicitud(long sesionId) {
-        return (int) (sesionId ^ (sesionId >>> 32));
+        return Long.hashCode(sesionId);
     }
 
     static int flagsCompat(int base) {

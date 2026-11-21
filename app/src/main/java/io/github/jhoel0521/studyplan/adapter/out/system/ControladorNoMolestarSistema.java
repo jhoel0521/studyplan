@@ -34,10 +34,7 @@ public final class ControladorNoMolestarSistema implements ControladorNoMolestar
         if (notificationManager == null) {
             return false;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return notificationManager.isNotificationPolicyAccessGranted();
-        }
-        return true;
+        return notificationManager.isNotificationPolicyAccessGranted();
     }
 
     @Override
@@ -45,17 +42,15 @@ public final class ControladorNoMolestarSistema implements ControladorNoMolestar
         if (!tienePermiso()) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activar) {
-                if (!prefs.contains(CLAVE_FILTRO_PREVIO)) {
-                    int previo = notificationManager.getCurrentInterruptionFilter();
-                    prefs.edit().putInt(CLAVE_FILTRO_PREVIO, previo).apply();
-                }
-                notificationManager.setInterruptionFilter(
-                        NotificationManager.INTERRUPTION_FILTER_PRIORITY);
-            } else {
-                restaurarSiAplica();
+        if (activar) {
+            if (!prefs.contains(CLAVE_FILTRO_PREVIO)) {
+                int previo = notificationManager.getCurrentInterruptionFilter();
+                prefs.edit().putInt(CLAVE_FILTRO_PREVIO, previo).apply();
             }
+            notificationManager.setInterruptionFilter(
+                    NotificationManager.INTERRUPTION_FILTER_PRIORITY);
+        } else {
+            restaurarSiAplica();
         }
     }
 
@@ -69,8 +64,6 @@ public final class ControladorNoMolestarSistema implements ControladorNoMolestar
         if (!tienePermiso()) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            notificationManager.setInterruptionFilter(previo);
-        }
+        notificationManager.setInterruptionFilter(previo);
     }
 }

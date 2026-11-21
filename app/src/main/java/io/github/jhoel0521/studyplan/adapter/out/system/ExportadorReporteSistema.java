@@ -117,8 +117,8 @@ public final class ExportadorReporteSistema implements ExportadorReporte {
                 return ResultadoExportacion.ok(
                         FileProvider.getUriForFile(context, authority, archivo).toString());
             } catch (IOException | IllegalArgumentException | SecurityException e) {
-                if (archivo.exists()) {
-                    archivo.delete();
+                if (archivo.exists() && !archivo.delete()) {
+                    archivo.deleteOnExit();
                 }
                 return ResultadoExportacion.error(ResultadoExportacion.Error.ERROR_ESCRITURA);
             }
@@ -136,8 +136,8 @@ public final class ExportadorReporteSistema implements ExportadorReporte {
                 return;
             }
             for (File archivo : archivos) {
-                if (archivo.isFile()) {
-                    archivo.delete();
+                if (archivo.isFile() && !archivo.delete()) {
+                    archivo.deleteOnExit();
                 }
             }
         }
@@ -150,7 +150,7 @@ public final class ExportadorReporteSistema implements ExportadorReporte {
         if (directorioReportes.exists()) {
             return false;
         }
-        return directorioReportes.mkdirs() || directorioReportes.isDirectory();
+        return directorioReportes.mkdirs();
     }
 
     private File crearArchivoUnico(ReporteEstudio reporte, FormatoExportacionReporte formato) {
@@ -172,7 +172,7 @@ public final class ExportadorReporteSistema implements ExportadorReporte {
         if (archivos == null || archivos.length <= MAX_ARCHIVOS_RETENIDOS) {
             return;
         }
-        Arrays.sort(archivos, (a, b) -> Long.compare(a.lastModified(), b.lastModified()));
+        Arrays.sort(archivos, java.util.Comparator.comparingLong(File::lastModified));
         int sobrantes = archivos.length - MAX_ARCHIVOS_RETENIDOS;
         for (File candidato : archivos) {
             if (sobrantes <= 0) {
