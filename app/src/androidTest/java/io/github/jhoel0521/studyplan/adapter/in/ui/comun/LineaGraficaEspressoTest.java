@@ -249,11 +249,17 @@ public class LineaGraficaEspressoTest {
         abrir(reparto, R.id.botonMas5Min, modoNocheEsperado);
         capturarUltima("reparto", tema);
 
+        // Con la ventana de gracia de 1 minuto (HU-40) la salida de la app tarda en registrarse: se acorta para que
+        // al cerrar la sesión quede registrada y Inicio pregunte «¿seguiste estudiando?».
+        app.contadorActividades().fijarGraciaParaPruebas(100L);
+
         // Sesión en curso: la misma sesión iniciada para el reparto (solo puede haber una en curso).
         Intent sesion = new Intent(contexto, SesionEnCursoActivity.class);
         sesion.putExtra(SesionEnCursoActivity.EXTRA_SESION_ID, primera.id());
         // Primero aparece el diálogo «Al volver» (W13) porque la sesión lleva 90 min iniciada;
-        // se responde «Sigo estudiando» y queda a la vista el cronómetro.
+        // se responde «Sigo estudiando» y queda a la vista el cronómetro. Volver a la app dentro de la gracia ya no
+        // pide la recuperación (HU-40), así que la prueba simula el cierre abrupto del proceso pidiéndola.
+        app.contadorActividades().solicitarEvaluacionRecuperacion();
         try (ActivityScenario<Activity> escenario = ActivityScenario.launch(sesion)) {
             Pruebas.esperarVisible(withId(R.id.grupoOpcionesRecuperacion));
             comprobarModoNoche(escenario, modoNocheEsperado);
@@ -272,6 +278,8 @@ public class LineaGraficaEspressoTest {
         // Inicio con la sesión En curso: aviso «Volver a la sesión» (HU-02, decisión 21).
         // Al cerrar la sesión la prueba «sale» de la app con la sesión En curso, así que Inicio pregunta primero
         // «¿seguiste estudiando?» (RN-23); se responde «Sigo estudiando» y queda el aviso de sesión en curso.
+        // Espera a que la salida se registre (decisión de 1,2 s más la gracia acortada).
+        Thread.sleep(2_500);
         try (ActivityScenario<MainActivity> escenario = ActivityScenario.launch(MainActivity.class)) {
             Pruebas.esperarVisible(withId(R.id.grupoOpcionesRecuperacion));
             onView(withId(R.id.radioSigoEstudiando)).perform(click());
