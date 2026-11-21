@@ -439,5 +439,7 @@ Decisiones posibles: Aceptado · Modificado · Rechazado · Decidido por el huma
 
 **Verificación integral (tarea 5.4):** `assembleDebug test lint` sin errores (lint: 0 errores, 53 avisos, uno menos que antes) y, en el emulador, `NotificacionSesionEspressoTest` 9, `AccionesNotificacionEspressoTest` 8, `BloqueoPantallaEspressoTest` 5, `ContadorActividadesInstrumentadoTest` 1, `CandadoEspressoTest` 4 y `SesionEnCursoControlesEspressoTest` 6, todas sin fallos.
 
-**Pendiente de revisión humana:** aprobar la redacción de RN-23 y RN-24 (tarea 1.1); probar en el teléfono (tarea 5.5); decidir el destino de `ServicioSesionEnCurso`; la tarea 7.2 del change archivado sigue abierta (medición de batería y ux-check).
+**Prueba en el teléfono (tarea 5.5):** la IA actualizó la app en el Redmi del Product Owner con su permiso explícito y él la probó a mano: «Me gusta, está perfecto». No detalló cada paso (botones al expandir, música, salidas de 55 s y de 10 min).
+
+**Pendiente de revisión humana:** aprobar la redacción de RN-23 y RN-24 (tarea 1.1); decidir el destino de `ServicioSesionEnCurso`; la tarea 7.2 del change archivado sigue abierta (medición de batería y ux-check).
 
