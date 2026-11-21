@@ -4,7 +4,7 @@ Reglas: el estudiante pidió un `git commit` por tarea al terminarla (`feat(HU-x
 
 ## 1. Aprobación del Product Owner
 
-- [ ] 1.1 Pedir al Product Owner que apruebe la redacción nueva de RN-23 (salida registrada tras 1 minuto fuera, con la hora real; menos de 1 minuto no es salida) y RN-24 (pregunta solo tras una salida registrada) y anotar su decisión en `docs/auditoria-ia/bitacora.md`. Modifica: `docs/auditoria-ia/bitacora.md`. Verificación: la fila cita HU-40, HU-41 y HU-49.
+- [x] 1.1 Pedir al Product Owner que apruebe la redacción nueva de RN-23 (salida registrada tras 1 minuto fuera, con la hora real; menos de 1 minuto no es salida) y RN-24 (pregunta solo tras una salida registrada) y anotar su decisión en `docs/auditoria-ia/bitacora.md`. Modifica: `docs/auditoria-ia/bitacora.md`. Verificación: la fila cita HU-40, HU-41 y HU-49. Aprobada por el Product Owner el 2026-11-21 al ordenar continuar sin pausas, tras probar la app en su teléfono («Me gusta, está perfecto»); la redacción está en el capítulo 3.
 
 ## 2. Salida con ventana de gracia (HU-40, HU-41)
 
