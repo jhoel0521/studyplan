@@ -77,6 +77,27 @@ public class RecuperacionSalidaServiceTest {
     }
 
     @Test
+    public void laSalidaRetroactivaDeLaGraciaAbreLaPreguntaDesdeLaHoraRealDeSalida() {
+        Fecha hoy = reloj.hoy();
+        SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
+                fisica.id(), hoy, hoy, Hora.de(8, 0).valor(), Hora.de(10, 0).valor(), "", null)
+                .valor());
+        iniciar.ejecutar(s.id(), TecnicaEstudio.LIBRE, PreferenciaNoMolestar.FORZAR_ACTIVAR);
+        long inicio = reloj.ahoraMilis();
+
+        // Sale a los 15 minutos, pasa más de 1 minuto fuera y vuelve a los 25 (HU-40, RN-23).
+        reloj.avanzarMilis(25 * MIN);
+        assertTrue(registrarSalida.ejecutar(inicio + 15 * MIN).isPresent());
+
+        DiagnosticoRegresoApp diag = evaluar.ejecutar().get();
+        assertEquals(inicio + 15 * MIN, diag.instanteSalidaMilis());
+        assertFalse("No es un cierre abrupto", diag.esRecuperacionCierreAbrupto());
+        assertEquals("Un solo evento de salida", 1, eventos.listarPorSesion(s.id()).stream()
+                .filter(e -> e.tipo() == io.github.jhoel0521.studyplan.domain.TipoEventoEstudio.SALIDA_APP)
+                .count());
+    }
+
+    @Test
     public void registraSalidaYDeclaraEstudioAppCerradaHastaHora() {
         Fecha hoy = reloj.hoy();
         SesionEstudio s = sesiones.guardar(SesionEstudio.planificar(
