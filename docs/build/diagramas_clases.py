@@ -87,7 +87,8 @@ DOMINIO_CALENDARIO = ["BloqueHorarioCalendario", "CalculadorRangoHorario", "Celd
 PRESENTACION_TECNICAS = ["DialogoRecuperacionSesion", "EventoEstudioAdapter", "FlujoBloqueoPantalla",
                          "NotificadorSesion", "ReceptorAvisosSesion", "RepartoSesionActivity",
                          "RepartoSesionViewModel", "ServicioSesionEnCurso", "SesionEnCursoActivity",
-                         "SesionEnCursoViewModel", "TextosSesion"]
+                         "SesionEnCursoViewModel", "TextosSesion", "SalidaConGracia", "ProgramadorRetardado",
+                         "ProgramadorRetardadoHandler"]
 ENTRADA_TECNICAS = ["AlternarNoMolestarSesion", "ConfigurarAjustesEstudio", "ConsultarEjecucionSesion",
                     "DecidirFinPlanificadoOInvasion", "DetenerSesion", "EvaluarRecuperacionSesion", "IniciarSesion",
                     "PausarReanudarSesion", "RegistrarBloqueoPantalla", "RegistrarDesbloqueo", "RegistrarSalidaApp",
@@ -447,13 +448,17 @@ def clases_tecnicas():
     y1c = y1b + alto(fila1b) + 50
     fila1c = [caja_con_metodos("ServicioSesionEnCurso", xs1[0], y1c, w1),
               caja_con_metodos("FlujoBloqueoPantalla", xs1[1], y1c, w1),
-              caja_con_metodos("TextosSesion", xs1[2], y1c, w1)]
-    for c in fila1 + fila1b + fila1c:
+              caja_con_metodos("TextosSesion", xs1[2], y1c, w1),
+              caja_con_metodos("SalidaConGracia", xs1[3], y1c, w1)]
+    y1d = y1c + alto(fila1c) + 50
+    fila1d = [caja_con_metodos("ProgramadorRetardado", xs1[0], y1d, w1),
+              caja_con_metodos("ProgramadorRetardadoHandler", xs1[1], y1d, w1)]
+    for c in fila1 + fila1b + fila1c + fila1d:
         c.draw(d)
     dg.assoc(d, fila1[0].right(0.2), fila1[1].left(0.2), "observa", None, None)
     dg.assoc(d, fila1[2].right(0.2), fila1[3].left(0.2), "observa", None, None)
 
-    y2 = y1c + alto(fila1c) + 90
+    y2 = y1d + alto(fila1d) + 90
     d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
     d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
     y2 += 60
