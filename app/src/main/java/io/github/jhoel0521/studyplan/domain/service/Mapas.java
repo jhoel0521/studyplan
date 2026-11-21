@@ -15,14 +15,20 @@ public final class Mapas {
     private Mapas() {
     }
 
-    /** Valor entero asociado a la clave, o 0 si no hay entrada o el valor es nulo. */
+    /** Valor entero asociado a la clave, o 0 si el mapa es nulo, no hay entrada o el valor es nulo. */
     public static <K> int entero(Map<K, Integer> mapa, K clave) {
+        if (mapa == null) {
+            return 0;
+        }
         Integer valor = mapa.get(clave);
         return valor == null ? 0 : valor;
     }
 
-    /** Valor largo asociado a la clave, o 0 si no hay entrada o el valor es nulo. */
+    /** Valor largo asociado a la clave, o 0 si el mapa es nulo, no hay entrada o el valor es nulo. */
     public static <K> long largo(Map<K, Long> mapa, K clave) {
+        if (mapa == null) {
+            return 0L;
+        }
         Long valor = mapa.get(clave);
         return valor == null ? 0L : valor;
     }

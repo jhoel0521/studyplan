@@ -214,24 +214,30 @@ public final class DecidirFinPlanificadoOInvasionService implements DecidirFinPl
             return sigIniciadaRes;
         }
         SesionEstudio sigIniciada = sigIniciadaRes.valor();
+        Long sigId = sigIniciada.id();
+        if (sigId == null) {
+            return Resultado.error(ErrorValidacion.SESION_NO_ENCONTRADA);
+        }
 
         eventos.guardar(cambioEv);
         sesiones.actualizar(actualCerrada.valor());
-        if (tramos != null) {
+        if (tramos != null && actual.id() != null) {
             tramos.guardarTramos(
                     actual.id(),
                     RepartidorPorDia.repartir(actualCerrada.valor(), lista, ahoraMs, minutos));
         }
-        programador.cancelarAvisos(actual.id());
+        if (actual.id() != null) {
+            programador.cancelarAvisos(actual.id());
+        }
         noMolestar.restaurarSiAplica();
         marcadorSalida.limpiar();
 
         sesiones.actualizar(sigIniciada);
-        if (programadorRecordatorios != null && sigIniciada.id() != null) {
-            programadorRecordatorios.cancelar(sigIniciada.id());
+        if (programadorRecordatorios != null) {
+            programadorRecordatorios.cancelar(sigId);
         }
         EventoEstudio inicioSig = eventos.guardar(EventoEstudio.crear(
-                sigIniciada.id(),
+                sigId,
                 TipoEventoEstudio.INICIO,
                 ahoraMs,
                 reloj.fechaDe(ahoraMs),

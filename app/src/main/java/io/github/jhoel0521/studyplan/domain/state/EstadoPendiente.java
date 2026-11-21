@@ -22,11 +22,6 @@ public final class EstadoPendiente implements EstadoSesion {
     }
 
     @Override
-    public boolean puedeCompletar(Fecha sesionFecha, Fecha hoy) {
-        return false;
-    }
-
-    @Override
     public boolean puedeReprogramar() {
         return true;
     }
@@ -49,7 +44,7 @@ public final class EstadoPendiente implements EstadoSesion {
     @Override
     public Resultado<EstadoSesion> marcarCompletada(
             Fecha sesionFecha, Fecha hoy, int duracionRealMinutos) {
-        if (sesionFecha == null || hoy == null || !sesionFecha.equals(hoy)) {
+        if (sesionFecha == null || !sesionFecha.equals(hoy)) {
             return Resultado.error(ErrorValidacion.COMPLETAR_SOLO_MISMO_DIA);
         }
         if (duracionRealMinutos <= 0) {

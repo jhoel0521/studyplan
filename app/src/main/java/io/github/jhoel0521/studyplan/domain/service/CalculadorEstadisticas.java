@@ -43,6 +43,10 @@ public final class CalculadorEstadisticas {
             Map<Long, List<EventoEstudio>> eventosPorSesion,
             long ahoraMilis) {
         Objects.requireNonNull(periodo, "periodo");
+        Objects.requireNonNull(minutosPorMateria, "minutosPorMateria");
+        Objects.requireNonNull(catalogoMaterias, "catalogoMaterias");
+        Objects.requireNonNull(sesionesDelPeriodo, "sesionesDelPeriodo");
+        Objects.requireNonNull(eventosPorSesion, "eventosPorSesion");
 
         Double variacion = minutosTotalesAnterior <= 0
                 ? null
@@ -56,35 +60,33 @@ public final class CalculadorEstadisticas {
         int reprogramadas = 0;
         int pendientesOVigentes = 0;
 
-        if (sesionesDelPeriodo != null) {
-            for (SesionEstudio s : sesionesDelPeriodo) {
-                switch (s.codigoEstado()) {
-                    case COMPLETADA:
-                        completadas++;
-                        break;
-                    case COMPLETADA_TARDIA:
-                        tardias++;
-                        break;
-                    case NO_REALIZADA:
-                        noRealizadas++;
-                        noRealizadasPorMateria.put(
-                                s.materiaId(),
-                                Mapas.entero(noRealizadasPorMateria, s.materiaId()) + 1);
-                        break;
-                    case REPROGRAMADA:
-                        reprogramadas++;
-                        break;
-                    case PENDIENTE:
-                    case EN_CURSO:
-                        pendientesOVigentes++;
-                        break;
-                }
-                if (s.estado().ocupaHorario() && s.tienePlan()) {
-                    planificadosPorMateria.put(
+        for (SesionEstudio s : sesionesDelPeriodo) {
+            switch (s.codigoEstado()) {
+                case COMPLETADA:
+                    completadas++;
+                    break;
+                case COMPLETADA_TARDIA:
+                    tardias++;
+                    break;
+                case NO_REALIZADA:
+                    noRealizadas++;
+                    noRealizadasPorMateria.put(
                             s.materiaId(),
-                            Mapas.entero(planificadosPorMateria, s.materiaId())
-                                    + Math.max(0, s.duracionPlanificadaMinutos()));
-                }
+                            Mapas.entero(noRealizadasPorMateria, s.materiaId()) + 1);
+                    break;
+                case REPROGRAMADA:
+                    reprogramadas++;
+                    break;
+                case PENDIENTE:
+                case EN_CURSO:
+                    pendientesOVigentes++;
+                    break;
+            }
+            if (s.estado().ocupaHorario() && s.tienePlan()) {
+                planificadosPorMateria.put(
+                        s.materiaId(),
+                        Mapas.entero(planificadosPorMateria, s.materiaId())
+                                + Math.max(0, s.duracionPlanificadaMinutos()));
             }
         }
 
@@ -130,6 +132,9 @@ public final class CalculadorEstadisticas {
             Map<Long, Materia> catalogoMaterias,
             List<SesionEstudio> sesionesDelPeriodo) {
         Objects.requireNonNull(periodo, "periodo");
+        Objects.requireNonNull(minutosPorMateria, "minutosPorMateria");
+        Objects.requireNonNull(catalogoMaterias, "catalogoMaterias");
+        Objects.requireNonNull(sesionesDelPeriodo, "sesionesDelPeriodo");
 
         Map<Long, Integer> realesPorMateria = copiarPositivos(minutosPorMateria);
         Map<Long, Integer> planificadosPorMateria = new HashMap<>();
@@ -152,7 +157,7 @@ public final class CalculadorEstadisticas {
             if (minReal <= 0 && minPlan <= 0 && noReal <= 0) {
                 continue;
             }
-            Materia materia = catalogoMaterias != null ? catalogoMaterias.get(id) : null;
+            Materia materia = catalogoMaterias.get(id);
             String nombre = materia != null ? materia.nombre() : "";
             boolean esGeneral = materia != null && materia.esGeneral();
             int color = materia != null ? materia.color() : 0xFF607D8B;
@@ -189,9 +194,6 @@ public final class CalculadorEstadisticas {
 
     private static Map<Long, Integer> copiarPositivos(Map<Long, Integer> origen) {
         Map<Long, Integer> destino = new HashMap<>();
-        if (origen == null) {
-            return destino;
-        }
         for (Map.Entry<Long, Integer> entrada : origen.entrySet()) {
             if (entrada.getKey() != null && entrada.getValue() != null && entrada.getValue() > 0) {
                 destino.put(entrada.getKey(), entrada.getValue());
@@ -205,15 +207,9 @@ public final class CalculadorEstadisticas {
             List<SesionEstudio> sesiones,
             Map<Long, Integer> planificadosPorMateria,
             Map<Long, Integer> noRealizadasPorMateria) {
-        if (sesiones == null) {
-            return;
-        }
         Fecha inicio = periodo.inicio();
         Fecha fin = periodo.fin();
         for (SesionEstudio sesion : sesiones) {
-            if (sesion == null) {
-                continue;
-            }
             if (sesion.estado().ocupaHorario() && sesion.tienePlan()) {
                 int minPlan = sesion.minutosPlanificadosEnRango(inicio, fin);
                 if (minPlan > 0) {
@@ -266,11 +262,9 @@ public final class CalculadorEstadisticas {
             Map<Long, Integer> planificadosPorMateria,
             Map<Long, Integer> noRealizadasPorMateria) {
         Set<Long> ids = new LinkedHashSet<>();
-        if (minutosPorMateria != null) {
-            for (Map.Entry<Long, Integer> entry : minutosPorMateria.entrySet()) {
-                if (entry.getValue() != null && entry.getValue() > 0) {
-                    ids.add(entry.getKey());
-                }
+        for (Map.Entry<Long, Integer> entry : minutosPorMateria.entrySet()) {
+            if (entry.getValue() != null && entry.getValue() > 0) {
+                ids.add(entry.getKey());
             }
         }
         List<DesgloseMateriaPeriodo> resultado = new ArrayList<>();
@@ -279,7 +273,7 @@ public final class CalculadorEstadisticas {
             if (min <= 0) {
                 continue;
             }
-            Materia m = catalogoMaterias != null ? catalogoMaterias.get(id) : null;
+            Materia m = catalogoMaterias.get(id);
             String nombre = m != null ? m.nombre() : "";
             boolean esGeneral = m != null && m.esGeneral();
             int color = m != null ? m.color() : 0xFF607D8B;
@@ -323,61 +317,59 @@ public final class CalculadorEstadisticas {
         Map<TopicoEventoEstudio, Integer> interrupcionesConteo =
                 new EnumMap<>(TopicoEventoEstudio.class);
 
-        if (sesiones != null) {
-            for (SesionEstudio s : sesiones) {
-                if (s.codigoEstado() == CodigoEstadoSesion.COMPLETADA_TARDIA) {
-                    continue;
-                }
-                List<EventoEstudio> eventos = eventosDe(eventosPorSesion, s.id());
-                if (eventos.isEmpty()) {
-                    continue;
-                }
+        for (SesionEstudio s : sesiones) {
+            if (s.codigoEstado() == CodigoEstadoSesion.COMPLETADA_TARDIA) {
+                continue;
+            }
+            List<EventoEstudio> eventos = eventosDe(eventosPorSesion, s.id());
+            if (eventos.isEmpty()) {
+                continue;
+            }
 
-                CalculadorTiempoReal.AnalisisEventos analisis =
-                        CalculadorTiempoReal.analizarEventos(eventos, ahoraMilis);
-                if (analisis.primerInicioMilis() == null) {
-                    continue;
-                }
+            CalculadorTiempoReal.AnalisisEventos analisis =
+                    CalculadorTiempoReal.analizarEventos(eventos, ahoraMilis);
+            if (analisis.primerInicioMilis() == null) {
+                continue;
+            }
 
-                dentroAppMs += CalculadorTiempoReal.calcularMilisDentroDeApp(eventos, ahoraMilis);
-                pausasManualesMs += analisis.pausasManualesMs();
-                tiempoFueraNoAcademicoMs += analisis.salidasNoAcademicasMs();
-                totalInterrupciones +=
-                        analisis.cantidadPausasManuales() + analisis.cantidadSalidasNoAcademicas();
+            dentroAppMs += CalculadorTiempoReal.calcularMilisDentroDeApp(eventos, ahoraMilis);
+            pausasManualesMs += analisis.pausasManualesMs();
+            tiempoFueraNoAcademicoMs += analisis.salidasNoAcademicasMs();
+            totalInterrupciones +=
+                    analisis.cantidadPausasManuales() + analisis.cantidadSalidasNoAcademicas();
 
-                for (Map.Entry<TopicoEventoEstudio, Long> e :
-                        analisis.estudioExternoPorTopicoMs().entrySet()) {
-                    estudioExternoMs.put(
-                            e.getKey(),
-                            Mapas.largo(estudioExternoMs, e.getKey()) + e.getValue());
-                    estudioExternoConteo.put(
-                            e.getKey(),
-                            Mapas.entero(estudioExternoConteo, e.getKey()) + 1);
-                }
+            for (Map.Entry<TopicoEventoEstudio, Long> e :
+                    analisis.estudioExternoPorTopicoMs().entrySet()) {
+                estudioExternoMs.put(
+                        e.getKey(),
+                        Mapas.largo(estudioExternoMs, e.getKey()) + e.getValue());
+                estudioExternoConteo.put(
+                        e.getKey(),
+                        Mapas.entero(estudioExternoConteo, e.getKey()) + 1);
+            }
 
-                for (Map.Entry<TopicoEventoEstudio, Long> e :
-                        analisis.interrupcionesPorTopicoMs().entrySet()) {
-                    interrupcionesMs.put(
-                            e.getKey(),
-                            Mapas.largo(interrupcionesMs, e.getKey()) + e.getValue());
-                }
-                for (Map.Entry<TopicoEventoEstudio, Integer> e :
-                        analisis.interrupcionesPorTopicoConteo().entrySet()) {
-                    interrupcionesConteo.put(
-                            e.getKey(),
-                            Mapas.entero(interrupcionesConteo, e.getKey()) + e.getValue());
-                }
+            for (Map.Entry<TopicoEventoEstudio, Long> e :
+                    analisis.interrupcionesPorTopicoMs().entrySet()) {
+                interrupcionesMs.put(
+                        e.getKey(),
+                        Mapas.largo(interrupcionesMs, e.getKey()) + e.getValue());
+            }
+            for (Map.Entry<TopicoEventoEstudio, Integer> e :
+                    analisis.interrupcionesPorTopicoConteo().entrySet()) {
+                interrupcionesConteo.put(
+                        e.getKey(),
+                        Mapas.entero(interrupcionesConteo, e.getKey()) + e.getValue());
+            }
 
-                if (s.tienePlan() && s.duracionPlanificadaMinutos() > 0) {
-                    sumaPuntualidadMin +=
-                            (analisis.primerInicioMilis() - s.planInicioUtcMilis()) / 60_000.0;
-                    sesionesPuntualidad++;
+            if (s.tienePlan() && s.duracionPlanificadaMinutos() > 0) {
+                sumaPuntualidadMin +=
+                        (analisis.primerInicioMilis() - s.planInicioUtcMilis()) / 60_000.0;
+                sesionesPuntualidad++;
 
-                    if (s.codigoEstado() == CodigoEstadoSesion.COMPLETADA
-                            && s.duracionRealMinutos() != null) {
-                        sumaPlanRespetoMin += s.duracionPlanificadaMinutos();
-                        sumaRealRespetoMin += Math.max(0, s.duracionRealMinutos());
-                    }
+                if (s.codigoEstado() == CodigoEstadoSesion.COMPLETADA
+                        && s.duracionRealMinutos() != null) {
+                    sumaPlanRespetoMin += s.duracionPlanificadaMinutos();
+                    sumaRealRespetoMin += Math.max(0, s.duracionRealMinutos());
                 }
             }
         }
@@ -441,9 +433,9 @@ public final class CalculadorEstadisticas {
         return lista;
     }
 
-    /** Eventos de la sesión; lista vacía si no hay mapa, no hay id o la sesión no tiene eventos. */
+    /** Eventos de la sesión; lista vacía si la sesión aún no tiene id o no tiene eventos. */
     private static List<EventoEstudio> eventosDe(Map<Long, List<EventoEstudio>> eventosPorSesion, Long sesionId) {
-        if (eventosPorSesion == null || sesionId == null) {
+        if (sesionId == null) {
             return Collections.emptyList();
         }
         List<EventoEstudio> eventos = eventosPorSesion.get(sesionId);

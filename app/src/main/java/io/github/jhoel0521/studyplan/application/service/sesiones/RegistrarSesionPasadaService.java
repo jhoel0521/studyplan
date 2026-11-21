@@ -90,12 +90,14 @@ public final class RegistrarSesionPasadaService implements RegistrarSesionPasada
             return ResultadoSesion.error(resultado.error());
         }
         SesionEstudio candidata = resultado.valor();
-        ConflictoHorario conflicto = ValidadorSesiones.buscarConflictoHorario(
-                sesiones,
-                materias,
-                candidata.inicioInstante(),
-                candidata.finInstante(),
-                null);
+        ConflictoHorario conflicto = candidata.finInstante() == null
+                ? null
+                : ValidadorSesiones.buscarConflictoHorario(
+                        sesiones,
+                        materias,
+                        candidata.inicioInstante(),
+                        candidata.finInstante(),
+                        null);
         if (conflicto != null) {
             return ResultadoSesion.conConflicto(conflicto);
         }

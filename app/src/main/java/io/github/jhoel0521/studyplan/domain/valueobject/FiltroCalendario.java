@@ -65,8 +65,7 @@ public final class FiltroCalendario {
     }
 
     public FiltroCalendario conIncluirArchivadas(boolean nuevoIncluirArchivadas) {
-        Long nuevaMateria = (!nuevoIncluirArchivadas && materiaId != null) ? materiaId : materiaId;
-        return new FiltroCalendario(nuevaMateria, nuevoIncluirArchivadas, estadosVisibles);
+        return new FiltroCalendario(materiaId, nuevoIncluirArchivadas, estadosVisibles);
     }
 
     /** Evalúa si una sesión con su materia archivada cumple el filtro actual. */

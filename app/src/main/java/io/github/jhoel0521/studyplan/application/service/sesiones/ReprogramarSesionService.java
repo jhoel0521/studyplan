@@ -111,12 +111,14 @@ public final class ReprogramarSesionService implements ReprogramarSesion {
             return ResultadoSesion.error(nuevaPendiente.error());
         }
         SesionEstudio candidata = nuevaPendiente.valor();
-        ConflictoHorario conflicto = ValidadorSesiones.buscarConflictoHorario(
-                sesiones,
-                materias,
-                candidata.inicioInstante(),
-                candidata.finInstante(),
-                original.id());
+        ConflictoHorario conflicto = candidata.finInstante() == null
+                ? null
+                : ValidadorSesiones.buscarConflictoHorario(
+                        sesiones,
+                        materias,
+                        candidata.inicioInstante(),
+                        candidata.finInstante(),
+                        original.id());
         if (conflicto != null) {
             return ResultadoSesion.conConflicto(conflicto);
         }
