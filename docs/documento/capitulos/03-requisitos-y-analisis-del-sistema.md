@@ -545,7 +545,7 @@ Tabla: Requisitos no funcionales (criterios de calidad) {#tabla21}
 | RNF-16 | Mantenibilidad / Analizabilidad / trazabilidad | Cada cambio es rastreable hasta su requisito. | 100 % de las HU con spec en OpenSpec; commits con referencia HU-xx; Lint sin errores. | openspec validate --strict; ./gradlew lint |
 | RNF-17 | Compatibilidad / Interoperabilidad | Funciona en las versiones vigentes de Android. | Android 7.0 (API 24) en adelante; targetSdk según la política vigente de Google Play. | Emuladores API 24, 30 y 37 |
 | RNF-18 | Compatibilidad / Coexistencia | Respeta las restricciones del sistema. | Permisos de notificaciones (Android 13+), alarmas exactas (12+) y acceso a No molestar solicitados con explicación previa; la app funciona aunque se nieguen. | Pruebas con permisos denegados |
-| RNF-19 | Flexibilidad / Adaptabilidad | Se adapta a distintas pantallas y al widget. | Pantallas de 5" a 7" en vertical; la vista semanal es legible en 5" (desplazamiento horizontal si hace falta); widget de 2×2 y 4×2 celdas. | Emuladores de varios tamaños |
+| RNF-19 | Flexibilidad / Adaptabilidad | Se adapta a distintas pantallas y al widget. | Pantallas de 5" a 7" en vertical; la vista semanal es legible en 5" (desplazamiento horizontal si hace falta); widget de 1×4 celdas (4 de ancho por 1 de alto). | Emuladores de varios tamaños |
 
 Nota: SUS = System Usability Scale (Brooke, 1996). Los valores objetivo son metas del proyecto y se verificarán en el Capítulo 5 (Pruebas y Validación).
 

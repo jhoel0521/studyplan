@@ -387,4 +387,14 @@ La novena épica implementada (`add-recordatorios`, Room v8 con `MIGRATION_7_8`)
 
 Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
 
-[[pendiente: diagramas de clases de las épicas siguientes (respaldo en Google Drive y widget), con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
+### Widget de progreso semanal
+
+El change `add-widget-progreso` implementa HU-05. El widget es de un solo tamaño, 1×4 celdas (RNF-19), y muestra de izquierda a derecha el logo de la aplicación, la meta semanal (un anillo con el porcentaje y «horas / meta») y las dos próximas materias, cada una con su color, día y hora. Es un adaptador de entrada en `adapter.in.ui.configuracion` que reutiliza el caso de uso `ObtenerResumenInicio` de la pantalla de Inicio, de modo que el cálculo de las horas, la meta y la próxima sesión no se duplica. Para las dos próximas materias se amplió el modelo de lectura `ResumenInicio` con `proximasSesiones()`, calculada con el mismo recorrido que ya elegía la próxima; Inicio sigue usando `proximaSesion()` sin cambios.
+
+El widget se compone de cuatro clases: `WidgetProgresoProvider` (el `AppWidgetProvider` que arma las vistas y abre Inicio al tocarlo), `ModeloWidgetProgreso` (decide el estado y el porcentaje; es Java puro y se prueba en la JVM), `DibujanteAnilloProgreso` (dibuja el anillo en un mapa de bits, porque `RemoteViews` no admite vistas propias) y `ObservadorProgresoWidget` (pide el refresco cuando cambian los datos).
+
+Dos decisiones explican el diseño. Primera, el refresco usa el rastreador de invalidación de Room sobre `sesion_estudio`, `meta_semanal`, `perfil` y `materia`: así el widget se actualiza al completar una sesión sin modificar ninguno de los servicios de sesión, y los avisos seguidos se agrupan en un solo redibujado. Segunda, la lectura de los datos ocurre en el hilo de fondo de la aplicación (`goAsync`), nunca en el principal. Además de los cambios de datos, el sistema lo redibuja cada 30 minutos, el mínimo permitido, para el cambio de día y de semana; por eso, tras la medianoche puede mostrar el dato anterior hasta un máximo de 30 minutos.
+
+Si no hay perfil, meta semanal o sesiones próximas, el widget lo dice con texto («Abre StudyPlan para empezar», «Define tu meta semanal», «Sin sesiones próximas») y, como en el resto de la aplicación, ningún estado depende solo del color (RNF-06). Tocar el widget abre Inicio, donde se aplica el bloqueo con huella o PIN (HU-04) si está activo. Una versión previa con dos tamaños (2×2 y 4×2) se descartó por decisión del Product Owner. Quedan fuera, por no estar en HU-05, mostrar la sesión en curso, ocultar los datos con el bloqueo activo y un botón «Estudiar ahora».
+
+[[pendiente: diagrama de clases del widget de progreso (hay que regenerar `python docs/build/diagramas.py`, que necesita las fuentes de Windows) y de la épica de respaldo en Google Drive, con los métodos del ciclo de vida y de los listeners, a medida que se implementen]]
