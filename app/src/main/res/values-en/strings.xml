@@ -489,4 +489,17 @@
     <string name="sesion_en_curso_ir_a_activa">Go to running session</string>
     <string name="estadisticas_metrica_etiqueta">%1$s: %2$s</string>
     <string name="estadisticas_tiempo_fuera_valor">%1$d min</string>
+    <!-- Weekly progress widget (HU-05) -->
+    <string name="widget_nombre">StudyPlan: weekly progress</string>
+    <string name="widget_descripcion">Your hours this week against your goal, and your next subjects</string>
+    <string name="widget_titulo_semana">This week</string>
+    <string name="widget_porcentaje">%1$d%%</string>
+    <string name="widget_proxima_linea">%1$s · %2$s %3$s</string>
+    <string name="widget_manana">Tomorrow</string>
+    <string name="widget_hoy">Today</string>
+    <string name="widget_sin_perfil">Open StudyPlan to get started</string>
+    <string name="widget_sin_meta">Set your weekly goal</string>
+    <string name="widget_sin_sesiones">No upcoming sessions</string>
+    <string name="widget_accesibilidad">Weekly progress: %1$d %%, %2$s. Tap to open StudyPlan.</string>
+    <string name="widget_accesibilidad_vacio">%1$s. Tap to open StudyPlan.</string>
 </resources>

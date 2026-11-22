@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget de progreso semanal 1x4 (HU-05, RNF-19): 4 celdas de ancho por 1 de alto. Se actualiza cada 30 minutos
+     (el mínimo del sistema) además de cuando cambian los datos. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_descripcion"
+    android:initialLayout="@layout/widget_progreso_1x4"
+    android:minHeight="40dp"
+    android:minResizeHeight="40dp"
+    android:minResizeWidth="250dp"
+    android:minWidth="280dp"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

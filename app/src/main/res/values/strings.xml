@@ -489,4 +489,17 @@
     <string name="sesion_en_curso_ir_a_activa">Ir a la sesión en curso</string>
     <string name="estadisticas_metrica_etiqueta">%1$s: %2$s</string>
     <string name="estadisticas_tiempo_fuera_valor">%1$d min</string>
+    <!-- Widget de progreso semanal (HU-05) -->
+    <string name="widget_nombre">StudyPlan: progreso semanal</string>
+    <string name="widget_descripcion">Tus horas de la semana sobre la meta y tus próximas materias</string>
+    <string name="widget_titulo_semana">Esta semana</string>
+    <string name="widget_porcentaje">%1$d%%</string>
+    <string name="widget_proxima_linea">%1$s · %2$s %3$s</string>
+    <string name="widget_manana">Mañana</string>
+    <string name="widget_hoy">Hoy</string>
+    <string name="widget_sin_perfil">Abre StudyPlan para empezar</string>
+    <string name="widget_sin_meta">Define tu meta semanal</string>
+    <string name="widget_sin_sesiones">Sin sesiones próximas</string>
+    <string name="widget_accesibilidad">Progreso semanal: %1$d %%, %2$s. Toca para abrir StudyPlan.</string>
+    <string name="widget_accesibilidad_vacio">%1$s. Toca para abrir StudyPlan.</string>
 </resources>

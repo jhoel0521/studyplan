@@ -128,6 +128,8 @@ import io.github.jhoel0521.studyplan.application.service.configuracion.SesionBlo
 import io.github.jhoel0521.studyplan.application.service.sesiones.VencerSesionesPendientesService;
 import io.github.jhoel0521.studyplan.domain.entity.Ajustes;
 import io.github.jhoel0521.studyplan.adapter.in.ui.calendario.PreferenciaVistaCalendario;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.ObservadorProgresoWidget;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.WidgetProgresoProvider;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.AplicadorApariencia;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.ContadorActividades;
 import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.NotificadorSesion;
@@ -221,6 +223,8 @@ public class StudyPlanApplication extends Application {
     private void componer() {
         ejecutor = Executors.newSingleThreadExecutor();
         StudyPlanDatabase base = StudyPlanDatabase.abrir(this);
+        base.getInvalidationTracker().addObserver(
+                new ObservadorProgresoWidget(ejecutor, () -> WidgetProgresoProvider.refrescarTodos(this)));
         PerfilRepositoryRoom perfiles = new PerfilRepositoryRoom(base.perfilDao());
         AjustesRepositoryRoom ajustes = new AjustesRepositoryRoom(base.ajustesDao());
         AlmacenDatosRoom almacen = new AlmacenDatosRoom(base);
