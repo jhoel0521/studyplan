@@ -232,4 +232,55 @@ public class ObtenerResumenInicioServiceTest {
 
         assertNull(servicio.ejecutar().orElseThrow(AssertionError::new).sesionEnCurso());
     }
+
+    private SesionEstudio pendiente(int diasDesdeHoy, int hora) {
+        return sesiones.guardar(SesionEstudio.restaurar(
+                null,
+                algebraId,
+                HOY.sumarDias(diasDesdeHoy),
+                Hora.de(hora, 0).valor(),
+                Hora.de(hora + 1, 0).valor(),
+                60,
+                null,
+                CodigoEstadoSesion.PENDIENTE,
+                null,
+                null));
+    }
+
+    /** HU-05: el widget muestra hasta 2 próximas sesiones; la primera es la misma que usa Inicio. */
+    @Test
+    public void proximasSesionesDevuelveLasDosPrimerasYLaPrimeraEsLaProxima() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        SesionEstudio primera = pendiente(0, 15);
+        SesionEstudio segunda = pendiente(1, 10);
+        pendiente(2, 10);
+
+        ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
+
+        assertEquals(2, resumen.proximasSesiones().size());
+        assertEquals(primera.id().longValue(), resumen.proximasSesiones().get(0).sesionId());
+        assertEquals(segunda.id().longValue(), resumen.proximasSesiones().get(1).sesionId());
+        assertEquals(resumen.proximaSesion().sesionId(), resumen.proximasSesiones().get(0).sesionId());
+    }
+
+    @Test
+    public void proximasSesionesTieneUnaSolaSiSoloQuedaUnaPendiente() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+        SesionEstudio unica = pendiente(1, 10);
+
+        ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
+
+        assertEquals(1, resumen.proximasSesiones().size());
+        assertEquals(unica.id().longValue(), resumen.proximasSesiones().get(0).sesionId());
+    }
+
+    @Test
+    public void proximasSesionesEstaVaciaSinPendientes() {
+        perfiles.guardar(Perfil.crear("Ana", 10).valor());
+
+        ResumenInicio resumen = servicio.ejecutar().orElseThrow(AssertionError::new);
+
+        assertNull(resumen.proximaSesion());
+        assertEquals(0, resumen.proximasSesiones().size());
+    }
 }

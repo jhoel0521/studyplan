@@ -20,6 +20,7 @@ public final class ResumenInicio {
     private final DetalleSesionInicio proximaSesion;
     private final List<DetalleSesionInicio> sesionesDeHoy;
     private final DetalleSesionInicio sesionEnCurso;
+    private final List<DetalleSesionInicio> proximasSesiones;
 
     public ResumenInicio(String nombre, double horasRealizadas, double metaSemanalHoras) {
         this(nombre, horasRealizadas, metaSemanalHoras, null, null, Collections.emptyList());
@@ -43,6 +44,19 @@ public final class ResumenInicio {
             DetalleSesionInicio proximaSesion,
             List<DetalleSesionInicio> sesionesDeHoy,
             DetalleSesionInicio sesionEnCurso) {
+        this(nombre, horasRealizadas, metaSemanalHoras, hoy, proximaSesion, sesionesDeHoy, sesionEnCurso,
+                proximaSesion == null ? Collections.emptyList() : Collections.singletonList(proximaSesion));
+    }
+
+    public ResumenInicio(
+            String nombre,
+            double horasRealizadas,
+            double metaSemanalHoras,
+            Fecha hoy,
+            DetalleSesionInicio proximaSesion,
+            List<DetalleSesionInicio> sesionesDeHoy,
+            DetalleSesionInicio sesionEnCurso,
+            List<DetalleSesionInicio> proximasSesiones) {
         this.nombre = nombre;
         this.horasRealizadas = horasRealizadas;
         this.metaSemanalHoras = metaSemanalHoras;
@@ -52,6 +66,9 @@ public final class ResumenInicio {
                 ? Collections.emptyList()
                 : Collections.unmodifiableList(new ArrayList<>(sesionesDeHoy));
         this.sesionEnCurso = sesionEnCurso;
+        this.proximasSesiones = proximasSesiones == null
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(new ArrayList<>(proximasSesiones));
     }
 
     public String nombre() {
@@ -76,6 +93,14 @@ public final class ResumenInicio {
 
     public List<DetalleSesionInicio> sesionesDeHoy() {
         return sesionesDeHoy;
+    }
+
+    /**
+     * @return las próximas sesiones pendientes en orden (hasta 2); la primera es {@link #proximaSesion()}. Las usa el
+     *     widget (HU-05).
+     */
+    public List<DetalleSesionInicio> proximasSesiones() {
+        return proximasSesiones;
     }
 
     /** @return la sesión En curso, o {@code null} si no hay ninguna (solo puede haber una) */

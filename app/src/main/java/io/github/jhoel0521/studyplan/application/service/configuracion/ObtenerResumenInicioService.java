@@ -33,6 +33,9 @@ import io.github.jhoel0521.studyplan.application.service.comun.ValidadorSesiones
  */
 public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
 
+    /** Cuántas próximas sesiones se calculan (Inicio usa la primera; el widget, hasta dos; HU-05). */
+    private static final int PROXIMAS_MAXIMAS = 2;
+
     private final PerfilRepository perfiles;
     private final SesionRepository sesiones;
     private final MateriaRepository materias;
@@ -102,7 +105,8 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
             sesionesDeHoy.add(mapearDetalle(s, catalogo));
         }
 
-        DetalleSesionInicio proxima = seleccionarProxima(hoy, ahoraInst, catalogo);
+        List<DetalleSesionInicio> proximas = seleccionarProximas(hoy, ahoraInst, catalogo, PROXIMAS_MAXIMAS);
+        DetalleSesionInicio proxima = proximas.isEmpty() ? null : proximas.get(0);
         // Sesión En curso para el aviso de Inicio y el botón «Volver a la sesión» (HU-02, HU-47).
         DetalleSesionInicio enCurso = sesiones.buscarEnCurso()
                 .map(s -> mapearDetalle(s, catalogo))
@@ -115,7 +119,8 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
                 hoy,
                 proxima,
                 sesionesDeHoy,
-                enCurso));
+                enCurso,
+                proximas));
     }
 
     private double resolverMetaSemanaActual(Fecha lunes, Perfil perfil) {
@@ -133,19 +138,26 @@ public final class ObtenerResumenInicioService implements ObtenerResumenInicio {
         return perfil.metaSemanalHoras();
     }
 
-    private DetalleSesionInicio seleccionarProxima(
-            Fecha hoy, Instante ahoraInst, Map<Long, Materia> catalogo) {
+    /** Las próximas pendientes en orden: empieza en la primera que aún no terminó (o la primera de la lista). */
+    private List<DetalleSesionInicio> seleccionarProximas(
+            Fecha hoy, Instante ahoraInst, Map<Long, Materia> catalogo, int maximo) {
         List<SesionEstudio> pendientes = sesiones.listarPendientesDesde(hoy);
+        List<DetalleSesionInicio> proximas = new ArrayList<>();
         if (pendientes.isEmpty()) {
-            return null;
+            return proximas;
         }
-        for (SesionEstudio candidata : pendientes) {
-            Instante fin = candidata.finInstante();
+        int inicio = 0;
+        for (int i = 0; i < pendientes.size(); i++) {
+            Instante fin = pendientes.get(i).finInstante();
             if (fin != null && fin.esPosteriorA(ahoraInst)) {
-                return mapearDetalle(candidata, catalogo);
+                inicio = i;
+                break;
             }
         }
-        return mapearDetalle(pendientes.get(0), catalogo);
+        for (int i = inicio; i < pendientes.size() && proximas.size() < maximo; i++) {
+            proximas.add(mapearDetalle(pendientes.get(i), catalogo));
+        }
+        return proximas;
     }
 
     private DetalleSesionInicio mapearDetalle(SesionEstudio sesion, Map<Long, Materia> catalogo) {
