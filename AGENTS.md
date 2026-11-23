@@ -117,6 +117,7 @@ docs/build/          scripts propios (diagramas.py)
 - Nunca cambies `applicationId`, `namespace`, el lenguaje (Java) ni minSdk.
 - Antes de implementar, comprueba que existe un change aprobado en `openspec/changes/`.
 - Al terminar una sesión, anota en la bitácora qué pidió el usuario, qué generaste y qué quedó pendiente de revisión humana.
+- Nunca escribas, versiones ni imprimas claves de firma, contraseñas, tokens ni archivos `.jks`/`.keystore`/cuentas de servicio. Los crea y los carga el humano (secretos de GitHub); las claves de prueba son temporales y se borran al terminar.
 
 ## 9. Comandos y subagentes
 - OpenSpec: `/opsx:explore` (explorar sin código) · `/opsx:propose "<idea>"` (proposal, specs, design y tasks) ·

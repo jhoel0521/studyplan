@@ -50,6 +50,51 @@ Sin `.env`, la portada sale con marcadores genéricos en amarillo. En Word, puls
 actualizar el índice y las listas de tablas y figuras. Si editas un Word a mano, guárdalo con otro nombre
 fuera de `dist/` o `generar_docx.py` se negará a sobrescribirlo.
 
+## Compilación, CI y publicación
+
+Compuerta de calidad local (también la que corre el CI):
+
+```bash
+./gradlew assembleDebug assembleDebugAndroidTest test lint   # con ANDROID_HOME definido
+```
+
+| Workflow | Cuándo corre | Qué hace |
+|---|---|---|
+| `.github/workflows/ci.yml` | push a `main` y cada pull request | La compuerta anterior; sube los informes si falla. No usa secretos |
+| `.github/workflows/release.yml` | al empujar una etiqueta `vX.Y.Z` | Pruebas y lint, AAB y APK firmados, verificación con `apksigner` y un **borrador** de GitHub Release (no público) |
+
+La versión sale de la etiqueta: `vX.Y.Z` da `versionName = X.Y.Z` y `versionCode = X·1.000.000 + Y·1.000 + Z`
+(por ejemplo `v1.2.3` da `1002003`). Sin propiedades, el build local usa `1` y `1.0`.
+
+### Crear la clave de subida (una sola vez, en tu máquina)
+
+La clave **nunca** entra al repositorio (`.gitignore` bloquea `*.jks` y `*.keystore`). No la crea la IA.
+
+```bash
+keytool -genkeypair -v -keystore upload.jks -alias upload -keyalg RSA -keysize 4096 -validity 10000
+```
+
+1. Anota las contraseñas en tu gestor de contraseñas y guarda **una copia de `upload.jks` fuera del repositorio**.
+2. El SHA-1 de la clave es público y se pide en Google Cloud y en Play Console:
+   `keytool -list -v -keystore upload.jks -alias upload` (línea `SHA1`).
+3. Carga cuatro **secretos** en GitHub (Settings → Secrets and variables → Actions):
+
+| Secreto | Valor |
+|---|---|
+| `KEYSTORE_BASE64` | el keystore en base64: `base64 -w0 upload.jks` |
+| `KEYSTORE_PASSWORD` | contraseña del keystore |
+| `KEY_ALIAS` | el alias (`upload`) |
+| `KEY_PASSWORD` | contraseña de la clave |
+
+### Publicar una versión
+
+```bash
+git tag v0.1.0 && git push origin v0.1.0     # la etiqueta debe apuntar a una confirmación de main
+```
+
+Cuando termina el workflow, abre el borrador en *Releases*, comprueba el AAB y el APK, y publícalo si todo está bien.
+Para Google Play, el AAB se sube **a mano** la primera vez; ver `docs/publicacion/guia-google-play-y-drive.md`.
+
 ## Auditoría de IA
 
 Por indicación del docente, **todo uso de IA se documenta**. La *Auditoría IA* es un punto especial
