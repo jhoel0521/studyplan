@@ -11,7 +11,7 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Tasks;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -32,10 +32,17 @@ public final class AutenticadorGoogleDrive implements ProveedorTokenDrive {
         this.contexto = contexto.getApplicationContext();
     }
 
-    /** Solicitud de autorización de {@code drive.appdata}; la usan también las pantallas para pedir el permiso. */
+    /** Alcance no sensible que permite a Google devolver el correo de la cuenta elegida. */
+    public static final String ALCANCE_CORREO = "email";
+
+    /**
+     * Solicitud de autorización de {@code drive.appdata} más el correo de la cuenta; la usan también las pantallas
+     * para pedir el permiso. Sin el alcance de correo Google autoriza, pero {@code getEmail()} llega vacío y la app
+     * no sabría qué cuenta vinculó.
+     */
     public static AuthorizationRequest solicitud() {
         return AuthorizationRequest.builder()
-                .setRequestedScopes(Collections.singletonList(new Scope(ALCANCE_APPDATA)))
+                .setRequestedScopes(Arrays.asList(new Scope(ALCANCE_APPDATA), new Scope(ALCANCE_CORREO)))
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package io.github.jhoel0521.studyplan.adapter.in.ui.comun;
 
 import android.app.PendingIntent;
+import android.util.Log;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResult;
@@ -14,6 +15,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 
 import io.github.jhoel0521.studyplan.adapter.out.drive.AutenticadorGoogleDrive;
+import io.github.jhoel0521.studyplan.adapter.out.drive.ConsultaCorreoGoogle;
+
+import java.io.IOException;
 
 /**
  * Pide al estudiante, con la pantalla de Google, el permiso de {@code drive.appdata} y entrega el correo de la cuenta
@@ -31,6 +35,8 @@ public final class ProcesoAutorizacionDrive {
         void alFallar();
     }
 
+    private static final String ETIQUETA = "AutorizacionDrive";
+
     private final ComponentActivity actividad;
     private final Escucha escucha;
     private final ActivityResultLauncher<IntentSenderRequest> lanzador;
@@ -47,14 +53,14 @@ public final class ProcesoAutorizacionDrive {
         Identity.getAuthorizationClient(actividad)
                 .authorize(AutenticadorGoogleDrive.solicitud())
                 .addOnSuccessListener(this::onAutorizacion)
-                .addOnFailureListener(error -> escucha.alFallar());
+                .addOnFailureListener(error -> fallar("authorize() falló: " + error));
     }
 
     private void onAutorizacion(AuthorizationResult resultado) {
         if (resultado.hasResolution()) {
             PendingIntent pantalla = resultado.getPendingIntent();
             if (pantalla == null) {
-                escucha.alFallar();
+                fallar("Google pidió una pantalla pero no entregó el PendingIntent");
                 return;
             }
             lanzador.launch(new IntentSenderRequest.Builder(pantalla.getIntentSender()).build());
@@ -65,23 +71,43 @@ public final class ProcesoAutorizacionDrive {
 
     private void onResultadoDePantalla(ActivityResult resultado) {
         if (resultado.getData() == null) {
-            escucha.alFallar();
+            fallar("La pantalla de Google terminó sin datos (código " + resultado.getResultCode() + ")");
             return;
         }
         try {
             entregar(Identity.getAuthorizationClient(actividad).getAuthorizationResultFromIntent(resultado.getData()));
         } catch (ApiException e) {
-            escucha.alFallar();
+            fallar("getAuthorizationResultFromIntent falló: " + e);
         }
     }
 
     private void entregar(AuthorizationResult resultado) {
         GoogleSignInAccount cuenta = resultado.toGoogleSignInAccount();
         String correo = cuenta == null ? null : cuenta.getEmail();
-        if (correo == null || correo.isEmpty()) {
-            escucha.alFallar();
-        } else {
+        if (correo != null && !correo.isEmpty()) {
             escucha.alAutorizar(correo);
+            return;
         }
+        String token = resultado.getAccessToken();
+        if (token == null) {
+            fallar("Google autorizó pero no entregó token de acceso");
+            return;
+        }
+        // Google autoriza el alcance sin entregar el correo: se pregunta con el token, fuera del hilo principal.
+        new Thread(() -> consultarCorreo(token), "consulta-correo-google").start();
+    }
+
+    private void consultarCorreo(String token) {
+        try {
+            String correo = ConsultaCorreoGoogle.correoDe(token);
+            actividad.runOnUiThread(() -> escucha.alAutorizar(correo));
+        } catch (IOException e) {
+            actividad.runOnUiThread(() -> fallar("No se pudo leer el correo de la cuenta: " + e.getMessage()));
+        }
+    }
+
+    private void fallar(String motivo) {
+        Log.w(ETIQUETA, motivo);
+        escucha.alFallar();
     }
 }
