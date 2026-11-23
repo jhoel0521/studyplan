@@ -6,6 +6,7 @@ Android Developers. (s.f.-d). *Guía de arquitectura de apps*. Google. https://d
 Android Developers. (s.f.-e). *Kotlin y Android*. Google. https://developer.android.com/kotlin
 Android Developers. (s.f.-f). *Trabajo persistente con* *WorkManager*. Google. https://developer.android.com/develop/background-work/background-tasks/persistent
 Anthropic. (2026). *Claude Code* [Software]. https://claude.com/claude-code
+Ayuda de Play Console. (s.f.). *Proporciona información para la sección de Seguridad de los datos de Google Play*. Google. https://support.google.com/googleplay/android-developer/answer/10787469
 Beck, K., Beedle, M., van Bennekum, A., Cockburn, A., Cunningham, W., Fowler, M., Grenning, J., Highsmith, J., Hunt, A., Jeffries, R., Kern, J., Marick, B., Martin, R. C., Mellor, S., Schwaber, K., Sutherland, J., & Thomas, D. (2001). *Manifiesto por el desarrollo ágil de software*. https://agilemanifesto.org/iso/es/manifesto.html
 Britton, B. K., & Tesser, A. (1991). Effects of time-management practices on college grades. *Journal of Educational Psychology, 83*(3), 405–410. https://doi.org/10.1037/0022-0663.83.3.405
 Brooke, J. (1996). SUS: A “quick and dirty” usability scale. En P. W. Jordan, B. Thomas, B. A. Weerdmeester, & I. L. McClelland (Eds.), *Usability evaluation in industry* (pp. 189–194). Taylor & Francis.

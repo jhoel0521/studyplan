@@ -89,6 +89,23 @@ Tabla: Resumen de la bitácora de la sesión del 4 de noviembre de 2026 {#tabla2
 | 13 | Actualizar índice del Word | El script de automatización de Word (COM) se colgó dos veces | **Pendiente.** El estudiante actualiza los campos en Word (Ctrl+A, F9) |
 | 14 | Requisitos v3 y documento | 45 HU, 30 RN, 19 RNF, 10 specs validadas | **Pendiente** de revisión humana (tareas 2.1 a 2.3 de tasks.md) |
 
+La @tabla:bitacora_nov22 resume las sesiones del 22 y 23 de noviembre de 2026, dedicadas a la épica de respaldo y a la publicación en Google Play. Se incluyen los errores de la IA que el estudiante detectó: una corrección que no bastó, una acción sobre su teléfono sin permiso expreso y una afirmación que presentó como hecho sin comprobarla. El detalle completo está en las filas 165 a 169 de la bitácora del repositorio.
+
+Tabla: Resumen de la bitácora de las sesiones del 22 y 23 de noviembre de 2026 {#bitacora_nov22 anchos=0.7,4,6,5.8 tam=9}
+
+| # | Solicitud / propuesta | Resultado de la IA | Decisión humana y justificación |
+|---|---|---|---|
+| 1 | Implementar la épica 10: respaldo y privacidad | Auditó el plan, corrigió la especificación, implementó el núcleo, los adaptadores y las pantallas; 456 pruebas unitarias sin fallos | **Aceptado.** El estudiante aprobó las dependencias, guardar la contraseña con Android KeyStore y el respaldo apagado por defecto |
+| 2 | Vincular la cuenta de Google en el teléfono | El primer arreglo (pedir el alcance del correo) no bastó; el segundo (consultar el correo con el token de acceso) funcionó | **Aceptado con corrección.** El estudiante probó y reportó el fallo; la IA había supuesto la causa sin comprobarla |
+| 3 | Probar respaldo y restauración con la cuenta real | La IA no pudo hacerlo | **Hecho por el humano.** El estudiante borró sus datos en el teléfono y los restauró desde Drive |
+| 4 | Actualizar la app en el teléfono | Copió la base y los ajustes, reinstaló y restauró los datos | **Aceptado con reserva.** La IA actuó sobre el teléfono más allá de lo pedido; el estudiante fijó la regla de no operarlo sin permiso expreso |
+| 5 | Firma y release | Comprobó que existen los cuatro secretos y, por orden del estudiante, borró el release anterior y creó otro sobre el commit con la épica | **Decidido por el humano.** La clave de subida la creó el estudiante en otra computadora |
+| 6 | Crear la app y completar las declaraciones de Play Console | Operó la consola con confirmación en cada paso sensible; 11 declaraciones guardadas | **Decidido por el humano** en detalles de acceso, público objetivo y seguridad de los datos |
+| 7 | Video para el permiso de servicio en primer plano | Grabó en un emulador un recorrido de 6 min 36 s y lo subió a YouTube | **Decidido por el humano.** El estudiante eligió visibilidad pública |
+| 8 | Explicar por qué el logo no aparecía en la consola | Afirmó, sin comprobarlo, que aparecería tras la aprobación de Google | **Rechazado.** El estudiante la corrigió: el logo aparece al guardar la ficha, no al aprobarse |
+
+Nota: Elaboración propia a partir de la bitácora del repositorio.
+
 ## A.5. Riesgos del uso de IA y mitigación {.sin-numero}
 
 Tabla: Riesgos identificados en el uso de IA y su mitigación {#tabla26}
@@ -101,6 +118,8 @@ Tabla: Riesgos identificados en el uso de IA y su mitigación {#tabla26}
 | Desvío del stack | Generar Kotlin o Jetpack Compose por costumbre | Restricción en config.yaml y AGENTS.md; revisión con revisor-java |
 | Código inseguro o de baja calidad | SQL concatenado, consultas en el hilo principal, cifrado débil | RNF-12, RNF-14 y RNF-15, Lint, StrictMode y revisión humana |
 | Pérdida de autoría y comprensión | Entregar código que el estudiante no entiende | La Definition of Done exige que el estudiante explique el código; defensa oral |
+| Actuar fuera de lo pedido en equipos o cuentas del estudiante | La IA abrió, cerró y reinstaló la app en el teléfono del estudiante sin permiso expreso | Regla: ningún toque, apertura ni instalación en el teléfono sin permiso expreso, y confirmación antes de cada acción hacia fuera (publicar, declarar, subir) |
+| Afirmaciones sin comprobar presentadas como hechos | Decir que el logo de la consola dependía de la aprobación de Google | El estudiante verifica contra la consola y la IA registra sus errores en la bitácora (fila 169) |
 
 ## A.6. Reflexión: ¿qué diferencia a un programador en la era de la IA? {.sin-numero}
 

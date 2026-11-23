@@ -214,7 +214,27 @@ Nota: Elaboración propia.
 
 Nota: W13 implementa la declaración de estudio con la app cerrada; W15 muestra la línea de tiempo de eventos y las métricas de concentración. Elaboración propia.
 
-[[pendiente: mockups de las pantallas ya implementadas (capturas de la app en el emulador); hoy solo hay capturas locales sin versionar]]
+Para contrastar los prototipos con lo construido se capturaron cinco pantallas de la aplicación instalada en un teléfono Android: Inicio con la meta semanal (@figura:app_inicio), Calendario en vista de día (@figura:app_calendario), Estadísticas con la distribución por materia (@figura:app_estadisticas), Materias (@figura:app_materias) y Copia de seguridad (@figura:app_respaldo). A las capturas se les recortó la barra de estado y se ocultaron el nombre del estudiante y el correo de la cuenta vinculada.
+
+![Pantalla de Inicio con la meta semanal y las sesiones de hoy](../recursos/figuras/app_inicio.png){#app_inicio ancho=5.5}
+
+Nota: Elaboración propia. Captura de la aplicación en un teléfono Android.
+
+![Calendario en vista de día](../recursos/figuras/app_calendario.png){#app_calendario ancho=5.5}
+
+Nota: Elaboración propia. Captura de la aplicación en un teléfono Android.
+
+![Estadísticas: distribución del tiempo por materia](../recursos/figuras/app_estadisticas.png){#app_estadisticas ancho=5.5}
+
+Nota: Elaboración propia. Captura de la aplicación en un teléfono Android.
+
+![Lista de materias con las horas acumuladas](../recursos/figuras/app_materias.png){#app_materias ancho=5.5}
+
+Nota: Elaboración propia. Captura de la aplicación en un teléfono Android.
+
+![Copia de seguridad en Google Drive, con la cuenta vinculada](../recursos/figuras/app_respaldo.png){#app_respaldo ancho=5.5}
+
+Nota: Elaboración propia. Captura de la aplicación en un teléfono Android. El correo de la cuenta se ocultó.
 
 ## Diseño de Componentes y Módulos
 
@@ -403,4 +423,12 @@ El change `add-respaldo-drive` implementa HU-35 a HU-38 (RN-19 a RN-21). El resp
 
 En infraestructura, `CifradorRespaldoAesGcm` cifra con AES-256-GCM y una clave derivada con PBKDF2-HMAC-SHA256 (120 000 iteraciones, sal de 16 bytes, IV de 12 bytes); el PBKDF2 se calcula con HMAC-SHA256 porque `SecretKeyFactory("PBKDF2WithHmacSHA256")` solo existe desde Android 8 y la app admite Android 7. `AlmacenCredencialRespaldoKeystore` guarda la contraseña cifrada con una clave del Android KeyStore para poder respaldar de forma automática sin pedirla; si la clave se pierde, el respaldo vuelve a pedirla. `ClienteGoogleDriveRest` usa `HttpURLConnection` contra la API REST de Drive v3 sobre `appDataFolder` con un único archivo, y `AutenticadorGoogleDrive` obtiene el token con la API de autorización de Google Identity Services y el alcance `drive.appdata`; `WorkerRespaldoDrive` y `ProgramadorRespaldoWorkManager` programan la tarea periódica con red conectada y reintento solo ante fallos de red. `AlmacenDatosRoom.restaurarTodo` reemplaza todas las tablas en una transacción y comprueba las claves foráneas antes de confirmar. En la interfaz, `RespaldoActivity` y `RespaldoViewModel` (Ajustes > Copia de seguridad), el flujo de borrado con alcance y el botón «Restaurar desde Google Drive» de `PerfilInicialActivity`.
 
-[[pendiente: diagramas de clases del widget de progreso y de la épica de respaldo en Google Drive (hay que regenerar `python docs/build/diagramas.py`, que necesita las fuentes de Windows), con los métodos del ciclo de vida y de los listeners]]
+La @figura:clases_respaldo muestra las clases de la épica de respaldo, con los métodos del ciclo de vida y de los listeners de la pantalla, y la @figura:clases_widget las del widget de progreso semanal. Los métodos se toman del código con `python docs/build/diagramas_clases.py`, y `python docs/build/cotejo_clases.py` comprueba que ningún diagrama quede desfasado respecto de las clases reales.
+
+![Diagrama de clases de la épica de respaldo y privacidad](../recursos/diagramas/diagrama_clases_respaldo.png){#clases_respaldo ancho=16.5}
+
+Nota: Elaboración propia a partir del código.
+
+![Diagrama de clases del widget de progreso semanal](../recursos/diagramas/diagrama_clases_widget.png){#clases_widget ancho=16.5}
+
+Nota: Elaboración propia a partir del código.

@@ -20,7 +20,7 @@ import diagramas_clases as dc  # noqa: E402
 RAIZ = dc.jf.RAIZ
 IMAGENES = ["diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
             "diagrama_clases_calendario", "diagrama_clases_estadisticas", "diagrama_clases_reportes",
-            "diagrama_clases_recordatorios", "modelo_logico", "secuencia_registrar_materia",
+            "diagrama_clases_recordatorios", "diagrama_clases_respaldo", "diagrama_clases_widget", "modelo_logico", "secuencia_registrar_materia",
             "secuencia_planificar_sesion", "secuencia_consultar_calendario"]
 
 
@@ -52,6 +52,8 @@ def cotejar_imagenes(errores):
             dc.clases_estadisticas()
             dc.clases_reportes()
             dc.clases_recordatorios()
+            dc.clases_respaldo()
+            dc.clases_widget()
             dc.modelo_logico()
             dc.secuencia_registrar_materia()
             dc.secuencia_planificar_sesion()

@@ -31,4 +31,4 @@
 ## 4. Verificación E2E, documentación y prueba real
 
 - [x] 4.1 Añadir pruebas Espresso para la configuración de respaldo, advertencia de contraseña y doble confirmación de borrado selectivo en `Ajustes` y arranque en `PerfilInicialActivity` (con `ClienteGoogleDrive` fake en pruebas o flujo completo), y ejecutar `./gradlew connectedDebugAndroidTest` en emulador.
-- [ ] 4.2 Prueba manual del Product Owner en dispositivo/emulador con cuenta Google real (vincular Drive, respaldar con contraseña, borrar local, restaurar y comprobar historial), más actualización de capítulos 3–4, diagramas (`adapter.out.drive`) y `docs/auditoria-ia/bitacora.md`.
+- [x] 4.2 Prueba manual del Product Owner en dispositivo/emulador con cuenta Google real (vincular Drive, respaldar con contraseña, borrar local, restaurar y comprobar historial), más actualización de capítulos 3–4, diagramas (`adapter.out.drive`) y `docs/auditoria-ia/bitacora.md`. **Hecho el 2026-11-23:** el Product Owner borró sus datos en su teléfono y los restauró desde Google Drive; capítulos 3 a 5, diagramas y bitácora actualizados.

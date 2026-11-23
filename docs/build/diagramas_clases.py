@@ -137,15 +137,29 @@ SERVICIOS_RECORDATORIOS = ["ConfigurarRecordatorioPorDefectoService", "Reprogram
 SALIDA_RECORDATORIOS = ["ProgramadorRecordatorios"]
 DOMINIO_RECORDATORIOS = ["AntelacionRecordatorio", "AvisoRecordatorioPendiente"]
 
+# add-respaldo-drive
+PRESENTACION_RESPALDO = ["RespaldoActivity", "RespaldoViewModel", "ProcesoAutorizacionDrive"]
+ENTRADA_RESPALDO = ["ConfigurarRespaldo", "RespaldarAhora", "RestaurarRespaldo"]
+SERVICIOS_RESPALDO = ["ConfigurarRespaldoService", "RespaldarAhoraService", "RestaurarRespaldoService"]
+SALIDA_RESPALDO = ["AlmacenCredencialRespaldo", "CifradorRespaldo", "ClienteGoogleDrive", "ConfiguracionRespaldoRepository", "ProgramadorRespaldo"]
+DOMINIO_RESPALDO = ["ConfiguracionRespaldo", "FrecuenciaRespaldo", "InstantaneaRespaldo", "MetadatosRespaldo", "NormalizadorRespaldo", "RespaldoDescargado", "ResultadoRespaldo", "SerializadorRespaldo"]
+PERSISTENCIA_RESPALDO = ["ConfiguracionRespaldoPreferencias"]
+SEGURIDAD_RESPALDO = ["AlmacenCredencialRespaldoKeystore", "CifradorRespaldoAesGcm"]
+DRIVE_RESPALDO = ["AutenticadorGoogleDrive", "ClienteGoogleDriveRest", "ConsultaCorreoGoogle", "ProgramadorRespaldoWorkManager", "ProveedorTokenDrive", "WorkerRespaldoDrive"]
+
+# add-widget-progreso
+PRESENTACION_WIDGET = ["DibujanteAnilloProgreso", "ModeloWidgetProgreso", "ObservadorProgresoWidget", "WidgetProgresoProvider"]
+
 # Paquete (carpeta bajo io/github/jhoel0521/studyplan) -> todas las clases que deben aparecer en algún diagrama
 CLASES_POR_PAQUETE = {
-    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS + PRESENTACION_ESTADISTICAS + PRESENTACION_REPORTES,
-    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS + ENTRADA_REPORTES + ENTRADA_RECORDATORIOS,
-    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS + SERVICIOS_REPORTES + SERVICIOS_RECORDATORIOS,
-    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS + SALIDA_REPORTES + SALIDA_RECORDATORIOS,
-    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS + DOMINIO_REPORTES + DOMINIO_RECORDATORIOS,
-    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS + PERSISTENCIA_METAS,
-    "adapter/out/security": SEGURIDAD_CONFIG,
+    "adapter/in/ui": PRESENTACION_CONFIG + PRESENTACION_MATERIAS + PRESENTACION_SESIONES + PRESENTACION_CALENDARIO + PRESENTACION_TECNICAS + PRESENTACION_METAS + PRESENTACION_ESTADISTICAS + PRESENTACION_REPORTES + PRESENTACION_RESPALDO + PRESENTACION_WIDGET,
+    "application/port/in": ENTRADA_CONFIG + ENTRADA_MATERIAS + ENTRADA_SESIONES + ENTRADA_CALENDARIO + ENTRADA_TECNICAS + ENTRADA_METAS + ENTRADA_ESTADISTICAS + ENTRADA_REPORTES + ENTRADA_RECORDATORIOS + ENTRADA_RESPALDO,
+    "application/service": SERVICIOS_CONFIG + SERVICIOS_MATERIAS + SERVICIOS_SESIONES + SERVICIOS_CALENDARIO + SERVICIOS_TECNICAS + SERVICIOS_METAS + SERVICIOS_ESTADISTICAS + SERVICIOS_REPORTES + SERVICIOS_RECORDATORIOS + SERVICIOS_RESPALDO,
+    "application/port/out": SALIDA_CONFIG + SALIDA_MATERIAS + SALIDA_SESIONES + SALIDA_TECNICAS + SALIDA_METAS + SALIDA_REPORTES + SALIDA_RECORDATORIOS + SALIDA_RESPALDO,
+    "domain": DOMINIO_CONFIG + DOMINIO_MATERIAS + DOMINIO_SESIONES + DOMINIO_CALENDARIO + DOMINIO_TECNICAS + DOMINIO_METAS + DOMINIO_ESTADISTICAS + DOMINIO_REPORTES + DOMINIO_RECORDATORIOS + DOMINIO_RESPALDO,
+    "adapter/out/persistence": PERSISTENCIA_CONFIG + PERSISTENCIA_MATERIAS + PERSISTENCIA_SESIONES + PERSISTENCIA_TECNICAS + PERSISTENCIA_METAS + PERSISTENCIA_RESPALDO,
+    "adapter/out/security": SEGURIDAD_CONFIG + SEGURIDAD_RESPALDO,
+    "adapter/out/drive": DRIVE_RESPALDO,
     "adapter/out/system": SISTEMA_TECNICAS + SISTEMA_REPORTES,
 }
 
@@ -1069,6 +1083,76 @@ def secuencia_ejecucion_sesion():
     )
 
 
+def clases_respaldo():
+    """Clases de la épica E10: respaldo y restauración en Google Drive (HU-35 a HU-38)."""
+    W = 3760
+    img = Image.new("RGB", (W, 5200), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "1. Presentación · adapter.in.ui (pantalla Copia de seguridad y autorización de Google)",
+           font=dg.font(34, True), fill=dg.BLACK)
+    fila1 = [caja_con_metodos("RespaldoActivity", 40, 80, 1180),
+             caja_con_metodos("RespaldoViewModel", 1280, 80, 1160),
+             caja_con_metodos("ProcesoAutorizacionDrive", 2500, 80, 1220)]
+    for c in fila1:
+        c.draw(d)
+    dg.assoc(d, fila1[0].right(0.3), fila1[1].left(0.3), "observa", None, None)
+
+    y2 = 80 + alto(fila1) + 90
+    d.line([40, y2 - 30, W - 40, y2 - 30], fill=dg.MID, width=3)
+    d.text((40, y2), "2. Núcleo de la aplicación · Java puro, sin android.*", font=dg.font(34, True), fill=dg.BLACK)
+    y2 += 60
+    xs2, ws2 = [40, 960, 1880, 2800], [860, 860, 860, 920]
+    nucleo = [
+        caja_de_paquete("domain (respaldo)", DOMINIO_RESPALDO, xs2[0], y2, ws2[0], "domain"),
+        caja_de_paquete("application.port.in", ENTRADA_RESPALDO + ["BorrarDatos (con alcance Drive)"], xs2[1], y2, ws2[1], "port.in"),
+        caja_de_paquete("application.service", SERVICIOS_RESPALDO + ["BorrarDatosService (ampliado)"], xs2[2], y2, ws2[2], "service"),
+        caja_de_paquete("application.port.out", SALIDA_RESPALDO + ["AlmacenDatos (exportar y restaurar)"], xs2[3], y2, ws2[3], "port.out"),
+    ]
+    for c in nucleo:
+        c.draw(d)
+    dg.assoc(d, nucleo[2].left(0.3), nucleo[1].right(0.3), "implementa", None, None)
+    dg.assoc(d, nucleo[2].right(0.3), nucleo[3].left(0.3), "usa", None, None)
+
+    y3 = y2 + alto(nucleo) + 90
+    d.line([40, y3 - 30, W - 40, y3 - 30], fill=dg.MID, width=3)
+    d.text((40, y3), "3. Infraestructura · Google Drive (appDataFolder), cifrado, Android KeyStore y WorkManager",
+           font=dg.font(34, True), fill=dg.BLACK)
+    y3 += 60
+    infra = [caja_con_metodos("ClienteGoogleDriveRest", 40, y3, 1500),
+             caja_con_metodos("CifradorRespaldoAesGcm", 1600, y3, 1000),
+             caja_con_metodos("WorkerRespaldoDrive", 2660, y3, 1060)]
+    for c in infra:
+        c.draw(d)
+    y4 = y3 + alto(infra) + 60
+    infra2 = [caja_de_paquete("adapter.out.drive", DRIVE_RESPALDO, 40, y4, 1500, "adapter"),
+              caja_de_paquete("adapter.out.security", SEGURIDAD_RESPALDO, 1600, y4, 1000, "adapter"),
+              caja_de_paquete("adapter.out.persistence", PERSISTENCIA_RESPALDO + ["AlmacenDatosRoom (ampliado)"], 2660, y4, 1060, "adapter")]
+    for c in infra2:
+        c.draw(d)
+    img.crop((0, 0, W, int(y4 + alto(infra2) + 60))).save(
+        dg.OUT / "diagrama_clases_respaldo.png", dpi=(200, 200))
+
+
+def clases_widget():
+    """Clases del widget de progreso semanal en la pantalla de inicio (change add-widget-progreso)."""
+    W = 3000
+    img = Image.new("RGB", (W, 3000), dg.WHITE)
+    d = ImageDraw.Draw(img)
+    d.text((40, 20), "Presentación · adapter.in.ui (widget de progreso semanal)", font=dg.font(34, True), fill=dg.BLACK)
+    fila1 = [caja_con_metodos("WidgetProgresoProvider", 40, 80, 1380),
+             caja_con_metodos("ObservadorProgresoWidget", 1480, 80, 1480)]
+    for c in fila1:
+        c.draw(d)
+    dg.assoc(d, fila1[1].left(0.3), fila1[0].right(0.3), "actualiza", None, None)
+    y2 = 80 + alto(fila1) + 70
+    fila2 = [caja_con_metodos("ModeloWidgetProgreso", 40, y2, 1380),
+             caja_con_metodos("DibujanteAnilloProgreso", 1480, y2, 1480)]
+    for c in fila2:
+        c.draw(d)
+    img.crop((0, 0, W, int(y2 + alto(fila2) + 60))).save(
+        dg.OUT / "diagrama_clases_widget.png", dpi=(200, 200))
+
+
 def generar():
     clases_configuracion()
     clases_materias()
@@ -1079,6 +1163,8 @@ def generar():
     clases_estadisticas()
     clases_reportes()
     clases_recordatorios()
+    clases_respaldo()
+    clases_widget()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
     secuencia_registrar_materia()
@@ -1092,6 +1178,6 @@ if __name__ == "__main__":
     for f in ("diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
               "diagrama_clases_calendario", "diagrama_clases_tecnicas", "diagrama_clases_metas",
               "diagrama_clases_estadisticas", "diagrama_clases_reportes", "diagrama_clases_recordatorios",
-              "modelo_logico", "secuencia_registrar_materia", "secuencia_planificar_sesion",
+              "diagrama_clases_respaldo", "diagrama_clases_widget", "modelo_logico", "secuencia_registrar_materia", "secuencia_planificar_sesion",
               "secuencia_consultar_calendario", "secuencia_ejecucion_sesion"):
         print((dg.OUT / f"{f}.png").relative_to(RAIZ))
