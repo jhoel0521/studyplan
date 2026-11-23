@@ -1,0 +1,50 @@
+# Integración continua de StudyPlan (RNF-15, RNF-16).
+# Corre la misma compuerta que AGENTS.md §6 en cada push a main y en cada pull request. No usa secretos.
+# Las versiones de las acciones de terceros están por verificar a mano (ver la bitácora de auditoría IA).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compuerta:
+    name: Compilar, probar y lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Gradle con caché
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Aceptar las licencias del SDK de Android
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - name: Compilar (debug y pruebas instrumentadas), pruebas JVM y lint
+        run: ./gradlew assembleDebug assembleDebugAndroidTest test lint
+
+      - name: Subir los informes si falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informes-ci
+          path: |
+            app/build/reports
+            app/build/test-results
+          if-no-files-found: ignore
