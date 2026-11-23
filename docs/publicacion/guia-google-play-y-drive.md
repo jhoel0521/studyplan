@@ -134,3 +134,4 @@ publica nada en Play sin tu aprobación.
 |---|---|---|---|
 | 2026-11-22 | Redacción de esta guía (sin cuentas ni claves creadas) | Pendiente de verificación manual | IA propuso, Product Owner revisa |
 | 2026-11-22 | Política de privacidad publicada con GitHub Pages (`github.com/jhoel0521/studyplan-privacy`) | URL: https://jhoel0521.github.io/studyplan-privacy/ (200, bilingüe) | IA creó el repositorio con `gh` con la confirmación del Product Owner |
+| 2026-11-23 | Borrador de la ficha de Play: textos es/en, respuestas de Data safety y clasificación, permisos a justificar (`docs/publicacion/ficha-play-store.md`); revisión de la cuenta de Play Console (cuenta personal, sin la app StudyPlan; acción pendiente «declarar condición de comerciante» antes de feb. 2027) | Borrador, todo `[VERIFICAR]` en la consola; ícono 512 y gráfico 1024×500 ya existen, faltan las capturas | IA propuso (solo lectura en la consola), Product Owner decide |
