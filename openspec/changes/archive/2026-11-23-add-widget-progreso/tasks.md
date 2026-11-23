@@ -27,7 +27,7 @@
 
 ## 5. Prueba en el teléfono del Product Owner
 
-- [ ] 5.1 Con permiso explícito del Product Owner, instalar el APK de debug por `adb install -r` (sin `uninstall`, para conservar los datos) y comprobar en el teléfono: agregar el widget 1×4; ver el logo, la meta («horas / meta» y porcentaje) y las 2 próximas materias; completar una sesión y ver el cambio; tocar el widget y ver la pantalla de inicio; estados vacíos; tema claro y oscuro. Verificación: resultado anotado en la bitácora; las fallas se corrigen antes de archivar.
+- [x] 5.1 Con permiso explícito del Product Owner, instalar el APK de debug por `adb install -r` (sin `uninstall`, para conservar los datos) y comprobar en el teléfono: agregar el widget 1×4; ver el logo, la meta («horas / meta» y porcentaje) y las 2 próximas materias; completar una sesión y ver el cambio; tocar el widget y ver la pantalla de inicio; estados vacíos; tema claro y oscuro. Verificación: resultado anotado en la bitácora; las fallas se corrigen antes de archivar.
 
 ## Workflow follow-up
 
