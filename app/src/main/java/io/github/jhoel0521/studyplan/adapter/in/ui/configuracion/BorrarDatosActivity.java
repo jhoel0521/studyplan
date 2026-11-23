@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +15,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.jhoel0521.studyplan.R;
+import io.github.jhoel0521.studyplan.domain.enumeration.AlcanceBorrado;
 import io.github.jhoel0521.studyplan.domain.enumeration.Idioma;
 import io.github.jhoel0521.studyplan.domain.enumeration.Tema;
 import io.github.jhoel0521.studyplan.adapter.in.ui.comun.ActividadProtegida;
@@ -45,6 +48,18 @@ public class BorrarDatosActivity extends ActividadProtegida {
         botonBorrar = findViewById(R.id.botonBorrarTelefono);
         barraSuperior.setNavigationOnClickListener(this::onVolverClick);
         botonBorrar.setOnClickListener(this::onBorrarClick);
+        RadioGroup grupoAlcance = findViewById(R.id.grupoAlcance);
+        grupoAlcance.setOnCheckedChangeListener(this::onAlcanceElegido);
+    }
+
+    private void onAlcanceElegido(RadioGroup grupo, int idElegido) {
+        if (idElegido == R.id.alcanceDrive) {
+            modelo.elegirAlcance(AlcanceBorrado.DRIVE);
+        } else if (idElegido == R.id.alcanceAmbos) {
+            modelo.elegirAlcance(AlcanceBorrado.AMBOS);
+        } else {
+            modelo.elegirAlcance(AlcanceBorrado.TELEFONO);
+        }
     }
 
     @Override
@@ -72,6 +87,14 @@ public class BorrarDatosActivity extends ActividadProtegida {
             case SEGUNDA_CONFIRMACION:
                 mostrarDialogo(R.string.borrar_segunda_confirmacion, R.string.borrar_confirmar,
                         this::onSegundaConfirmada);
+                break;
+            case BORRADO_DRIVE:
+                Toast.makeText(this, R.string.borrar_drive_hecho, Toast.LENGTH_LONG).show();
+                modelo.cancelar();
+                break;
+            case ERROR:
+                Toast.makeText(this, RespaldoActivity.mensajeDe(modelo.ultimoError()), Toast.LENGTH_LONG).show();
+                modelo.cancelar();
                 break;
             case BORRADO:
                 Intent primerUso = new Intent(this, PerfilInicialActivity.class);

@@ -316,6 +316,15 @@
                 tools:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/botonRespaldo"
+                style="@style/Widget.StudyPlan.Button.Outlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:minHeight="@dimen/button_height"
+                android:text="@string/ajustes_respaldo" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/botonPrivacidad"
                 style="@style/Widget.StudyPlan.Button.Outlined"
                 android:layout_width="wrap_content"

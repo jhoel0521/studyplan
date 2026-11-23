@@ -103,6 +103,7 @@ public class AjustesActivity extends ActividadProtegida {
         MaterialButton botonAbrirAjustesNotificaciones =
                 findViewById(R.id.botonAbrirAjustesNotificaciones);
         MaterialButton botonAbrirAjustesAlarmas = findViewById(R.id.botonAbrirAjustesAlarmas);
+        MaterialButton botonRespaldo = findViewById(R.id.botonRespaldo);
         MaterialButton botonPrivacidad = findViewById(R.id.botonPrivacidad);
         botonQuitarPermisoBloqueo = findViewById(R.id.botonQuitarPermisoBloqueo);
 
@@ -120,6 +121,7 @@ public class AjustesActivity extends ActividadProtegida {
         selectorRecordatorioDefecto.setOnItemClickListener(this::onRecordatorioDefectoElegido);
         botonAbrirAjustesNotificaciones.setOnClickListener(this::onAbrirAjustesNotificacionesClick);
         botonAbrirAjustesAlarmas.setOnClickListener(this::onAbrirAjustesAlarmasClick);
+        botonRespaldo.setOnClickListener(this::onRespaldoClick);
         botonPrivacidad.setOnClickListener(this::onPrivacidadClick);
         botonQuitarPermisoBloqueo.setOnClickListener(this::onQuitarPermisoBloqueoClick);
     }
@@ -269,6 +271,10 @@ public class AjustesActivity extends ActividadProtegida {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    private void onRespaldoClick(View vista) {
+        startActivity(new Intent(this, RespaldoActivity.class));
     }
 
     private void onPrivacidadClick(View vista) {

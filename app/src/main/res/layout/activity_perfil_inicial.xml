@@ -79,5 +79,14 @@
             android:layout_marginTop="32dp"
             android:minHeight="@dimen/button_height"
             android:text="@string/perfil_guardar" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonRestaurarDrive"
+            style="@style/Widget.StudyPlan.Button.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:minHeight="@dimen/button_height"
+            android:text="@string/perfil_restaurar" />
     </LinearLayout>
 </ScrollView>

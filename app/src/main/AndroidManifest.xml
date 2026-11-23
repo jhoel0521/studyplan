@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Internet exclusivo para el respaldo en Google Drive (appDataFolder), AGENTS.md §2 (HU-35 a HU-37). -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -45,6 +47,9 @@
             android:exported="false" />
         <activity
             android:name=".adapter.in.ui.configuracion.BorrarDatosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.in.ui.configuracion.RespaldoActivity"
             android:exported="false" />
         <activity
             android:name=".adapter.in.ui.materias.MateriasActivity"

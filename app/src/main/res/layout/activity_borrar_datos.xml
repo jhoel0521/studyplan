@@ -31,12 +31,48 @@
             android:textAppearance="?attr/textAppearanceBodyLarge"
             tools:text="Se eliminarán tu perfil, tus ajustes y todos tus datos de este teléfono. No se puede deshacer." />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/borrar_alcance"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <RadioGroup
+            android:id="@+id/grupoAlcance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/alcanceTelefono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:minHeight="48dp"
+                android:text="@string/borrar_alcance_telefono" />
+
+            <RadioButton
+                android:id="@+id/alcanceDrive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/borrar_alcance_drive" />
+
+            <RadioButton
+                android:id="@+id/alcanceAmbos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/borrar_alcance_ambos" />
+        </RadioGroup>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/botonBorrarTelefono"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:minHeight="@dimen/button_height"
-            android:text="@string/borrar_telefono" />
+            android:text="@string/borrar_accion" />
     </LinearLayout>
 </LinearLayout>

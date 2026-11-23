@@ -196,8 +196,8 @@ public class SesionRepositoryRoomTest {
         if (permisos != null) {
             boolean declaraScheduleExactAlarm = false;
             for (String p : permisos) {
-                assertFalse(p.endsWith(".INTERNET")
-                        || p.endsWith(".USE_EXACT_ALARM"));
+                // INTERNET ya se declara, solo para el respaldo en Drive (HU-35, aprobado en AGENTS.md §2).
+                assertFalse(p.endsWith(".USE_EXACT_ALARM"));
                 if (p.endsWith(".SCHEDULE_EXACT_ALARM")) {
                     declaraScheduleExactAlarm = true;
                 }

@@ -8,6 +8,18 @@ import android.os.Looper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.jhoel0521.studyplan.adapter.out.drive.AutenticadorGoogleDrive;
+import io.github.jhoel0521.studyplan.adapter.out.drive.ClienteGoogleDriveRest;
+import io.github.jhoel0521.studyplan.adapter.out.drive.ProgramadorRespaldoWorkManager;
+import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.ConfiguracionRespaldoPreferencias;
+import io.github.jhoel0521.studyplan.adapter.out.security.AlmacenCredencialRespaldoKeystore;
+import io.github.jhoel0521.studyplan.adapter.out.security.CifradorRespaldoAesGcm;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.ConfigurarRespaldo;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.RespaldarAhora;
+import io.github.jhoel0521.studyplan.application.port.in.configuracion.RestaurarRespaldo;
+import io.github.jhoel0521.studyplan.application.service.configuracion.ConfigurarRespaldoService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.RespaldarAhoraService;
+import io.github.jhoel0521.studyplan.application.service.configuracion.RestaurarRespaldoService;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.AjustesRepositoryRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.AlmacenDatosRoom;
 import io.github.jhoel0521.studyplan.adapter.out.persistence.repository.EventoEstudioRepositoryRoom;
@@ -144,6 +156,9 @@ import io.github.jhoel0521.studyplan.adapter.in.ui.tecnicas.SesionEnCursoActivit
 public class StudyPlanApplication extends Application {
 
     private ExecutorService ejecutor;
+    private ConfigurarRespaldo configurarRespaldo;
+    private RespaldarAhora respaldarAhora;
+    private RestaurarRespaldo restaurarRespaldo;
     private ConfigurarPerfil configurarPerfil;
     private ConsultarPerfil consultarPerfil;
     private ConsultarAjustes consultarAjustes;
@@ -235,6 +250,17 @@ public class StudyPlanApplication extends Application {
         MetaSemanalRepositoryRoom metas = new MetaSemanalRepositoryRoom(base.metaSemanalDao());
         SesionesDeMateriaRoom sesionesDeMateria = new SesionesDeMateriaRoom(base.sesionDao());
         RelojSistema relojSistema = new RelojSistema();
+        // Respaldo en Google Drive (HU-35 a HU-38): apagado hasta que el estudiante lo activa en Ajustes.
+        ConfiguracionRespaldoPreferencias configuracionRespaldoPrefs = new ConfiguracionRespaldoPreferencias(this);
+        AlmacenCredencialRespaldoKeystore credencialRespaldo = new AlmacenCredencialRespaldoKeystore(this);
+        ProgramadorRespaldoWorkManager programadorRespaldo = new ProgramadorRespaldoWorkManager(this);
+        ClienteGoogleDriveRest clienteDrive = new ClienteGoogleDriveRest(new AutenticadorGoogleDrive(this));
+        CifradorRespaldoAesGcm cifradorRespaldo = new CifradorRespaldoAesGcm();
+        configurarRespaldo = new ConfigurarRespaldoService(
+                configuracionRespaldoPrefs, credencialRespaldo, programadorRespaldo);
+        respaldarAhora = new RespaldarAhoraService(
+                almacen, clienteDrive, cifradorRespaldo, credencialRespaldo, configuracionRespaldoPrefs,
+                relojSistema);
         DisponibilidadBloqueoBiometrico disponibilidad = new DisponibilidadBloqueoBiometrico(this);
         ControladorNoMolestarSistema noMolestar = new ControladorNoMolestarSistema(this);
         ProgramadorAvisosAlarmManager programadorAlarmas = new ProgramadorAvisosAlarmManager(
@@ -267,7 +293,8 @@ public class StudyPlanApplication extends Application {
         obtenerResumenInicio = new ObtenerResumenInicioService(
                 perfiles, sesiones, materias, tramos, metas, relojSistema, vencerSesionesPendientes);
         borrarDatos = new BorrarDatosService(
-                almacen, sesion, marcadorSalida, noMolestar, exportadorSistema, programadorAlarmas);
+                almacen, sesion, marcadorSalida, noMolestar, exportadorSistema, programadorAlarmas,
+                clienteDrive, configuracionRespaldoPrefs, programadorRespaldo, credencialRespaldo);
         registrarMateria = new RegistrarMateriaService(materias, metas, relojSistema);
         editarMateria = new EditarMateriaService(materias, metas, relojSistema);
         consultarMateria = new ConsultarMateriaService(materias);
@@ -295,7 +322,10 @@ public class StudyPlanApplication extends Application {
         configurarRecordatorioPorDefecto = new ConfigurarRecordatorioPorDefectoService(ajustes);
         reprogramarRecordatoriosPendientes = new ReprogramarRecordatoriosPendientesService(
                 sesiones, materias, programadorAlarmas, relojSistema);
-        iniciarSesion = new IniciarSesionService(
+        restaurarRespaldo = new RestaurarRespaldoService(
+                almacen, clienteDrive, cifradorRespaldo, configuracionRespaldoPrefs,
+                reprogramarRecordatoriosPendientes);
+        iniciarSesion =new IniciarSesionService(
                 sesiones,
                 eventos,
                 materias,
@@ -417,6 +447,18 @@ public class StudyPlanApplication extends Application {
 
     public BorrarDatos borrarDatos() {
         return borrarDatos;
+    }
+
+    public ConfigurarRespaldo configurarRespaldo() {
+        return configurarRespaldo;
+    }
+
+    public RespaldarAhora respaldarAhora() {
+        return respaldarAhora;
+    }
+
+    public RestaurarRespaldo restaurarRespaldo() {
+        return restaurarRespaldo;
     }
 
     public RegistrarMateria registrarMateria() {

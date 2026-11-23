@@ -9,6 +9,7 @@ import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.BorrarDatosView
 import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.InicioViewModel;
 import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.PerfilInicialViewModel;
 import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.ProteccionViewModel;
+import io.github.jhoel0521.studyplan.adapter.in.ui.configuracion.RespaldoViewModel;
 import io.github.jhoel0521.studyplan.adapter.in.ui.estadisticas.EstadisticasViewModel;
 import io.github.jhoel0521.studyplan.adapter.in.ui.materias.ListaMateriasViewModel;
 import io.github.jhoel0521.studyplan.adapter.in.ui.materias.MateriaFormularioViewModel;
@@ -108,6 +109,10 @@ public class FabricaViewModels implements ViewModelProvider.Factory {
                     app.configurarAjustesEstudio(),
                     app.configurarRecordatorioPorDefecto(),
                     app.ejecutor());
+        }
+        if (clase.isAssignableFrom(RespaldoViewModel.class)) {
+            return (T) new RespaldoViewModel(
+                    app.configurarRespaldo(), app.respaldarAhora(), app.restaurarRespaldo(), app.ejecutor());
         }
         if (clase.isAssignableFrom(BorrarDatosViewModel.class)) {
             return (T) new BorrarDatosViewModel(app.borrarDatos(), app.ejecutor());

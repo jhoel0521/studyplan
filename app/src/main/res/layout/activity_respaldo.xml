@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".adapter.in.ui.configuracion.RespaldoActivity"
+    tools:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/barraSuperior"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationContentDescription="@string/volver"
+        app:navigationIcon="@drawable/ic_volver"
+        app:title="@string/respaldo_titulo" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="600dp"
+                android:text="@string/respaldo_explicacion"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                tools:text="Guarda una copia de tus datos en la carpeta privada de tu Google Drive." />
+
+            <TextView
+                android:id="@+id/textoCuenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="Cuenta: ana@example.com" />
+
+            <TextView
+                android:id="@+id/textoFallo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorError"
+                android:visibility="gone"
+                tools:text="El último intento falló: Hay que autorizar de nuevo el acceso a Drive"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonVincular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/respaldo_vincular" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonDesvincular"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/respaldo_desvincular" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/respaldo_frecuencia"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <RadioGroup
+                android:id="@+id/grupoFrecuencia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/frecuenciaNunca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/respaldo_frec_nunca" />
+
+                <RadioButton
+                    android:id="@+id/frecuenciaDiaria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/respaldo_frec_diaria" />
+
+                <RadioButton
+                    android:id="@+id/frecuenciaSemanal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/respaldo_frec_semanal" />
+
+                <RadioButton
+                    android:id="@+id/frecuenciaMensual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/respaldo_frec_mensual" />
+
+                <RadioButton
+                    android:id="@+id/frecuenciaManual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/respaldo_frec_manual" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/respaldo_contrasena_titulo"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <TextView
+                android:id="@+id/textoContrasena"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                tools:text="Sin contraseña: el respaldo no se cifra." />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonDefinirContrasena"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/respaldo_definir_contrasena" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonQuitarContrasena"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/respaldo_quitar_contrasena" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textoUltimoRespaldo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:maxWidth="600dp"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                tools:text="Último respaldo: 23 nov. 2026 11:30 (12 KB)" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/indicadorOcupado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/respaldo_titulo"
+                android:indeterminate="true"
+                android:maxWidth="600dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonRespaldarAhora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/respaldo_ahora" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/botonRestaurar"
+                    style="@style/Widget.StudyPlan.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:minHeight="@dimen/button_height"
+                    android:text="@string/respaldo_restaurar" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
