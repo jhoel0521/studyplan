@@ -7,7 +7,7 @@ version_kit = "0.2.0"
 
 [documento]
 titulo = "StudyPlan: Aplicación Móvil Android para Gestionar y Planificar el Tiempo de Estudio del Estudiante Universitario"
-subtitulo = "Segunda entrega: [[pendiente: alcance de la entrega 2 según el docente]]"
+subtitulo = "Entrega final: diseño, respaldo en Google Drive y publicación en Google Play"
 salida = "StudyPlan_Entrega2"                     # dist/Documento.docx
 papel = "carta"                          # carta | a4 | oficio
 fuente = "Times New Roman"               # APA 7 admite también Calibri 11 o Arial 11

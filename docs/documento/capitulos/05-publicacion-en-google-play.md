@@ -16,9 +16,11 @@ Tabla: Estado de los pasos de publicación al 23 de noviembre de 2026 {#estado_p
 | Versión 1000 (0.1.0) en prueba interna | Hecho, sin verificadores | @figura:play_prueba_interna |
 | Declaraciones de Contenido de la app | Hecho (11 de 11) | @figura:play_declaraciones_al_dia |
 | Ficha de la tienda en español | Guardada | @figura:play_ficha |
-| Categoría y contacto de la ficha | Ingresados; falta comprobar que quedaron guardados | Pendiente de verificación en la consola |
+| Categoría y contacto de la ficha | Hecho: categoría Productividad y correo de contacto, comprobados tras recargar la consola | Configuración de la tienda |
+| Verificadores de la prueba interna | Hecho: una lista con el correo del Product Owner | Pestaña Verificadores de la prueba interna |
+| Política de privacidad actualizada | Hecho y publicada | Página de GitHub Pages con la fecha del 23 de noviembre de 2026 |
 | Cliente OAuth de Drive para la firma de Play | Pendiente | Ver @sec:pub_pendientes |
-| Envío a revisión y pruebas cerradas | Pendiente | Ver @sec:pub_pendientes |
+| Envío a revisión y pruebas cerradas | Pendiente: el botón de envío sigue desactivado | Ver @sec:pub_pendientes |
 
 Nota: Elaboración propia a partir del registro de la sesión de trabajo.
 
@@ -130,14 +132,11 @@ Tabla: Pasos pendientes para publicar la aplicación {#pendientes_publicacion an
 
 | Paso | Qué falta |
 |---|---|
-| Categoría y contacto | Comprobar en la consola que la categoría Productividad y el correo de contacto quedaron guardados, porque el navegador dejó de responder durante la verificación |
 | Clientes OAuth de Drive | Crear los clientes de Android de la clave de subida y del certificado de firma de Play App Signing; sin ellos, la app instalada desde Play no podría vincular la cuenta de Google |
 | Usuarios de prueba | Mientras el proyecto de Google Cloud esté en estado «Prueba», solo los usuarios declarados pueden vincular su cuenta |
-| Política de privacidad | Quitar el aviso «en desarrollo» y mencionar la copia opcional en Drive y el respaldo automático de Android |
-| Verificadores | Asignarlos en la prueba interna para que alguien pueda instalar la versión |
+| Envío a revisión | El botón «Enviar la app para su revisión» sigue desactivado con el aviso de completar los pasos del panel, aunque el panel ya no muestra tareas de configuración pendientes; no se determinó la causa |
 | Prueba cerrada | Play suele exigirla a las cuentas personales nuevas antes de producción; hay que comprobar el requisito vigente |
 | Condición de comerciante | Declararla en la cuenta de desarrollador antes de febrero de 2027 |
 | Ficha en inglés | Traducir la ficha (opcional) |
-| Envío a revisión | Enviar los cambios de la ficha cuando la consola habilite el botón |
 
 Nota: Elaboración propia.
