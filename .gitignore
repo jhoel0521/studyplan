@@ -35,3 +35,9 @@ docs/documento/recursos/capturas/
 
 # ux-kit: capturas de render
 .ux/reports/render/
+
+# Claves de firma: nunca se versionan (ver README, «Compilación, CI y publicación»)
+*.jks
+*.keystore
+keystore.properties
+upload-key*

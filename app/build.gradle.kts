@@ -2,6 +2,16 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+// Versión y firma de publicación (RNF-15, RNF-16). Sin variables ni propiedades, el build local queda como siempre:
+// versionCode 1, versionName "1.0" y release sin firmar. El workflow de release las pasa desde la etiqueta y los secretos.
+val versionCodeProp = providers.gradleProperty("versionCode").map { it.toInt() }.getOrElse(1)
+val versionNameProp = providers.gradleProperty("versionName").getOrElse("1.0")
+val clavePath = providers.environmentVariable("STUDYPLAN_KEYSTORE_PATH").orNull
+val claveStorePass = providers.environmentVariable("STUDYPLAN_KEYSTORE_PASSWORD").orNull
+val claveAlias = providers.environmentVariable("STUDYPLAN_KEY_ALIAS").orNull
+val claveKeyPass = providers.environmentVariable("STUDYPLAN_KEY_PASSWORD").orNull
+val hayClaveDeFirma = listOf(clavePath, claveStorePass, claveAlias, claveKeyPass).all { !it.isNullOrBlank() }
+
 android {
     namespace = "io.github.jhoel0521.studyplan"
     compileSdk {
@@ -12,8 +22,8 @@ android {
         applicationId = "io.github.jhoel0521.studyplan"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = versionCodeProp
+        versionName = versionNameProp
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -24,11 +34,25 @@ android {
         }
     }
 
+    signingConfigs {
+        if (hayClaveDeFirma) {
+            create("release") {
+                storeFile = file(clavePath!!)
+                storePassword = claveStorePass
+                keyAlias = claveAlias
+                keyPassword = claveKeyPass
+            }
+        }
+    }
+
     buildTypes {
         debug {
             enableUnitTestCoverage = true
         }
         release {
+            if (hayClaveDeFirma) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
