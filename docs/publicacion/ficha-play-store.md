@@ -131,3 +131,9 @@ ubicación. Resultado esperado: apta para todo público. Público objetivo: indi
 3. Responder los formularios con la tabla 4 y 5 como punto de partida.
 4. Actualizar la política de privacidad (quitar «en desarrollo» y mencionar el respaldo opcional y `allowBackup`).
 5. Subir el primer AAB firmado a una pista interna o cerrada.
+
+## 8. Declaración del servicio en primer plano (borrador, falta el video)
+
+Play exige, para `FOREGROUND_SERVICE_SPECIAL_USE`, un **vínculo a un video** y una descripción. El video lo graba y publica (por ejemplo, no listado en YouTube) el Product Owner: debe mostrar iniciar una sesión, la notificación con Pausar, Detener y No molestar, y la pantalla de bloqueo. Descripción verificada contra `AndroidManifest.xml` y HU-49:
+
+> StudyPlan usa un único servicio en primer plano mientras hay una sesión de estudio En curso. El servicio sostiene una notificación persistente, visible también en la pantalla de bloqueo, con la materia, el tiempo transcurrido (o la fase y el tiempo restante del Pomodoro) y los botones Pausar, Detener y No molestar, para que el estudiante controle su sesión sin abrir la app. Se inicia de inmediato cuando el estudiante empieza la sesión: el cronómetro y los controles deben estar disponibles en ese momento, y si el servicio se detuviera, la notificación con los controles desaparecería mientras la sesión sigue En curso. El servicio permanece durante una pausa y se detiene cuando la sesión termina, se detiene o se cancela. No hay ningún otro servicio en primer plano, y no se usa sin una sesión En curso.
