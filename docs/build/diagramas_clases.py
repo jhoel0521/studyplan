@@ -1154,23 +1154,11 @@ def clases_widget():
 
 
 def generar():
-    clases_configuracion()
-    clases_materias()
-    clases_sesiones()
-    clases_calendario()
-    clases_tecnicas()
-    clases_metas()
-    clases_estadisticas()
-    clases_reportes()
-    clases_recordatorios()
-    clases_respaldo()
-    clases_widget()
+    import diagramas_uml  # clases y secuencias: UML con PlantUML (ver diagramas_uml.py)
+    diagramas_uml.generar()
+    diagramas_uml.generar_secuencias()
     version, entidades = modelo_logico()
     actualizar_capitulo(version, entidades)
-    secuencia_registrar_materia()
-    secuencia_planificar_sesion()
-    secuencia_consultar_calendario()
-    secuencia_ejecucion_sesion()
 
 
 if __name__ == "__main__":

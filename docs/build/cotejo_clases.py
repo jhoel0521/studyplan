@@ -18,10 +18,7 @@ import diagramas as dg  # noqa: E402
 import diagramas_clases as dc  # noqa: E402
 
 RAIZ = dc.jf.RAIZ
-IMAGENES = ["diagrama_clases_configuracion", "diagrama_clases_materias", "diagrama_clases_sesiones",
-            "diagrama_clases_calendario", "diagrama_clases_estadisticas", "diagrama_clases_reportes",
-            "diagrama_clases_recordatorios", "diagrama_clases_respaldo", "diagrama_clases_widget", "modelo_logico", "secuencia_registrar_materia",
-            "secuencia_planificar_sesion", "secuencia_consultar_calendario"]
+IMAGENES = ["modelo_logico"]
 
 
 def cotejar_clases(errores):
@@ -45,19 +42,7 @@ def cotejar_imagenes(errores):
     with tempfile.TemporaryDirectory() as temporal:
         dg.OUT = Path(temporal)
         try:
-            dc.clases_configuracion()
-            dc.clases_materias()
-            dc.clases_sesiones()
-            dc.clases_calendario()
-            dc.clases_estadisticas()
-            dc.clases_reportes()
-            dc.clases_recordatorios()
-            dc.clases_respaldo()
-            dc.clases_widget()
             dc.modelo_logico()
-            dc.secuencia_registrar_materia()
-            dc.secuencia_planificar_sesion()
-            dc.secuencia_consultar_calendario()
         finally:
             dg.OUT = carpeta_real
         for nombre in IMAGENES:
@@ -65,6 +50,24 @@ def cotejar_imagenes(errores):
             actual = (carpeta_real / f"{nombre}.png")
             if not actual.exists() or actual.read_bytes() != nuevo:
                 errores.append(f"{nombre}.png está desactualizado respecto al código o al esquema")
+
+
+def cotejar_uml(errores):
+    """Los .puml versionados deben coincidir con lo que se generaría hoy desde el código."""
+    import diagramas_uml as du
+    du.TEXTOS = {}
+    try:
+        du.generar()
+        du.generar_secuencias()
+        esperados = dict(du.TEXTOS)
+    finally:
+        du.TEXTOS = None
+    for nombre, texto in esperados.items():
+        ruta = du.UML / f"{nombre}.puml"
+        if not ruta.exists() or ruta.read_text(encoding="utf-8") != texto:
+            errores.append(f"{nombre}.puml está desactualizado respecto al código")
+        if not (du.SALIDA / f"{nombre}.png").exists():
+            errores.append(f"falta {nombre}.png")
 
 
 def cotejar_capitulo(errores):
@@ -81,6 +84,7 @@ def main():
     errores = []
     total = cotejar_clases(errores)
     cotejar_imagenes(errores)
+    cotejar_uml(errores)
     cotejar_capitulo(errores)
     if errores:
         print("\n".join(errores))

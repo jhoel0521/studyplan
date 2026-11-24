@@ -1,0 +1,419 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E3 Sesiones de estudio
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class EstadoSesionVisual {
+    + rolDe(CodigoEstadoSesion): RolColorEstado
+    + atributoDe(RolColorEstado): int
+    + aplicar(CodigoEstadoSesion, ImageView, TextView): void
+    + etiquetaDe(CodigoEstadoSesion): int
+  }
+  class EventoSesion {
+    + ok(Tipo): EventoSesion
+    + ok(Tipo, long): EventoSesion
+    + error(ErrorValidacion): EventoSesion
+    + fallo(ResultadoSesion): EventoSesion
+    + tipo(): Tipo
+    + sesionId(): Long
+    ... (+2)
+  }
+  class FormatoSesion {
+    + rangoYDuracion(Context, DetalleSesionInicio, boolean): String
+    + desfaseActualSistema(): int
+    + sufijoZonaSiDifiere(int, int): String
+    + horarioSesionConZona(SesionEstudio, int): String
+    + horaEventoConZona(EventoEstudio, int): String
+    + etiquetaAntelacion(Context, AntelacionRecordatorio): String
+    ... (+1)
+  }
+  enum RolColorEstado {
+  }
+  class SesionDetalleActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class SesionDetalleViewModel {
+    + detalle(): LiveData<DetalleSesion>
+    + noEncontrada(): LiveData<Boolean>
+    + evento(): LiveData<EventoSesion>
+    + confirmandoEliminar(): LiveData<Boolean>
+    + cargar(long): void
+    + iniciar(long, TecnicaEstudio, PreferenciaNoMolestar): void
+    ... (+6)
+  }
+  class SesionFormularioActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class SesionFormularioViewModel {
+    + sesionBase(): LiveData<DetalleSesion>
+    + fechaHoy(): LiveData<Fecha>
+    + recordatorioPorDefecto(): LiveData<AntelacionRecordatorio>
+    + evento(): LiveData<EventoSesion>
+    + cargar(long): void
+    + esVentanaRecordatorioVencida(String, String, AntelacionRecordatorio): boolean
+    ... (+6)
+  }
+  class SesionInicioAdapter {
+    + onCreateViewHolder(ViewGroup, int): SesionHolder
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface CompletarSesion {
+    + ejecutar(long, int): Resultado<SesionEstudio>
+  }
+  interface ConsultarSesion {
+    + ejecutar(long): Optional<DetalleSesion>
+  }
+  interface EliminarSesion {
+    + ejecutar(long): Resultado<SesionEstudio>
+  }
+  interface PlanificarSesion {
+    + ejecutar(long, Fecha, Hora, Hora, String): ResultadoSesion
+    + ejecutar(long, Fecha, Hora, Hora, String, AntelacionRecordatorio): ResultadoSesion
+  }
+  interface RegistrarSesionPasada {
+    + ejecutar(long, Fecha, Hora, Hora, int, String): ResultadoSesion
+  }
+  interface RegistrarSesionTardia {
+    + ejecutar(long, int): Resultado<SesionEstudio>
+  }
+  interface ReprogramarSesion {
+    + ejecutar(long, Fecha, Hora, Hora, String): ResultadoSesion
+    + ejecutar(long, Fecha, Hora, Hora, String, AntelacionRecordatorio): ResultadoSesion
+  }
+  interface VencerSesionesPendientes {
+    + ejecutar(): int
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class CompletarSesionService {
+    + ejecutar(long, int): Resultado<SesionEstudio>
+  }
+  class ConsultarSesionService {
+    + ejecutar(long): Optional<DetalleSesion>
+  }
+  class EliminarSesionService {
+    + ejecutar(long): Resultado<SesionEstudio>
+  }
+  class PlanificarSesionService {
+    + ejecutar(long, Fecha, Hora, Hora, String): ResultadoSesion
+    + ejecutar(long, Fecha, Hora, Hora, String, AntelacionRecordatorio): ResultadoSesion
+  }
+  class RegistrarSesionPasadaService {
+    + ejecutar(long, Fecha, Hora, Hora, int, String): ResultadoSesion
+  }
+  class RegistrarSesionTardiaService {
+    + ejecutar(long, int): Resultado<SesionEstudio>
+    + ejecutarConMetas(long, int): Resultado<CierreSesion>
+  }
+  class ReprogramarSesionService {
+    + ejecutar(long, Fecha, Hora, Hora, String): ResultadoSesion
+    + ejecutar(long, Fecha, Hora, Hora, String, AntelacionRecordatorio): ResultadoSesion
+  }
+  class ValidadorSesiones {
+    + obtenerMateriaActiva(MateriaRepository, long): Resultado<Materia>
+    + buscarConflictoHorario(SesionRepository, MateriaRepository, Instante, Instante, Long): ConflictoHorario
+    + aDetalleInicio(SesionEstudio, Materia): DetalleSesionInicio
+  }
+  class VencerSesionesPendientesService {
+    + ejecutar(): int
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface Reloj {
+    + hoy(): Fecha
+    + ahora(): Hora
+    + ahoraMilis(): long
+    + ahoraInstante(): Instante
+    + fechaDe(long): Fecha
+    + horaDe(long): Hora
+    + instanteDe(Fecha, Hora): long
+  }
+  interface SesionRepository {
+    + guardar(SesionEstudio): SesionEstudio
+    + actualizar(SesionEstudio): void
+    + reprogramar(SesionEstudio, SesionEstudio): SesionEstudio
+    + buscarPorId(long): Optional<SesionEstudio>
+    + buscarReprogramadaHijaDe(long): Optional<SesionEstudio>
+    + listarPorFecha(Fecha): List<SesionEstudio>
+    + listarPorRango(Fecha, Fecha): List<SesionEstudio>
+    + listarPorRangoUtc(long, long): List<SesionEstudio>
+    + listarPendientesDesde(Fecha): List<SesionEstudio>
+    + listarPendientesAnterioresA(Fecha): List<SesionEstudio>
+    + sumarMinutosRealesPorMateria(long): int
+    + sumarMinutosRealesEnRango(Fecha, Fecha): int
+    ... (+4)
+  }
+  interface TramoDiarioRepository {
+    + guardarTramos(long, Map<Fecha, Integer>): void
+    + sumarMinutosEnRango(Fecha, Fecha): int
+    + sumarPorDiaEnRango(Fecha, Fecha): Map<Fecha, Integer>
+    + sumarPorMateriaEnRango(Fecha, Fecha): Map<Long, Integer>
+    + eliminarPorSesion(long): void
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  enum CodigoEstadoSesion {
+  }
+  class ConflictoHorario {
+    + sesionId(): long
+    + materiaId(): long
+    + nombreMateria(): String
+    + fecha(): Fecha
+    + horaInicio(): Hora
+    + horaFin(): Hora
+    ... (+2)
+  }
+  class DetalleSesion {
+    + sesion(): SesionEstudio
+    + nombreMateria(): String
+    + colorMateria(): int
+    + puedeCompletar(): boolean
+    + puedeRegistrarTardio(): boolean
+    + puedeReprogramar(): boolean
+    ... (+5)
+  }
+  class DetalleSesionInicio {
+    + sesionId(): long
+    + materiaId(): long
+    + nombreMateria(): String
+    + colorMateria(): int
+    + fecha(): Fecha
+    + horaInicio(): Hora
+    ... (+6)
+  }
+  class EstadoCompletada {
+    + codigo(): CodigoEstadoSesion
+    + esFinal(): boolean
+    + sumaHorasReales(): boolean
+  }
+  class EstadoCompletadaTardia {
+    + codigo(): CodigoEstadoSesion
+    + esFinal(): boolean
+    + sumaHorasReales(): boolean
+  }
+  class EstadoEnCurso {
+    + codigo(): CodigoEstadoSesion
+    + pausarReanudar(): Resultado<EstadoSesion>
+    + detener(int): Resultado<EstadoSesion>
+    + cambiarASiguiente(int): Resultado<EstadoSesion>
+    + declararFinAlVolver(int): Resultado<EstadoSesion>
+    + cerrarPorPlazoVencido(int): Resultado<EstadoSesion>
+  }
+  class EstadoNoRealizada {
+    + codigo(): CodigoEstadoSesion
+    + puedeRegistrarTardio(int): boolean
+    + puedeReprogramar(): boolean
+    + registrarTardio(int, int): Resultado<EstadoSesion>
+    + reprogramar(): Resultado<EstadoSesion>
+  }
+  class EstadoPendiente {
+    + codigo(): CodigoEstadoSesion
+    + puedeReprogramar(): boolean
+    + puedeEliminar(): boolean
+    + validarEliminacion(): Resultado<Boolean>
+    + iniciar(): Resultado<EstadoSesion>
+    + marcarCompletada(Fecha, Fecha, int): Resultado<EstadoSesion>
+    ... (+2)
+  }
+  class EstadoReprogramada {
+    + codigo(): CodigoEstadoSesion
+    + esFinal(): boolean
+    + ocupaHorario(): boolean
+  }
+  interface EstadoSesion {
+    + codigo(): CodigoEstadoSesion
+  }
+  class Fecha {
+    + de(int, int, int): Resultado<Fecha>
+    + parsear(String): Resultado<Fecha>
+    + esBisiesto(int): boolean
+    + diasDelMes(int, int): int
+    + anio(): int
+    + mes(): int
+    ... (+15)
+  }
+  class Hora {
+    + de(int, int): Resultado<Hora>
+    + desdeMinutos(int): Resultado<Hora>
+    + parsear(String): Resultado<Hora>
+    + parsear(String, ErrorValidacion): Resultado<Hora>
+    + hora(): int
+    + minuto(): int
+    ... (+8)
+  }
+  class Instante {
+    + de(long, int): Instante
+    + desdeFechaYHoraLocal(Fecha, Hora, int): Instante
+    + utcMilis(): long
+    + desfaseMinutos(): int
+    + localMilis(): long
+    + fechaLocal(): Fecha
+    ... (+12)
+  }
+  class RepartidorPorDia {
+    + repartir(SesionEstudio, List<EventoEstudio>, long, int): Map<Fecha, Integer>
+  }
+  class ResultadoSesion {
+    + ok(SesionEstudio): ResultadoSesion
+    + ok(SesionEstudio, List<MetaAlcanzada>): ResultadoSesion
+    + error(ErrorValidacion): ResultadoSesion
+    + conConflicto(ConflictoHorario): ResultadoSesion
+    + esValido(): boolean
+    + sesion(): SesionEstudio
+    ... (+3)
+  }
+  class SesionEstudio {
+    + planificar(long, Fecha, Fecha, Hora, Hora, String, Long): Resultado<SesionEstudio>
+    + planificar(long, Fecha, Fecha, Hora, Hora, int, String, Long): Resultado<SesionEstudio>
+    + planificar(long, Fecha, Fecha, Hora, Hora, int, String, Long, AntelacionRecordatorio): Resultado<SesionEstudio>
+    + registrarPasada(long, Fecha, Fecha, Hora, Hora, int, String): Resultado<SesionEstudio>
+    + registrarPasada(long, Fecha, Fecha, Hora, Hora, int, int, String): Resultado<SesionEstudio>
+    + restaurar(Long, long, Fecha, Hora, Hora, int, Integer, CodigoEstadoSesion, String, Long): SesionEstudio
+    ... (+57)
+  }
+}
+
+package "adapter.out.persistence" as p_persistencia #F5EAF7 {
+  abstract class SesionDao {
+    + insertar(SesionEntity): long
+    + actualizar(SesionEntity): void
+    + reprogramar(SesionEntity, SesionEntity): long
+    + buscarPorId(long): SesionEntity
+    + buscarReprogramadaHijaDe(long): SesionEntity
+    + listarPorRangoUtc(long, long): List<SesionEntity>
+    ... (+8)
+  }
+  class SesionEntity <<Entity>> {
+    + id: long
+    + materiaId: long
+    + planInicioUtcMilis: long
+    + planFinUtcMilis: Long
+    + desfaseMinutos: int
+    + duracionPlanificadaMinutos: int
+    + duracionRealMinutos: Integer
+    + estado: String
+    + notas: String
+    + sesionOrigenId: Long
+    --
+  }
+  class SesionRepositoryRoom {
+    + guardar(SesionEstudio): SesionEstudio
+    + actualizar(SesionEstudio): void
+    + reprogramar(SesionEstudio, SesionEstudio): SesionEstudio
+    + buscarPorId(long): Optional<SesionEstudio>
+    + buscarReprogramadaHijaDe(long): Optional<SesionEstudio>
+    + listarPorFecha(Fecha): List<SesionEstudio>
+    ... (+10)
+  }
+  class SesionesDeMateriaRoom {
+    + contar(long): int
+  }
+  abstract class TramoDiarioDao {
+    + insertarTodos(List<TramoDiarioEntity>): void
+    + eliminarPorSesion(long): void
+    + reemplazarPorSesion(long, List<TramoDiarioEntity>): void
+    + sumarMinutosEnRango(String, String): int
+    + listarEnRango(String, String): List<TramoDiarioEntity>
+    + sumarPorMateriaEnRango(String, String): List<MinutosPorMateria>
+  }
+  class TramoDiarioEntity <<Entity>> {
+    + sesionId: long
+    + fechaLocal: String
+    + minutos: int
+    --
+  }
+  class TramoDiarioRepositoryRoom {
+    + guardarTramos(long, Map<Fecha, Integer>): void
+    + sumarMinutosEnRango(Fecha, Fecha): int
+    + sumarPorDiaEnRango(Fecha, Fecha): Map<Fecha, Integer>
+    + sumarPorMateriaEnRango(Fecha, Fecha): Map<Long, Integer>
+    + eliminarPorSesion(long): void
+  }
+}
+
+SesionDetalleActivity --> SesionDetalleViewModel
+SesionDetalleViewModel --> CompletarSesion
+SesionDetalleViewModel --> ConsultarSesion
+SesionDetalleViewModel --> EliminarSesion
+SesionDetalleViewModel --> EventoSesion
+SesionDetalleViewModel --> RegistrarSesionTardia
+SesionFormularioActivity --> SesionFormularioViewModel
+SesionFormularioViewModel --> ConsultarSesion
+SesionFormularioViewModel --> EventoSesion
+SesionFormularioViewModel --> PlanificarSesion
+SesionFormularioViewModel --> RegistrarSesionPasada
+SesionFormularioViewModel --> Reloj
+SesionFormularioViewModel --> ReprogramarSesion
+CompletarSesionService ..|> CompletarSesion
+CompletarSesionService --> Reloj
+CompletarSesionService --> SesionRepository
+CompletarSesionService --> TramoDiarioRepository
+ConsultarSesionService ..|> ConsultarSesion
+ConsultarSesionService --> Reloj
+ConsultarSesionService --> SesionRepository
+ConsultarSesionService --> VencerSesionesPendientes
+EliminarSesionService ..|> EliminarSesion
+EliminarSesionService --> SesionRepository
+PlanificarSesionService ..|> PlanificarSesion
+PlanificarSesionService --> Reloj
+PlanificarSesionService --> SesionRepository
+RegistrarSesionPasadaService ..|> RegistrarSesionPasada
+RegistrarSesionPasadaService --> Reloj
+RegistrarSesionPasadaService --> SesionRepository
+RegistrarSesionPasadaService --> TramoDiarioRepository
+RegistrarSesionTardiaService ..|> RegistrarSesionTardia
+RegistrarSesionTardiaService --> Reloj
+RegistrarSesionTardiaService --> SesionRepository
+RegistrarSesionTardiaService --> TramoDiarioRepository
+ReprogramarSesionService ..|> ReprogramarSesion
+ReprogramarSesionService --> Reloj
+ReprogramarSesionService --> SesionRepository
+VencerSesionesPendientesService ..|> VencerSesionesPendientes
+VencerSesionesPendientesService --> Reloj
+VencerSesionesPendientesService --> SesionRepository
+VencerSesionesPendientesService --> TramoDiarioRepository
+ConflictoHorario --> Fecha
+ConflictoHorario --> Hora
+DetalleSesion --> SesionEstudio
+DetalleSesionInicio --> CodigoEstadoSesion
+DetalleSesionInicio --> Fecha
+DetalleSesionInicio --> Hora
+EstadoCompletada ..|> EstadoSesion
+EstadoCompletadaTardia ..|> EstadoSesion
+EstadoEnCurso ..|> EstadoSesion
+EstadoNoRealizada ..|> EstadoSesion
+EstadoPendiente ..|> EstadoSesion
+EstadoReprogramada ..|> EstadoSesion
+ResultadoSesion --> ConflictoHorario
+ResultadoSesion --> SesionEstudio
+SesionEstudio --> EstadoSesion
+SesionRepositoryRoom ..|> SesionRepository
+SesionRepositoryRoom --> SesionDao
+SesionesDeMateriaRoom --> SesionDao
+TramoDiarioRepositoryRoom ..|> TramoDiarioRepository
+TramoDiarioRepositoryRoom --> TramoDiarioDao
+@enduml

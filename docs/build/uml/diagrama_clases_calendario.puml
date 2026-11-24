@@ -1,0 +1,143 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E4 Calendario
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class CalendarioActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+    + dispatchTouchEvent(MotionEvent): boolean
+    + alTocarDia(Fecha): void
+    + alMantenerPulsadoDia(Fecha): void
+  }
+  class CalendarioMesAdapter {
+    + onCreateViewHolder(ViewGroup, int): CeldaHolder
+  }
+  class CalendarioViewModel {
+    + datos(): LiveData<DatosCalendario>
+    + cargando(): LiveData<Boolean>
+    + cargar(): void
+    + cambiarVista(VistaCalendario): void
+    + anterior(): void
+    + siguiente(): void
+    ... (+4)
+  }
+  class PreferenciaVistaCalendario {
+    + enMemoria(): PreferenciaVistaCalendario
+    + leer(): VistaCalendario
+    + guardar(VistaCalendario): void
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface ConsultarCalendario {
+    + ejecutar(PeriodoCalendario, FiltroCalendario): DatosCalendario
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class ConsultarCalendarioService {
+    + ejecutar(PeriodoCalendario, FiltroCalendario): DatosCalendario
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class BloqueHorarioCalendario {
+    + item(): ItemSesionCalendario
+    + diaColumna(): int
+    + minutoInicio(): int
+    + minutoFin(): int
+    + indiceSolapamiento(): int
+    + totalSolapamientos(): int
+  }
+  class CalculadorRangoHorario {
+    + calcularMinutoScrollInicial(List<ItemSesionCalendario>, boolean, Hora): int
+    + construirBloques(List<ItemSesionCalendario>, VistaCalendario): List<BloqueHorarioCalendario>
+    + calcularResumen(List<ItemSesionCalendario>): ResumenPeriodoCalendario
+  }
+  class CeldaDiaMes {
+    + fecha(): Fecha
+    + delMesActual(): boolean
+    + esHoy(): boolean
+    + esSeleccionado(): boolean
+    + coloresMaterias(): List<Integer>
+    + minutosTotalesDia(): int
+    ... (+1)
+  }
+  class DatosCalendario {
+    + periodo(): PeriodoCalendario
+    + filtro(): FiltroCalendario
+    + resumen(): ResumenPeriodoCalendario
+    + celdasMes(): List<CeldaDiaMes>
+    + sesionesDiaSeleccionado(): List<ItemSesionCalendario>
+    + bloquesHorario(): List<BloqueHorarioCalendario>
+    ... (+4)
+  }
+  class FiltroCalendario {
+    + porDefecto(): FiltroCalendario
+    + de(Long, boolean, Set<CodigoEstadoSesion>): FiltroCalendario
+    + materiaId(): Long
+    + incluirArchivadas(): boolean
+    + estadosVisibles(): Set<CodigoEstadoSesion>
+    + tieneRestricciones(): boolean
+    ... (+5)
+  }
+  class ItemSesionCalendario {
+    + sesionId(): long
+    + materiaId(): long
+    + nombreMateria(): String
+    + colorMateria(): int
+    + materiaArchivada(): boolean
+    + fecha(): Fecha
+    ... (+10)
+  }
+  class PeriodoCalendario {
+    + inicial(Fecha): PeriodoCalendario
+    + de(VistaCalendario, Fecha, Fecha): PeriodoCalendario
+    + vista(): VistaCalendario
+    + fechaFoco(): Fecha
+    + diaSeleccionado(): Fecha
+    + rangoVisibleInicio(): Fecha
+    ... (+12)
+  }
+  class ResumenPeriodoCalendario {
+    + minutosPlanificados(): int
+    + minutosRealizados(): int
+    + horasPlanificadas(): double
+    + horasRealizadas(): double
+  }
+  enum VistaCalendario {
+  }
+}
+
+CalendarioActivity --> CalendarioMesAdapter
+CalendarioActivity --> CalendarioViewModel
+CalendarioViewModel --> ConsultarCalendario
+CalendarioViewModel --> PreferenciaVistaCalendario
+ConsultarCalendarioService ..|> ConsultarCalendario
+BloqueHorarioCalendario --> ItemSesionCalendario
+DatosCalendario --> BloqueHorarioCalendario
+DatosCalendario --> CeldaDiaMes
+DatosCalendario --> FiltroCalendario
+DatosCalendario --> ItemSesionCalendario
+DatosCalendario --> PeriodoCalendario
+DatosCalendario --> ResumenPeriodoCalendario
+PeriodoCalendario --> VistaCalendario
+@enduml

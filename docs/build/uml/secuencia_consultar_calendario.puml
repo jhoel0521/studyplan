@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 220
+title Secuencia · consultar calendario de estudio (HU-16 a HU-21, RN-08, RN-11)
+actor "Estudiante" as P0
+boundary "CalendarioActivity" as P1
+control "CalendarioViewModel" as P2
+control "ConsultarCalendarioService" as P3
+control "VencerSesionesPendientesService" as P4
+database "SesionRepositoryRoom" as P5
+database "SesionDao" as P6
+autonumber
+P0 -> P1 : abre la pestaña Calendario
+P0 -> P1 : elige la vista: día, semana o mes
+P1 -> P2 : cargar() / cambiarVista(vista)
+P2 -> P3 : ejecutar(periodo, filtro)
+P3 -> P4 : ejecutar() [RN-08 vencer pendientes]
+P4 --> P3 : int vencidas
+P3 -> P5 : listarPorRango(desde, hasta)
+P5 -> P6 : listarPorRangoUtc(desdeUtc, hastaUtc)
+P6 --> P5 : List<SesionEntity>
+P5 --> P3 : List<SesionEstudio>
+P3 -> P3 : filtrar, construir bloques/celdas y resumen Plan/Real
+P3 --> P2 : DatosCalendario
+P2 --> P1 : LiveData<DatosCalendario> → onDatosActualizados()
+@enduml

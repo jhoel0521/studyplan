@@ -1,0 +1,68 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E9 Recordatorios
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface ConfigurarRecordatorioPorDefecto {
+    + ejecutar(AntelacionRecordatorio): Ajustes
+  }
+  interface ReprogramarRecordatoriosPendientes {
+    + ejecutar(): List<AvisoRecordatorioPendiente>
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class ConfigurarRecordatorioPorDefectoService {
+    + ejecutar(AntelacionRecordatorio): Ajustes
+  }
+  class ReprogramarRecordatoriosPendientesService {
+    + ejecutar(): List<AvisoRecordatorioPendiente>
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface ProgramadorRecordatorios {
+    + programar(long, long): void
+    + cancelar(long): void
+    + cancelarTodasNotificaciones(): void
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  enum AntelacionRecordatorio {
+    + minutos(): int
+    + activo(): boolean
+    + milisAntes(): long
+    + aMinutosNullable(): Integer
+    + deMinutos(Integer, AntelacionRecordatorio): AntelacionRecordatorio
+  }
+  class AvisoRecordatorioPendiente {
+    + sesionId(): long
+    + nombreMateria(): String
+    + horarioLocal(): String
+    + equals(Object): boolean
+    + hashCode(): int
+  }
+}
+
+ConfigurarRecordatorioPorDefectoService ..|> ConfigurarRecordatorioPorDefecto
+ReprogramarRecordatoriosPendientesService ..|> ReprogramarRecordatoriosPendientes
+ReprogramarRecordatoriosPendientesService --> ProgramadorRecordatorios
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 220
+title Secuencia · planificar una sesión de estudio (HU-10, RN-05 y RN-07)
+actor "Estudiante" as P0
+boundary "SesionFormularioActivity" as P1
+control "SesionFormularioViewModel" as P2
+control "PlanificarSesionService" as P3
+entity "SesionEstudio / State" as P4
+database "SesionRepositoryRoom" as P5
+database "SesionDao" as P6
+autonumber
+P0 -> P1 : abre el formulario «Nueva sesión»
+P0 -> P1 : elige la materia: onMateriaElegida(...)
+P0 -> P1 : elige la fecha: onElegirFechaClick(View)
+P0 -> P1 : elige la hora de inicio: onElegirHoraInicioClick(View)
+P0 -> P1 : elige la hora de fin: onElegirHoraFinClick(View)
+P0 -> P1 : escribe las notas (opcional)
+P0 -> P1 : pulsa «Guardar»: onGuardarClick(View)
+P1 -> P2 : guardarPlanificada(materiaId, fecha, inicio, fin, notas)
+P2 -> P2 : ejecutor.execute(...) · hilo en segundo plano
+P2 -> P3 : ejecutar(materiaId, Fecha, Hora, Hora, String)
+P3 -> P5 : listarPorFecha(Fecha) · ValidadorSesiones (RN-05)
+P5 -> P6 : listarPorRangoUtc(desde, hasta)
+P6 --> P5 : List<SesionEntity>
+P5 --> P3 : List<SesionEstudio> (sin cruce horario)
+P3 -> P4 : planificar(..., Fecha hoy) · EstadoPendiente (RN-07)
+P4 --> P3 : Resultado<SesionEstudio>
+P3 -> P5 : guardar(SesionEstudio)
+P5 -> P6 : insertar(SesionEntity)
+P6 --> P5 : id: long
+P5 --> P3 : SesionEstudio con id
+P3 --> P2 : ResultadoSesion.ok(sesion)
+P2 -> P1 : evento.postValue(PLANIFICADA)  →  onEvento(EventoSesion)
+P1 -> P1 : finish()
+@enduml

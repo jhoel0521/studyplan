@@ -315,6 +315,8 @@ Tabla: Tipos de clase del proyecto y un ejemplo de cada uno {#tipos_de_clase anc
 
 Nota: Elaboración propia. Los ejemplos son clases reales del código.
 
+Los diagramas de clases siguen la notación UML. Cada contrato (puerto de entrada o de salida) se dibuja como una interfaz (`«interface»`) y cada servicio o adaptador como una clase aparte que la realiza, con trazo discontinuo y triángulo hueco; la herencia usa línea continua con triángulo hueco, y la asociación, una flecha simple. Las clases se agrupan en un paquete UML por capa (`adapter.in.ui`, `application.port.in`, `application.service`, `application.port.out`, `domain` y los paquetes de `adapter.out`). Cada caja muestra solo los métodos públicos, hasta un máximo, y el resto se resume con «(+n)». Las relaciones y las firmas se leen de los fuentes Java, y los diagramas de secuencia parten de un actor, el Estudiante, que abre la pantalla, completa los campos y pulsa el botón; donde otro actor dispara el flujo, como Android con las alarmas, aparece también como actor. Los archivos fuente de los diagramas están en `docs/build/uml/` y se regeneran con `python docs/build/diagramas_uml.py`.
+
 ### Épica Configuración inicial
 
 La primera épica implementada reúne el perfil inicial (HU-01), el Inicio parcial (HU-02), el tema y el idioma (HU-03), el bloqueo con huella o PIN (HU-04) y el borrado de datos del teléfono (HU-38). La @figura:clases_configuracion muestra sus 58 clases agrupadas por paquete. En la capa de presentación se detallan los métodos del ciclo de vida (onCreate, onStart) y de los listeners (onGuardarClick, onMenuBarraSuperiorClick y los demás), que se escriben como métodos con nombre para que se vean en la revisión de código. Las Activities protegidas heredan de ActividadProtegida, que consulta al núcleo si falta el perfil o si hay que autenticar antes de mostrar datos; PerfilInicialActivity y AutenticacionActivity heredan de ActividadBase porque no muestran datos del estudiante.
@@ -331,7 +333,7 @@ La segunda épica implementada reúne el registro, la edición, el archivado y l
 
 Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba que no se desfasa.
 
-El nombre de la materia se sanea antes de guardarse (se recortan los espacios de los extremos y se colapsan los repetidos) y la unicidad entre las materias activas se decide con una clave sin acentos ni mayúsculas (RN-02, ampliada por el Product Owner). La @figura:secuencia_registrar_materia recorre las tres capas al registrar una materia: cada mensaje del diagrama corresponde a un método real y el script que lo dibuja falla si alguno deja de existir.
+El nombre de la materia se sanea antes de guardarse (se recortan los espacios de los extremos y se colapsan los repetidos) y la unicidad entre las materias activas se decide con una clave sin acentos ni mayúsculas (RN-02, ampliada por el Product Owner). La @figura:secuencia_registrar_materia recorre las tres capas al registrar una materia, desde que el Estudiante abre el formulario, escribe el nombre, el docente y la meta, elige el color y pulsa «Guardar»: cada mensaje que corresponde a un método del código se verifica y el script que lo dibuja falla si alguno deja de existir.
 
 ![Secuencia de registrar una materia a través de las tres capas](../recursos/diagramas/secuencia_registrar_materia.png){#secuencia_registrar_materia ancho=16.5}
 
@@ -345,7 +347,7 @@ La tercera épica implementada (`add-sesiones-estudio`) incorpora la planificaci
 
 Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_clases.py` comprueba la correspondencia exacta con las clases Java.
 
-Para evitar cruces horarios entre sesiones activas (`RN-05`), cada operación de planificación o reprogramación consulta `ValidadorSesiones` en el hilo de fondo antes de delegar en `SesionEstudio` y persistir mediante `SesionRepositoryRoom`. La @figura:secuencia_planificar_sesion recorre ese flujo desde `SesionFormularioActivity` hasta Room y el retorno al hilo principal; el script generador valida que todos los nombres de métodos correspondan al código fuente vigente.
+Para evitar cruces horarios entre sesiones activas (`RN-05`), cada operación de planificación o reprogramación consulta `ValidadorSesiones` en el hilo de fondo antes de delegar en `SesionEstudio` y persistir mediante `SesionRepositoryRoom`. La @figura:secuencia_planificar_sesion recorre ese flujo desde que el Estudiante abre el formulario y elige materia, fecha y horas hasta Room y el retorno al hilo principal; el script generador valida que todos los nombres de métodos correspondan al código fuente vigente.
 
 ![Secuencia de planificar una sesión de estudio a través de las tres capas](../recursos/diagramas/secuencia_planificar_sesion.png){#secuencia_planificar_sesion ancho=16.5}
 

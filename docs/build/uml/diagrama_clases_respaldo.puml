@@ -1,0 +1,229 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E10 Respaldo y privacidad
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class ProcesoAutorizacionDrive {
+    + iniciar(): void
+  }
+  class RespaldoActivity {
+    # onCreate(Bundle): void
+    + alAutorizar(String): void
+    + alFallar(): void
+  }
+  class RespaldoViewModel {
+    + configuracion(): LiveData<ConfiguracionRespaldo>
+    + ocupado(): LiveData<Boolean>
+    + evento(): LiveData<Evento>
+    + consumirEvento(): void
+    + cargar(): void
+    + vincular(String): void
+    ... (+7)
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface ConfigurarRespaldo {
+    + consultar(): ConfiguracionRespaldo
+    + vincularCuenta(String): void
+    + desvincular(): void
+    + cambiarFrecuencia(FrecuenciaRespaldo): ResultadoRespaldo
+    + definirContrasena(char[]): ResultadoRespaldo
+    + quitarContrasena(): void
+  }
+  interface RespaldarAhora {
+    + ejecutar(): ResultadoRespaldo
+  }
+  interface RestaurarRespaldo {
+    + ejecutar(char[]): ResultadoRespaldo
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class ConfigurarRespaldoService {
+    + consultar(): ConfiguracionRespaldo
+    + vincularCuenta(String): void
+    + desvincular(): void
+    + cambiarFrecuencia(FrecuenciaRespaldo): ResultadoRespaldo
+    + definirContrasena(char[]): ResultadoRespaldo
+    + quitarContrasena(): void
+  }
+  class RespaldarAhoraService {
+    + ejecutar(): ResultadoRespaldo
+  }
+  class RestaurarRespaldoService {
+    + ejecutar(char[]): ResultadoRespaldo
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface AlmacenCredencialRespaldo {
+    + guardar(char[]): void
+    + obtener(): char[]
+    + borrar(): void
+  }
+  interface CifradorRespaldo {
+    + empaquetar(byte[], char[]): byte[]
+    + reconoce(byte[]): boolean
+    + estaCifrado(byte[]): boolean
+    + desempaquetar(byte[], char[]): Optional<byte[]>
+  }
+  interface ClienteGoogleDrive {
+    + subir(byte[]): ResultadoRespaldo
+    + descargar(): RespaldoDescargado
+    + eliminar(): ResultadoRespaldo
+  }
+  interface ConfiguracionRespaldoRepository {
+    + leer(): ConfiguracionRespaldo
+    + guardarCorreo(String): void
+    + guardarFrecuencia(FrecuenciaRespaldo): void
+    + guardarConContrasena(boolean): void
+    + guardarUltimoRespaldo(MetadatosRespaldo): void
+    + guardarUltimoResultado(ResultadoRespaldo): void
+    + limpiar(): void
+  }
+  interface ProgramadorRespaldo {
+    + programar(FrecuenciaRespaldo): void
+    + cancelar(): void
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class ConfiguracionRespaldo {
+    + correo(): String
+    + hayCuenta(): boolean
+    + frecuencia(): FrecuenciaRespaldo
+    + conContrasena(): boolean
+    + ultimoRespaldo(): MetadatosRespaldo
+    + ultimoResultado(): ResultadoRespaldo
+    ... (+1)
+  }
+  enum FrecuenciaRespaldo {
+    + periodoDias(): int
+    + esAutomatica(): boolean
+  }
+  class InstantaneaRespaldo {
+    + versionFormato(): int
+    + versionEsquema(): int
+    + fechaExportacionUtcMilis(): long
+    + conTablas(Map<String, List<Map<String, Object>>>): InstantaneaRespaldo
+  }
+  class MetadatosRespaldo {
+    + fechaUtcMilis(): long
+    + tamanoBytes(): long
+    + cifrado(): boolean
+  }
+  class NormalizadorRespaldo {
+    + normalizar(InstantaneaRespaldo): InstantaneaRespaldo
+  }
+  class RespaldoDescargado {
+    + fallo(ResultadoRespaldo): RespaldoDescargado
+    + resultado(): ResultadoRespaldo
+    + datos(): byte[]
+  }
+  enum ResultadoRespaldo {
+  }
+  class SerializadorRespaldo {
+    + serializar(InstantaneaRespaldo): byte[]
+    + deserializar(byte[]): InstantaneaRespaldo
+  }
+}
+
+package "adapter.out.persistence" as p_persistencia #F5EAF7 {
+  class ConfiguracionRespaldoPreferencias {
+    + leer(): ConfiguracionRespaldo
+    + guardarCorreo(String): void
+    + guardarFrecuencia(FrecuenciaRespaldo): void
+    + guardarConContrasena(boolean): void
+    + guardarUltimoRespaldo(MetadatosRespaldo): void
+    + guardarUltimoResultado(ResultadoRespaldo): void
+    ... (+1)
+  }
+}
+
+package "adapter.out.security" as p_seguridad #F5EAF7 {
+  class AlmacenCredencialRespaldoKeystore {
+    + guardar(char[]): void
+    + obtener(): char[]
+    + borrar(): void
+  }
+  class CifradorRespaldoAesGcm {
+    + empaquetar(byte[], char[]): byte[]
+    + reconoce(byte[]): boolean
+    + estaCifrado(byte[]): boolean
+    + desempaquetar(byte[], char[]): Optional<byte[]>
+  }
+}
+
+package "adapter.out.drive" as p_drive #F5EAF7 {
+  class AutenticadorGoogleDrive {
+    + solicitud(): AuthorizationRequest
+    + obtenerToken(): String
+  }
+  class ClienteGoogleDriveRest {
+    + subir(byte[]): ResultadoRespaldo
+    + descargar(): RespaldoDescargado
+    + eliminar(): ResultadoRespaldo
+  }
+  class ConsultaCorreoGoogle {
+    + correoDe(String): String
+  }
+  class ProgramadorRespaldoWorkManager {
+    + programar(FrecuenciaRespaldo): void
+    + cancelar(): void
+  }
+  interface ProveedorTokenDrive {
+    + obtenerToken(): String
+  }
+  class WorkerRespaldoDrive {
+    + doWork(): Result
+  }
+}
+
+RespaldoActivity --> ProcesoAutorizacionDrive
+RespaldoActivity --> RespaldoViewModel
+RespaldoViewModel --> ConfigurarRespaldo
+RespaldoViewModel --> RespaldarAhora
+RespaldoViewModel --> RestaurarRespaldo
+ConfigurarRespaldoService ..|> ConfigurarRespaldo
+ConfigurarRespaldoService --> AlmacenCredencialRespaldo
+ConfigurarRespaldoService --> ConfiguracionRespaldoRepository
+ConfigurarRespaldoService --> ProgramadorRespaldo
+RespaldarAhoraService ..|> RespaldarAhora
+RespaldarAhoraService --> AlmacenCredencialRespaldo
+RespaldarAhoraService --> CifradorRespaldo
+RespaldarAhoraService --> ClienteGoogleDrive
+RespaldarAhoraService --> ConfiguracionRespaldoRepository
+RestaurarRespaldoService ..|> RestaurarRespaldo
+RestaurarRespaldoService --> CifradorRespaldo
+RestaurarRespaldoService --> ClienteGoogleDrive
+RestaurarRespaldoService --> ConfiguracionRespaldoRepository
+ConfiguracionRespaldo --> FrecuenciaRespaldo
+ConfiguracionRespaldo --> MetadatosRespaldo
+ConfiguracionRespaldo --> ResultadoRespaldo
+RespaldoDescargado --> ResultadoRespaldo
+ConfiguracionRespaldoPreferencias ..|> ConfiguracionRespaldoRepository
+AlmacenCredencialRespaldoKeystore ..|> AlmacenCredencialRespaldo
+CifradorRespaldoAesGcm ..|> CifradorRespaldo
+AutenticadorGoogleDrive ..|> ProveedorTokenDrive
+ClienteGoogleDriveRest ..|> ClienteGoogleDrive
+ClienteGoogleDriveRest --> ProveedorTokenDrive
+ProgramadorRespaldoWorkManager ..|> ProgramadorRespaldo
+@enduml

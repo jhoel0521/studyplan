@@ -1,0 +1,249 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E2 Materias
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class AcentoMateria {
+    + ajustado(View, int): int
+    + barra(View, int): void
+    + punto(ImageView, int): void
+    + chip(View, int): void
+    + comoBoton(View): void
+  }
+  class ColorHex {
+  }
+  class ColorMateria {
+    + paraSuperficie(int, int): int
+    + conAlfa(int, float, int): int
+    + contraste(int, int): double
+    + luminancia(int): double
+  }
+  enum DestinoPrincipal {
+    + idMenu(): int
+    + actividad(): Class<?>
+    + implementado(): boolean
+    + deIdMenu(int): DestinoPrincipal
+  }
+  class EventoMateria {
+    + de(Tipo): EventoMateria
+    + error(ErrorValidacion): EventoMateria
+    + tipo(): Tipo
+    + error(): ErrorValidacion
+  }
+  class FilaMateria {
+    + activa(ResumenMateria): FilaMateria
+    + encabezadoArchivadas(int, boolean): FilaMateria
+    + archivada(Materia): FilaMateria
+    + tipo(): Tipo
+    + materia(): Materia
+    + horasRealizadas(): double
+    ... (+6)
+  }
+  class GrupoBotones {
+    + unir(MaterialButton...): void
+    + ajustarEnUnaLinea(MaterialButtonToggleGroup): void
+  }
+  class ListaMateriasViewModel {
+    + vacia(): LiveData<Boolean>
+    + cargar(): void
+    + alternarArchivadas(): void
+  }
+  class MateriaFormularioActivity {
+    # onCreate(Bundle): void
+  }
+  class MateriaFormularioViewModel {
+    + materia(): LiveData<Materia>
+    + evento(): LiveData<EventoMateria>
+    + confirmandoEliminar(): LiveData<Boolean>
+    + cargar(long): void
+    + guardar(Long, String, int, String): void
+    + guardar(Long, String, int, String, String): void
+    ... (+6)
+  }
+  class MateriasActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class MateriasAdapter {
+    + getItemViewType(int): int
+    + onCreateViewHolder(ViewGroup, int): RecyclerView.ViewHolder
+  }
+  class MensajesDeError {
+    + paraMateria(ErrorValidacion): int
+    + textoSesion(Context, ErrorValidacion, ConflictoHorario): String
+  }
+  class SelectorColorDialogo {
+    + mostrar(): void
+    + cerrar(): void
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface ArchivarMateria {
+    + ejecutar(long): Resultado<Materia>
+  }
+  interface ConsultarMateria {
+    + ejecutar(long): Optional<Materia>
+  }
+  interface DesarchivarMateria {
+    + ejecutar(long): Resultado<Materia>
+  }
+  interface EditarMateria {
+    + ejecutar(long, String, int, String): Resultado<Materia>
+  }
+  interface EliminarMateria {
+    + ejecutar(long): Resultado<Materia>
+  }
+  interface ListarMaterias {
+    + ejecutar(): ListadoMaterias
+  }
+  interface RegistrarMateria {
+    + ejecutar(String, int, String): Resultado<Materia>
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class ArchivarMateriaService {
+    + ejecutar(long): Resultado<Materia>
+  }
+  class ConsultarMateriaService {
+    + ejecutar(long): Optional<Materia>
+  }
+  class DesarchivarMateriaService {
+    + ejecutar(long): Resultado<Materia>
+  }
+  class EditarMateriaService {
+    + ejecutar(long, String, int, String): Resultado<Materia>
+    + ejecutar(long, String, int, String, Double): Resultado<Materia>
+  }
+  class EliminarMateriaService {
+    + ejecutar(long): Resultado<Materia>
+  }
+  class ListarMateriasService {
+    + ejecutar(): ListadoMaterias
+  }
+  class NombresDeMateria {
+    + hayActivaConClave(MateriaRepository, String, Long): boolean
+  }
+  class RegistrarMateriaService {
+    + ejecutar(String, int, String): Resultado<Materia>
+    + ejecutar(String, int, String, Double): Resultado<Materia>
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface MateriaRepository {
+    + guardar(Materia): Materia
+    + obtener(long): Optional<Materia>
+    + activas(): List<Materia>
+    + archivadas(): List<Materia>
+    + eliminar(long): void
+  }
+  interface SesionesDeMateria {
+    + contar(long): int
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class ListadoMaterias {
+    + activas(): List<ResumenMateria>
+    + archivadas(): List<Materia>
+    + estaVacio(): boolean
+  }
+  class Materia {
+    + crear(String, int, String): Resultado<Materia>
+    + crear(String, int, String, Double): Resultado<Materia>
+    + crearGeneral(int): Materia
+    + restaurar(long, String, int, String, boolean): Materia
+    + restaurar(long, String, int, String, boolean, Double, boolean): Materia
+    + normalizarNombre(String): String
+    ... (+18)
+  }
+  class ResumenMateria {
+    + materia(): Materia
+    + horasRealizadas(): double
+    + metaSemanaActual(): ProgresoMeta
+  }
+}
+
+package "adapter.out.persistence" as p_persistencia #F5EAF7 {
+  interface MateriaDao {
+    + insertar(MateriaEntity): long
+    + actualizar(MateriaEntity): void
+    + obtener(long): MateriaEntity
+    + activas(): List<MateriaEntity>
+    + archivadas(): List<MateriaEntity>
+    + eliminar(long): void
+  }
+  class MateriaEntity <<Entity>> {
+    + id: long
+    + nombre: String
+    + nombreClave: String
+    + color: int
+    + docente: String
+    + archivada: boolean
+    + metaSemanalHoras: Double
+    + esGeneral: boolean
+    --
+  }
+  class MateriaRepositoryRoom {
+    + guardar(Materia): Materia
+    + obtener(long): Optional<Materia>
+    + activas(): List<Materia>
+    + archivadas(): List<Materia>
+    + eliminar(long): void
+  }
+  class Migraciones {
+  }
+}
+
+MateriasActivity --> ListaMateriasViewModel
+MateriasActivity --> MateriasAdapter
+MateriaFormularioActivity --> MateriaFormularioViewModel
+MateriaFormularioActivity --> SelectorColorDialogo
+ListaMateriasViewModel --> ListarMaterias
+MateriaFormularioViewModel --> ArchivarMateria
+MateriaFormularioViewModel --> ConsultarMateria
+MateriaFormularioViewModel --> DesarchivarMateria
+MateriaFormularioViewModel --> EditarMateria
+MateriaFormularioViewModel --> EliminarMateria
+MateriaFormularioViewModel --> EventoMateria
+MateriaFormularioViewModel --> RegistrarMateria
+ArchivarMateriaService ..|> ArchivarMateria
+ArchivarMateriaService --> MateriaRepository
+ConsultarMateriaService ..|> ConsultarMateria
+ConsultarMateriaService --> MateriaRepository
+DesarchivarMateriaService ..|> DesarchivarMateria
+DesarchivarMateriaService --> MateriaRepository
+EditarMateriaService ..|> EditarMateria
+EditarMateriaService --> MateriaRepository
+EliminarMateriaService ..|> EliminarMateria
+EliminarMateriaService --> MateriaRepository
+EliminarMateriaService --> SesionesDeMateria
+ListarMateriasService ..|> ListarMaterias
+ListarMateriasService --> MateriaRepository
+RegistrarMateriaService ..|> RegistrarMateria
+RegistrarMateriaService --> MateriaRepository
+ListadoMaterias --> Materia
+ListadoMaterias --> ResumenMateria
+ResumenMateria --> Materia
+MateriaRepositoryRoom ..|> MateriaRepository
+MateriaRepositoryRoom --> MateriaDao
+@enduml

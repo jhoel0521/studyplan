@@ -1,0 +1,134 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E7 Estadísticas
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class EstadisticasActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class EstadisticasAdapter {
+    + nombreVisible(Context, DesgloseMateriaPeriodo): String
+  }
+  class EstadisticasViewModel {
+    + periodo(): LiveData<PeriodoEstadisticas>
+    + subvista(): LiveData<Subvista>
+    + estadisticas(): LiveData<EstadisticasPeriodo>
+    + cargar(): void
+    + cambiarTipo(PeriodoEstadisticas.Tipo): void
+    + periodoAnterior(): void
+    ... (+2)
+  }
+  class TopicosUi {
+    + etiquetaRes(TopicoEventoEstudio): int
+    + etiqueta(Context, TopicoEventoEstudio): String
+    + topicosParaEstudioExterno(): List<TopicoEventoEstudio>
+    + topicosParaInterrupcion(): List<TopicoEventoEstudio>
+    + poblarChips(Context, ChipGroup, List<TopicoEventoEstudio>, TopicoEventoEstudio): void
+    + obtenerSeleccionado(ChipGroup): TopicoEventoEstudio
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface ConsultarEstadisticas {
+    + ejecutar(PeriodoEstadisticas): EstadisticasPeriodo
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class ConsultarEstadisticasService {
+    + ejecutar(PeriodoEstadisticas): EstadisticasPeriodo
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class CalculadorEstadisticas {
+    + calcular(PeriodoEstadisticas, int, int, Map<Long, Integer>, Map<Long, Materia>, List<SesionEstudio>, Map<Long, List<EventoEstudio>>, long): EstadisticasPeriodo
+    + calcularReporte(PeriodoEstadisticas, long, Map<Long, Integer>, Map<Long, Materia>, List<SesionEstudio>): ReporteEstudio
+  }
+  class ConcentracionPeriodo {
+    + indiceConcentracionPorcentaje(): Double
+    + interrupcionesPorHora(): double
+    + totalInterrupciones(): int
+    + puntualidadPromedioMinutos(): Double
+    + respetoDelTiempoPorcentaje(): Double
+    + tiempoFueraAppMinutos(): int
+    ... (+4)
+  }
+  class DesgloseMateriaPeriodo {
+    + materiaId(): long
+    + nombreMateria(): String
+    + esGeneral(): boolean
+    + colorMateria(): int
+    + archivada(): boolean
+    + minutosReales(): int
+    ... (+5)
+  }
+  class EstadisticasPeriodo {
+    + periodo(): PeriodoEstadisticas
+    + minutosRealesTotales(): int
+    + horasRealesTotales(): double
+    + minutosRealesPeriodoAnterior(): int
+    + variacionPorcentaje(): Double
+    + distribucionMaterias(): List<DesgloseMateriaPeriodo>
+    ... (+9)
+  }
+  class Mapas {
+    + entero(Map<K, Integer>, K): int
+    + largo(Map<K, Long>, K): long
+  }
+  class PeriodoEstadisticas {
+    + semanal(Fecha): PeriodoEstadisticas
+    + mensual(Fecha): PeriodoEstadisticas
+    + de(Tipo, Fecha): PeriodoEstadisticas
+    + tipo(): Tipo
+    + fechaFoco(): Fecha
+    + inicio(): Fecha
+    ... (+6)
+  }
+  class ResumenTopico {
+    + topico(): TopicoEventoEstudio
+    + cantidad(): int
+    + minutos(): int
+  }
+  class SalidaRegistrada {
+    + sesionId(): long
+    + nombreMateria(): String
+    + equals(Object): boolean
+    + hashCode(): int
+  }
+  enum TopicoEventoEstudio {
+    + clave(): String
+    + esParaEstudioExterno(): boolean
+    + esParaInterrupcion(): boolean
+    + desdeClave(String): Optional<TopicoEventoEstudio>
+  }
+}
+
+EstadisticasActivity --> EstadisticasAdapter
+EstadisticasActivity --> EstadisticasViewModel
+EstadisticasViewModel --> ConsultarEstadisticas
+ConsultarEstadisticasService ..|> ConsultarEstadisticas
+ConcentracionPeriodo --> ResumenTopico
+EstadisticasPeriodo --> ConcentracionPeriodo
+EstadisticasPeriodo --> DesgloseMateriaPeriodo
+EstadisticasPeriodo --> PeriodoEstadisticas
+ResumenTopico --> TopicoEventoEstudio
+@enduml

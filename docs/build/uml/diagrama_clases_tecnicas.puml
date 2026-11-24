@@ -1,0 +1,461 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E5 Técnicas y eventos de estudio
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class DialogoRecuperacionSesion {
+    + mostrar(ActividadProtegida, DiagnosticoRegresoApp, Runnable): AlertDialog
+  }
+  class EventoEstudioAdapter {
+    + onCreateViewHolder(ViewGroup, int): EventoHolder
+  }
+  class FlujoBloqueoPantalla {
+  }
+  class NotificadorSesion {
+    + asegurarCanales(Context): void
+    + puedeNotificar(Context): boolean
+    + tienePermisoNotificaciones(Context): boolean
+    + puedeProgramarAlarmasExactas(Context): boolean
+    + intentAjustesNotificaciones(Context): Intent
+    + intentAjustesAlarmasExactas(Context): Intent
+    ... (+18)
+  }
+  interface ProgramadorRetardado {
+    + programar(Runnable, long): void
+    + cancelar(Runnable): void
+  }
+  class ProgramadorRetardadoHandler {
+    + programar(Runnable, long): void
+    + cancelar(Runnable): void
+  }
+  class ReceptorAvisosSesion {
+  }
+  class RepartoSesionActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class RepartoSesionViewModel {
+    + estado(): LiveData<EstadoReparto>
+    + error(): LiveData<ErrorValidacion>
+    + guardado(): LiveData<Boolean>
+    + cargar(long, long): void
+    + fijarCorteMilis(long): void
+    + desplazarCorteMinutos(int): void
+    ... (+1)
+  }
+  class SalidaConGracia {
+  }
+  class ServicioSesionEnCurso {
+    + mostrar(Context, Notification): void
+    + detener(Context): void
+    + estaActivo(): boolean
+    + onCreate(): void
+  }
+  class SesionEnCursoActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class SesionEnCursoViewModel {
+    + conAlternarNoMolestar(AlternarNoMolestarSesion): SesionEnCursoViewModel
+    + errorNoMolestar(): LiveData<ErrorValidacion>
+    + consumirErrorNoMolestar(): void
+    + alternarNoMolestar(long): void
+    + resumen(): LiveData<ResumenEjecucionSesion>
+    + finalizada(): LiveData<Boolean>
+    ... (+12)
+  }
+  class TextosSesion {
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface AlternarNoMolestarSesion {
+    + ejecutar(long): Resultado<Boolean>
+  }
+  interface ConfigurarAjustesEstudio {
+    + ejecutar(boolean, int, int, int, int): Resultado<Ajustes>
+  }
+  interface ConsultarEjecucionSesion {
+    + ejecutar(long): Optional<ResumenEjecucionSesion>
+  }
+  interface DecidirFinPlanificadoOInvasion {
+    + ejecutar(long, DecisionFinOInvasion, Long): Resultado<SesionEstudio>
+  }
+  interface DetenerSesion {
+    + ejecutar(long): Resultado<SesionEstudio>
+  }
+  interface EvaluarRecuperacionSesion {
+    + ejecutar(): Optional<DiagnosticoRegresoApp>
+  }
+  interface IniciarSesion {
+    + ejecutar(long, TecnicaEstudio, PreferenciaNoMolestar): Resultado<SesionEstudio>
+  }
+  interface PausarReanudarSesion {
+    + ejecutar(long): Resultado<SesionEstudio>
+  }
+  interface RegistrarBloqueoPantalla {
+    + ejecutar(): Optional<EventoEstudio>
+  }
+  interface RegistrarDesbloqueo {
+    + ejecutar(): Optional<EventoEstudio>
+  }
+  interface RegistrarSalidaApp {
+    + ejecutar(long): Optional<SalidaRegistrada>
+  }
+  interface RepartirTramoSesion {
+    + ejecutar(long, long, long): Resultado<ResultadoReparto>
+  }
+  interface ResolverRegresoApp {
+    + ejecutar(long, OpcionRegreso, Long, String): Resultado<SesionEstudio>
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class AlternarNoMolestarSesionService {
+    + ejecutar(long): Resultado<Boolean>
+  }
+  class ConfigurarAjustesEstudioService {
+    + ejecutar(boolean, int, int, int, int): Resultado<Ajustes>
+  }
+  class ConsultarEjecucionSesionService {
+    + ejecutar(long): Optional<ResumenEjecucionSesion>
+  }
+  class DecidirFinPlanificadoOInvasionService {
+    + ejecutar(long, DecisionFinOInvasion, Long): Resultado<SesionEstudio>
+  }
+  class DetenerSesionService {
+    + ejecutar(long): Resultado<SesionEstudio>
+    + ejecutarConMetas(long): Resultado<CierreSesion>
+  }
+  class EjecucionHitos {
+    + detectarInvasion(SesionEstudio, long, SesionRepository, MateriaRepository, Reloj): CandidataInvasion
+    + programarProximoHito(SesionEstudio, String, List<EventoEstudio>, long, SesionRepository, ProgramadorAvisosSesion, Reloj): void
+    + contieneTipo(List<EventoEstudio>, TipoEventoEstudio): boolean
+  }
+  class EvaluarRecuperacionSesionService {
+    + ejecutar(): Optional<DiagnosticoRegresoApp>
+  }
+  class IniciarSesionService {
+    + ejecutar(long, TecnicaEstudio, PreferenciaNoMolestar): Resultado<SesionEstudio>
+  }
+  class PausarReanudarSesionService {
+    + ejecutar(long): Resultado<SesionEstudio>
+    + ejecutar(long, TopicoEventoEstudio, String): Resultado<SesionEstudio>
+  }
+  class RegistrarBloqueoPantallaService {
+    + ejecutar(): Optional<EventoEstudio>
+  }
+  class RegistrarDesbloqueoService {
+    + ejecutar(): Optional<EventoEstudio>
+  }
+  class RegistrarSalidaAppService {
+    + ejecutar(long): Optional<SalidaRegistrada>
+  }
+  class RepartirTramoSesionService {
+    + ejecutar(long, long, long): Resultado<ResultadoReparto>
+  }
+  class ResolverRegresoAppService {
+    + ejecutar(long, OpcionRegreso, Long, String): Resultado<SesionEstudio>
+    + ejecutarConMetas(long, OpcionRegreso, Long, String): Resultado<CierreSesion>
+    + ejecutarConMetas(long, OpcionRegreso, Long, String, TopicoEventoEstudio): Resultado<CierreSesion>
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface ControladorNoMolestar {
+    + tienePermiso(): boolean
+    + aplicar(boolean): void
+    + restaurarSiAplica(): void
+  }
+  interface EventoEstudioRepository {
+    + guardar(EventoEstudio): EventoEstudio
+    + listarPorSesion(long): List<EventoEstudio>
+    + listarPorRangoSesionesUtc(long, long): List<EventoEstudio>
+    + eliminarPorSesion(long): void
+    + eliminarTodos(): void
+  }
+  interface MarcadorSalidaApp {
+    + marcarSalida(long, long): void
+    + obtenerSesionActiva(): Long
+    + obtenerInstanteSalida(): Long
+    + marcarFinDescansoPomodoro(long, long): void
+    + obtenerSesionDescansoPomodoro(): Long
+    + obtenerFinDescansoPomodoro(): Long
+    + limpiarFinDescansoPomodoro(): void
+    + limpiar(): void
+  }
+  interface ProgramadorAvisosSesion {
+    + programarSiguienteHito(long, TipoHito, long, String): void
+    + cancelarAvisos(long): void
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class CalculadorPomodoro {
+    + estaEnDescanso(FasePomodoro): boolean
+    + calcularFinDescansoProyectado(long, EstadoPomodoroCalculado): long
+    + pomodorosQueCabenEnPlan(int, ConfiguracionPomodoro): int
+    + calcularEstado(long, ConfiguracionPomodoro, int, boolean): EstadoPomodoroCalculado
+  }
+  class CalculadorRepartoTramo {
+    + repartir(TecnicaEstudio, ConfiguracionPomodoro, int, List<EventoEstudio>, long, long): Resultado<ResultadoReparto>
+  }
+  class CalculadorTiempoReal {
+    + reconstruirIntervalos(List<EventoEstudio>, long): List<IntervaloEfectivo>
+    + calcularMilisEfectivos(TecnicaEstudio, ConfiguracionPomodoro, int, List<EventoEstudio>, long): long
+    + calcularMinutosReales(TecnicaEstudio, ConfiguracionPomodoro, int, List<EventoEstudio>, long): int
+    + calcularMilisDentroDeApp(List<EventoEstudio>, long): long
+    + estaPausadaActualmente(List<EventoEstudio>): boolean
+    + tieneSalidaSinResolver(List<EventoEstudio>): boolean
+    ... (+3)
+  }
+  class CandidataInvasion {
+    + sesionId(): long
+    + nombreMateria(): String
+    + colorMateria(): int
+    + horaInicio(): Hora
+    + horaFin(): Hora
+  }
+  class ConfiguracionPomodoro {
+    + porDefecto(): ConfiguracionPomodoro
+    + crear(int, int, int, int): Resultado<ConfiguracionPomodoro>
+    + restaurar(int, int, int, int): ConfiguracionPomodoro
+    + trabajoMinutos(): int
+    + descansoCortoMinutos(): int
+    + descansoLargoMinutos(): int
+    ... (+3)
+  }
+  class DiagnosticoRegresoApp {
+    + sesionEnCurso(): SesionEstudio
+    + nombreMateria(): String
+    + colorMateria(): int
+    + instanteSalidaMilis(): long
+    + instanteLimiteMaxMilis(): long
+    + esRecuperacionCierreAbrupto(): boolean
+    ... (+2)
+  }
+  class EstadoPomodoroCalculado {
+    + faseActual(): FasePomodoro
+    + cicloActual(): int
+    + pomodorosCompletados(): int
+    + milisRestantesEnFase(): long
+    + milisTrabajoAcumulados(): long
+    + ciclosPlanificadosCompletados(): boolean
+  }
+  class EventoEstudio {
+    + crear(long, TipoEventoEstudio, Instante, String): Resultado<EventoEstudio>
+    + crear(long, TipoEventoEstudio, Instante, String, TopicoEventoEstudio): Resultado<EventoEstudio>
+    + crear(long, TipoEventoEstudio, long, int, String): Resultado<EventoEstudio>
+    + crear(long, TipoEventoEstudio, long, int, String, TopicoEventoEstudio): Resultado<EventoEstudio>
+    + crear(long, TipoEventoEstudio, long, Fecha, Hora, String): Resultado<EventoEstudio>
+    + crear(long, TipoEventoEstudio, long, Fecha, Hora, String, TopicoEventoEstudio): Resultado<EventoEstudio>
+    ... (+16)
+  }
+  enum FasePomodoro {
+  }
+  class IntervaloEfectivo {
+    + inicioMilis(): long
+    + finMilis(): long
+    + esAppCerrada(): boolean
+    + duracionMilis(): long
+  }
+  enum PreferenciaNoMolestar {
+    + aBoolean(): Boolean
+    + desdeBoolean(Boolean): PreferenciaNoMolestar
+  }
+  class ResultadoReparto {
+    + inicioTramoMilis(): long
+    + corteMilis(): long
+    + finTramoMilis(): long
+    + minutosPrimeraSesion(): int
+    + minutosSegundaSesion(): int
+  }
+  class ResumenEjecucionSesion {
+    + sesion(): SesionEstudio
+    + nombreMateria(): String
+    + colorMateria(): int
+    + milisEfectivos(): long
+    + pausada(): boolean
+    + noMolestarActivo(): boolean
+    ... (+5)
+  }
+  enum TecnicaEstudio {
+  }
+  enum TipoEventoEstudio {
+    + esMarcaDentroDeApp(): boolean
+  }
+}
+
+package "adapter.out.persistence" as p_persistencia #F5EAF7 {
+  abstract class EventoEstudioDao {
+    + insertar(EventoEstudioEntity): long
+    + listarPorSesion(long): List<EventoEstudioEntity>
+    + listarPorRangoSesionesUtc(long, long): List<EventoEstudioEntity>
+    + eliminarPorSesion(long): void
+    + eliminarTodos(): void
+  }
+  class EventoEstudioEntity <<Entity>> {
+    + id: long
+    + sesionId: long
+    + tipo: String
+    + instanteMilis: long
+    + desfaseMinutos: int
+    + nota: String
+    + topico: String
+    --
+  }
+  class EventoEstudioRepositoryRoom {
+    + guardar(EventoEstudio): EventoEstudio
+    + listarPorSesion(long): List<EventoEstudio>
+    + listarPorRangoSesionesUtc(long, long): List<EventoEstudio>
+    + eliminarPorSesion(long): void
+    + eliminarTodos(): void
+  }
+}
+
+package "adapter.out.system" as p_sistema #F5EAF7 {
+  class BloqueoPantallaSistema {
+    + estaActivo(): boolean
+    + bloquear(): boolean
+    + quitarPermiso(): void
+    + intentSolicitarPermiso(String): Intent
+  }
+  class ControladorNoMolestarSistema {
+    + tienePermiso(): boolean
+    + aplicar(boolean): void
+    + restaurarSiAplica(): void
+  }
+  class MarcadorSalidaAppPrefs {
+    + marcarSalida(long, long): void
+    + obtenerSesionActiva(): Long
+    + obtenerInstanteSalida(): Long
+    + marcarFinDescansoPomodoro(long, long): void
+    + obtenerSesionDescansoPomodoro(): Long
+    + obtenerFinDescansoPomodoro(): Long
+    ... (+2)
+  }
+  interface NotificacionSesion {
+    + refrescar(long): void
+  }
+  class PreferenciasBloqueoPantalla {
+    + noVolverAPreguntar(): boolean
+    + guardarNoVolverAPreguntar(boolean): void
+  }
+  class ProgramadorAvisosAlarmManager {
+    + programarSiguienteHito(long, TipoHito, long, String): void
+    + cancelarAvisos(long): void
+    + programar(long, long): void
+    + cancelar(long): void
+    + cancelarTodasNotificaciones(): void
+    + idNotificacionRecordatorio(long): int
+  }
+  class ProgramadorAvisosConNotificacion {
+    + programarSiguienteHito(long, TipoHito, long, String): void
+    + cancelarAvisos(long): void
+  }
+  class ReceptorAdministradorBloqueo {
+  }
+  class RelojSistema {
+    + hoy(): Fecha
+    + ahora(): Hora
+    + ahoraMilis(): long
+    + ahoraInstante(): Instante
+    + fechaDe(long): Fecha
+    + horaDe(long): Hora
+    ... (+1)
+  }
+}
+
+FlujoBloqueoPantalla --> BloqueoPantallaSistema
+FlujoBloqueoPantalla --> PreferenciasBloqueoPantalla
+RepartoSesionActivity --> RepartoSesionViewModel
+RepartoSesionViewModel --> EventoEstudioRepository
+RepartoSesionViewModel --> RepartirTramoSesion
+SesionEnCursoActivity --> FlujoBloqueoPantalla
+SesionEnCursoActivity --> SesionEnCursoViewModel
+SesionEnCursoViewModel --> AlternarNoMolestarSesion
+SesionEnCursoViewModel --> ConsultarEjecucionSesion
+SesionEnCursoViewModel --> DecidirFinPlanificadoOInvasion
+SesionEnCursoViewModel --> DetenerSesion
+SesionEnCursoViewModel --> IniciarSesion
+SesionEnCursoViewModel --> PausarReanudarSesion
+SalidaConGracia --> ProgramadorRetardado
+ProgramadorRetardadoHandler ..|> ProgramadorRetardado
+AlternarNoMolestarSesionService ..|> AlternarNoMolestarSesion
+AlternarNoMolestarSesionService --> ControladorNoMolestar
+AlternarNoMolestarSesionService --> EventoEstudioRepository
+ConfigurarAjustesEstudioService ..|> ConfigurarAjustesEstudio
+ConsultarEjecucionSesionService ..|> ConsultarEjecucionSesion
+ConsultarEjecucionSesionService --> ControladorNoMolestar
+ConsultarEjecucionSesionService --> EventoEstudioRepository
+DecidirFinPlanificadoOInvasionService ..|> DecidirFinPlanificadoOInvasion
+DecidirFinPlanificadoOInvasionService --> ControladorNoMolestar
+DecidirFinPlanificadoOInvasionService --> DetenerSesion
+DecidirFinPlanificadoOInvasionService --> EventoEstudioRepository
+DecidirFinPlanificadoOInvasionService --> MarcadorSalidaApp
+DecidirFinPlanificadoOInvasionService --> ProgramadorAvisosSesion
+DetenerSesionService ..|> DetenerSesion
+DetenerSesionService --> ControladorNoMolestar
+DetenerSesionService --> EventoEstudioRepository
+DetenerSesionService --> MarcadorSalidaApp
+DetenerSesionService --> ProgramadorAvisosSesion
+EvaluarRecuperacionSesionService ..|> EvaluarRecuperacionSesion
+EvaluarRecuperacionSesionService --> ControladorNoMolestar
+EvaluarRecuperacionSesionService --> EventoEstudioRepository
+EvaluarRecuperacionSesionService --> MarcadorSalidaApp
+EvaluarRecuperacionSesionService --> ProgramadorAvisosSesion
+IniciarSesionService ..|> IniciarSesion
+IniciarSesionService --> ControladorNoMolestar
+IniciarSesionService --> EventoEstudioRepository
+IniciarSesionService --> MarcadorSalidaApp
+IniciarSesionService --> ProgramadorAvisosSesion
+PausarReanudarSesionService ..|> PausarReanudarSesion
+PausarReanudarSesionService --> ControladorNoMolestar
+PausarReanudarSesionService --> EventoEstudioRepository
+PausarReanudarSesionService --> ProgramadorAvisosSesion
+RegistrarBloqueoPantallaService ..|> RegistrarBloqueoPantalla
+RegistrarBloqueoPantallaService --> EventoEstudioRepository
+RegistrarDesbloqueoService ..|> RegistrarDesbloqueo
+RegistrarDesbloqueoService --> EventoEstudioRepository
+RegistrarSalidaAppService ..|> RegistrarSalidaApp
+RegistrarSalidaAppService --> EventoEstudioRepository
+RegistrarSalidaAppService --> MarcadorSalidaApp
+RepartirTramoSesionService ..|> RepartirTramoSesion
+RepartirTramoSesionService --> ControladorNoMolestar
+RepartirTramoSesionService --> EventoEstudioRepository
+RepartirTramoSesionService --> MarcadorSalidaApp
+RepartirTramoSesionService --> ProgramadorAvisosSesion
+ResolverRegresoAppService ..|> ResolverRegresoApp
+ResolverRegresoAppService --> ControladorNoMolestar
+ResolverRegresoAppService --> EventoEstudioRepository
+ResolverRegresoAppService --> MarcadorSalidaApp
+ResolverRegresoAppService --> ProgramadorAvisosSesion
+EstadoPomodoroCalculado --> FasePomodoro
+EventoEstudio --> TipoEventoEstudio
+ResumenEjecucionSesion --> CandidataInvasion
+ResumenEjecucionSesion --> EstadoPomodoroCalculado
+EventoEstudioRepositoryRoom ..|> EventoEstudioRepository
+EventoEstudioRepositoryRoom --> EventoEstudioDao
+ControladorNoMolestarSistema ..|> ControladorNoMolestar
+MarcadorSalidaAppPrefs ..|> MarcadorSalidaApp
+ProgramadorAvisosAlarmManager ..|> ProgramadorAvisosSesion
+ProgramadorAvisosConNotificacion ..|> ProgramadorAvisosSesion
+ProgramadorAvisosConNotificacion --> NotificacionSesion
+@enduml

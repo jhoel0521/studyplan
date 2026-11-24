@@ -1,0 +1,29 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 220
+title Secuencia · iniciar y ejecutar sesión en vivo (HU-22 a HU-24, HU-39, RN-22)
+actor "Estudiante" as P0
+boundary "SesionDetalleActivity" as P1
+control "IniciarSesionService" as P2
+database "SesionRepositoryRoom" as P3
+database "EventoEstudioRepositoryRoom" as P4
+entity "ControladorNoMolestarSistema" as P5
+entity "ProgramadorAvisosAlarmManager" as P6
+actor "Android (AlarmManager)" as P7
+autonumber
+P0 -> P1 : abre el detalle de la sesión pendiente
+P0 -> P1 : pulsa «Iniciar sesión»: onIniciarClick(View)
+P1 -> P2 : ejecutar(sesionId, tecnica, prefDnd)
+P2 -> P3 : buscarPorId(sesionId) / guardar(sesionEnCurso)
+P3 --> P2 : SesionEstudio (EN_CURSO + snapshot)
+P2 -> P4 : guardar(EventoEstudio.INICIO)
+P2 -> P5 : aplicar(activar) [HU-24, RNF-18]
+P2 -> P6 : programarSiguienteHito(sesionId, instante, hito)
+P2 --> P1 : Resultado<SesionEstudio> -> abre SesionEnCursoActivity
+P6 -> P7 : programa la alarma del siguiente hito
+P7 --> P6 : al vencer, dispara el aviso (ReceptorAvisosSesion)
+@enduml

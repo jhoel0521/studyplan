@@ -1,0 +1,101 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E8 Reportes
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class ReportesActivity {
+    + crearIntent(Context, PeriodoEstadisticas.Tipo, Fecha): Intent
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class ReportesAdapter {
+    + onCreateViewHolder(ViewGroup, int): Vista
+    + getItemCount(): int
+  }
+  class ReportesViewModel {
+    + periodo(): LiveData<PeriodoEstadisticas>
+    + reporte(): LiveData<ReporteEstudio>
+    + cargando(): LiveData<Boolean>
+    + exportando(): LiveData<Boolean>
+    + exportacion(): LiveData<EventoExportacion>
+    + errorExportacion(): LiveData<ResultadoExportacion.Error>
+    ... (+10)
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface GenerarReporteEstudio {
+    + ejecutar(PeriodoEstadisticas): ReporteEstudio
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class GenerarReporteEstudioService {
+    + ejecutar(PeriodoEstadisticas): ReporteEstudio
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface ExportadorReporte {
+    + exportar(ReporteEstudio, FormatoExportacionReporte): ResultadoExportacion
+    + limpiarTemporales(): void
+  }
+  class ResultadoExportacion {
+    + ok(String): ResultadoExportacion
+    + error(Error): ResultadoExportacion
+    + esExitoso(): boolean
+    + uriContenido(): String
+    + error(): Error
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  enum FormatoExportacionReporte {
+  }
+  class GeneradorCsvReporte {
+    + generar(ReporteEstudio, Locale): byte[]
+    + generar(ReporteEstudio, Locale, String, String): byte[]
+  }
+  class ReporteEstudio {
+    + periodo(): PeriodoEstadisticas
+    + generadoEnMilis(): long
+    + materias(): List<DesgloseMateriaPeriodo>
+    + minutosPlanificadosTotales(): int
+    + minutosRealesTotales(): int
+    + horasPlanificadasTotales(): double
+    ... (+4)
+  }
+}
+
+package "adapter.out.system" as p_sistema #F5EAF7 {
+  class ExportadorReporteSistema {
+    + exportar(ReporteEstudio, FormatoExportacionReporte): ResultadoExportacion
+    + limpiarTemporales(): void
+  }
+}
+
+ReportesActivity --> ReportesAdapter
+ReportesActivity --> ReportesViewModel
+ReportesViewModel --> ExportadorReporte
+ReportesViewModel --> GenerarReporteEstudio
+ReportesViewModel --> ResultadoExportacion
+GenerarReporteEstudioService ..|> GenerarReporteEstudio
+ExportadorReporteSistema ..|> ExportadorReporte
+@enduml

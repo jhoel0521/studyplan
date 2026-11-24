@@ -1,0 +1,166 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E6 Metas semanales
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  class FelicitacionMetasActivity {
+    + crearIntent(Context, List<MetaAlcanzada>): Intent
+    # onCreate(Bundle): void
+  }
+  class HistorialMetasActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class HistorialMetasAdapter {
+    + onCreateViewHolder(ViewGroup, int): Holder
+  }
+  class HistorialMetasViewModel {
+    + cargar(): void
+  }
+  class SelectorEstudioBottomSheet {
+    + mostrar(Context, int, List<Materia>, TecnicaEstudio, Listener): BottomSheetDialog
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface CambiarDeMateria {
+    + ejecutar(long, Long, TecnicaEstudio): Resultado<SesionEstudio>
+    + ejecutarConNuevaMateria(long, String, int, TecnicaEstudio): Resultado<SesionEstudio>
+  }
+  interface ConsultarProgresoMetas {
+    + progresoSemanaActualTotal(): ProgresoMeta
+    + historialMetas(): List<ProgresoMeta>
+  }
+  interface DefinirMetaSemanal {
+    + ejecutar(double): Resultado<MetaSemanal>
+  }
+  interface EstudiarAhora {
+    + ejecutar(Long, TecnicaEstudio, PreferenciaNoMolestar): Resultado<SesionEstudio>
+    + ejecutarConNuevaMateria(String, int, TecnicaEstudio, PreferenciaNoMolestar): Resultado<SesionEstudio>
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class CambiarDeMateriaService {
+    + ejecutar(long, Long, TecnicaEstudio): Resultado<SesionEstudio>
+    + ejecutarConNuevaMateria(long, String, int, TecnicaEstudio): Resultado<SesionEstudio>
+  }
+  class ConsultarProgresoMetasService {
+    + progresoSemanaActualTotal(): ProgresoMeta
+    + historialMetas(): List<ProgresoMeta>
+  }
+  class DefinirMetaSemanalService {
+    + ejecutar(double): Resultado<MetaSemanal>
+  }
+  class DetectorFelicitacionMetas {
+    + capturarAntes(TramoDiarioRepository, MetaSemanalRepository, Reloj): InstantaneaAntes
+    + detectarYMarcar(InstantaneaAntes, MetaSemanalRepository, PerfilRepository, MateriaRepository, TramoDiarioRepository): List<MetaAlcanzada>
+  }
+  class EstudiarAhoraService {
+    + ejecutar(Long, TecnicaEstudio, PreferenciaNoMolestar): Resultado<SesionEstudio>
+    + ejecutarConNuevaMateria(String, int, TecnicaEstudio, PreferenciaNoMolestar): Resultado<SesionEstudio>
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface MetaSemanalRepository {
+    + buscar(Fecha, Long): Optional<MetaSemanal>
+    + listarDeSemana(Fecha): List<MetaSemanal>
+    + listarTodas(): List<MetaSemanal>
+    + guardar(MetaSemanal): MetaSemanal
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class CalculadorProgresoMetas {
+    + calcularProgreso(Fecha, Long, String, int, double, boolean): ProgresoMeta
+    + cruzoObjetivo(int, int, double): boolean
+    + detectarMetasAlcanzadas(List<MetaSemanal>, Map<Long, Integer>, Map<Long, Integer>, int, int, Map<Long, String>): List<MetaAlcanzada>
+  }
+  class CierreSesion {
+    + sesion(): SesionEstudio
+    + metasAlcanzadas(): List<MetaAlcanzada>
+  }
+  class MetaAlcanzada {
+    + materiaId(): Long
+    + esMetaTotal(): boolean
+    + nombreMateria(): String
+    + horasObjetivo(): double
+    + horasRealizadas(): double
+  }
+  class MetaSemanal {
+    + crear(Fecha, Long, double): Resultado<MetaSemanal>
+    + restaurar(Long, Fecha, Long, double, boolean): MetaSemanal
+    + conId(long): MetaSemanal
+    + conObjetivo(double): Resultado<MetaSemanal>
+    + marcarFelicitada(): MetaSemanal
+    + id(): Long
+    ... (+7)
+  }
+  class ProgresoMeta {
+    + semanaInicio(): Fecha
+    + materiaId(): Long
+    + esMetaTotal(): boolean
+    + nombreMateria(): String
+    + horasRealizadas(): double
+    + horasObjetivo(): double
+    ... (+3)
+  }
+}
+
+package "adapter.out.persistence" as p_persistencia #F5EAF7 {
+  abstract class MetaSemanalDao {
+    + buscarTotal(String): MetaSemanalEntity
+    + buscarPorMateria(String, long): MetaSemanalEntity
+    + listarDeSemana(String): List<MetaSemanalEntity>
+    + listarTodas(): List<MetaSemanalEntity>
+    + insertar(MetaSemanalEntity): long
+    + actualizar(MetaSemanalEntity): void
+    ... (+1)
+  }
+  class MetaSemanalEntity <<Entity>> {
+    + id: long
+    + semanaInicio: String
+    + materiaId: Long
+    + horasObjetivo: double
+    + felicitada: boolean
+    --
+  }
+  class MetaSemanalRepositoryRoom {
+    + buscar(Fecha, Long): Optional<MetaSemanal>
+    + listarDeSemana(Fecha): List<MetaSemanal>
+    + listarTodas(): List<MetaSemanal>
+    + guardar(MetaSemanal): MetaSemanal
+  }
+}
+
+HistorialMetasActivity --> HistorialMetasAdapter
+HistorialMetasActivity --> HistorialMetasViewModel
+HistorialMetasViewModel --> ConsultarProgresoMetas
+CambiarDeMateriaService ..|> CambiarDeMateria
+ConsultarProgresoMetasService ..|> ConsultarProgresoMetas
+ConsultarProgresoMetasService --> MetaSemanalRepository
+DefinirMetaSemanalService ..|> DefinirMetaSemanal
+DefinirMetaSemanalService --> MetaSemanalRepository
+EstudiarAhoraService ..|> EstudiarAhora
+CierreSesion --> MetaAlcanzada
+MetaSemanalRepositoryRoom ..|> MetaSemanalRepository
+MetaSemanalRepositoryRoom --> MetaSemanalDao
+@enduml

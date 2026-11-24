@@ -1,0 +1,380 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam classAttributeIconSize 0
+skinparam nodesep 30
+skinparam ranksep 90
+left to right direction
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+}
+
+title Clases · E1 Perfil, inicio y ajustes
+
+package "adapter.in.ui" as p_presentacion #EAF1FB {
+  abstract class ActividadBase {
+    # attachBaseContext(Context): void
+    # aplicarInsets(): void
+    + app(): StudyPlanApplication
+    # viewModel(Class<T>): T
+  }
+  abstract class ActividadProtegida {
+    # onCreate(Bundle): void
+    # protegerCapturas(): void
+    # hayDialogoRecuperacionAbierto(): boolean
+    # alEstarListo(): void
+    # enlazarBarraInferior(DestinoPrincipal): void
+  }
+  class AjustesActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class AjustesViewModel {
+    + ajustes(): LiveData<Ajustes>
+    + avisoSinBloqueo(): LiveData<Boolean>
+    + cargar(): void
+    + elegirTema(Tema): void
+    + elegirIdioma(Idioma): void
+    + cambiarBloqueo(boolean): void
+    ... (+6)
+  }
+  class AplicadorApariencia {
+    + aplicarTema(Tema): void
+    + aplicarIdioma(Idioma): void
+    + aplicarIdioma(Context, Idioma): void
+    + idiomaActivo(Context): Locale
+  }
+  class AutenticacionActivity {
+    # onCreate(Bundle): void
+  }
+  class BorrarDatosActivity {
+    # onCreate(Bundle): void
+  }
+  class BorrarDatosViewModel {
+    + paso(): LiveData<Paso>
+    + alcance(): AlcanceBorrado
+    + elegirAlcance(AlcanceBorrado): void
+    + ultimoError(): ResultadoRespaldo
+    + pedirBorrado(): void
+    + confirmarPrimera(): void
+    ... (+2)
+  }
+  class ContadorActividades {
+    + consumirEvaluacionRecuperacion(): boolean
+    + solicitarEvaluacionRecuperacion(): void
+    + reiniciarParaPruebas(): void
+    + fijarGraciaParaPruebas(long): void
+  }
+  class FabricaViewModels {
+    + create(Class<T>): T
+  }
+  class FormatoHoras {
+    + texto(double): String
+  }
+  class InicioViewModel {
+    + resumen(): LiveData<ResumenInicio>
+    + hayMateriasActivas(): LiveData<Boolean>
+    + metaActualizada(): LiveData<Boolean>
+    + errorAccion(): LiveData<ErrorValidacion>
+    + sesionIniciadaId(): LiveData<Long>
+    + cargar(): void
+    ... (+5)
+  }
+  class MainActivity {
+    # onCreate(Bundle): void
+    # alEstarListo(): void
+  }
+  class PerfilInicialActivity {
+    # onCreate(Bundle): void
+    + alAutorizar(String): void
+    + alFallar(): void
+  }
+  class PerfilInicialViewModel {
+    + guardar(String, String): void
+    + consumirResultado(): void
+  }
+  class ProteccionViewModel {
+    + estado(): LiveData<EstadoArranque>
+    + comprobar(): void
+    + consumirEstado(): void
+  }
+  class StudyPlanApplication {
+    + de(Context): StudyPlanApplication
+    + onCreate(): void
+    + ejecutor(): java.util.concurrent.Executor
+    + enviarTarea(java.util.concurrent.Callable<T>): java.util.concurrent.Future<T>
+    + enviarTarea(Runnable): java.util.concurrent.Future<?>
+    + fabrica(): FabricaViewModels
+    ... (+57)
+  }
+}
+
+package "application.port.in" as p_port_in #EEF7EA {
+  interface BorrarDatos {
+    + ejecutar(AlcanceBorrado): ResultadoRespaldo
+  }
+  interface ConfigurarApariencia {
+    + cambiarTema(Tema): void
+    + cambiarIdioma(Idioma): void
+  }
+  interface ConfigurarBloqueo {
+    + activar(): ResultadoActivacion
+    + desactivar(): void
+  }
+  interface ConfigurarPerfil {
+    + ejecutar(String, double): Resultado<Perfil>
+  }
+  interface ConsultarAjustes {
+    + ejecutar(): Ajustes
+  }
+  interface ConsultarEstadoArranque {
+    + ejecutar(): EstadoArranque
+  }
+  interface ConsultarPerfil {
+    + ejecutar(): Optional<Perfil>
+  }
+  interface ControlarSesionBloqueo {
+    + estaBloqueada(): boolean
+    + alVolverAPrimerPlano(): void
+    + desbloquear(): void
+    + bloqueoActivo(): boolean
+  }
+  interface ObtenerResumenInicio {
+    + ejecutar(): Optional<ResumenInicio>
+  }
+}
+
+package "application.service" as p_service #EEF7EA {
+  class BorrarDatosService {
+    + ejecutar(AlcanceBorrado): ResultadoRespaldo
+  }
+  class ConfigurarAparienciaService {
+    + cambiarTema(Tema): void
+    + cambiarIdioma(Idioma): void
+  }
+  class ConfigurarBloqueoService {
+    + activar(): ResultadoActivacion
+    + desactivar(): void
+  }
+  class ConfigurarPerfilService {
+    + ejecutar(String, double): Resultado<Perfil>
+  }
+  class ConsultarAjustesService {
+    + ejecutar(): Ajustes
+  }
+  class ConsultarEstadoArranqueService {
+    + ejecutar(): EstadoArranque
+  }
+  class ConsultarPerfilService {
+    + ejecutar(): Optional<Perfil>
+  }
+  class ObtenerResumenInicioService {
+    + ejecutar(): Optional<ResumenInicio>
+  }
+  class SesionBloqueo {
+    + alCambiarBloqueo(boolean): void
+    + bloqueoActivo(): boolean
+    + estaBloqueada(): boolean
+    + alVolverAPrimerPlano(): void
+    + desbloquear(): void
+  }
+}
+
+package "application.port.out" as p_port_out #EEF7EA {
+  interface AjustesRepository {
+    + obtener(): Ajustes
+    + guardar(Ajustes): void
+  }
+  interface AlmacenDatos {
+    + borrarTodo(): void
+    + exportarTodo(long): InstantaneaRespaldo
+    + restaurarTodo(InstantaneaRespaldo): void
+  }
+  interface DisponibilidadBloqueo {
+    + estaDisponible(): boolean
+  }
+  interface PerfilRepository {
+    + obtener(): Optional<Perfil>
+    + guardar(Perfil): void
+  }
+}
+
+package "domain" as p_dominio #FFF6E0 {
+  class Ajustes {
+    + porDefecto(): Ajustes
+    + tema(): Tema
+    + idioma(): Idioma
+    + bloqueoActivo(): boolean
+    + noMolestarGlobal(): boolean
+    + pomodoro(): ConfiguracionPomodoro
+    ... (+10)
+  }
+  enum AlcanceBorrado {
+  }
+  enum ErrorValidacion {
+  }
+  enum EstadoArranque {
+  }
+  enum Idioma {
+  }
+  class Perfil {
+    + crear(String, double): Resultado<Perfil>
+    + nombre(): String
+    + metaSemanalHoras(): double
+    + equals(Object): boolean
+    + hashCode(): int
+    + toString(): String
+  }
+  class Resultado {
+    + ok(T): Resultado<T>
+    + error(ErrorValidacion): Resultado<T>
+    + esValido(): boolean
+    + valor(): T
+    + error(): ErrorValidacion
+  }
+  class ResumenInicio {
+    + nombre(): String
+    + horasRealizadas(): double
+    + metaSemanalHoras(): double
+    + hoy(): Fecha
+    + proximaSesion(): DetalleSesionInicio
+    + sesionesDeHoy(): List<DetalleSesionInicio>
+    ... (+3)
+  }
+  enum Tema {
+  }
+}
+
+package "adapter.out.persistence" as p_persistencia #F5EAF7 {
+  interface AjustesDao {
+    + obtener(): AjustesEntity
+    + guardar(AjustesEntity): void
+  }
+  class AjustesEntity <<Entity>> {
+    + id: int
+    + tema: String
+    + idioma: String
+    + bloqueoActivo: boolean
+    + noMolestarGlobal: boolean
+    + pomodoroTrabajoMin: int
+    + pomodoroDescansoCortoMin: int
+    + pomodoroDescansoLargoMin: int
+    + pomodoroCiclosHastaLargo: int
+    + recordatorioMinutos: int
+    --
+  }
+  class AjustesRepositoryRoom {
+    + obtener(): Ajustes
+    + guardar(Ajustes): void
+  }
+  class AlmacenDatosRoom {
+    + borrarTodo(): void
+    + exportarTodo(long): InstantaneaRespaldo
+    + restaurarTodo(InstantaneaRespaldo): void
+  }
+  class Mapeadores {
+  }
+  interface PerfilDao {
+    + obtener(): PerfilEntity
+    + guardar(PerfilEntity): void
+  }
+  class PerfilEntity <<Entity>> {
+    + id: int
+    + nombre: String
+    + metaSemanalHoras: double
+    --
+  }
+  class PerfilRepositoryRoom {
+    + obtener(): Optional<Perfil>
+    + guardar(Perfil): void
+  }
+  abstract class StudyPlanDatabase {
+    + perfilDao(): PerfilDao
+    + ajustesDao(): AjustesDao
+    + materiaDao(): MateriaDao
+    + sesionDao(): SesionDao
+    + eventoEstudioDao(): EventoEstudioDao
+    + tramoDiarioDao(): TramoDiarioDao
+    ... (+3)
+  }
+}
+
+package "adapter.out.security" as p_seguridad #F5EAF7 {
+  class DisponibilidadBloqueoBiometrico {
+    + estaDisponible(): boolean
+  }
+}
+
+ActividadProtegida --|> ActividadBase
+ActividadProtegida --> ProteccionViewModel
+MainActivity --|> ActividadProtegida
+MainActivity --> InicioViewModel
+PerfilInicialActivity --|> ActividadBase
+PerfilInicialActivity --> PerfilInicialViewModel
+AjustesActivity --|> ActividadProtegida
+AjustesActivity --> AjustesViewModel
+AutenticacionActivity --|> ActividadBase
+BorrarDatosActivity --|> ActividadProtegida
+BorrarDatosActivity --> BorrarDatosViewModel
+PerfilInicialViewModel --> ConfigurarPerfil
+InicioViewModel --> ObtenerResumenInicio
+ProteccionViewModel --> ConsultarEstadoArranque
+AjustesViewModel --> ConfigurarApariencia
+AjustesViewModel --> ConfigurarBloqueo
+AjustesViewModel --> ConsultarAjustes
+BorrarDatosViewModel --> BorrarDatos
+StudyPlanApplication --> AjustesRepository
+StudyPlanApplication --> BorrarDatos
+StudyPlanApplication --> ConfigurarApariencia
+StudyPlanApplication --> ConfigurarBloqueo
+StudyPlanApplication --> ConfigurarPerfil
+StudyPlanApplication --> ConsultarAjustes
+StudyPlanApplication --> ConsultarEstadoArranque
+StudyPlanApplication --> ConsultarPerfil
+StudyPlanApplication --> ContadorActividades
+StudyPlanApplication --> ControlarSesionBloqueo
+StudyPlanApplication --> FabricaViewModels
+StudyPlanApplication --> ObtenerResumenInicio
+FabricaViewModels --> StudyPlanApplication
+ContadorActividades --> ControlarSesionBloqueo
+BorrarDatosService ..|> BorrarDatos
+BorrarDatosService --> AlmacenDatos
+BorrarDatosService --> SesionBloqueo
+ConfigurarAparienciaService ..|> ConfigurarApariencia
+ConfigurarAparienciaService --> AjustesRepository
+ConfigurarBloqueoService ..|> ConfigurarBloqueo
+ConfigurarBloqueoService --> AjustesRepository
+ConfigurarBloqueoService --> DisponibilidadBloqueo
+ConfigurarBloqueoService --> SesionBloqueo
+ConfigurarPerfilService ..|> ConfigurarPerfil
+ConfigurarPerfilService --> PerfilRepository
+ConsultarAjustesService ..|> ConsultarAjustes
+ConsultarAjustesService --> AjustesRepository
+ConsultarEstadoArranqueService ..|> ConsultarEstadoArranque
+ConsultarEstadoArranqueService --> AjustesRepository
+ConsultarEstadoArranqueService --> PerfilRepository
+ConsultarEstadoArranqueService --> SesionBloqueo
+ConsultarPerfilService ..|> ConsultarPerfil
+ConsultarPerfilService --> PerfilRepository
+ObtenerResumenInicioService ..|> ObtenerResumenInicio
+ObtenerResumenInicioService --> PerfilRepository
+SesionBloqueo ..|> ControlarSesionBloqueo
+Ajustes --> Idioma
+Ajustes --> Tema
+Resultado --> ErrorValidacion
+AjustesRepositoryRoom ..|> AjustesRepository
+AjustesRepositoryRoom --> AjustesDao
+AlmacenDatosRoom ..|> AlmacenDatos
+AlmacenDatosRoom --> StudyPlanDatabase
+PerfilRepositoryRoom ..|> PerfilRepository
+PerfilRepositoryRoom --> PerfilDao
+DisponibilidadBloqueoBiometrico ..|> DisponibilidadBloqueo
+@enduml

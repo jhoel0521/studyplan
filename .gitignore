@@ -41,3 +41,10 @@ docs/documento/recursos/capturas/
 *.keystore
 keystore.properties
 upload-key*
+
+# Presentación de la defensa (lleva datos personales de la portada)
+docs/presentacion/*.pptx
+docs/presentacion/*.png
+
+# Herramienta de build local (PlantUML)
+docs/build/herramientas/
