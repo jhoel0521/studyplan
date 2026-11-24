@@ -16,10 +16,33 @@ respaldo en Google Drive. Funciona offline-first.
 | Entrega | Contenido | Estado |
 |---|---|---|
 | 1 | Cap. 1 a 3.2.2 (introducción, marco teórico, metodología y requisitos) + Auditoría IA | En revisión |
+| Final | Capítulos 1 a 5 (el 5 documenta la publicación en Google Play), Auditoría IA, referencias y anexos; 140 páginas, 43 tablas y 39 figuras | Documento generado; falta la revisión humana del texto |
 
 Requisitos de la línea base: 46 historias de usuario, 30 reglas de negocio y 19 requisitos no
 funcionales (ISO/IEC 25010:2023), especificados en
 [`openspec/specs`](openspec/specs) (la línea base archivada está en [`openspec/changes/archive`](openspec/changes/archive)).
+
+## Objetivos logrados
+
+| Objetivo | Estado | Evidencia |
+|---|---|---|
+| Guardar la copia de seguridad en Google Drive | **Cumplido** | Épica 10 (HU-35 a HU-38): copia en la carpeta oculta de la app en Drive, cifrado AES-256-GCM opcional con contraseña, restauración y borrado por alcance. El Product Owner la probó en un teléfono real: borró sus datos y los restauró desde Drive |
+| Publicar o dejarlo pendiente y documentado | **Cumplido como «pendiente y documentado»** | App creada en Google Play Console, versión 1000 (0.1.0) firmada por el CI en prueba interna, 11 declaraciones de contenido, ficha con ícono, gráfico y 5 capturas, y video público. El capítulo 5 del documento lo registra |
+| Finalizar el documento | **Cumplido** | Capítulos 1 a 5 con auditoría de IA, 0 marcas pendientes y diagramas cotejados con el código (327 clases) |
+
+Otros resultados verificables: 456 pruebas unitarias sin fallos, flujo de CI con release firmado por etiqueta
+(`vX.Y.Z`), widget de progreso semanal, reportes en PDF y CSV, y una bitácora de auditoría de IA con los errores
+de la IA registrados (filas 165 a 171).
+
+### Publicación en Google Play
+
+- Estado: la versión 0.1.0 está en **prueba interna**; la app **no está disponible para el público**.
+- Video de demostración: <https://youtu.be/v-vtEj7br2A>
+- Política de privacidad: <https://jhoel0521.github.io/studyplan-privacy/>
+- Pendiente (ver el capítulo 5 y `docs/publicacion/guia-google-play-y-drive.md`): el botón «Enviar la app para su
+  revisión» sigue desactivado por una causa no determinada, la prueba cerrada que Play pide antes de producción y los
+  clientes OAuth de Drive para la clave de subida y para Play App Signing, sin los cuales la versión instalada desde
+  Play no podría vincular la cuenta de Google.
 
 ## Estructura
 
@@ -27,6 +50,8 @@ funcionales (ISO/IEC 25010:2023), especificados en
 app/                 código Android (Java)
 openspec/            specs vigentes (specs/) y cambios en curso (changes/)
 docs/documento/      documento de la entrega en Markdown (capitulos/, recursos/, documento.toml) y su salida en dist/
+docs/publicacion/     guía de Google Play y Drive y borrador de la ficha de la tienda
+docs/presentacion/    generar_presentacion.py: genera la presentación de la defensa (el .pptx no se versiona)
 docs/build/          diagramas.py: modelo de dominio, máquina de estados, ciclo Scrum+SDD, wireframes W1–W15
 .apa/                motor de apa-kit (genera el Word desde los .md)
 docs/auditoria-ia/   bitácora del uso de IA
