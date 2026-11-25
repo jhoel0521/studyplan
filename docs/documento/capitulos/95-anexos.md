@@ -16,28 +16,28 @@ Tabla: Trazabilidad entre historias de usuario, especificaciones, prototipo y cr
 
 | HU | Spec (capacidad) | Esc. | Wireframe | Reglas | RNF de la épica |
 |---|---|---|---|---|---|
-| HU-01 | perfil-ajustes | 2 | W1 | — | RNF-01, RNF-07, RNF-08, RNF-12 |
-| HU-02 | perfil-ajustes | 2 | W1 | — | RNF-01, RNF-07, RNF-08, RNF-12 |
-| HU-03 | perfil-ajustes | 2 | W10 | — | RNF-01, RNF-07, RNF-08, RNF-12 |
-| HU-04 | perfil-ajustes | 2 | W10 | — | RNF-01, RNF-07, RNF-08, RNF-12 |
-| HU-05 | perfil-ajustes | 2 | — | — | RNF-01, RNF-07, RNF-08, RNF-12 |
+| HU-01 | perfil-ajustes | 2 | W1 | No aplica | RNF-01, RNF-07, RNF-08, RNF-12 |
+| HU-02 | perfil-ajustes | 2 | W1 | No aplica | RNF-01, RNF-07, RNF-08, RNF-12 |
+| HU-03 | perfil-ajustes | 2 | W10 | No aplica | RNF-01, RNF-07, RNF-08, RNF-12 |
+| HU-04 | perfil-ajustes | 2 | W10 | No aplica | RNF-01, RNF-07, RNF-08, RNF-12 |
+| HU-05 | perfil-ajustes | 2 | No aplica | No aplica | RNF-01, RNF-07, RNF-08, RNF-12 |
 | HU-06 | gestion-materias | 2 | W2 | RN-02 | RNF-06, RNF-14 |
-| HU-07 | gestion-materias | 1 | W2 | — | RNF-06, RNF-14 |
+| HU-07 | gestion-materias | 1 | W2 | No aplica | RNF-06, RNF-14 |
 | HU-08 | gestion-materias | 3 | W2 | RN-03 | RNF-06, RNF-14 |
-| HU-09 | gestion-materias | 2 | W2 | — | RNF-06, RNF-14 |
+| HU-09 | gestion-materias | 2 | W2 | No aplica | RNF-06, RNF-14 |
 | HU-46 | gestion-materias | 2 | W2 | RN-02 | RNF-06, RNF-14 |
 | HU-10 | sesiones-estudio | 3 | W3 | RN-04, RN-05 | RNF-02, RNF-04, RNF-14, RNF-15 |
 | HU-11 | sesiones-estudio | 2 | W3 | RN-06 | RNF-02, RNF-04, RNF-14, RNF-15 |
-| HU-12 | sesiones-estudio | 2 | W4–W6 | RN-07 | RNF-02, RNF-04, RNF-14, RNF-15 |
-| HU-13 | sesiones-estudio | 3 | W4–W6 | RN-08, RN-10 | RNF-02, RNF-04, RNF-14, RNF-15 |
-| HU-14 | sesiones-estudio | 3 | W4–W6 | RN-05, RN-09 | RNF-02, RNF-04, RNF-14, RNF-15 |
-| HU-15 | sesiones-estudio | 2 | W4–W6 | RN-12 | RNF-02, RNF-04, RNF-14, RNF-15 |
-| HU-16 | calendario-estudio | 3 | W4 | — | RNF-02, RNF-04, RNF-06, RNF-19 |
-| HU-17 | calendario-estudio | 2 | W5 | — | RNF-02, RNF-04, RNF-06, RNF-19 |
-| HU-18 | calendario-estudio | 1 | W6 | — | RNF-02, RNF-04, RNF-06, RNF-19 |
-| HU-19 | calendario-estudio | 2 | W4–W6 | — | RNF-02, RNF-04, RNF-06, RNF-19 |
-| HU-20 | calendario-estudio | 2 | W5, W6 | — | RNF-02, RNF-04, RNF-06, RNF-19 |
-| HU-21 | calendario-estudio | 2 | W4–W6 | — | RNF-02, RNF-04, RNF-06, RNF-19 |
+| HU-12 | sesiones-estudio | 2 | W4 a W6 | RN-07 | RNF-02, RNF-04, RNF-14, RNF-15 |
+| HU-13 | sesiones-estudio | 3 | W4 a W6 | RN-08, RN-10 | RNF-02, RNF-04, RNF-14, RNF-15 |
+| HU-14 | sesiones-estudio | 3 | W4 a W6 | RN-05, RN-09 | RNF-02, RNF-04, RNF-14, RNF-15 |
+| HU-15 | sesiones-estudio | 2 | W4 a W6 | RN-12 | RNF-02, RNF-04, RNF-14, RNF-15 |
+| HU-16 | calendario-estudio | 3 | W4 | No aplica | RNF-02, RNF-04, RNF-06, RNF-19 |
+| HU-17 | calendario-estudio | 2 | W5 | No aplica | RNF-02, RNF-04, RNF-06, RNF-19 |
+| HU-18 | calendario-estudio | 1 | W6 | No aplica | RNF-02, RNF-04, RNF-06, RNF-19 |
+| HU-19 | calendario-estudio | 2 | W4 a W6 | No aplica | RNF-02, RNF-04, RNF-06, RNF-19 |
+| HU-20 | calendario-estudio | 2 | W5, W6 | No aplica | RNF-02, RNF-04, RNF-06, RNF-19 |
+| HU-21 | calendario-estudio | 2 | W4 a W6 | No aplica | RNF-02, RNF-04, RNF-06, RNF-19 |
 | HU-22 | tecnicas-estudio | 3 | W7 | RN-22, RN-26 | RNF-03, RNF-10, RNF-18 |
 | HU-23 | tecnicas-estudio | 4 | W7, W10 | RN-11, RN-17, RN-25 | RNF-03, RNF-10, RNF-18 |
 | HU-24 | tecnicas-estudio | 3 | W7, W10 | RN-18 | RNF-03, RNF-10, RNF-18 |
@@ -50,22 +50,24 @@ Tabla: Trazabilidad entre historias de usuario, especificaciones, prototipo y cr
 | HU-25 | metas-semanales | 3 | W1 | RN-14, RN-15 | RNF-05, RNF-15 |
 | HU-26 | metas-semanales | 2 | W2 | RN-14 | RNF-05, RNF-15 |
 | HU-27 | metas-semanales | 2 | W1, W8 | RN-11 | RNF-05, RNF-15 |
-| HU-28 | metas-semanales | 2 | — | RN-16 | RNF-05, RNF-15 |
-| HU-29 | estadisticas | 2 | W8 | — | RNF-02, RNF-06 |
-| HU-30 | estadisticas | 2 | W8 | — | RNF-02, RNF-06 |
-| HU-31 | estadisticas | 1 | W8 | — | RNF-02, RNF-06 |
+| HU-28 | metas-semanales | 2 | No aplica | RN-16 | RNF-05, RNF-15 |
+| HU-29 | estadisticas | 2 | W8 | No aplica | RNF-02, RNF-06 |
+| HU-30 | estadisticas | 2 | W8 | No aplica | RNF-02, RNF-06 |
+| HU-31 | estadisticas | 1 | W8 | No aplica | RNF-02, RNF-06 |
 | HU-45 | estadisticas | 2 | W15 | RN-30 | RNF-02, RNF-06 |
-| HU-32 | reportes | 2 | W9 | — | RNF-11, RNF-15 |
-| HU-33 | reportes | 2 | W9 | — | RNF-11, RNF-15 |
-| HU-34 | recordatorios | 3 | W3, W10 | — | RNF-03, RNF-18 |
+| HU-32 | reportes | 2 | W9 | No aplica | RNF-11, RNF-15 |
+| HU-33 | reportes | 2 | W9 | No aplica | RNF-11, RNF-15 |
+| HU-34 | recordatorios | 3 | W3, W10 | No aplica | RNF-03, RNF-18 |
 | HU-35 | respaldo-privacidad | 3 | W11 | RN-19 | RNF-10, RNF-11, RNF-12, RNF-13 |
 | HU-36 | respaldo-privacidad | 2 | W11 | RN-20 | RNF-10, RNF-11, RNF-12, RNF-13 |
-| HU-37 | respaldo-privacidad | 2 | W11 | — | RNF-10, RNF-11, RNF-12, RNF-13 |
+| HU-37 | respaldo-privacidad | 2 | W11 | No aplica | RNF-10, RNF-11, RNF-12, RNF-13 |
 | HU-38 | respaldo-privacidad | 2 | W12 | RN-21 | RNF-10, RNF-11, RNF-12, RNF-13 |
 
 Nota: Total: 46 historias y 103 escenarios, más 13 escenarios de la máquina de estados (RN-07). Las columnas de código y prueba se agregarán en cada sprint de implementación.
 
 ## Anexo E: Glosario de Términos
+
+Tabla: Glosario de términos {#tabla28}
 
 | Término | Definición |
 |---|---|
@@ -79,7 +81,7 @@ Nota: Total: 46 historias y 103 escenarios, más 13 escenarios de la máquina de
 | Historia de usuario | Descripción breve de una funcionalidad desde la perspectiva del usuario: «Como… quiero… para…». |
 | Máquina de estados | Modelo que define los estados de un objeto y los eventos que provocan transiciones entre ellos. |
 | MoSCoW | Técnica de priorización: Must (debe), Should (debería), Could (podría), Won't (no se hará ahora). |
-| MVVM | Modelo–Vista–Modelo de Vista: patrón que separa la interfaz de la lógica de presentación y de los datos. |
+| MVVM | Modelo-Vista-Modelo de Vista: patrón que separa la interfaz de la lógica de presentación y de los datos. |
 | Offline-first | Diseño en el que la aplicación funciona por completo sin conexión y solo usa la red para funciones opcionales. |
 | Patrón State | Patrón de diseño en el que cada estado es una clase que conoce sus acciones y su estado siguiente. |
 | Pomodoro | Técnica de estudio en bloques de concentración (25 min) separados por descansos cortos y largos. |

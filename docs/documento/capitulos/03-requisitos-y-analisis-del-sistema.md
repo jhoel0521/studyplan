@@ -2,7 +2,7 @@
 
 ## Metodología de Desarrollo Adoptada
 
-Se adopta **Scrum** (Schwaber & Sutherland, 2020), adaptado a un equipo de un desarrollador asistido por IA, y combinado con **desarrollo guiado por especificaciones** mediante OpenSpec. Scrum aporta el marco de gestión (roles, eventos y artefactos); OpenSpec aporta la disciplina técnica que obliga a especificar y aprobar el comportamiento antes de que la IA genere código. Ambos son coherentes con los valores del Manifiesto Ágil (Beck et al., 2001).
+Se adopta **Scrum** (Schwaber y Sutherland, 2020), adaptado a un equipo de un desarrollador asistido por IA, y combinado con **desarrollo guiado por especificaciones** mediante OpenSpec. Scrum aporta el marco de gestión (roles, eventos y artefactos); OpenSpec aporta la disciplina técnica que obliga a especificar y aprobar el comportamiento antes de que la IA genere código. Ambos son coherentes con los valores del Manifiesto Ágil (Beck et al., 2001).
 
 ### Roles
 
@@ -264,7 +264,7 @@ Tabla: Historias de usuario de la épica E4: Calendario de estudio {#tabla11}
 | **HU-17** | **Ver calendario semanal tipo horario** |
 | **Historia** | Como estudiante, quiero ver la semana de lunes a domingo como un horario por horas con bloques de sesiones para organizar mi estudio igual que mi horario de clases. |
 | **Prioridad / Est.** | Must · 8 puntos |
-| **Criterios de aceptación** | 1. **Vista semanal.** *Dado* que hay sesiones en la semana, *cuando* el estudiante elige la vista Semana, *entonces* el sistema muestra 7 columnas (L–D) con franjas horarias y cada sesión como un bloque del color de su materia, de alto proporcional a su duración.<br>2. **Navegar semanas.** *Dado* que la vista Semana está abierta, *cuando* el estudiante desliza a la izquierda, *entonces* el sistema muestra la semana siguiente. |
+| **Criterios de aceptación** | 1. **Vista semanal.** *Dado* que hay sesiones en la semana, *cuando* el estudiante elige la vista Semana, *entonces* el sistema muestra 7 columnas (de lunes a domingo) con franjas horarias y cada sesión como un bloque del color de su materia, de alto proporcional a su duración.<br>2. **Navegar semanas.** *Dado* que la vista Semana está abierta, *cuando* el estudiante desliza a la izquierda, *entonces* el sistema muestra la semana siguiente. |
 | **HU-18** | **Ver calendario diario** |
 | **Historia** | Como estudiante, quiero ver un día con sus horas y las sesiones en línea de tiempo para enfocarme en lo que tengo que hacer hoy. |
 | **Prioridad / Est.** | Must · 3 puntos |
@@ -360,7 +360,7 @@ Tabla: Historias de usuario de la épica E6: Metas semanales {#tabla13}
 | **HU-47** | **Estudiar ahora (sesión sin plan)** |
 | **Historia** | Como estudiante, quiero iniciar una sesión de estudio al instante sin planificar horario previo para aprovechar cualquier momento libre en una materia existente, una nueva o «Estudios varios». |
 | **Prioridad / Est.** | Must · 5 puntos |
-| **Criterios de aceptación** | 1. **Arranque directo.** *Dado* que no hay sesión En curso, *cuando* el estudiante pulsa «Estudiar ahora» y elige materia (o «Estudios varios» o crea una nueva al vuelo) y técnica, *entonces* la sesión arranca directamente en estado *En curso* (`Nueva → En curso`, RN-07) sin ocupar horas planificadas (`Plan`).<br>2. **Sesión pendiente del día.** *Dado* que la materia elegida tiene una sesión Pendiente hoy, *cuando* la selecciona, *entonces* se pregunta si corresponde a esa sesión planificada o a una nueva libre. |
+| **Criterios de aceptación** | 1. **Arranque directo.** *Dado* que no hay sesión En curso, *cuando* el estudiante pulsa «Estudiar ahora» y elige materia (o «Estudios varios» o crea una nueva al vuelo) y técnica, *entonces* la sesión arranca directamente en estado *En curso* (de `Nueva` a `En curso`, RN-07) sin ocupar horas planificadas (`Plan`).<br>2. **Sesión pendiente del día.** *Dado* que la materia elegida tiene una sesión Pendiente hoy, *cuando* la selecciona, *entonces* se pregunta si corresponde a esa sesión planificada o a una nueva libre. |
 | **HU-48** | **Cambiar de materia en sesión en curso** |
 | **Historia** | Como estudiante, quiero cambiar de materia durante una sesión En curso sin perder el tiempo ya estudiado para registrar con precisión cada tramo cuando cambio de tema. |
 | **Prioridad / Est.** | Should · 3 puntos |
@@ -374,7 +374,7 @@ Tabla: Historias de usuario de la épica E7: Estadísticas {#tabla14}
 |---|---|
 | **Historia** | Como estudiante, quiero ver el total de horas de la semana y su variación respecto a la anterior para saber si estoy mejorando. |
 | **Prioridad / Est.** | Must · 3 puntos |
-| **Criterios de aceptación** | 1. **Variación.** *Dado* que esta semana hay 15 h y la anterior 12 h, *cuando* el estudiante abre Estadísticas, *entonces* el sistema muestra «15 h» y «↑ 25 % vs. semana anterior».<br>2. **Sin datos previos.** *Dado* que no hay datos de la semana anterior, *cuando* abre Estadísticas, *entonces* se muestra el total sin comparación. |
+| **Criterios de aceptación** | 1. **Variación.** *Dado* que esta semana hay 15 h y la anterior 12 h, *cuando* el estudiante abre Estadísticas, *entonces* el sistema muestra «15 h» y una flecha hacia arriba con «25 % vs. semana anterior».<br>2. **Sin datos previos.** *Dado* que no hay datos de la semana anterior, *cuando* abre Estadísticas, *entonces* se muestra el total sin comparación. |
 | **HU-30** | **Ver distribución de horas por materia** |
 | **Historia** | Como estudiante, quiero ver un gráfico de anillo con el porcentaje de horas por materia para identificar mis áreas de mejora. |
 | **Prioridad / Est.** | Must · 5 puntos |
@@ -456,7 +456,7 @@ Tabla: Reglas de negocio del dominio {#tabla18}
 | RN-10 | Una sesión «No realizada» puede pasar a «Completada (registro tardío)» solo si su fecha está dentro de los últimos 3 días. | Entrevista |
 | RN-11 | Solo las sesiones Completadas y Completadas (registro tardío) suman horas reales; con Pomodoro solo suman los bloques de trabajo, no los descansos. | Entrevista |
 | RN-12 | Solo se pueden eliminar sesiones Pendientes; las demás forman parte del historial. | Derivada de RN-09, confirmada por el Product Owner |
-| RN-13 | La semana de estudio va de lunes a domingo. | Mockup (calendario L–D) |
+| RN-13 | La semana de estudio va de lunes a domingo. | Mockup (calendario de lunes a domingo) |
 | RN-14 | La meta semanal total y las metas por materia son independientes entre sí; cada una debe ser mayor que 0 y menor o igual a 168 horas. | Entrevista |
 | RN-15 | Si no se define una meta total para la semana, se aplica la meta predeterminada del perfil. | Propuesta IA, aceptada |
 | RN-16 | La felicitación por cumplir una o más metas se muestra una sola vez por meta y semana al producirse un cierre real de sesión (detener, declarar fin al volver, vencimiento de 3 días o registro tardío/pasado), acumulando en una única pantalla todas las metas cruzadas en ese tramo y omitiéndola al cambiar de materia. | Propuesta IA, refinada con el Product Owner |
@@ -537,7 +537,7 @@ Tabla: Requisitos no funcionales (criterios de calidad) {#tabla21}
 | RNF-08 | Capacidad de interacción / Inclusividad (idioma) | Aplicación multiidioma. | 100 % de los textos en recursos strings.xml para es y en; fechas y horas en formato local. | Lint (MissingTranslation, HardcodedText) |
 | RNF-09 | Fiabilidad / Disponibilidad | Funcionamiento offline-first. | 100 % de las funciones operativas sin conexión, salvo el respaldo y la restauración en Drive. | Prueba en modo avión |
 | RNF-10 | Fiabilidad / Tolerancia a fallos | Sin pérdida de datos ni de sesiones en curso. | 0 pérdidas al rotar, cerrar o terminar el proceso; cada evento de estudio se guarda con su marca de tiempo antes de confirmarse en pantalla; el tiempo de sesión sobrevive al cierre forzado de la app; tasa de fallos ≤ 1 %. | Pruebas instrumentadas; Play Console Vitals |
-| RNF-11 | Fiabilidad / Recuperabilidad | Respaldos íntegros. | El respaldo restaurado reproduce el 100 % de los registros; verificación de integridad (hash) antes de restaurar; reintento automático sin conexión. | Prueba respaldo → reinstalación → restauración |
+| RNF-11 | Fiabilidad / Recuperabilidad | Respaldos íntegros. | El respaldo restaurado reproduce el 100 % de los registros; verificación de integridad (hash) antes de restaurar; reintento automático sin conexión. | Prueba de respaldo, reinstalación y restauración |
 | RNF-12 | Seguridad / Confidencialidad | Protección de los datos personales. | BD en almacenamiento interno privado; respaldo con contraseña cifrado con AES-256-GCM (clave PBKDF2); acceso a Drive solo a la carpeta oculta de la app (drive.appdata); bloqueo opcional con BiometricPrompt. | Revisión de código y del AndroidManifest |
 | RNF-13 | Seguridad / Integridad / responsabilidad | Control del usuario sobre sus datos. | Borrado selectivo con doble confirmación; INTERNET usado solo para el respaldo; sin SDK de analítica ni publicidad; formulario Data safety de Play completo. | Revisión del manifest; Data safety |
 | RNF-14 | Seguridad / Integridad (entradas) | Validación de entradas y consultas seguras. | 100 % de los campos validados (longitud, rangos, horarios, reglas RN); solo consultas parametrizadas de Room. | Pruebas unitarias de validadores |

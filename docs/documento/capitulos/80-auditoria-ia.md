@@ -13,7 +13,7 @@ Tabla: Herramientas de IA utilizadas {#tabla22}
 
 Nota: Todo contenido generado por IA fue revisado por el estudiante antes de la entrega. Las referencias bibliográficas propuestas por la IA deben verificarse una por una (DOI o URL) antes de la entrega final.
 
-## A.2. Protocolo de trabajo humano–IA {.sin-numero}
+## A.2. Protocolo de trabajo humano-IA {.sin-numero}
 
 El protocolo define límites claros entre lo que decide el humano y lo que ejecuta la IA. Está escrito en AGENTS.md (reglas para cualquier agente) y CLAUDE.md (reglas de Claude Code) en la raíz del repositorio, y se refuerza en openspec/config.yaml, que inyecta el contexto del proyecto en cada instrucción que OpenSpec entrega a la IA. A raíz del incidente descrito en A.4, se agregó la regla explícita: **la IA no inventa requisitos; si falta información, pregunta**.
 

@@ -200,7 +200,7 @@ Nota: Debajo de cada pantalla se indican las historias de usuario que representa
 
 ![Prototipo de baja fidelidad del calendario de estudio: vistas de mes, semana y día](../recursos/diagramas/wireframes_2.png){#figura5}
 
-Nota: Íconos de estado: ✓ completada, ○ pendiente, ✕ no realizada, ↻ reprogramada, ◷ registro tardío. Elaboración propia.
+Nota: Íconos de estado: visto (completada), círculo vacío (pendiente), equis (no realizada), flecha circular (reprogramada) y reloj (registro tardío). Elaboración propia.
 
 ![Prototipo de baja fidelidad: Sesión en curso (Pomodoro), Estadísticas y Reporte](../recursos/diagramas/wireframes_3.png){#figura6}
 
@@ -355,7 +355,7 @@ Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
 ### Épica Calendario de estudio
 
-La cuarta épica implementada (`add-calendario-estudio`) habilita la pestaña **Calendario** (`DestinoPrincipal.CALENDARIO` → `CalendarioActivity`) con vistas nativas **Día**, **Semana** y **Mes** construidas íntegramente en Views XML y Java sin librerías externas de calendario ni permisos nuevos (HU-16 a HU-21, RN-08, RN-11, RN-13, RNF-06, RNF-19). En el dominio puro, `PeriodoCalendario` resuelve la navegación por día/semana/mes y la conservación de foco al alternar entre vistas, mientras `CalculadorRangoHorario` determina la ventana de desplazamiento inicial (`± 2 h` sobre la rejilla de 24 horas), distribuye columnas paralelas ante coincidencias visuales entre sesiones `REPROGRAMADA` y activas, y calcula el resumen `Plan / Real` del periodo visible. La @figura:clases_calendario presenta sus clases por capa y la @figura:secuencia_consultar_calendario muestra la consulta por rango (`listarPorRango`) sobre Room v3 sin migración de esquema.
+La cuarta épica implementada (`add-calendario-estudio`) habilita la pestaña **Calendario** (`DestinoPrincipal.CALENDARIO`, que abre `CalendarioActivity`) con vistas nativas **Día**, **Semana** y **Mes** construidas íntegramente en Views XML y Java sin librerías externas de calendario ni permisos nuevos (HU-16 a HU-21, RN-08, RN-11, RN-13, RNF-06, RNF-19). En el dominio puro, `PeriodoCalendario` resuelve la navegación por día/semana/mes y la conservación de foco al alternar entre vistas, mientras `CalculadorRangoHorario` determina la ventana de desplazamiento inicial (`± 2 h` sobre la rejilla de 24 horas), distribuye columnas paralelas ante coincidencias visuales entre sesiones `REPROGRAMADA` y activas, y calcula el resumen `Plan / Real` del periodo visible. La @figura:clases_calendario presenta sus clases por capa y la @figura:secuencia_consultar_calendario muestra la consulta por rango (`listarPorRango`) sobre Room v3 sin migración de esquema.
 
 ![Diagrama de clases de la épica Calendario de estudio](../recursos/diagramas/diagrama_clases_calendario.png){#clases_calendario ancho=16.5}
 
@@ -367,7 +367,7 @@ Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
 ### Épica Técnicas de estudio y ejecución en vivo
 
-La quinta épica implementada (`add-tecnicas-estudio`) reemplaza la finalización directa desde `PENDIENTE` por el flujo obligatorio en vivo (`PENDIENTE → EN_CURSO → COMPLETADA`, `RN-07`), incorporando las técnicas **Libre** (`HU-22`) y **Pomodoro** (`HU-23`, con instantánea inmutable de parámetros al iniciar `RN-22`), la configuración opcional de **No molestar** sin bloqueo ante denegación (`HU-24`, `RNF-18`), la línea de tiempo cronológica de eventos persistidos en Room v4 (`evento_estudio`, `MIGRATION_3_4`, `HU-39`, `RN-23`), la recuperación tras salida de la app mediante el diálogo `W13` (`HU-40`, `HU-41`), los avisos de hitos con `AlarmManager` y el reparto interactivo de tramo continuo `W14` (`HU-42` a `HU-44`). La @figura:clases_tecnicas presenta sus clases agrupadas por capa, incluyendo el nuevo paquete `adapter.out.system`, y la @figura:secuencia_ejecucion_sesion ilustra el inicio de una sesión en vivo con persistencia del evento `INICIO`, aplicación opcional de No molestar y programación de avisos.
+La quinta épica implementada (`add-tecnicas-estudio`) reemplaza la finalización directa desde `PENDIENTE` por el flujo obligatorio en vivo (de `PENDIENTE` a `EN_CURSO` y luego a `COMPLETADA`, `RN-07`), incorporando las técnicas **Libre** (`HU-22`) y **Pomodoro** (`HU-23`, con instantánea inmutable de parámetros al iniciar `RN-22`), la configuración opcional de **No molestar** sin bloqueo ante denegación (`HU-24`, `RNF-18`), la línea de tiempo cronológica de eventos persistidos en Room v4 (`evento_estudio`, `MIGRATION_3_4`, `HU-39`, `RN-23`), la recuperación tras salida de la app mediante el diálogo `W13` (`HU-40`, `HU-41`), los avisos de hitos con `AlarmManager` y el reparto interactivo de tramo continuo `W14` (`HU-42` a `HU-44`). La @figura:clases_tecnicas presenta sus clases agrupadas por capa, incluyendo el nuevo paquete `adapter.out.system`, y la @figura:secuencia_ejecucion_sesion ilustra el inicio de una sesión en vivo con persistencia del evento `INICIO`, aplicación opcional de No molestar y programación de avisos.
 
 ![Diagrama de clases de la épica Técnicas de estudio y ejecución en vivo](../recursos/diagramas/diagrama_clases_tecnicas.png){#clases_tecnicas ancho=16.5}
 
@@ -379,7 +379,7 @@ Nota: Elaboración propia. Los mensajes con línea discontinua son retornos.
 
 ### Épica Metas semanales y estudio inmediato
 
-La sexta épica implementada (`add-metas-semanales`, Room v6 con `MIGRATION_5_6`) incorpora las instantáneas semanales inmutables en `meta_semanal` (`RN-33`, `HU-25` a `HU-27`), la materia general protegida «Estudios varios» (`RN-32`), el inicio inmediato sin plan mediante `EstudiarAhora` (`Nueva → En curso`, `HU-47`, `RN-07`), el cambio continuo de materia en `CambiarDeMateria` (`HU-48`) y la felicitación única acumulada al cierre real de la sesión (`FelicitacionMetasActivity`, `HU-28`, `RN-16`). La @figura:clases_metas presenta sus clases agrupadas por capa.
+La sexta épica implementada (`add-metas-semanales`, Room v6 con `MIGRATION_5_6`) incorpora las instantáneas semanales inmutables en `meta_semanal` (`RN-33`, `HU-25` a `HU-27`), la materia general protegida «Estudios varios» (`RN-32`), el inicio inmediato sin plan mediante `EstudiarAhora` (de `Nueva` a `En curso`, `HU-47`, `RN-07`), el cambio continuo de materia en `CambiarDeMateria` (`HU-48`) y la felicitación única acumulada al cierre real de la sesión (`FelicitacionMetasActivity`, `HU-28`, `RN-16`). La @figura:clases_metas presenta sus clases agrupadas por capa.
 
 ![Diagrama de clases de la épica Metas semanales y estudio inmediato](../recursos/diagramas/diagrama_clases_metas.png){#clases_metas ancho=16.5}
 
@@ -387,7 +387,7 @@ Nota: Elaboración propia, generada desde el código; `python docs/build/cotejo_
 
 ### Épica Estadísticas y blindaje de ejecución
 
-La séptima épica implementada (`add-estadisticas`, Room v7 con `MIGRATION_6_7` que incorpora `topico` en `evento_estudio`) habilita la pestaña **Estadísticas** (`DestinoPrincipal.ESTADISTICAS` → `EstadisticasActivity`), calcula el total de horas reales con variación semanal o mensual (`HU-29`, `RN-31`), presenta la distribución por materia mediante `MPAndroidChart` (`HU-30`), evalúa la tasa de cumplimiento excluyendo sesiones aún vigentes (`HU-31`), mide concentración, puntualidad, respeto del tiempo y tópicos agrupados de pausas o salidas (`HU-45`, `RN-30`), y blinda la detección de regresos y descansos Pomodoro (`HU-39`, `HU-41`). La @figura:clases_estadisticas presenta sus clases agrupadas por capa y `DesgloseMateriaPeriodo` como base compartida para reportes.
+La séptima épica implementada (`add-estadisticas`, Room v7 con `MIGRATION_6_7` que incorpora `topico` en `evento_estudio`) habilita la pestaña **Estadísticas** (`DestinoPrincipal.ESTADISTICAS`, que abre `EstadisticasActivity`), calcula el total de horas reales con variación semanal o mensual (`HU-29`, `RN-31`), presenta la distribución por materia mediante `MPAndroidChart` (`HU-30`), evalúa la tasa de cumplimiento excluyendo sesiones aún vigentes (`HU-31`), mide concentración, puntualidad, respeto del tiempo y tópicos agrupados de pausas o salidas (`HU-45`, `RN-30`), y blinda la detección de regresos y descansos Pomodoro (`HU-39`, `HU-41`). La @figura:clases_estadisticas presenta sus clases agrupadas por capa y `DesgloseMateriaPeriodo` como base compartida para reportes.
 
 ![Diagrama de clases de la épica Estadísticas](../recursos/diagramas/diagrama_clases_estadisticas.png){#clases_estadisticas ancho=16.5}
 
