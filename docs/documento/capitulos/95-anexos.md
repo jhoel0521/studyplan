@@ -10,7 +10,7 @@ Nota: Reporte y DistribucionMateria son conceptos calculados a partir de las ses
 
 Las clases principales son: **Estudiante**, el único usuario local, con sus **Ajustes** (tema, idioma, bloqueo, No molestar y Pomodoro) y su **ConfiguracionRespaldo**; **Materia**, que agrupa por composición las **SesionEstudio**, cada una con fecha, horario, técnica, un **EstadoSesion** gobernado por la máquina de estados (@figura:figura2) y un **Recordatorio** opcional. La autoasociación *reprograma en* enlaza una sesión reprogramada con la nueva. **MetaSemanal** representa la meta total (sin materia) o una meta por materia, y su progreso se calcula sumando las horas de las sesiones completadas. **Reporte** contiene una **DistribucionMateria** por cada materia del periodo.
 
-## Anexo C: Matriz de Trazabilidad
+## Anexo B: Matriz de Trazabilidad
 
 Tabla: Trazabilidad entre historias de usuario, especificaciones, prototipo y criterios de calidad {#tabla27}
 
@@ -65,7 +65,7 @@ Tabla: Trazabilidad entre historias de usuario, especificaciones, prototipo y cr
 
 Nota: Total: 46 historias y 103 escenarios, más 13 escenarios de la máquina de estados (RN-07). Las columnas de código y prueba se agregarán en cada sprint de implementación.
 
-## Anexo E: Glosario de Términos
+## Anexo C: Glosario de Términos
 
 Tabla: Glosario de términos {#tabla28}
 
